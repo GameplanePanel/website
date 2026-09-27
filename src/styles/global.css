@@ -12,42 +12,58 @@
  */
 :root {
   color-scheme: dark;
-  --background: #111111;
-  --card: #1a1a1a;
-  --border: #2e2e2e;
-  --foreground: #ffffff;
-  --muted: #2e2e2e;
-  --muted-foreground: #b8b9b6;
-  --primary: #ff8400;
-  --primary-foreground: #111111;
-  --secondary: #2e2e2e;
-  --secondary-foreground: #ffffff;
-  --sidebar: #18181b;
-  --sidebar-accent: #2a2a30;
-  --sidebar-accent-foreground: #fafafa;
-  --sidebar-border: #ffffff1a;
-  --sidebar-foreground: #fafafa;
-  --terminal: #0d0d0d;
-  --destructive: #ff5c33;
+  --background: #121114;
+  --card: #1c1a20;
+  --border: #2c2932;
+  --separator: #232227;
+  --foreground: #f5f3f7;
+  --muted: #232128;              /* was a bg-tint token; now $default/default, main app hex */
+  --muted-foreground: #9e98a6;   /* $muted from decisions.md */
+  --primary: #ff4fa3;            /* $accent/accent */
+  --primary-foreground: #ffffff; /* $accent/foreground */
+  --accent-soft: #331525;        /* $accent/soft */
+  --accent-soft-foreground: #ff8ac4; /* $accent/soft-foreground */
+  --secondary: #232128;          /* $default/default (icon tiles, nav active row) */
+  --secondary-foreground: #ede9f0;
+  --surface-secondary: #17151a;  /* $surface/secondary — docs sidebar bg */
+  --surface-tertiary: #141317;   /* $surface/tertiary — terminal chrome bg */
+  --sidebar: #17151a;
+  --sidebar-accent: #232128;
+  --sidebar-accent-foreground: #f5f3f7;
+  --sidebar-border: #2c2932;
+  --sidebar-foreground: #9e98a6;
+  --terminal: #141317;
+  --destructive: #e0304f;        /* $danger */
+  --warning: #f59f0a;            /* $warning, for Alert/Warning (docs-ui) */
+  --field-placeholder: #7b7584;  /* $field/placeholder — search/sidebar caption text */
 }
 
 .theme-light {
   color-scheme: light;
-  --background: #f2f3f0;
-  --card: #ffffff;
-  --border: #cbccc9;
-  --foreground: #111111;
-  --muted: #f2f3f0;
-  --muted-foreground: #666666;
-  --primary: #ff8400;
-  --primary-foreground: #111111;
-  --secondary: #e7e8e5;
-  --secondary-foreground: #111111;
-  --sidebar: #e7e8e5;
-  --sidebar-accent: #cbccc9;
-  --sidebar-accent-foreground: #18181b;
-  --sidebar-border: #cbccc9;
-  --sidebar-foreground: #666666;
+  --background: #ffffff;
+  --card: #fff7fb;
+  --border: #efc3d6;
+  --separator: #efc3d6;
+  --foreground: #2a0f1e;
+  --muted: #f6dce7;              /* $default/default */
+  --muted-foreground: #6e5262;   /* $muted */
+  --primary: #db2777;            /* $accent/accent */
+  --primary-foreground: #ffffff;
+  --accent-soft: #ffffff;        /* $accent/soft (light mode is a white chip fill) */
+  --accent-soft-foreground: #be185d;
+  --secondary: #f6dce7;
+  --secondary-foreground: #2a0f1e;
+  --surface-secondary: #f8dde9;
+  --surface-tertiary: #f8dde9;
+  --sidebar: #f8dde9;
+  --sidebar-accent: #f6dce7;
+  --sidebar-accent-foreground: #2a0f1e;
+  --sidebar-border: #efc3d6;
+  --sidebar-foreground: #6e5262;
+  --terminal: #f8dde9;
+  --destructive: #dc2828;
+  --warning: #f59f0a;
+  --field-placeholder: #8a6c7b;
 }
 
 /* Colors resolve at runtime (inline) so utilities follow the active scope. */
@@ -69,6 +85,13 @@
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-terminal: var(--terminal);
   --color-destructive: var(--destructive);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-soft-foreground: var(--accent-soft-foreground);
+  --color-surface-secondary: var(--surface-secondary);
+  --color-surface-tertiary: var(--surface-tertiary);
+  --color-separator: var(--separator);
+  --color-warning: var(--warning);
+  --color-field-placeholder: var(--field-placeholder);
 }
 
 /* Static tokens: fonts and radii don't flip with the theme scope. */
@@ -77,6 +100,10 @@
   --font-secondary: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
   --radius-m: 16px;
   --radius-pill: 999px;
+  --radius-md: 6px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-3xl: 24px;
 }
 
 @layer base {

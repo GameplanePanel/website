@@ -9,8 +9,8 @@ const { dot = true, class: className = "" } = Astro.props;
 ---
 
 <span
-  class={`inline-flex items-center gap-2 rounded-pill border border-border px-3.5 py-1.5 text-xs text-muted-foreground ${className}`}
+  class={`inline-flex items-center gap-2 rounded-2xl border border-border bg-accent-soft px-3.5 py-1.5 text-xs text-accent-soft-foreground ${className}`}
 >
-  {dot && <span class="h-1.5 w-1.5 rounded-pill bg-primary"></span>}
+  {dot && <span class="h-1.5 w-1.5 rounded-full bg-primary"></span>}
   <slot />
 </span>
