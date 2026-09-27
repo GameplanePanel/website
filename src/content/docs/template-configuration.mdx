@@ -1,0 +1,106 @@
+---
+title: Template-specific Configuration
+description: Translate a game template's schema into safe player-facing settings, runtime flags, and memory values before creation.
+section: operate
+group: servers-config
+order: 6
+icon: layers
+eyebrow: CREATE
+readTime: 13 MIN
+covers: ["Wizard", "Game rules", "Memory"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+
+Every GameServer accepts game-specific configuration through the wizard — fields defined by the GameTemplate's `configSchema`. These template-driven settings let you tune difficulty, whitelist, world seed, heap memory, and other game-specific options without modifying the template itself.
+
+<DocsCallout icon="cpu" title="Set identity and access before first boot">
+  World identity and authentication choices are easiest to correct before the first boot and persistent data creation.
+</DocsCallout>
+
+<DocsSectionList
+  items={[
+    {
+      icon: "network",
+      label: "Infrastructure vs. Player-Facing",
+      text: "Separate the server's workload name from player-visible description and MOTD.",
+    },
+    {
+      icon: "info",
+      label: "Game Rules Before Boot",
+      text: "Difficulty, PvP, whitelist, and world seed are easiest to configure before first run.",
+    },
+    {
+      icon: "check",
+      label: "Automatic Memory Sizing",
+      text: "Let the template compute heap from available resources; manual overrides require headroom.",
+    },
+  ]}
+/>
+
+## Identity and player-facing details
+
+Each GameServer has three identity layers:
+
+1. **Workload name** (the server's identity in the cluster): use a lowercase, dash-separated name (e.g., `pvp-arena-1`). This becomes the StatefulSet name and the pod name prefix (the pod itself is `<name>-0`), visible in kubectl and logs.
+
+2. **Description** (internal notes): an operational note for your ops team, visible on the dashboard's Server Overview. Keep it separate from the MOTD.
+
+3. **MOTD and player-visible text**: the message players see when they join. Configure this as a separate template field (often named `motd`, `servername`, or `announcement` depending on the game). This decouples operator metadata from player-facing copy.
+
+Player limits should match the CPU, memory, and network capacity you've allocated, not just the game's theoretical max. A Minecraft server with 512 MiB is unlikely to handle 20 players smoothly, even if the game itself supports it.
+
+## World and access rules
+
+Game rules (difficulty, PvP, hardcore mode) and identity settings (whitelist, online mode, seed) are best configured *before* the server boots for the first time. Many games persist these in world data or configuration files; changing them after creation may require manual intervention.
+
+### World seed
+
+If the template offers a seed field, record your chosen value before first boot. Changing the seed after a world exists does not regenerate existing chunks — it only affects newly generated terrain. The same applies to difficulty and hardcore mode: seeds the world's rule set at creation time.
+
+### Whitelist and access control
+
+If your game supports a whitelist (e.g., Minecraft's `whitelist.json`), configure it before creating persistent data. The agent sidecar provides dashboard controls for adding/removing players, but these depend on the game's command syntax and the whitelist being enabled in the template's capabilities.
+
+Review consequences of hardcore mode (permanent death, single-player experience) or strict PvP enforcement before committing data.
+
+### Online mode and authentication
+
+Some games (e.g., Minecraft Java) have an "online mode" that validates player identities against a central authentication server. Set this before boot if you plan to enforce authentication. Disabling it after creation may leave stale config in world files.
+
+## Memory and advanced fields
+
+### Automatic heap sizing
+
+Most templates that manage JVM heap (Minecraft Java, Forge servers) expose a `maxHeap` or similar field with `autoFromMemoryLimit` enabled. This computes the value at pod-start time as a percentage of the container's memory limit.
+
+**Prefer automatic sizing.** When you allocate 2048 MiB to the container and the template uses a 75% factor, the heap sizes to ~1536 MiB, leaving ~512 MiB for non-heap memory (Direct ByteBuffers, off-heap caches, native code). This headroom prevents Out-of-Memory kills when the heap stays under its limit but total memory exceeds the pod's allocation.
+
+### Manual heap overrides
+
+If you must pin a fixed heap size (e.g., testing or a workload with stable behavior), set the value explicitly in the config and reserve at least 25% headroom for non-heap memory. A container with 2048 MiB should pin heap to at most 1536 MiB; 1024 MiB is safer for stability.
+
+Review the YAML in `GameServer.spec.config` to confirm your value is correctly applied. The operator validates field types and enum values at submission time but does not simulate runtime memory pressure.
+
+### Credentials and secrets
+
+Some games require API keys, database credentials, or authentication tokens (e.g., external mod registry access). Template ConfigFields of type `password` are stored in a per-server Secret and injected as environment variables via `SecretKeyRef`; they never appear inline in the GameServer spec or in `configFiles` templates.
+
+Never pass secrets via plain ConfigFields of type `string`. Always use the `password` type.
+
+<DocsQuickReference
+  label="CONFIG CHECK"
+  items={[
+    "01  Confirm infrastructure name, description, MOTD, and player limit",
+    "02  Confirm game rules, whitelist, identity mode, and world seed",
+    "03  Prefer auto heap; if pinned, leave ~25% headroom and review YAML",
+  ]}
+/>
+
+## See also
+
+- [General Server Settings](./general-server-settings/) — CPU, memory, and environment variables
+- [Server Configuration](./server-configuration/) — hub overview of all server settings
+- [Backups & Recovery](./backups-recovery/) — world save protection strategies

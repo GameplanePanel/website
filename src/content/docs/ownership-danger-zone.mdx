@@ -1,0 +1,82 @@
+---
+title: "Ownership, collaborators, and danger zone"
+description: "Delegate operations, transfer accountability, and distinguish wipe from deletion before an irreversible action."
+section: operate
+group: servers-config
+order: 8
+icon: shield-alert
+eyebrow: "ACCESS"
+readTime: "13 MIN"
+covers: ["Ownership", "RBAC", "Deletion"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
+
+<DocsArticleMeta groupId="servers-config" readTime="13 MIN" />
+
+<DocsCallout icon="shield-alert" title="Coming in v0.3.0: owner-or-admin tightening">
+  Ownership, collaborators, transfer, wipe, and delete are already available in v0.2.0-beta.8. In beta.8, users with the operator role can still transfer ownership, wipe data, or delete servers they don't own; v0.3.0 restricts these four operations to the server's owner or a cluster admin only.
+</DocsCallout>
+
+Ownership controls accountability and destructive authority; collaboration grants operator access to one server. Both require explicit owner decisions before irreversible actions like data wiping and server deletion.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "users",
+      label: "Owner",
+      text: "Can transfer ownership, wipe data, delete the server, and manage collaborators.",
+    },
+    {
+      icon: "users",
+      label: "Collaborators",
+      text: "Can operate the server (start, stop, read console, upload mods) but cannot delete, transfer, or change access.",
+    },
+    {
+      icon: "lock",
+      label: "Access control",
+      text: "Only the server's owner or a cluster admin can perform destructive operations.",
+    },
+  ]}
+/>
+
+## Owner and collaborator access
+
+Ownership controls accountability and destructive authority; collaboration grants operator access to one server.
+
+- **Owner can transfer and perform destructive actions** — The owner has the highest level of control, including the ability to change who owns the server, wipe all world data, and delete the entire GameServer resource along with its persistent volume.
+- **Collaborators operate this server but cannot delete or transfer it** — Collaborators can start, stop, restart, and clone the server, access the console (RCON or PTY), manage files, view players and logs, and upload mods. They cannot delete the server, transfer ownership, or modify the collaborator list.
+- **Add exact usernames and remove stale access promptly** — Use the Access tab in server settings to grant collaborator access by typing exact usernames. Remove collaborators who no longer need access to keep the server's access list current.
+
+## Transfer ownership
+
+Select an existing user who accepts the server's data and operational obligations, then verify every downstream access path.
+
+- **Confirm current and new owner in the transfer dialog** — The dashboard shows the current owner during transfer and requires explicit acknowledgment from the new owner's account (via a separate confirmation).
+- **Former owner needs explicit collaborator access to retain control** — If a former owner should keep operating the server after transfer, they must be explicitly added as a collaborator in the new owner's settings.
+- **Verify audit, backups, notifications, and on-call ownership after transfer** — Transfer does not automatically update backup destinations, notification recipients, or on-call assignments. Update these manually in the new owner's namespace if they differ.
+
+## Wipe world or delete server
+
+Wipe keeps configuration and resets world data; Delete removes the GameServer, workload, and data volume.
+
+Both operations require a verified backup and an explicit owner decision:
+
+- **Wipe data** — Suspends the server, empties the persistent volume (retaining configuration and game templates), and restarts the server with a clean world. Use this when you want to reset the game world but keep your server's name, settings, and template configuration.
+- **Delete server** — Removes the entire GameServer Kubernetes resource, stops the workload pod, and deletes the data PersistentVolumeClaim (PVC). All game data, configuration, and deployment state are destroyed. Use this only when you no longer need the server.
+
+<DocsQuickReference
+  label="DESTRUCTIVE ACTION"
+  items={[
+    "01  Collaborator = operate; owner = transfer and destructive authority",
+    "02  Transfer changes accountability and must be audited",
+    "03  Backup + stop writes; Wipe keeps config, Delete removes server+volume",
+  ]}
+/>
+
+---
+
+**Next guide:** [Backup destinations](./backup-destinations/)

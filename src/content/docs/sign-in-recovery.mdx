@@ -1,0 +1,136 @@
+---
+title: "Sign-in & Account Recovery"
+description: "Choose local or federated sign-in, diagnose authentication failures, and recover access without locking out every administrator."
+section: "start-here"
+order: 5
+icon: "lock"
+eyebrow: "START HERE"
+readTime: "11 MIN"
+covers: ["Local auth", "OIDC", "Recovery"]
+next: "template-configuration"
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+
+Choose local or federated sign-in, diagnose authentication failures, and recover access without locking out every administrator.
+
+<DocsCallout icon="shield" title="Keep one tested administrative recovery path">
+  Keep one tested administrative recovery path until SSO-only redirects, claims, and role mappings work end to end.
+</DocsCallout>
+
+## Choose a sign-in method
+
+Local accounts use a Gameplane credential; provider buttons delegate password and MFA to the configured identity provider.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "Local accounts",
+      text: "Use username or email with the local account password.",
+    },
+    {
+      icon: "check",
+      label: "OIDC providers",
+      text: "Use the correct OIDC provider button for federated accounts.",
+    },
+    {
+      icon: "check",
+      label: "SSO enforcement",
+      text: "Do not enforce SSO-only until an administrative provider login is verified.",
+    },
+  ]}
+/>
+
+**Local auth** requires the account to exist in Gameplane's local user list — created manually under **Admin Settings → Users** or automatically on first OIDC login (assigned the viewer role by default). Each local account stores an `argon2id`-hashed password; the API enforces a 12-character minimum.
+
+**OIDC** (OpenID Connect) delegates authentication to a third-party identity provider (Keycloak, Authentik, Google Workspace, Okta, etc.). The provider handles password storage and MFA; Gameplane stores only the OIDC subject ID (issuer + subject claim); group-claim role mapping is not available in beta.8 (coming in v0.3.0). Providers are configured under **Admin Settings → Authentication** and take effect on the next user login (no API restart required).
+
+<DocsCallout icon="info" title="Coming in v0.3.0">
+  OIDC group-claim role mapping will allow you to derive user roles from your identity provider's group claims, enabling zero-trust RBAC on login without post-deployment configuration.
+</DocsCallout>
+
+For provider-specific setup steps, see [Users, Auth & RBAC](./users-auth-rbac/).
+
+## Diagnose a failed sign-in
+
+Generic errors protect account details, so correlate the browser response with API health and provider configuration.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "Re-enter & rate limits",
+      text: "Re-enter the identifier and avoid repeated guesses that trigger rate limits.",
+    },
+    {
+      icon: "check",
+      label: "Provider details",
+      text: "Verify issuer, redirect URI, client Secret, clock, claims, and mapped role.",
+    },
+    {
+      icon: "check",
+      label: "API & database health",
+      text: "For a loading loop, check session requests, API logs, and database health.",
+    },
+  ]}
+/>
+
+**Rate limits** (per IP and per username) cap login attempts to prevent brute-force attacks:
+- **Per-IP limit:** 5 attempts per minute (burst 10)
+- **Per-username limit:** 3 attempts per minute (burst 6)
+
+If you exceed either limit, wait 1 minute and retry. The rate limit is tied to the TCP peer address; if your API uses a proxy or load balancer, ensure the X-Forwarded-For header is **not** trusted by the API (the default). Check the API pod logs (`kubectl logs -f -n gameplane-system deploy/gameplane-api -c api`) for audit entries if a login appears stuck.
+
+**OIDC failures** are often due to misconfigured redirect URIs, mismatched issuer URLs (including trailing slashes), or a provider-side clock skew:
+- Check **Admin Settings → General → External URL** — it must match your dashboard's public hostname exactly (e.g., `https://gameplane.example.com`).
+- Verify the provider's issuer URL. Example test: `curl https://<issuer-url>/.well-known/openid-configuration` — the response must include an `authorization_endpoint` and `token_endpoint`.
+- Confirm the callback URL in the provider (e.g., `https://gameplane.example.com/auth/oidc/<provider-name>/callback`) matches the provider's OIDC configuration exactly.
+- Check the provider's system clock against the API container's clock — server and IdP clocks must be synchronized (within 5 minutes) for successful authentication.
+
+**Local login failures** are usually due to a wrong username/email or incorrect password. The login endpoint does not reveal which — you will see a generic "invalid credentials" error either way.
+
+## Recover access safely
+
+An administrator with the `users:manage` role can reset any local user's password. Test recovery in a private/incognito browser window.
+
+**Admin-initiated password reset**: If a user forgets their local password or is locked out, an administrator can reset it:
+1. Go to **Admin Settings → Users**
+2. Find the user and click the three-dot menu
+3. Select **Reset password**
+4. Set a temporary password
+5. Share the temporary password securely with the user (out of band, not via email)
+6. Ask the user to change it on first login
+
+The user's effective role in Gameplane is determined by:
+- **Local account**: the role manually assigned in **Admin Settings → Users**
+- **OIDC account**: the role is the viewer role by default (coming in v0.3.0: the role derived from the provider's group claim if group mapping is configured in **Admin Settings → Authentication**) *or* the role manually assigned in **Admin Settings → Users** as an override
+
+To test your own recovery process, log out and use a private/incognito window to attempt re-login. If you are locked out of OIDC and cannot log in via a local backup account, use one of these break-glass paths:
+
+**Option 1: Re-enable local login** (if it was disabled in **Admin Settings → Authentication**):
+```bash
+kubectl exec -n gameplane-system -it deploy/gameplane-api -c api -- \
+  /api bootstrap-admin --enable-local-login
+```
+Then log in with your local account (if it exists).
+
+**Option 2: Create or reset an admin account** (if no local accounts exist or are usable):
+```bash
+kubectl exec -n gameplane-system -it deploy/gameplane-api -c api -- \
+  /api bootstrap-admin --username admin --password-stdin
+```
+Type the new password at the prompt (hidden). Log in as `admin` with the new password.
+
+The `bootstrap-admin` command must be run on any API pod that can reach the database. In a single-pod deployment, use the pod above. In a replicated or high-availability setup, run it on any single replica — the changes are immediately visible to all API instances.
+
+<DocsQuickReference
+  label="RECOVERY PATH"
+  items={[
+    "01  Local → username/email + password; OIDC → provider button",
+    "02  Failure → API health, redirect, issuer, claims, and rate limits",
+    "03  Recovery → audited admin reset or bootstrap-admin break-glass; OIDC resets upstream",
+  ]}
+/>

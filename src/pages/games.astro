@@ -9,100 +9,117 @@ import { withBase } from "../lib/url";
 const games = [
   {
     icon: "box",
-    version: "v2.8.1",
+    version: "2.8.1",
     title: "Minecraft (Java Edition)",
     blurb: "Vanilla, Paper, Fabric, Forge & more with a version+loader picker and Modrinth browse.",
   },
   {
     icon: "sword",
-    version: "v2.3.3",
+    version: "2.3.3",
     title: "Valheim (Dedicated)",
     blurb: "Stable/public-test channels, BepInEx mods, in-app Thunderstore browse.",
   },
   {
     icon: "pickaxe",
-    version: "v2.2.0",
+    version: "2.2.0",
     title: "Terraria",
     blurb: "Vanilla + tModLoader with a version picker and a ModPacks volume.",
   },
   {
-    icon: "cpu",
-    version: "v1.1.2",
+    icon: "factory",
+    version: "1.1.2",
     title: "Factorio (Headless)",
     blurb: "Channel picker, wizard-managed settings, in-app mod-portal browse.",
   },
   {
-    icon: "swords",
-    version: "v1.2.0",
+    icon: "paw-print",
+    version: "1.2.0",
     title: "Palworld (Dedicated)",
     blurb: "REST-API console, save-aware graceful stop, .pak mod volume.",
   },
   {
-    icon: "axe",
-    version: "v1.1.0",
+    icon: "flame",
+    version: "1.1.0",
     title: "Rust",
     blurb: "WebRcon console, Oxide plugin volume, save-then-quit stop.",
   },
   {
-    icon: "bug",
-    version: "v1.1.1",
+    icon: "skull",
+    version: "1.1.1",
     title: "DayZ",
     blurb: "BattlEye RCon console with SIGTERM-safe restarts.",
   },
   {
-    icon: "package",
-    version: "v1.1.1",
+    icon: "cog",
+    version: "1.1.1",
     title: "Satisfactory (Dedicated)",
     blurb: "Stable/experimental branches; installs via steamcmd on first boot.",
   },
   {
-    icon: "gamepad-2",
-    version: "v1.1.0",
+    icon: "crosshair",
+    version: "1.1.0",
     title: "Counter-Strike 2",
     blurb: "Source RCON with a Metamod/CS# plugins volume.",
   },
   {
-    icon: "bug",
-    version: "v1.0.8",
+    icon: "mountain",
+    version: "1.0.8",
     title: "ARK: Survival Ascended",
     blurb: "RCON console/moderation; CurseForge mods via -mods=.",
   },
   {
-    icon: "bug",
-    version: "v1.0.5",
+    icon: "biohazard",
+    version: "1.0.5",
     title: "Project Zomboid",
     blurb: "RCON console/moderation, Steam Workshop mods.",
   },
   {
-    icon: "bug",
-    version: "v2.0.4",
+    icon: "radiation",
+    version: "2.0.4",
     title: "7 Days to Die",
     blurb: "Telnet console, persistent world saves, mod installers.",
   },
   {
-    icon: "gamepad-2",
-    version: "v2.0.2",
+    icon: "wrench",
+    version: "2.0.2",
     title: "Garry's Mod",
     blurb: "Workshop addon collections via launch args.",
   },
   {
-    icon: "box",
-    version: "v1.0.2",
+    icon: "castle",
+    version: "1.0.2",
     title: "Enshrouded",
     blurb: "Dedicated survival server, env-configured.",
   },
   {
-    icon: "box",
-    version: "v1.1.0",
+    icon: "moon",
+    version: "1.1.0",
     title: "Don't Starve Together",
     blurb: "Dedicated co-op survival server.",
   },
   {
-    icon: "sword",
-    version: "v1.0.2",
+    icon: "droplet",
+    version: "1.0.2",
     title: "V Rising",
     blurb: "Source RCON with a safe shutdown sequence.",
   },
+];
+
+const v030Games = [
+  { icon: "car", title: "FiveM", blurb: "Bundled txAdmin with embedded MariaDB supervision and REST controls." },
+  { icon: "leaf", title: "Farming Simulator 25", blurb: "Headless Wine runtime with a supervised web management portal and REST admin." },
+  { icon: "truck", title: "Euro Truck Simulator 2", blurb: "PTY console with diagnostic idle when the server logon token is missing." },
+  { icon: "shield", title: "Mount & Blade II: Bannerlord", blurb: "PTY console with skirmish, captain, and siege match hosting." },
+  { icon: "blocks", title: "tModLoader", blurb: "Modded Terraria with a .tmod mod manager and interactive PTY console." },
+  { icon: "target", title: "Team Fortress 2", blurb: "Source RCON console with SourceMod/MetaMod addon support." },
+  { icon: "gauge", title: "BeamMP", blurb: "PTY console with custom vehicle/map mods and diagnostic idle." },
+  { icon: "skull", title: "Left 4 Dead 2", blurb: "Source RCON console with SourceMod/MetaMod addon support." },
+  { icon: "paw-print", title: "The Isle", blurb: "Source RCON administration with persistent world save management." },
+  { icon: "bone", title: "ARK: Survival Evolved", blurb: "Source RCON console with cluster travel support and persistent world state." },
+  { icon: "crosshair", title: "Arma Reforger", blurb: "PTY console with persistent saves and Steam Workshop mod support." },
+  { icon: "flame", title: "Hell Let Loose", blurb: "Source RCON console with match-based rotation and modding support." },
+  { icon: "users", title: "Squad", blurb: "Source-family RCON with match rotation and Steam Workshop modding." },
+  { icon: "radiation", title: "Nuclear Option", blurb: "Remote-command console, runtime-installed via SteamCMD on first boot." },
 ];
 ---
 
@@ -116,15 +133,15 @@ const games = [
     <SectionHeader
       eyebrow="SUPPORTED GAMES"
       title="Deploy the games your community plays"
-      subtitle="Sixteen game servers ship out of the box — and the module format is open, so more are just a template away."
+      subtitle="Sixteen game servers ship out of the box — and the module format is open, so more are just a template away. Fourteen more arrive in v0.3.0."
     />
 
     <div class="grid w-full max-w-[1280px] grid-cols-1 gap-4 md:grid-cols-3 md:gap-6">
       {
         games.map((game) => (
-          <div class="flex flex-col gap-4 rounded-m border border-border bg-card p-6">
+          <div class="flex flex-col gap-4 rounded-2xl border border-border bg-card p-6">
             <div class="flex items-center justify-between">
-              <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-secondary">
+              <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-secondary">
                 <Icon name={game.icon} class="h-[26px] w-[26px] text-primary" />
               </div>
               <Badge>{game.version}</Badge>
@@ -136,16 +153,43 @@ const games = [
       }
     </div>
 
+    <div class="flex w-full flex-col items-center gap-6">
+      <SectionHeader
+        eyebrow="COMING IN V0.3.0"
+        title="Fourteen more modules land in the next release"
+        subtitle="Not yet shipped in v0.2.0-beta.8 — these templates are staged for the v0.3.0 release."
+      />
+
+      <div class="grid w-full max-w-[1280px] grid-cols-1 gap-4 md:grid-cols-3 md:gap-6">
+        {
+          v030Games.map((game) => (
+            <div class="flex flex-col gap-4 rounded-2xl border border-border bg-card p-6">
+              <div class="flex items-center justify-between">
+                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-secondary">
+                  <Icon name={game.icon} class="h-[22px] w-[22px] text-primary" />
+                </div>
+                <span class="inline-flex items-center rounded-2xl bg-accent-soft px-2 py-0.5 text-[11px] font-medium text-accent-soft-foreground">
+                  v0.3.0
+                </span>
+              </div>
+              <h3 class="font-primary text-lg font-semibold text-foreground">{game.title}</h3>
+              <p class="text-[13px] leading-normal text-muted-foreground">{game.blurb}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+
     <div
-      class="flex w-full max-w-[840px] flex-col gap-6 rounded-m border border-border bg-card p-6 md:flex-row md:p-8"
+      class="flex w-full max-w-[840px] flex-col gap-6 rounded-2xl border border-border bg-card p-6 md:flex-row md:p-8"
     >
-      <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-secondary">
+      <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-secondary">
         <Icon name="puzzle" class="h-[26px] w-[26px] text-primary" />
       </div>
       <div class="flex flex-col gap-2">
         <h2 class="font-primary text-lg font-semibold text-foreground">Bring your own game</h2>
         <p class="text-sm leading-relaxed text-muted-foreground">
-          Every module — including these sixteen — is just an OCI bundle: a template.yaml describing
+          Every module — including all sixteen above — is just an OCI bundle: a template.yaml describing
           the container, config schema, and capabilities, plus a module.yaml with metadata. If a
           game runs in a container and takes a config file, it can become a Gameplane module.
         </p>

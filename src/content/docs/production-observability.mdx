@@ -1,0 +1,128 @@
+---
+title: Production observability and alerting
+description: Connect metrics, logs, events, audit records, and notifications into an actionable signal path with bounded retention.
+section: platform
+group: audit-observability
+order: 3
+icon: activity
+eyebrow: OPERATIONS
+readTime: 19 MIN
+covers: ["Metrics", "Alerts", "Evidence"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+
+Connect metrics, logs, events, audit records, and notifications into an actionable signal path with bounded retention.
+
+<DocsCallout icon="shield-alert" title="Alerts require owners, not just thresholds">
+  Every alert needs an owner, duration, severity, notification route, and tested runbook—not just a threshold.
+</DocsCallout>
+
+## Collect the right signals
+
+Label every signal with cluster, namespace, resource UID, and synchronized time while keeping component boundaries visible.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "activity",
+      label: "Scrape documented metric endpoints",
+      text: "Collect metrics from API (port 9090), operator (port 8080), and agent sidecars (port 9090) using Prometheus ServiceMonitors and PodMonitors.",
+    },
+    {
+      icon: "history",
+      label: "Collect API, operator, agent, and game logs separately",
+      text: "Aggregate logs by component using your cluster's log collector (Loki, Splunk, ELK, Stackdriver) to preserve troubleshooting context.",
+    },
+    {
+      icon: "shield-check",
+      label: "Export Kubernetes events and tamper-evident audit records",
+      text: "Forward Kubernetes Events and Gameplane audit logs via syslog or S3 to an audit archival system for incident investigation.",
+    },
+  ]}
+/>
+
+**Metrics endpoints:**
+
+- **API:** `/metrics` on the dedicated in-cluster listener (port `metricsPort`, default 9090). ServiceMonitor available when `serviceMonitors.enabled: true` in `values.yaml`.
+- **Operator:** `/metrics` on port 8080. Exports fleet state gauges like `gameplane_gameservers{phase=...}` and reconciliation counters.
+- **Agent sidecars:** `/metrics` on port 9090 (unauthenticated). PodMonitor available when `serviceMonitors.enabled: true`.
+
+**Logs collection:**
+
+Configure your cluster's log aggregation system (Kubernetes logging architecture) to collect:
+- API, operator, and agent stdout/stderr from `kubectl logs`
+- Game server logs from the agent's tail stream (available via the `/ws/servers/<name>/logs` WebSocket endpoint used by the dashboard's Logs tab)
+
+**Audit trail:**
+
+Export audit events via webhook syslog (RFC 5424) using `api.audit.webhook.syslogBridge` or batch upload to S3 using `api.audit.s3.*` in `values.yaml`. See [Audit observability](./audit-observability-admin/) for full configuration.
+
+## Dashboards, SLOs, and alerts
+
+Cover control-plane health, reconciliation, fleet states, capacity, storage, backups, credentials, and source synchronization.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "box",
+      label: "Dashboard availability, latency, errors, queues, fleet, and storage",
+      text: "Use Prometheus dashboards (via Grafana, Datadog, or New Relic) to visualize API response times, queue depths, active GameServers, and PVC usage.",
+    },
+    {
+      icon: "info",
+      label: "Alert on stuck/failed work, capacity, DB, certs, backups, and sources",
+      text: "Configure alerts on PrometheusRules: GameplaneOperatorReconcileErrors, GameplaneOperatorWorkqueueBacklog, GameplaneGameServerFailed, GameplaneBackupFailed, and certificate expiry.",
+    },
+    {
+      icon: "info",
+      label: "Attach severity, owner, silence policy, objective, and runbook URL",
+      text: "Every alert rule should include annotations for severity (critical/warning), owner team, silence/maintenance windows, SLO target, and a link to the incident runbook.",
+    },
+  ]}
+/>
+
+**Key alerts to define:**
+
+1. **Reconciliation health:** `GameplaneOperatorReconcileErrors` (by controller), `GameplaneOperatorReconcileStuck` (longest-running work > 5m)
+2. **Fleet health:** `GameplaneGameServerFailed` (phase=Failed), `GameplaneBackupFailed` (any failed backup)
+3. **Capacity:** API/operator memory, CPU throttling, PVC usage approaching limits
+4. **Infrastructure:** Certificate expiry, Database connectivity, Persistent volume mount failures
+5. **Sources & modules:** Module source sync failures, registry credential rotation expiry (see [Credential rotation](./credential-rotation/))
+
+**Built-in PrometheusRule:**
+
+Enable `prometheusRules.enabled: true` in `values.yaml` to activate the bundled alert rules. Use `serviceMonitors.enabled: true` to auto-create Prometheus scrape targets and `scrapeNamespaceSelector` to open NetworkPolicy exceptions if Prometheus runs in a separate namespace.
+
+## Retention and incident use
+
+Bound cardinality, access, redaction, encryption, and cost; preserve evidence before restarts or rotation.
+
+**Metrics retention:** Prometheus is stateful; size your Persistent Volume for your retention window (commonly 15d–90d depending on cost/compliance). High-cardinality labels (e.g., per-pod or per-request-id) increase storage; use recording rules to pre-aggregate before long-term storage.
+
+**Logs retention:** Cluster log aggregators (Loki, ELK, Stackdriver) typically offer configurable retention (7d–30d by default). Game logs are available on-demand via the dashboard; configure agent log persistence (`spec.logPath` in templates) to disk (attached volume) or external log sink.
+
+**Audit trail:** API audit events are persisted in the database (every row hash-chained per `005_audit_chain.sql` migration). Export via syslog bridge or S3 for long-term archival and legal/compliance holds. Gameplane never deletes audit rows—you control archival and purge policies.
+
+**Evidence preservation:** Before node maintenance, cluster upgrades, or credential rotation, export:
+- Prometheus snapshots (if using Prometheus)
+- Recent log chunks from your aggregator
+- Audit event exports from the API (`GET /admin/audit/export` or syslog archive)
+- Game server snapshots (if applicable for your incident timeline)
+
+<DocsQuickReference
+  label="OBSERVABILITY CHECK"
+  items={[
+    "Metrics + events + component logs + audit with shared identity/time",
+    "Every alert → threshold/duration + severity + owner + route + runbook",
+    "Test alert delivery, cert expiry, backup/DB failure, evidence export",
+  ]}
+/>
+
+---
+
+## Next guide
+
+[Metrics, alerts, and dashboards](./metrics-alerts-dashboards/)

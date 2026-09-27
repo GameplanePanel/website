@@ -2,11 +2,14 @@
 title: Roadmap & Known Limitations
 description: What's solid today, what's explicitly deferred, and what's actively being built.
 section: reference
-order: 2
-icon: map
+group: releases-roadmap
+order: 1
+icon: milestone
 sidebarLabel: Roadmap
+eyebrow: DOCUMENTATION
 ---
 
+import DocsCallout from "../../components/docs/DocsCallout.astro";
 import IconList from "../../components/docs/IconList.astro";
 import { VERSION } from "../../config";
 
@@ -24,17 +27,46 @@ Core workflows — deploy a game server, console, files, backups/restore, module
     ]}
   />
   <IconList
-    title="Recently shipped"
+    title="Recently shipped in latest releases"
     icon="circle-dot"
     iconClass="text-primary"
     items={[
-      "Multi-cluster — Cluster CRD, health reconciler, and a dashboard cluster selector.",
-      "Four new console protocols — Rust WebRcon, DayZ BattlEye, Satisfactory, Palworld REST.",
-      "Read-only MCP server and per-GameServer access control (owners + collaborators).",
-      "Fleet metrics — gameserver/backup phase gauges on /metrics, with Grafana panels and alerts.",
-      "Server-side audit-log export and webhook push sink.",
-      "Audit-to-syslog bridge.",
-      "Cosign signing for module bundles and component images.",
+      "Wake-on-connect sentinel for idle auto-sleep — holds ports while pods sleep, wakes on genuine connection attempts.",
+      "Load-balancer address pools — request specific IP pools or explicit addresses via spec.networking.addressPool / address (beta.8).",
+      "Fleet metrics on /metrics — gameserver/backup phase gauges with Prometheus export and Grafana dashboards.",
+      "Multi-cluster cluster registration with health-checked dashboard selector.",
+    ]}
+  />
+</div>
+
+## Coming in v0.3.0
+
+<DocsCallout icon="check" title="Actively being developed">
+  The following features are in active development for v0.3.0-rc.1 and later. They are not available in v0.2.0-beta.8.
+</DocsCallout>
+
+<div class="grid gap-8 md:grid-cols-2">
+  <IconList
+    title="User experience"
+    icon="circle-dot"
+    iconClass="text-primary"
+    items={[
+      "User theme customization — preset and custom color themes with WCAG AA validation and per-user persistence.",
+      "Network capture sidecar — admin-only, on-demand packet capture from running GameServer pods (PCAPNG format).",
+      "Easy module building toolkit (gp-module CLI) — scaffold, validate, preview, and package custom game modules.",
+      "Owner-or-admin-only server operations — transferring ownership, editing collaborators, wiping data, and deleting a server will require the owner or an admin; the Operator role keeps its other permissions but loses these four on servers it doesn't own.",
+    ]}
+  />
+  <IconList
+    title="Modules & infrastructure"
+    icon="circle-dot"
+    iconClass="text-primary"
+    items={[
+      "13 new top-steam-game modules — FiveM, Farming Simulator 25, Arma Reforger, Squad, Hell Let Loose, and others (30 total).",
+      "Install-time OIDC role mappings and default StorageClass — zero post-deploy auth configuration.",
+      "Share link expiry options — custom expiration dates and no-expiry choice per share.",
+      "Audit-log webhook push sink — forward audit events to HTTP endpoints for external logging/SIEM integration (in progress).",
+      "Audit-to-syslog bridge relay — forward RFC 5424 audit events to syslog endpoints (in progress).",
     ]}
   />
 </div>

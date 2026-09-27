@@ -1,0 +1,152 @@
+---
+title: "Repository and components"
+description: "Understand the Go workspace, request path, submodules, and ownership boundaries before changing code."
+section: develop
+group: local-development
+order: 1
+icon: folder
+eyebrow: "ARCHITECTURE"
+readTime: "14 MIN"
+covers: ["Workspace", "Runtime", "Boundaries"]
+next: "web-dashboard-development"
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+
+Gameplane is split across long-lived components (dashboard, API, operator, and optional services) plus a per-pod agent sidecar. Understanding the repository layout and request paths helps you navigate the codebase and make changes that respect architectural boundaries.
+
+<DocsCallout icon="blocks" title="Desired state belongs in CRD spec; observed state and conditions belong to controllers.">
+  When adding new features, determine which layer should own the configuration: API schemas for user intent, CRD types for Kubernetes storage, or operator reconcilers for realizing that intent.
+</DocsCallout>
+
+## Workspace map
+
+The repository joins runtime components, shared libraries, optional services, packaging, and e2e infrastructure under a single Go workspace (`go.work`). This lets you develop across multiple modules and reference them locally without publishing intermediate versions.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "package",
+      label: "Go workspace",
+      text: "go.work joins operator, API, agent, shared Go modules, MCP, and tests.",
+    },
+    {
+      icon: "layout-dashboard",
+      label: "Web dashboard & packaging",
+      text: "web is React; charts and deploy own packaging and local orchestration.",
+    },
+    {
+      icon: "arrow-right",
+      label: "Game modules & website",
+      text: "modules and website are separately versioned gitlink repositories.",
+    },
+  ]}
+/>
+
+### Go modules in the workspace
+
+| Module | Purpose |
+|--------|---------|
+| `operator/` | controller-runtime Kubernetes operator; reconciles 8 CRDs in v0.2.0-beta.8 (GameServer, GameTemplate, Cluster, Backup, BackupSchedule, Restore, Module, ModuleSource) — a 9th, NetworkCapture, is coming in v0.3.0 |
+| `api/` | REST and WebSocket gateway; authentication, RBAC, audit logging; SQLite or PostgreSQL backend |
+| `agent/` | In-pod sidecar managing console (RCON/PTY), files, logs, and heartbeats |
+| `netguard/` | SSRF dial-guard protecting against injection attacks |
+| `gameaction/` | Console-injection guard and command renderer |
+| `gameproto/` | Minecraft and Terraria wire protocol parser for handshake filtering |
+| `gp-module/` | Module authoring CLI: scaffold, validate, preview, package |
+| `svcutil/` | Shared environment parsing and graceful shutdown helpers |
+| `tunnel/` | Relay client supervisor (frp, Tailscale, playit) |
+| `mcp-server/` | Read-only Model Context Protocol server for cluster debugging |
+| `audit-syslog-bridge/` | RFC 5424 HTTP-to-syslog forwarder for audit events |
+| `telemetry-receiver/` | Usage telemetry ingest service |
+| `sentinel/` | Wake-on-connect proxy for sleeping pods |
+| `capture-sidecar/` | AF_PACKET BPF packet capture sidecar |
+| `test/e2e/` | End-to-end test suite on Kind |
+
+### Non-Go components
+
+- **`web/`** — React 19 + TypeScript + Vite dashboard with TanStack Router, Query, and Tailwind CSS. Routes are defined in `src/routes/` and compiled into the API's static file server.
+- **`charts/`** — Helm chart for production installations; includes Kubernetes manifests generated from operator CRDs.
+- **`deploy/kind/`** — Local Kind cluster scripts for development.
+- **`modules/`** — Submodule linking to `gameplane-module` repository; contains 16 game templates in v0.2.0-beta.8, expanding to ~30 in the next release.
+- **`website/`** — Submodule linking to `gameplane-website` repository; Astro-based marketing and documentation site.
+
+## Runtime request path
+
+Browser, API, Kubernetes, operator, workloads, and agent form distinct contracts with different failure modes. The path from a user action to a game server change touches multiple layers.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "globe",
+      label: "Browser to API",
+      text: "REST, Server-Sent Events (SSE), and WebSockets over same-origin HTTPS.",
+    },
+    {
+      icon: "network",
+      label: "API to operator",
+      text: "API writes CRD changes; operator reconciles workloads, storage, and status conditions.",
+    },
+    {
+      icon: "activity",
+      label: "Operator & API to agent",
+      text: "API and operator reach the agent for console, files, logs, actions, and lifecycle hooks over mTLS.",
+    },
+  ]}
+/>
+
+### Layer responsibilities
+
+**Browser (`web/`):**
+- User-facing React UI built with HeroUI components.
+- Manages local state with TanStack Query.
+- Communicates with the API via REST endpoints and WebSocket for live console/logs.
+
+**API (`api/`):**
+- HTTP gateway and WebSocket server.
+- Authenticates users (local or OIDC) and enforces RBAC.
+- Writes CRD specs to Kubernetes API in response to user actions.
+- Streams logs and console from agent pods.
+- Audit logs all user actions.
+
+**Operator (`operator/`):**
+- Controller-runtime reconcilers watching CRDs.
+- Converts desired state (CRD spec) into Kubernetes primitives: StatefulSets, Services, PVCs, Jobs.
+- Monitors pod readiness, resource usage, and backup progress.
+- Records status conditions and ready replicas back to CRD status.
+
+**Agent (`agent/`):**
+- Sidecar container in every GameServer pod.
+- Communicates with the API over mTLS.
+- Manages game console (RCON/stdin/stdout), files, logs, and player state.
+- Executes graceful shutdown sequences via RCON before termination.
+
+## Change ownership
+
+When adding a feature, clarity on who owns each piece prevents architectural drift. Use this framework:
+
+- **Authentication, access control, audit:** Policy lives in `api/internal/rbac/` and `api/internal/auth/`; enforcement lives in middleware.
+- **Desired state (e.g., CPU, memory, replicas):** Lives in CRD spec (e.g., `GameServer.spec.resources`).
+- **Observed state and health checks:** Conditions on CRD status (e.g., `Ready`, `ContainerReady`) owned by the operator.
+- **Game-specific logic and protocol handlers:** Lives in the agent (e.g., RCON clients, console state).
+- **Shared security invariants (injection guards, SSRF checks):** Owned by libraries (`netguard`, `gameaction`) to avoid duplication.
+- **UI workflows:** Defined in the dashboard (`web/src/routes/` and components) with API client calls (`web/src/lib/api.ts`).
+
+<DocsQuickReference
+  label="REPOSITORY MAP"
+  items={[
+    "make help — List all build and development targets.",
+    "go work edit -json — Inspect workspace module dependencies.",
+    "operator/ api/ agent/ web/ charts/ test/e2e/ modules/ website/ — Top-level component directories.",
+  ]}
+/>
+
+---
+
+## See also
+
+- [Local Development Setup](./local-development-setup/) — Getting your environment ready and running tests.
+- [Web Dashboard Development](./web-dashboard-development/) — React component and routing guidelines.
+- [Operator & CRD Development](./operator-crd-development/) — Adding new CRDs and reconcilers.

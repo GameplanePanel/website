@@ -1,11 +1,21 @@
 ---
+import DocsArticleMeta from "../components/docs/DocsArticleMeta.astro";
 import DocsPrevNext from "../components/docs/DocsPrevNext.astro";
+import DocsEditPageCard from "../components/docs/DocsEditPageCard.astro";
+import DocsToc from "../components/docs/DocsToc.astro";
 import DocsShell from "./DocsShell.astro";
+import { SECTIONS } from "../lib/docs-nav";
 import { withBase } from "../lib/url";
 
 interface Link {
   title: string;
   href: string;
+}
+
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
 }
 
 interface Props {
@@ -21,6 +31,11 @@ interface Props {
   lede?: string;
   prev?: Link | null;
   next?: Link | null;
+  section?: string;
+  group?: string;
+  readTime?: string;
+  covers?: string[];
+  headings?: Heading[];
 }
 
 const {
@@ -28,29 +43,93 @@ const {
   description,
   breadcrumb = title,
   activeId = "",
-  eyebrow = "DOCUMENTATION",
+  eyebrow,
   heading = title,
   lede,
   prev = null,
   next = null,
+  section,
+  group,
+  readTime,
+  covers,
+  headings = [],
 } = Astro.props;
 
+// Resolve eyebrow: use provided, fall back to section label
+const resolvedEyebrow = eyebrow || (section ? SECTIONS.find((s) => s.id === section)?.label : "DOCUMENTATION");
+
+// Build breadcrumb with section/group crumb
+const sectionLabel = section ? SECTIONS.find((s) => s.id === section)?.label : undefined;
 const breadcrumbs = [
   { label: "Docs", href: withBase("/docs/") },
+  ...(sectionLabel && sectionLabel !== "DOCUMENTATION" ? [{ label: sectionLabel }] : []),
   ...(breadcrumb === "Docs" ? [] : [{ label: breadcrumb }]),
 ];
 ---
 
 <DocsShell title={title} description={description} activeId={activeId} breadcrumbs={breadcrumbs}>
-  <main class="mx-auto flex w-full max-w-[780px] flex-col gap-6 p-5 lg:p-8">
-    <div class="flex flex-col gap-2">
-      <span class="font-primary text-[11px] font-semibold tracking-[0.8px] text-primary">{eyebrow}</span>
-      <h1 class="font-primary text-[26px] font-bold leading-[1.1] text-foreground lg:text-[30px]">
-        {heading}
-      </h1>
-      {lede && <p class="max-w-[640px] text-[15px] leading-[1.45] text-muted-foreground">{lede}</p>}
-    </div>
-    <slot />
-    {(prev || next) && <DocsPrevNext prev={prev} next={next} />}
-  </main>
+  <div class="flex w-full gap-8 p-5 lg:p-8">
+    {/* Main article column */}
+    <main class="flex min-w-0 flex-1 flex-col gap-6">
+      <div class="flex flex-col gap-2">
+        <span class="font-primary text-[11px] font-semibold tracking-[0.8px] text-primary">{resolvedEyebrow}</span>
+        <h1 class="font-primary text-[26px] font-bold leading-[1.1] text-foreground lg:text-[30px]">
+          {heading}
+        </h1>
+        {lede && <p class="max-w-[640px] text-[15px] leading-[1.45] text-muted-foreground">{lede}</p>}
+      </div>
+
+      {/* Metadata chips */}
+      {(group || readTime) && (
+        <DocsArticleMeta groupId={group} readTime={readTime} />
+      )}
+
+      <slot />
+
+      {/* Next guide strip (in-article) */}
+      {next && (
+        <div class="mt-4 border-t border-border pt-4">
+          <a href={next.href} class="group flex items-center justify-between gap-4">
+            <div class="flex flex-col gap-1">
+              <span class="text-[11px] text-muted-foreground">NEXT GUIDE</span>
+              <span class="font-primary text-sm font-medium text-foreground group-hover:text-primary">
+                {next.title}
+              </span>
+            </div>
+            <svg class="h-5 w-5 shrink-0 text-muted-foreground group-hover:text-primary" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </a>
+        </div>
+      )}
+
+      {(prev || next) && !next && <DocsPrevNext prev={prev} next={next} />}
+    </main>
+
+    {/* Right rail (desktop only) */}
+    <aside class="hidden w-[250px] shrink-0 flex-col gap-6 lg:flex">
+      {/* Table of contents */}
+      <DocsToc headings={headings} />
+
+      {/* Covers section */}
+      {covers && covers.length > 0 && (
+        <div class="rounded-m border border-border bg-card p-5">
+          <h3 class="mb-3 font-primary text-[11px] font-semibold tracking-[0.8px] text-primary">
+            COVERS
+          </h3>
+          <ul class="space-y-2 text-[13px] text-muted-foreground">
+            {covers.map((topic) => (
+              <li class="flex items-center gap-1.5">
+                <span class="inline-block h-1 w-1 rounded-full bg-primary"></span>
+                {topic}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Edit page card */}
+      <DocsEditPageCard slug={activeId} />
+    </aside>
+  </div>
 </DocsShell>

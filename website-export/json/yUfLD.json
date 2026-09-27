@@ -3,14 +3,14 @@
   "id": "yUfLD",
   "x": 0,
   "y": 81928,
-  "name": "Screen/Docs \u2014 Notification Sinks",
+  "name": "Screen/Docs — Notification Sinks",
   "theme": {
-    "H:Mode": "Dark"
+    "semantic": "dark"
   },
   "clip": true,
   "width": 1440,
   "height": 900,
-  "fill": "$H:--background",
+  "fill": "$background/background",
   "children": [
     {
       "id": "R39TY",
@@ -26,7 +26,7 @@
       "name": "Docs Main",
       "width": "fill_container",
       "height": "fill_container",
-      "fill": "$H:--background",
+      "fill": "$background/background",
       "layout": "vertical",
       "children": [
         {
@@ -66,7 +66,7 @@
                   "type": "text",
                   "id": "vGbn1",
                   "name": "Article Eyebrow",
-                  "fill": "#FF8400",
+                  "fill": "$accent/accent",
                   "content": "ALERTING",
                   "fontFamily": "JetBrains Mono",
                   "fontSize": 11,
@@ -77,7 +77,7 @@
                   "type": "text",
                   "id": "KRvTs",
                   "name": "Article Title",
-                  "fill": "#FFFFFF",
+                  "fill": "$foreground/foreground",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
                   "content": "Notification sinks",
@@ -90,7 +90,7 @@
                   "type": "text",
                   "id": "UEEak",
                   "name": "Article Lead",
-                  "fill": "#B8B9B6",
+                  "fill": "$muted",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
                   "content": "Route selected server and backup events to Discord, Slack, ntfy, email, or webhooks and prove delivery safely.",
@@ -107,82 +107,37 @@
                   "alignItems": "center",
                   "children": [
                     {
-                      "type": "frame",
-                      "id": "vC0Mb",
+                      "id": "DtwsU",
+                      "type": "ref",
+                      "ref": "NZPtq",
                       "name": "Meta Chip 0",
-                      "fill": "#FF84001F",
-                      "cornerRadius": 999,
-                      "stroke": "#FF840066",
-                      "strokeWidth": 1,
-                      "strokeAlignment": "inner",
-                      "padding": [
-                        5,
-                        9
-                      ],
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "pzl9G",
-                          "name": "Meta Chip Label 0",
-                          "fill": "#FF9D33",
-                          "content": "ADMIN GUIDE",
-                          "fontFamily": "JetBrains Mono",
-                          "fontSize": 9,
-                          "fontWeight": "600"
+                      "descendants": {
+                        "NLG8t": {
+                          "content": "ADMIN GUIDE"
                         }
-                      ]
+                      }
                     },
                     {
-                      "type": "frame",
-                      "id": "wOlxZ",
+                      "id": "KtI5j",
+                      "type": "ref",
+                      "ref": "EbSsA",
                       "name": "Meta Chip 1",
-                      "fill": "#1A1A1A",
-                      "cornerRadius": 999,
-                      "stroke": "#2E2E2E",
-                      "strokeWidth": 1,
-                      "strokeAlignment": "inner",
-                      "padding": [
-                        5,
-                        9
-                      ],
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "k2yG4",
-                          "name": "Meta Chip Label 1",
-                          "fill": "#B8B9B6",
-                          "content": "v0.2",
-                          "fontFamily": "JetBrains Mono",
-                          "fontSize": 9,
-                          "fontWeight": "600"
+                      "descendants": {
+                        "yb6zz": {
+                          "content": "v0.2"
                         }
-                      ]
+                      }
                     },
                     {
-                      "type": "frame",
-                      "id": "Fxt1b",
+                      "id": "ixdAh",
+                      "type": "ref",
+                      "ref": "EbSsA",
                       "name": "Meta Chip 2",
-                      "fill": "#1A1A1A",
-                      "cornerRadius": 999,
-                      "stroke": "#2E2E2E",
-                      "strokeWidth": 1,
-                      "strokeAlignment": "inner",
-                      "padding": [
-                        5,
-                        9
-                      ],
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "k1bA9",
-                          "name": "Meta Chip Label 2",
-                          "fill": "#B8B9B6",
-                          "content": "13 MIN",
-                          "fontFamily": "JetBrains Mono",
-                          "fontSize": 9,
-                          "fontWeight": "600"
+                      "descendants": {
+                        "yb6zz": {
+                          "content": "13 MIN"
                         }
-                      ]
+                      }
                     }
                   ]
                 },
@@ -191,9 +146,9 @@
                   "id": "V6Jk0",
                   "name": "Article Callout",
                   "width": "fill_container",
-                  "fill": "#FF84000F",
-                  "cornerRadius": 8,
-                  "stroke": "#FF84004D",
+                  "fill": "$accent/soft",
+                  "cornerRadius": "$radius/xl",
+                  "stroke": "$border/border",
                   "strokeWidth": 1,
                   "strokeAlignment": "inner",
                   "gap": 10,
@@ -211,13 +166,13 @@
                       "height": 16,
                       "icon": "bell-ring",
                       "library": "lucide",
-                      "fill": "#FF8400"
+                      "fill": "$accent/soft-foreground"
                     },
                     {
                       "type": "text",
                       "id": "OiZMl",
                       "name": "Article Callout Text",
-                      "fill": "#E7E7E4",
+                      "fill": "$accent/soft-foreground",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "A sink in Needs secret state is configured but not operational and must never be treated as an active alert route.",
@@ -239,7 +194,7 @@
                       "type": "text",
                       "id": "sqhc2",
                       "name": "Section Title 1",
-                      "fill": "#FFFFFF",
+                      "fill": "$foreground/foreground",
                       "content": "Add and secure a sink",
                       "fontFamily": "JetBrains Mono",
                       "fontSize": 17,
@@ -249,7 +204,7 @@
                       "type": "text",
                       "id": "gm2Ma",
                       "name": "Section Body 1",
-                      "fill": "#B8B9B6",
+                      "fill": "$muted",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "Choose provider and stable audience name, then store its credential in a labelled Secret.",
@@ -263,9 +218,9 @@
                       "id": "mkvP6",
                       "name": "Section List 1",
                       "width": "fill_container",
-                      "fill": "#1A1A1A",
-                      "cornerRadius": 8,
-                      "stroke": "#2E2E2E",
+                      "fill": "$surface/surface",
+                      "cornerRadius": "$radius/2xl",
+                      "stroke": "$border/border",
                       "strokeWidth": 1,
                       "strokeAlignment": "inner",
                       "layout": "vertical",
@@ -291,13 +246,13 @@
                               "height": 13,
                               "icon": "check",
                               "library": "lucide",
-                              "fill": "#FF8400"
+                              "fill": "$accent/accent"
                             },
                             {
                               "type": "text",
                               "id": "MopMp",
                               "name": "Section 1 Item Text 0",
-                              "fill": "#E7E7E4",
+                              "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
                               "content": "Supported types include Discord, Slack, ntfy, email, and webhook.",
@@ -323,13 +278,13 @@
                               "height": 13,
                               "icon": "check",
                               "library": "lucide",
-                              "fill": "#FF8400"
+                              "fill": "$accent/accent"
                             },
                             {
                               "type": "text",
                               "id": "Xy2Bx",
                               "name": "Section 1 Item Text 1",
-                              "fill": "#E7E7E4",
+                              "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
                               "content": "Keep credentials out of URLs, descriptions, Git, screenshots, and exports.",
@@ -355,13 +310,13 @@
                               "height": 13,
                               "icon": "check",
                               "library": "lucide",
-                              "fill": "#FF8400"
+                              "fill": "$accent/accent"
                             },
                             {
                               "type": "text",
                               "id": "KnPJY",
                               "name": "Section 1 Item Text 2",
-                              "fill": "#E7E7E4",
+                              "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
                               "content": "Grant only the event and provider scope required.",
@@ -387,7 +342,7 @@
                       "type": "text",
                       "id": "l0cMIi",
                       "name": "Section Title 2",
-                      "fill": "#FFFFFF",
+                      "fill": "$foreground/foreground",
                       "content": "Select events and test delivery",
                       "fontFamily": "JetBrains Mono",
                       "fontSize": 17,
@@ -397,7 +352,7 @@
                       "type": "text",
                       "id": "dBr7h",
                       "name": "Section Body 2",
-                      "fill": "#B8B9B6",
+                      "fill": "$muted",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "Subscribe to actionable failure and recovery events, then send a test through the real delivery path.",
@@ -411,9 +366,9 @@
                       "id": "fjaqV",
                       "name": "Section List 2",
                       "width": "fill_container",
-                      "fill": "#1A1A1A",
-                      "cornerRadius": 8,
-                      "stroke": "#2E2E2E",
+                      "fill": "$surface/surface",
+                      "cornerRadius": "$radius/2xl",
+                      "stroke": "$border/border",
                       "strokeWidth": 1,
                       "strokeAlignment": "inner",
                       "layout": "vertical",
@@ -439,13 +394,13 @@
                               "height": 13,
                               "icon": "check",
                               "library": "lucide",
-                              "fill": "#FF8400"
+                              "fill": "$accent/accent"
                             },
                             {
                               "type": "text",
                               "id": "JUJd9",
                               "name": "Section 2 Item Text 0",
-                              "fill": "#E7E7E4",
+                              "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
                               "content": "Use server unhealthy/recovered and backup/restore outcomes intentionally.",
@@ -471,13 +426,13 @@
                               "height": 13,
                               "icon": "check",
                               "library": "lucide",
-                              "fill": "#FF8400"
+                              "fill": "$accent/accent"
                             },
                             {
                               "type": "text",
                               "id": "RQlZg",
                               "name": "Section 2 Item Text 1",
-                              "fill": "#E7E7E4",
+                              "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
                               "content": "Confirm the test arrives with useful cluster/server context.",
@@ -503,13 +458,13 @@
                               "height": 13,
                               "icon": "check",
                               "library": "lucide",
-                              "fill": "#FF8400"
+                              "fill": "$accent/accent"
                             },
                             {
                               "type": "text",
                               "id": "qnbg5",
                               "name": "Section 2 Item Text 2",
-                              "fill": "#E7E7E4",
+                              "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
                               "content": "Repair Needs secret before relying on delivery.",
@@ -535,7 +490,7 @@
                       "type": "text",
                       "id": "IdcjO",
                       "name": "Section Title 3",
-                      "fill": "#FFFFFF",
+                      "fill": "$foreground/foreground",
                       "content": "Operate and troubleshoot",
                       "fontFamily": "JetBrains Mono",
                       "fontSize": 17,
@@ -545,7 +500,7 @@
                       "type": "text",
                       "id": "m65KM",
                       "name": "Section Body 3",
-                      "fill": "#B8B9B6",
+                      "fill": "$muted",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "Inspect dispatch results, endpoint health, authentication, quota, and permissions; rotate and retest credentials.",
@@ -559,9 +514,9 @@
                       "id": "u7DKHP",
                       "name": "Quick Reference",
                       "width": "fill_container",
-                      "fill": "#0D0D0D",
-                      "cornerRadius": 8,
-                      "stroke": "#2E2E2E",
+                      "fill": "$surface/tertiary",
+                      "cornerRadius": "$radius/xl",
+                      "stroke": "$border/border",
                       "strokeWidth": 1,
                       "strokeAlignment": "inner",
                       "layout": "vertical",
@@ -572,7 +527,7 @@
                           "type": "text",
                           "id": "q2C9vW",
                           "name": "Quick Reference Label",
-                          "fill": "#FF8400",
+                          "fill": "$accent/accent",
                           "content": "SINK ACCEPTANCE",
                           "fontFamily": "JetBrains Mono",
                           "fontSize": 9,
@@ -583,7 +538,7 @@
                           "type": "text",
                           "id": "D052n",
                           "name": "Quick Reference Line 1",
-                          "fill": "#FFFFFF",
+                          "fill": "$foreground/foreground",
                           "content": "01  Provider + stable name + credential-backed labelled Secret",
                           "fontFamily": "JetBrains Mono",
                           "fontSize": 11.5,
@@ -593,7 +548,7 @@
                           "type": "text",
                           "id": "C22Lq",
                           "name": "Quick Reference Line 2",
-                          "fill": "#FFFFFF",
+                          "fill": "$foreground/foreground",
                           "content": "02  Choose actionable events + Send test; Needs secret = broken",
                           "fontFamily": "JetBrains Mono",
                           "fontSize": 11.5,
@@ -603,7 +558,7 @@
                           "type": "text",
                           "id": "UOzMK",
                           "name": "Quick Reference Line 3",
-                          "fill": "#FFFFFF",
+                          "fill": "$foreground/foreground",
                           "content": "03  Diagnose dispatch/DNS/TLS/auth/quota; rotate, retest, audit",
                           "fontFamily": "JetBrains Mono",
                           "fontSize": 11.5,
@@ -618,7 +573,7 @@
                   "id": "r01BT",
                   "name": "Article Next Link",
                   "width": "fill_container",
-                  "stroke": "#2E2E2E",
+                  "stroke": "$border/border",
                   "strokeWidth": {
                     "top": 1
                   },
@@ -644,7 +599,7 @@
                           "type": "text",
                           "id": "F8DEyJ",
                           "name": "Next Link Eyebrow",
-                          "fill": "#737570",
+                          "fill": "$field/placeholder",
                           "content": "NEXT GUIDE",
                           "fontFamily": "Geist",
                           "fontSize": 10,
@@ -654,7 +609,7 @@
                           "type": "text",
                           "id": "Zsgqq",
                           "name": "Next Link Title",
-                          "fill": "#FFFFFF",
+                          "fill": "$foreground/foreground",
                           "content": "Platform settings",
                           "fontFamily": "JetBrains Mono",
                           "fontSize": 13,
@@ -670,7 +625,7 @@
                       "height": 15,
                       "icon": "arrow-right",
                       "library": "lucide",
-                      "fill": "#B8B9B6"
+                      "fill": "$muted"
                     }
                   ]
                 }
@@ -689,9 +644,9 @@
                   "id": "iLO3V",
                   "name": "Docs Table of Contents",
                   "width": "fill_container",
-                  "fill": "#171717",
-                  "cornerRadius": 10,
-                  "stroke": "#2E2E2E",
+                  "fill": "$surface/secondary",
+                  "cornerRadius": "$radius/2xl",
+                  "stroke": "$border/border",
                   "strokeWidth": 1,
                   "strokeAlignment": "inner",
                   "layout": "vertical",
@@ -702,7 +657,7 @@
                       "type": "text",
                       "id": "dtGTG",
                       "name": "TOC Label",
-                      "fill": "#737570",
+                      "fill": "$field/placeholder",
                       "content": "ON THIS PAGE",
                       "fontFamily": "JetBrains Mono",
                       "fontSize": 9,
@@ -725,13 +680,13 @@
                           "height": 12,
                           "icon": "hash",
                           "library": "lucide",
-                          "fill": "#FF8400"
+                          "fill": "$accent/accent"
                         },
                         {
                           "type": "text",
                           "id": "SRn1T",
                           "name": "TOC Text 0",
-                          "fill": "#FFFFFF",
+                          "fill": "$foreground/foreground",
                           "content": "Add sink",
                           "fontFamily": "Geist",
                           "fontSize": 12.5,
@@ -755,13 +710,13 @@
                           "height": 12,
                           "icon": "hash",
                           "library": "lucide",
-                          "fill": "#737570"
+                          "fill": "$field/placeholder"
                         },
                         {
                           "type": "text",
                           "id": "C2aA2",
                           "name": "TOC Text 1",
-                          "fill": "#B8B9B6",
+                          "fill": "$muted",
                           "content": "Events and test",
                           "fontFamily": "Geist",
                           "fontSize": 12.5,
@@ -785,13 +740,13 @@
                           "height": 12,
                           "icon": "hash",
                           "library": "lucide",
-                          "fill": "#737570"
+                          "fill": "$field/placeholder"
                         },
                         {
                           "type": "text",
                           "id": "ywfXz",
                           "name": "TOC Text 2",
-                          "fill": "#B8B9B6",
+                          "fill": "$muted",
                           "content": "Operations",
                           "fontFamily": "Geist",
                           "fontSize": 12.5,
@@ -803,7 +758,7 @@
                       "type": "rectangle",
                       "id": "cKgPR",
                       "name": "TOC Divider",
-                      "fill": "#2E2E2E",
+                      "fill": "$border/border",
                       "width": "fill_container",
                       "height": 1
                     },
@@ -811,7 +766,7 @@
                       "type": "text",
                       "id": "eZZOQ",
                       "name": "Coverage Label",
-                      "fill": "#737570",
+                      "fill": "$field/placeholder",
                       "content": "COVERS",
                       "fontFamily": "JetBrains Mono",
                       "fontSize": 9,
@@ -834,13 +789,13 @@
                           "height": 12,
                           "icon": "book-open",
                           "library": "lucide",
-                          "fill": "#8B8D88"
+                          "fill": "$field/placeholder"
                         },
                         {
                           "type": "text",
                           "id": "H1xxne",
                           "name": "Coverage Text 0",
-                          "fill": "#B8B9B6",
+                          "fill": "$muted",
                           "content": "Alerts",
                           "fontFamily": "Geist",
                           "fontSize": 12,
@@ -864,13 +819,13 @@
                           "height": 12,
                           "icon": "book-open",
                           "library": "lucide",
-                          "fill": "#8B8D88"
+                          "fill": "$field/placeholder"
                         },
                         {
                           "type": "text",
                           "id": "lFp3f",
                           "name": "Coverage Text 1",
-                          "fill": "#B8B9B6",
+                          "fill": "$muted",
                           "content": "Secrets",
                           "fontFamily": "Geist",
                           "fontSize": 12,
@@ -894,13 +849,13 @@
                           "height": 12,
                           "icon": "book-open",
                           "library": "lucide",
-                          "fill": "#8B8D88"
+                          "fill": "$field/placeholder"
                         },
                         {
                           "type": "text",
                           "id": "UV4wy",
                           "name": "Coverage Text 2",
-                          "fill": "#B8B9B6",
+                          "fill": "$muted",
                           "content": "Delivery",
                           "fontFamily": "Geist",
                           "fontSize": 12,
@@ -915,9 +870,9 @@
                   "id": "f9HpBM",
                   "name": "Edit Page Card",
                   "width": "fill_container",
-                  "fill": "#111111",
-                  "cornerRadius": 10,
-                  "stroke": "#2E2E2E",
+                  "fill": "$background/background",
+                  "cornerRadius": "$radius/3xl",
+                  "stroke": "$border/border",
                   "strokeWidth": 1,
                   "strokeAlignment": "inner",
                   "layout": "vertical",
@@ -928,7 +883,7 @@
                       "type": "text",
                       "id": "s3djNQ",
                       "name": "Edit Page Title",
-                      "fill": "#FFFFFF",
+                      "fill": "$foreground/foreground",
                       "content": "Improve this page",
                       "fontFamily": "JetBrains Mono",
                       "fontSize": 12,
@@ -938,7 +893,7 @@
                       "type": "text",
                       "id": "HKxbZ",
                       "name": "Edit Page Body",
-                      "fill": "#B8B9B6",
+                      "fill": "$muted",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "Found a gap? Open a docs issue or suggest an edit on GitHub.",
@@ -958,7 +913,7 @@
                           "type": "text",
                           "id": "QUMuh",
                           "name": "Edit Page Link Text",
-                          "fill": "#FF9D33",
+                          "fill": "$accent/soft-foreground",
                           "content": "Edit this page",
                           "fontFamily": "Geist",
                           "fontSize": 12,
@@ -972,7 +927,7 @@
                           "height": 12,
                           "icon": "external-link",
                           "library": "lucide",
-                          "fill": "#FF8400"
+                          "fill": "$accent/accent"
                         }
                       ]
                     }

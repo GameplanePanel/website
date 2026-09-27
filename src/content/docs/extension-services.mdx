@@ -1,42 +1,195 @@
 ---
-title: Extension Services
-description: Optional deployable services and the shared SSRF-guard library that harden and extend a Gameplane install.
-section: extending
-order: 2
+title: Extension services and shared libraries
+description: Develop optional processes and shared safety libraries without weakening core operator, API, or agent boundaries.
+section: develop
+group: component-guides
+order: 3
 icon: blocks
-sidebarLabel: Extension services
+eyebrow: DEVELOPER GUIDE
+readTime: 15 MIN
+covers: ["MCP", "Telemetry", "Safety"]
+next: public-website-development
 ---
 
-import IconList from "../../components/docs/IconList.astro";
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
 
-## Optional, opt-in
+Gameplane ships three optional deployable services plus one shared Go library, all opt-in and off by default. Each is independently deployable, testable, and packaged with its own Helm toggle.
 
-Beyond the core operator, API, and agent, Gameplane ships three optional deployable services plus one shared Go library. Every service defaults to off and is enabled by its own Helm toggle — none of them are on the critical path of running a game server.
+<DocsArticleMeta groupId="component-guides" readTime="15 MIN" />
 
-## netguard — a shared library, not a service
+<DocsCallout icon="shield-alert" title="Opt-in safety boundaries">
+Optional services remain opt-in and require independent least-privilege RBAC, bounded I/O, health, metrics, and secret-safe logs.
+</DocsCallout>
 
-`netguard` is **not deployed**; it's a Go package linked into the operator and the agent. It implements the SSRF egress dial-guard both use to keep outbound connections away from cluster-internal and cloud-metadata targets: the operator's `ModuleSource` `git`/`http` fetches and the agent's `capabilities.mods.install` downloads each dial through a `net.Dialer.Control` hook that blocks the destination at connect time — enforced late enough that DNS rebinding can't slip past a name-based allowlist. The operator's policy is intentionally more permissive than the agent's (self-hosted registries legitimately live on private/loopback addresses; mod-download URLs are less trusted) — see [Security](./security/) for the full threat model.
+## Services
 
-## audit-syslog-bridge
+Each extension solves a narrow integration problem without becoming a mutation backdoor.
 
-A schema-agnostic HTTP-JSON → syslog (RFC 5424) relay. It sits behind the API's audit webhook sink and forwards whatever JSON body it receives verbatim as the syslog message, so it works with any JSON webhook source, not just Gameplane's audit events. Enable it with `api.audit.webhook.syslogBridge.enabled=true`.
-
-## telemetry-receiver
-
-The collection endpoint for Gameplane's optional, anonymous, daily usage report — `{version, servers, templates}`, nothing else, sent only when an admin opts in. It exposes `/ingest` and a Prometheus `/metrics` endpoint; raw reports are never stored, only aggregated counters. Enable it with `api.telemetry.receiver.enabled=true`.
-
-## mcp-server
-
-A strictly **read-only** Model Context Protocol server for AI assistants: JSON-RPC 2.0 over stdio, no network port. It lists and gets the Gameplane CRDs plus Pods, Events, and pod logs, and offers a `propose_fix` tool that returns suggested YAML/`kubectl` text for a human to review — it has **no** create/update/patch/delete tool anywhere in it, enforced structurally and by RBAC. Enable it with `mcpServer.enabled=true`.
-
-<IconList
-  title="Enable flags at a glance"
-  icon="check"
+<DocsSectionList
   items={[
-    "audit-syslog-bridge — api.audit.webhook.syslogBridge.enabled",
-    "telemetry-receiver — api.telemetry.receiver.enabled",
-    "mcp-server — mcpServer.enabled",
+    {
+      icon: "arrow-right",
+      label: "audit-syslog-bridge",
+      text: "Relays authenticated audit JSON to syslog (RFC 5424) — a schema-agnostic HTTP-to-syslog relay that works with any JSON webhook source.",
+    },
+    {
+      icon: "activity",
+      label: "telemetry-receiver",
+      text: "Accepts the opt-in product telemetry path — anonymous daily usage reports ({version, servers, templates}) aggregated to Prometheus metrics, never stored raw.",
+    },
+    {
+      icon: "terminal",
+      label: "mcp-server",
+      text: "Exposes strictly read-only Kubernetes diagnostics over stdio — lists and gets Gameplane CRDs, Pods, Events, logs, and offers a propose_fix tool. No create/update/patch/delete, structurally and by RBAC.",
+    },
   ]}
 />
+
+### audit-syslog-bridge
+
+A schema-agnostic HTTP-JSON → syslog relay. It sits behind the API's audit webhook sink and forwards whatever JSON body it receives verbatim as the syslog message, so it works with any JSON webhook source, not just Gameplane's audit events.
+
+**Enable:** `api.audit.webhook.syslogBridge.enabled=true`
+
+**Transport recommendations:**
+- **TCP (default)** — recommended for audit trails; surfaces a dead collector as a `502` (→ API `failed`). UDP has no delivery confirmation and caps message size.
+- **TLS wrapping** — set `SYSLOG_TLS=true` for verified connections to the collector.
+
+**Authentication:** Set `AUTH_HEADER` to gate who may inject records (the chart wires it from the same Secret as the API's webhook token).
+
+### telemetry-receiver
+
+The collection endpoint for Gameplane's optional, anonymous, daily usage report — `{version, servers, templates}`, nothing else, sent only when an admin opts in via **Admin Settings → Telemetry → Send anonymous usage metrics**.
+
+**Enable:** `api.telemetry.receiver.enabled=true`
+
+**Endpoints:**
+- `/ingest` — `POST` to ingest a report; requires auth token if `AUTH_TOKEN` is set.
+- `/metrics` — Prometheus text format (counters by version, histograms of server/template counts).
+- `/healthz` — `GET` → `200 ok`.
+
+Raw reports are never stored, only aggregated counters. Version strings that don't parse are counted under `version="invalid"` to prevent label cardinality explosion.
+
+### mcp-server
+
+A strictly **read-only** [Model Context Protocol](https://modelcontextprotocol.io/) (MCP) server for AI assistants. It speaks JSON-RPC 2.0 over stdio (no network port) and lets an AI read cluster state — the 7 Gameplane CRDs, Pods, Events, and pod logs — and get a suggested fix as plain text (YAML and/or `kubectl` commands) for a human operator to review and run.
+
+**Read-only enforcement (three layers):**
+1. **Package boundary** — every MCP tool handler lives in `package main` with only read-shaped methods (List/Get/Watch); mutation methods (`Create`/`Update`/`Delete`/`Patch`/`Apply`) are unexported fields on the Kubernetes client.
+2. **RBAC** — the ClusterRole grants only `get`/`list`/`watch` verbs; there is no `create`/`update`/`patch`/`delete` in it. This is the authoritative backstop.
+3. **MCP annotations** — every registered tool carries `readOnlyHint: true` for visibility to MCP clients.
+
+**Enable:** `mcpServer.enabled=true`
+
+**Transport:**
+- Runs as a Deployment with no Service (no network port to expose).
+- Access via `kubectl exec -i deploy/gameplane-mcp-server -n gameplane-system -- /mcp-server serve` — each exec spawns an independent, isolated MCP session.
+- Works against local kubeconfig: `KUBECONFIG=~/.kube/config /mcp-server serve`.
+
+**RBAC blast radius:** The ClusterRole is cluster-wide (not namespaced), so it can read Pods, Events, and logs in *every* namespace, including `kube-system` and other workloads. Pod logs can surface application secrets. This is an accepted tradeoff (opt-in, write-free), but install it with that in mind.
+
+## Libraries
+
+Put cross-component invariants in small modules only when multiple callers require the same protection.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "shield",
+      label: "netguard",
+      text: "SSRF dial-guard protecting outbound dials from the operator and agent. Blocks cluster-internal and cloud-metadata targets at connect time, enforced late enough that DNS rebinding can't slip past.",
+    },
+    {
+      icon: "code",
+      label: "gameaction",
+      text: "Validates and renders module-declared commands. Enforces param-validation boundaries (hasControl rejects CR/LF and control bytes) so a param value can't chain a second console command.",
+    },
+    {
+      icon: "check",
+      label: "Best practice",
+      text: "Keep shared libraries narrow, deterministic, and heavily tested. Every caller (operator, agent, API) must independently validate before rendering or executing.",
+    },
+  ]}
+/>
+
+### netguard
+
+`netguard` is **not deployed**; it's a Go package linked into the operator and the agent. It implements the SSRF egress dial-guard both use to keep outbound connections away from cluster-internal and cloud-metadata targets:
+
+- **Operator** (`ModuleSource` `git`/`http` fetches) — intentionally more permissive; self-hosted registries legitimately live on private/loopback addresses.
+- **Agent** (`capabilities.mods.install` downloads) — stricter; mod-download URLs are less trusted.
+
+Both dial through a `net.Dialer.Control` hook that blocks the destination at connect time, enforced late enough that DNS rebinding can't slip past a name-based allowlist. See [Security](./security/) for the full threat model.
+
+### gameaction
+
+`gameaction` is a shared Go module that resolves parameters and validates console inputs against schemas, protecting both the agent (RCON commands) and the API (pod-attach stdin). It enforces the ONLY defense against console injection:
+
+- `Param.hasControl` rejects CR/LF and control bytes in string params, so a param value can't chain a second console command.
+- **Both the agent and the API must call `Resolve` before rendering.** The API validating first does not excuse the agent from validating — the agent's token-authed endpoint is its own trust boundary. Every transport validates.
+
+## Ship an extension
+
+Maintain an independent module, tests, image, chart opt-in, health/metrics, bounded I/O, and synchronized release wiring.
+
+<DocsQuickReference
+  label="EXTENSION CHECK"
+  items={[
+    "01  go test ./... inside the extension module",
+    "02  make image-audit-syslog image-telemetry-receiver image-mcp-server",
+    "03  Update Makefile + CI/release + chart values/templates together",
+  ]}
+/>
+
+### Module structure
+
+Each extension:
+- **Independent Go module** — its own `go.mod`, `go.sum`, and coverage gate (e.g., `audit-syslog-bridge/.testcoverage.yml`).
+- **Tests** — run in CI; coverage minimum (typically 70%–90%).
+- **Container image** — built and published in the same release pipeline as core components; tagged with the version.
+- **Chart opt-in** — a Helm boolean flag (e.g., `mcpServer.enabled`, `api.telemetry.receiver.enabled`) that gates whether the component is deployed.
+- **Health & metrics** — `/healthz` endpoint for readiness probes; Prometheus `/metrics` export where applicable.
+- **Bounded I/O** — timeouts, connection pooling, and retry limits to prevent wedging on a slow downstream.
+- **Secret-safe logs** — structured logging that never spills tokens, credentials, or API keys.
+
+### Release synchronization
+
+- Every extension release is synchronized with the main Gameplane version — e.g., extension features in `v0.3.0` land in the same tag.
+- CI gates each extension's tests and coverage; a failed test or coverage miss blocks the release.
+- Chart values and templates for the extension (enable toggles, env vars, resource requests/limits) ship in the same Helm chart release.
+
+### Enable an extension in your cluster
+
+Update your Helm values and upgrade:
+
+```yaml
+# values.yaml
+api:
+  audit:
+    webhook:
+      syslogBridge:
+        enabled: true
+        address: syslog.example:514
+        network: tcp  # or 'udp'
+        tls: false
+  telemetry:
+    receiver:
+      enabled: true
+mcpServer:
+  enabled: true
+  replicas: 1
+  resources:
+    requests: { cpu: 50m, memory: 32Mi }
+    limits:   { cpu: 200m, memory: 128Mi }
+```
+
+```bash
+helm upgrade --install gameplane oci://... -f values.yaml -n gameplane-system
+```
+
+---
 
 See the [CRD catalog](./crd-catalog/) for how these services fit around the CRDs they read or forward, and [Security](./security/) for the RBAC and network boundaries each one runs inside.

@@ -1,32 +1,223 @@
 ---
 title: Module Authoring
 description: Package game server templates as signed, versioned OCI artifacts with metadata, config schema, and capabilities.
-section: extending
-order: 1
+section: develop
+group: modules-sources
+order: 2
 icon: puzzle
+eyebrow: AUTHOR MODULES
+readTime: 12 MIN
+covers: ["Module format", "OCI artifacts", "Distribution", "Versioning", "Signing"]
 ---
 
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
 import CodeLabel from "../../components/docs/CodeLabel.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+
+<DocsArticleMeta groupId="modules-sources" readTime="12 MIN" />
+
+Package game server templates as signed, versioned OCI artifacts with metadata, config schema, and capabilities.
+
+A **module** is a reusable, versioned game-server blueprint distributed as an OCI artifact. Gameplane hosts modules in registries (official or self-hosted) and lets operators install them into the cluster as `GameTemplate` resources, so game servers on the platform inherit their console protocol, configuration schema, and operational capabilities — backup quiesce, player moderation, and lifecycle management — without any platform-code changes.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "file-code",
+      label: "Module Format",
+      text: "An OCI artifact with typed layers carrying template.yaml, module.yaml, README, and icon."
+    },
+    {
+      icon: "boxes",
+      label: "Source Layout",
+      text: "Directory structure on disk with YAML metadata and optional documentation."
+    },
+    {
+      icon: "package",
+      label: "Distribution & Installation",
+      text: "Register modules via ModuleSource, install them into the cluster as GameTemplate resources."
+    },
+    {
+      icon: "shield-check",
+      label: "Supply Chain Security",
+      text: "Cosign signing and digest pinning protect against tampering and tag drift."
+    },
+  ]}
+/>
 
 ## Source layout
 
-A module directory holds template.yaml, module.yaml, an optional README, and an optional icon.
+A module lives on disk as a directory holding four files:
 
-## Module metadata
+| File | Required | Purpose |
+|---|---|---|
+| `template.yaml` | yes | GameTemplate spec (Kubernetes resource) |
+| `module.yaml` | yes | Module metadata (name, version, display info) |
+| `README.md` | no | Operator documentation, rendered in the catalog |
+| `icon.png` | no | 256×256 PNG for the dashboard catalog tile |
 
-module.yaml declares name, version, game family, and summary — version must match the OCI tag.
+The official modules live in the standalone `gameplane-module` repository, checked out as the `modules/` submodule of the main Gameplane repo.
+
+## Module metadata (`module.yaml`)
+
+Every module declares its identity and display properties in `module.yaml`:
+
+```yaml
+apiVersion: gameplane.local/module/v1
+name: minecraft-java                         # required, DNS-1123 label
+displayName: Minecraft (Java Edition)        # required
+version: 1.0.0                               # required, semver, must match OCI tag
+game: minecraft-java                         # required, free-form game family
+categories: [Sandbox, Survival, Modded]      # optional, catalog grouping
+summary: Paper / Forge / Fabric / Vanilla    # required, one-line description
+homepage: https://minecraft.net              # optional
+license: MIT                                 # optional, SPDX identifier
+gameplaneMinVersion: 0.2.0                   # optional, operator version gate
+icon: icon.png                               # optional, filename in the bundle
+```
+
+**Key rules:**
+
+- `name` is the canonical module identifier within a source. Two modules with the same name in the same source are rejected.
+- `version` **must exactly match** the OCI tag the bundle is pushed under — drift is an error.
+- `game` is a free-form identifier grouping templates with the same upstream game, used for versioning schemes (e.g., `minecraft-java`, `minecraft-bedrock`).
+- `categories` appears as filter chips in the dashboard Modules catalog. Use official values (Sandbox, Survival, Shooter, etc.) or define your own — the dashboard auto-discovers new chips.
+- `gameplaneMinVersion` gates installation on operator version; a module that requires v0.3.0+ will refuse install on v0.2.0.
+
+## Bundling and distribution
+
+Modules are distributed as **OCI artifacts** — the same registries that hold your game-server images also hold module metadata. A bundle is a single artifact with typed layers.
+
+| Layer | Media type | Notes |
+|---|---|---|
+| `module.yaml` | `application/vnd.gameplane.module.metadata.v1+yaml` | Metadata, required |
+| `template.yaml` | `application/vnd.gameplane.module.template.v1+yaml` | Template spec, required |
+| `README.md` | `application/vnd.gameplane.module.readme.v1+md` | Operator docs, optional |
+| `icon.png` | `image/png` | Dashboard tile icon, optional |
+
+The artifact manifest is tagged as:
+
+```
+mediaType: application/vnd.oci.image.manifest.v1+json
+artifactType: application/vnd.gameplane.module.v1+json
+```
+
+Each layer carries an `org.opencontainers.image.title` annotation with its filename so the puller can identify layers by name.
+
+### Pushing a bundle
+
+Install `oras` (>= 1.2.0):
+
+```sh
+brew install oras                           # macOS
+# or download from https://oras.land/docs/installation
+```
+
+Then push a bundle from a module directory:
 
 <CodeLabel>PUSHING A BUNDLE</CodeLabel>
 
 ```sh
 oras push \
-    --artifact-type application/vnd.gameplane.module.v1+json \
-    ghcr.io/valgulnecron/gameplane-modules/minecraft-java:1.0.0 \
-    module.yaml template.yaml
+  --artifact-type application/vnd.gameplane.module.v1+json \
+  ghcr.io/valgulnecron/gameplane-modules/minecraft-java:1.0.0 \
+  module.yaml:application/vnd.gameplane.module.metadata.v1+yaml \
+  template.yaml:application/vnd.gameplane.module.template.v1+yaml \
+  README.md:application/vnd.gameplane.module.readme.v1+md \
+  icon.png:image/png
 ```
+
+Or use the Makefile target:
+
+```sh
+make modules-push REGISTRY=ghcr.io/valgulnecron/gameplane-modules
+```
+
+For private registries, log in once with `oras login <registry>`. The cluster uses a `kubernetes.io/dockerconfigjson` secret (`ModuleSource.spec.oci.pullSecretRef`) — the same credential format kubelet uses for private images.
 
 ## Bundle format
 
-An OCI artifact with named layers, tagged application/vnd.gameplane.module.v1+json.
+A module bundle is a single OCI artifact with named layers, tagged `application/vnd.gameplane.module.v1+json`.
 
-The full format spec — template.yaml schema, config surfaces, capabilities, and cosign signing — is in the [module authoring guide on GitHub](https://github.com/ValgulNecron/Gameplane/blob/main/docs/module-authoring.md).
+## Module sources
+
+Once a module is pushed to a registry, operators register it by creating a `ModuleSource` resource that tells Gameplane where to fetch modules:
+
+```yaml
+apiVersion: gameplane.local/v1alpha1
+kind: ModuleSource
+metadata: { name: community }
+spec:
+  type: oci                              # oci | git | http | local | upload
+  oci:
+    url: ghcr.io/valgulnecron/gameplane-modules
+    modules: [{ name: minecraft-java }]  # explicit list
+  verify:                                # optional, supply-chain security
+    key: { name: cosign-pub }            # signed with cosign ECDSA key
+  refreshInterval: 30m
+```
+
+ModuleSource types:
+
+| Type | Location | Versioning | Use case |
+|---|---|---|---|
+| `oci` | OCI registry | Semantic version tags | Official bundles, curated registries |
+| `git` | GitHub/GitLab repo | One stream: version field in module.yaml | Community contributions, gitops-style |
+| `http` | HTTP tar.gz/zip URL | One stream: content hash | Binary archives, air-gapped sources |
+| `local` | Pod mount path | One stream: content hash | On-cluster module directory |
+| `upload` | ConfigMaps in operator ns | One stream: content hash | Web dashboard uploads, manual entries |
+
+## Supply-chain security
+
+Two mechanisms protect modules from tampering:
+
+**Digest pinning** — `Module.spec.digest` pins the bundle to an exact OCI manifest digest:
+
+```yaml
+spec:
+  name: minecraft-java
+  version: 1.0.0
+  digest: sha256:abc123…  # install fails if the manifest changes
+```
+
+**Signature verification** (OCI sources only) — `ModuleSource.spec.verify` requires every bundle to carry a valid cosign signature:
+
+```yaml
+verify:
+  key: { name: cosign-pub }              # offline-verified ECDSA signature
+  requireTransparencyLog: false           # require Sigstore Rekor entry (optional)
+```
+
+The official Gameplane modules are signed with an ECDSA P-256 key and recorded in the public Sigstore Rekor transparency log. Keyed verification is **offline** — no network required — so air-gapped clusters can verify signed bundles without sigstore connectivity.
+
+<DocsCallout icon="shield-alert" title="Security best practice">
+Always pin digests and enable signature verification for production-critical modules. This prevents a compromised registry tag or mirror from pushing unexpected code into your cluster.
+</DocsCallout>
+
+## Installation and template materialization
+
+Modules appear in the **Modules** page of the dashboard once a source is configured. Click **Install** to create a `Module` resource:
+
+```yaml
+apiVersion: gameplane.local/v1alpha1
+kind: Module
+metadata: { name: minecraft-java }
+spec:
+  source: { name: default }  # ModuleSource name
+  name: minecraft-java       # module name within the source
+  version: 1.0.0             # omit to track the source's latest
+  digest: sha256:abc123…     # optional, enforce exact bundle
+```
+
+The operator pulls the artifact, parses `module.yaml` + `template.yaml`, and creates a `GameTemplate` owned by this `Module`. The template then appears in the "Create server" wizard. Deleting the `Module` deletes the `GameTemplate`, but the operator refuses deletion while servers still reference it.
+
+If a module fails to upgrade (pull error, bad signature, incompatible operator), the previous template keeps running unchanged; the `Module.status.previousVersion` field records the last-known-good version for safe rollback.
+
+## Next steps
+
+- **[Module Authoring Quickstart](./module-authoring-quickstart/)** — scaffold and author your first module using `gp-module` and the web dashboard.
+- **[GameTemplate Schema](./gametemplate-schema/)** — detailed reference for `template.yaml` fields: console protocols, config schema, capabilities, and mods.
+- **[Runtime Capabilities & Actions](./runtime-capabilities-actions/)** — add player moderation, backup quiesce, and operator buttons via template metadata.
+- **[Test, Publish & Sign Modules](./test-publish-sign-modules/)** — validate, package, and sign bundles for secure distribution.
+- **[Modules & Sources (Hub)](./modules-sources/)** — operator-side view of module registries and installation.

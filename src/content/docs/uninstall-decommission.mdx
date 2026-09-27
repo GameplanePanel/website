@@ -1,0 +1,233 @@
+---
+title: Uninstall and environment decommission
+description: Remove Gameplane without orphaning finalizers, deleting retained worlds, or leaving credentials and cloud resources behind.
+section: reference
+group: upgrades
+order: 4
+icon: info
+eyebrow: LIFECYCLE
+readTime: 17 MIN
+covers: ["Retention", "Finalizers", "Cleanup"]
+next: platform-disaster-recovery
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
+
+<DocsArticleMeta groupId="upgrades" readTime="17 MIN" />
+
+Removing Gameplane requires careful inventory, explicit decisions on every retained resource, and an uninstall order that respects Kubernetes finalizers and state cleanup. This guide covers retention decisions, safe uninstall sequencing, and verification that no orphaned resources or costs remain.
+
+<DocsCallout icon="shield-alert" title="Freeze GitOps and schedules before uninstalling">
+Freeze GitOps reconciliation and stop all automated schedules (BackupSchedule, webhook reconciliation, notification sinks) before uninstalling or they may recreate resources while the environment is being decommissioned.
+</DocsCallout>
+
+## Decide retention
+
+Inventory platform and game state, classify every item, and obtain owner approval before removal.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "layers",
+      label: "Inventory everything",
+      text: "Servers, PVCs, backups, database, audit logs, module sources, CRDs, and Secrets. Document which resources are live, archived, or candidates for export.",
+    },
+    {
+      icon: "copy",
+      label: "Classify each resource",
+      text: "For each item, decide: retain on-cluster (migrate, export first), export to backup system, migrate to new cluster, or destroy. Verify the final backup captures what must be preserved.",
+    },
+    {
+      icon: "info",
+      label: "Stop all automation",
+      text: "Disable BackupSchedule resources, pause webhook reconciliation, disable notification sinks, and freeze GitOps reconciliation (set `spec.suspend: true` on any Kustomization, HelmRelease, or equivalent).",
+    },
+  ]}
+/>
+
+### Backup and export
+
+Before removing anything, export or back up irreplaceable state:
+
+- **Game server worlds and data:** Trigger a final backup for every active GameServer via the Backup CRD or dashboard. Export `spec.storage.data` volumes to external storage if they contain user-created content or mods.
+- **Database:** Export audit logs and user credentials. For SQLite, the PVC `gameplane-api-data` contains `gameplane.db`; for PostgreSQL, dump the database with `pg_dump`.
+- **Module sources and credentials:** Document all `ModuleSource` custom registries and their pull-secret names (usually a `kubernetes.io/dockerconfigjson` Secret). Note the `uploads` ModuleSource (created when `uploadModuleSource.enabled` is set) and, if it points at a mounted directory via `operator.localModules.{hostPath,existingClaim}`, back up that volume before uninstalling.
+- **OIDC and webhook credentials:** Export `Secret` objects in `gameplane-system` namespace (OIDC client secret, webhook signing keys, etc.). These will be deleted when the namespace is removed.
+- **Cluster registrations:** Document any registered remote `Cluster` CRDs and their kubeconfig Secrets for re-registration or archival.
+
+### Retention approval
+
+Obtain sign-off from stakeholders (game owners, ops team, legal if applicable) on:
+
+1. Which worlds and save files are being destroyed vs. exported.
+2. How long backups are retained (restic repositories may continue accruing storage costs).
+3. Whether to retain the `gameplane-games` namespace and PVCs if migrating to a new cluster.
+
+## Uninstall safely
+
+Quiesce writes and remove controllers and dependencies in an order that allows finalizers to complete.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "info",
+      label: "Resolve stuck resources",
+      text: "If any resource is stuck: a stuck GameServer shows a Ready condition with reason PVCProvisioningFailed; a stuck Backup shows status.phase: Failed (check operator logs, retry if transient, or force-delete if orphaned).",
+    },
+    {
+      icon: "check",
+      label: "Make explicit decisions about CRDs",
+      text: "Decide what to do with each resource type: delete all GameServers and Backups (contents may be lost), archive Backup CRDs for later restore, or export all Game worlds first. For Module and ModuleSource: delete them, or keep them for re-import on a new cluster.",
+    },
+    {
+      icon: "info",
+      label: "Remove infrastructure layers",
+      text: "Delete RBAC ClusterRoles and ClusterRoleBindings, any custom NetworkPolicy objects in `gameplane-games`, Services and Ingress (especially the ingress.host entry and any associated TLS certificates), DNS records (remove CNAME or A records for gameplane.your-domain), and load-balancer Service type (if used) or equivalent.",
+    },
+  ]}
+/>
+
+### Uninstall sequence
+
+Follow this order to allow finalizers to complete:
+
+1. **Scale down controllers:** Set the operator and API Deployment replicas to 0.
+
+   ```bash
+   kubectl -n gameplane-system scale deployment gameplane-operator --replicas=0
+   kubectl -n gameplane-system scale deployment gameplane-api --replicas=0
+   ```
+
+   This stops new reconciliation loops. Existing in-flight operations (e.g., restic Backup Jobs) may still be running.
+
+2. **Wait for in-flight operations:** Wait for all Backup and Restore Jobs to complete or be explicitly deleted:
+
+   ```bash
+   kubectl -n gameplane-games get jobs
+   kubectl delete -n gameplane-games jobs --all
+   ```
+
+   Quiesce any running GameServers and wait for pods to stop (or delete them forcefully).
+
+3. **Delete GameServers and Backups:** GameServers delete immediately (no finalizer); a quiesced Backup (`spec.quiesce: true`) has a finalizer that blocks deletion until the operator sends the matching unquiesce — wait for that to clear before assuming it's stuck.
+
+   ```bash
+   kubectl delete gameservers -A
+   kubectl delete backups -A
+   ```
+
+   If a resource is stuck with `DeletionTimestamp` set, check the operator logs for the finalizer handler's error, fix the underlying issue (e.g., orphaned cloud resource), and remove the finalizer manually only as a last resort (only for Backups with `spec.quiesce: true`):
+
+   ```bash
+   kubectl patch backup <name> -p '{"metadata":{"finalizers":[]}}' --type merge
+   ```
+
+4. **Delete Helm release:** Uninstall the chart. CRDs are **not** deleted automatically (see "CRD retention" below).
+
+   ```bash
+   helm uninstall gameplane -n gameplane-system
+   ```
+
+5. **Delete the gameplane-system namespace:** Removes API, operator, and all related resources.
+
+   ```bash
+   kubectl delete namespace gameplane-system
+   ```
+
+6. **Delete or retain CRDs:** By default, Helm does not delete CRDs (to prevent accidental data loss). If you are decommissioning entirely:
+
+   ```bash
+   kubectl delete crd backups.gameplane.local backupschedules.gameplane.local \
+     clusters.gameplane.local gameservers.gameplane.local gametemplates.gameplane.local \
+     modules.gameplane.local modulesources.gameplane.local restores.gameplane.local
+   ```
+
+   If keeping the CRDs for re-import or recovery, skip this step. CRDs without resources consume minimal cluster resources.
+
+7. **Delete or retain the gameplane-games namespace:** If you are migrating GameServers to a new cluster and want to keep the PVCs and game data:
+
+   ```bash
+   # Keep PVCs and data, remove just the namespace and pods
+   kubectl delete namespace gameplane-games --grace-period=60
+   ```
+
+   Or, if decommissioning entirely:
+
+   ```bash
+   # Deletes all PVCs and game data
+   kubectl delete namespace gameplane-games
+   ```
+
+   If PVCs have a `retain` reclaim policy, they persist after namespace deletion and can be re-attached to another cluster.
+
+## Verify and close
+
+Check for orphaned resources and costs, revoke credentials, and archive restoration and destruction evidence.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "search",
+      label: "Check for orphaned resources",
+      text: "Search for leftover PersistentVolumeClaims (PVCs) and PersistentVolumes (PVs) in other namespaces, Services with external IPs or load-balancer addresses, Ingress objects, and unbound storage snapshots. Verify all are intentional or deleted.",
+    },
+    {
+      icon: "info",
+      label: "Verify cloud costs",
+      text: "If using cloud load balancers (AWS ELB/NLB, GCP Load Balancer, Azure LB), confirm they are released. Check cloud provider dashboards for lingering IP addresses, DNS entries, or snapshot retention that may incur ongoing charges.",
+    },
+    {
+      icon: "lock",
+      label: "Revoke credentials",
+      text: "Rotate or delete any remaining Secrets (OIDC client secrets, backup repository credentials, cloud provider access keys). Audit logs should record the credential revocation action.",
+    },
+    {
+      icon: "archive",
+      label: "Archive evidence",
+      text: "Save audit logs, final backups, exported worlds, and a summary of destroyed vs. retained resources. Document the decommission date, approver, and any recovery contacts in case a restore is requested later.",
+    },
+  ]}
+/>
+
+### Final verification checklist
+
+- [ ] No Gameplane pods running in `gameplane-system` or `gameplane-games` namespaces.
+- [ ] No Gameplane Services, Ingress, or NetworkPolicies remain in the cluster.
+- [ ] No Gameplane PersistentVolumeClaims or PersistentVolumes exist (or are retained intentionally with a documented reason).
+- [ ] Cloud provider load balancers and IP addresses associated with Gameplane are released.
+- [ ] DNS entries (e.g., `gameplane.your-domain`) are removed or point elsewhere.
+- [ ] All exported backups and audit logs are stored in long-term archive (S3, GCS, etc.).
+- [ ] Credentials have been rotated or revoked in the backup repository and any external systems (Slack for notifications, OIDC provider, etc.).
+- [ ] A final audit log or summary document is archived, signed, and timestamped.
+
+<DocsQuickReference
+  label="DECOMMISSION CHECKLIST"
+  items={[
+    "01  Freeze automation → verify export/backup → approve inventory",
+    "02  Uninstall controllers before resolving residual finalizers/resources",
+    "03  Verify no PVC/LB/DNS/Secret/repository remains; archive evidence",
+  ]}
+/>
+
+## Environment migration (alternative to full decommission)
+
+If you are shutting down Gameplane on one cluster but migrating to another:
+
+1. Export all GameServers to YAML via `kubectl get gameservers -A -o yaml > gameservers-export.yaml`.
+2. Export all Backup objects and their associated restic snapshots.
+3. On the new cluster, install Gameplane and re-import the GameServer definitions via `kubectl apply -f gameservers-export.yaml`.
+4. Re-register any `Cluster` resources and re-create `ModuleSource` configurations.
+5. Once verified on the new cluster, proceed with full decommission on the old cluster (steps above).
+
+This approach allows zero-downtime migration if you can tolerate a brief reconciliation window for the operator to re-create the StatefulSets and Services on the new cluster.
+
+---
+
+## See also
+
+- [Platform disaster recovery](./platform-disaster-recovery/) — recover from cluster failure, restore all data, and re-register multi-cluster topology.
+- [Backup & recovery](./backups-recovery/) — backup retention policies and restore procedures.
+- [Kubernetes maintenance](./kubernetes-maintenance/) — node drains, cluster upgrades, and capacity management.

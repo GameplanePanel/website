@@ -3,14 +3,14 @@
   "id": "ZwM1N",
   "x": 0,
   "y": 87628,
-  "name": "Screen/Docs \u2014 Web Dashboard Development",
+  "name": "Screen/Docs — Web Dashboard Development",
   "theme": {
-    "H:Mode": "Dark"
+    "semantic": "dark"
   },
   "clip": true,
   "width": 1440,
   "height": 900,
-  "fill": "$H:--background",
+  "fill": "$background/background",
   "children": [
     {
       "id": "m5pZW",
@@ -26,7 +26,7 @@
       "name": "Docs Main",
       "width": "fill_container",
       "height": "fill_container",
-      "fill": "$H:--background",
+      "fill": "$background/background",
       "layout": "vertical",
       "children": [
         {
@@ -66,7 +66,7 @@
                   "type": "text",
                   "id": "Bp7VC",
                   "name": "Article Eyebrow",
-                  "fill": "#FF8400",
+                  "fill": "$accent/accent",
                   "content": "DEVELOP",
                   "fontFamily": "JetBrains Mono",
                   "fontSize": 11,
@@ -77,7 +77,7 @@
                   "type": "text",
                   "id": "Ol3ec",
                   "name": "Article Title",
-                  "fill": "#FFFFFF",
+                  "fill": "$foreground/foreground",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
                   "content": "Web dashboard development",
@@ -90,7 +90,7 @@
                   "type": "text",
                   "id": "qr2Rn",
                   "name": "Article Lead",
-                  "fill": "#B8B9B6",
+                  "fill": "$muted",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
                   "content": "Extend the strict TypeScript dashboard without breaking query, routing, API, cluster, or design contracts.",
@@ -107,82 +107,37 @@
                   "alignItems": "center",
                   "children": [
                     {
-                      "type": "frame",
-                      "id": "mDYAI",
+                      "id": "NKxco",
+                      "type": "ref",
+                      "ref": "NZPtq",
                       "name": "Meta Chip 0",
-                      "fill": "#FF84001F",
-                      "cornerRadius": 999,
-                      "stroke": "#FF840066",
-                      "strokeWidth": 1,
-                      "strokeAlignment": "inner",
-                      "padding": [
-                        5,
-                        9
-                      ],
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "OOemo",
-                          "name": "Meta Chip Label 0",
-                          "fill": "#FF9D33",
-                          "content": "DEVELOPER GUIDE",
-                          "fontFamily": "JetBrains Mono",
-                          "fontSize": 9,
-                          "fontWeight": "600"
+                      "descendants": {
+                        "NLG8t": {
+                          "content": "DEVELOPER GUIDE"
                         }
-                      ]
+                      }
                     },
                     {
-                      "type": "frame",
-                      "id": "TDOCB",
+                      "id": "PYQa6",
+                      "type": "ref",
+                      "ref": "EbSsA",
                       "name": "Meta Chip 1",
-                      "fill": "#1A1A1A",
-                      "cornerRadius": 999,
-                      "stroke": "#2E2E2E",
-                      "strokeWidth": 1,
-                      "strokeAlignment": "inner",
-                      "padding": [
-                        5,
-                        9
-                      ],
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "q1lm1",
-                          "name": "Meta Chip Label 1",
-                          "fill": "#B8B9B6",
-                          "content": "v0.2",
-                          "fontFamily": "JetBrains Mono",
-                          "fontSize": 9,
-                          "fontWeight": "600"
+                      "descendants": {
+                        "yb6zz": {
+                          "content": "v0.2"
                         }
-                      ]
+                      }
                     },
                     {
-                      "type": "frame",
-                      "id": "c5r4u",
+                      "id": "H5VQ8n",
+                      "type": "ref",
+                      "ref": "EbSsA",
                       "name": "Meta Chip 2",
-                      "fill": "#1A1A1A",
-                      "cornerRadius": 999,
-                      "stroke": "#2E2E2E",
-                      "strokeWidth": 1,
-                      "strokeAlignment": "inner",
-                      "padding": [
-                        5,
-                        9
-                      ],
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "DzHfw",
-                          "name": "Meta Chip Label 2",
-                          "fill": "#B8B9B6",
-                          "content": "17 MIN",
-                          "fontFamily": "JetBrains Mono",
-                          "fontSize": 9,
-                          "fontWeight": "600"
+                      "descendants": {
+                        "yb6zz": {
+                          "content": "17 MIN"
                         }
-                      ]
+                      }
                     }
                   ]
                 },
@@ -191,9 +146,9 @@
                   "id": "XV9Hx",
                   "name": "Article Callout",
                   "width": "fill_container",
-                  "fill": "#FF84000F",
-                  "cornerRadius": 8,
-                  "stroke": "#FF84004D",
+                  "fill": "$accent/soft",
+                  "cornerRadius": "$radius/xl",
+                  "stroke": "$border/border",
                   "strokeWidth": 1,
                   "strokeAlignment": "inner",
                   "gap": 10,
@@ -211,13 +166,13 @@
                       "height": 16,
                       "icon": "monitor-code",
                       "library": "lucide",
-                      "fill": "#FF8400"
+                      "fill": "$accent/soft-foreground"
                     },
                     {
                       "type": "text",
                       "id": "kNBKL",
                       "name": "Article Callout Text",
-                      "fill": "#E7E7E4",
+                      "fill": "$accent/soft-foreground",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "Every cache and request that varies by cluster must include or clear cluster scope to prevent cross-cluster stale data.",
@@ -239,7 +194,7 @@
                       "type": "text",
                       "id": "Ox7g1",
                       "name": "Section Title 1",
-                      "fill": "#FFFFFF",
+                      "fill": "$foreground/foreground",
                       "content": "Application architecture",
                       "fontFamily": "JetBrains Mono",
                       "fontSize": 17,
@@ -249,7 +204,7 @@
                       "type": "text",
                       "id": "P3g5HA",
                       "name": "Section Body 1",
-                      "fill": "#B8B9B6",
+                      "fill": "$muted",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "React and Vite use explicit routing, query caches, reusable components, Monaco, and terminal primitives.",
@@ -263,9 +218,9 @@
                       "id": "wZSvl",
                       "name": "Section List 1",
                       "width": "fill_container",
-                      "fill": "#1A1A1A",
-                      "cornerRadius": 8,
-                      "stroke": "#2E2E2E",
+                      "fill": "$surface/surface",
+                      "cornerRadius": "$radius/2xl",
+                      "stroke": "$border/border",
                       "strokeWidth": 1,
                       "strokeAlignment": "inner",
                       "layout": "vertical",
@@ -291,13 +246,13 @@
                               "height": 13,
                               "icon": "check",
                               "library": "lucide",
-                              "fill": "#FF8400"
+                              "fill": "$accent/accent"
                             },
                             {
                               "type": "text",
                               "id": "THLxE",
                               "name": "Section 1 Item Text 0",
-                              "fill": "#E7E7E4",
+                              "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
                               "content": "Routes live in web/src/routes and the explicit router tree.",
@@ -323,13 +278,13 @@
                               "height": 13,
                               "icon": "check",
                               "library": "lucide",
-                              "fill": "#FF8400"
+                              "fill": "$accent/accent"
                             },
                             {
                               "type": "text",
                               "id": "v5RlqP",
                               "name": "Section 1 Item Text 1",
-                              "fill": "#E7E7E4",
+                              "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
                               "content": "Shared request and domain types live under web/src/types and lib.",
@@ -355,13 +310,13 @@
                               "height": 13,
                               "icon": "check",
                               "library": "lucide",
-                              "fill": "#FF8400"
+                              "fill": "$accent/accent"
                             },
                             {
                               "type": "text",
                               "id": "WQiFa",
                               "name": "Section 1 Item Text 2",
-                              "fill": "#E7E7E4",
+                              "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
                               "content": "TanStack Query owns server state; Monaco and xterm handle dense tools.",
@@ -387,7 +342,7 @@
                       "type": "text",
                       "id": "QDWmX",
                       "name": "Section Title 2",
-                      "fill": "#FFFFFF",
+                      "fill": "$foreground/foreground",
                       "content": "API and state contracts",
                       "fontFamily": "JetBrains Mono",
                       "fontSize": 17,
@@ -397,7 +352,7 @@
                       "type": "text",
                       "id": "g7iQ2",
                       "name": "Section Body 2",
-                      "fill": "#B8B9B6",
+                      "fill": "$muted",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "The shared request layer owns credentials, CSRF, errors, cluster selection, and streaming reconnect behavior.",
@@ -411,9 +366,9 @@
                       "id": "jiNjD",
                       "name": "Section List 2",
                       "width": "fill_container",
-                      "fill": "#1A1A1A",
-                      "cornerRadius": 8,
-                      "stroke": "#2E2E2E",
+                      "fill": "$surface/surface",
+                      "cornerRadius": "$radius/2xl",
+                      "stroke": "$border/border",
                       "strokeWidth": 1,
                       "strokeAlignment": "inner",
                       "layout": "vertical",
@@ -439,13 +394,13 @@
                               "height": 13,
                               "icon": "check",
                               "library": "lucide",
-                              "fill": "#FF8400"
+                              "fill": "$accent/accent"
                             },
                             {
                               "type": "text",
                               "id": "RJO3f",
                               "name": "Section 2 Item Text 0",
-                              "fill": "#E7E7E4",
+                              "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
                               "content": "api<T> injects credentials, CSRF on mutations, and uniform APIError.",
@@ -471,13 +426,13 @@
                               "height": 13,
                               "icon": "check",
                               "library": "lucide",
-                              "fill": "#FF8400"
+                              "fill": "$accent/accent"
                             },
                             {
                               "type": "text",
                               "id": "Ye11I",
                               "name": "Section 2 Item Text 1",
-                              "fill": "#E7E7E4",
+                              "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
                               "content": "Multipart and raw file requests add csrfHeaders explicitly.",
@@ -503,13 +458,13 @@
                               "height": 13,
                               "icon": "check",
                               "library": "lucide",
-                              "fill": "#FF8400"
+                              "fill": "$accent/accent"
                             },
                             {
                               "type": "text",
                               "id": "WOVC7",
                               "name": "Section 2 Item Text 2",
-                              "fill": "#E7E7E4",
+                              "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
                               "content": "SSE/WebSocket clients cancel and reconnect visibly on scope changes.",
@@ -535,7 +490,7 @@
                       "type": "text",
                       "id": "yBtRr",
                       "name": "Section Title 3",
-                      "fill": "#FFFFFF",
+                      "fill": "$foreground/foreground",
                       "content": "Develop and verify",
                       "fontFamily": "JetBrains Mono",
                       "fontSize": 17,
@@ -545,7 +500,7 @@
                       "type": "text",
                       "id": "Eoqjs",
                       "name": "Section Body 3",
-                      "fill": "#B8B9B6",
+                      "fill": "$muted",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "Use strict build, lint, Vitest/MSW, and the appropriate Playwright mode; UI changes cite Pencil node IDs.",
@@ -559,9 +514,9 @@
                       "id": "k23Bi",
                       "name": "Quick Reference",
                       "width": "fill_container",
-                      "fill": "#0D0D0D",
-                      "cornerRadius": 8,
-                      "stroke": "#2E2E2E",
+                      "fill": "$surface/tertiary",
+                      "cornerRadius": "$radius/xl",
+                      "stroke": "$border/border",
                       "strokeWidth": 1,
                       "strokeAlignment": "inner",
                       "layout": "vertical",
@@ -572,7 +527,7 @@
                           "type": "text",
                           "id": "JLkTG",
                           "name": "Quick Reference Label",
-                          "fill": "#FF8400",
+                          "fill": "$accent/accent",
                           "content": "WEB CHECK",
                           "fontFamily": "JetBrains Mono",
                           "fontSize": 9,
@@ -583,7 +538,7 @@
                           "type": "text",
                           "id": "nxNcl",
                           "name": "Quick Reference Line 1",
-                          "fill": "#FFFFFF",
+                          "fill": "$foreground/foreground",
                           "content": "01  cd web && npm ci && npm run dev",
                           "fontFamily": "JetBrains Mono",
                           "fontSize": 11.5,
@@ -593,7 +548,7 @@
                           "type": "text",
                           "id": "p4bvXj",
                           "name": "Quick Reference Line 2",
-                          "fill": "#FFFFFF",
+                          "fill": "$foreground/foreground",
                           "content": "02  npm test && npm run lint && npm run build",
                           "fontFamily": "JetBrains Mono",
                           "fontSize": 11.5,
@@ -603,7 +558,7 @@
                           "type": "text",
                           "id": "B1q1e",
                           "name": "Quick Reference Line 3",
-                          "fill": "#FFFFFF",
+                          "fill": "$foreground/foreground",
                           "content": "03  npm run test:e2e:mock   # live: make test-web-e2e-live",
                           "fontFamily": "JetBrains Mono",
                           "fontSize": 11.5,
@@ -618,7 +573,7 @@
                   "id": "VwA66",
                   "name": "Article Next Link",
                   "width": "fill_container",
-                  "stroke": "#2E2E2E",
+                  "stroke": "$border/border",
                   "strokeWidth": {
                     "top": 1
                   },
@@ -644,7 +599,7 @@
                           "type": "text",
                           "id": "sERMT",
                           "name": "Next Link Eyebrow",
-                          "fill": "#737570",
+                          "fill": "$field/placeholder",
                           "content": "NEXT GUIDE",
                           "fontFamily": "Geist",
                           "fontSize": 10,
@@ -654,7 +609,7 @@
                           "type": "text",
                           "id": "fvJbw",
                           "name": "Next Link Title",
-                          "fill": "#FFFFFF",
+                          "fill": "$foreground/foreground",
                           "content": "API and realtime development",
                           "fontFamily": "JetBrains Mono",
                           "fontSize": 13,
@@ -670,7 +625,7 @@
                       "height": 15,
                       "icon": "arrow-right",
                       "library": "lucide",
-                      "fill": "#B8B9B6"
+                      "fill": "$muted"
                     }
                   ]
                 }
@@ -689,9 +644,9 @@
                   "id": "F1ukr",
                   "name": "Docs Table of Contents",
                   "width": "fill_container",
-                  "fill": "#171717",
-                  "cornerRadius": 10,
-                  "stroke": "#2E2E2E",
+                  "fill": "$surface/secondary",
+                  "cornerRadius": "$radius/2xl",
+                  "stroke": "$border/border",
                   "strokeWidth": 1,
                   "strokeAlignment": "inner",
                   "layout": "vertical",
@@ -702,7 +657,7 @@
                       "type": "text",
                       "id": "jTakB",
                       "name": "TOC Label",
-                      "fill": "#737570",
+                      "fill": "$field/placeholder",
                       "content": "ON THIS PAGE",
                       "fontFamily": "JetBrains Mono",
                       "fontSize": 9,
@@ -725,13 +680,13 @@
                           "height": 12,
                           "icon": "hash",
                           "library": "lucide",
-                          "fill": "#FF8400"
+                          "fill": "$accent/accent"
                         },
                         {
                           "type": "text",
                           "id": "n7jHde",
                           "name": "TOC Text 0",
-                          "fill": "#FFFFFF",
+                          "fill": "$foreground/foreground",
                           "content": "Architecture",
                           "fontFamily": "Geist",
                           "fontSize": 12.5,
@@ -755,13 +710,13 @@
                           "height": 12,
                           "icon": "hash",
                           "library": "lucide",
-                          "fill": "#737570"
+                          "fill": "$field/placeholder"
                         },
                         {
                           "type": "text",
                           "id": "qPLZg",
                           "name": "TOC Text 1",
-                          "fill": "#B8B9B6",
+                          "fill": "$muted",
                           "content": "State contracts",
                           "fontFamily": "Geist",
                           "fontSize": 12.5,
@@ -785,13 +740,13 @@
                           "height": 12,
                           "icon": "hash",
                           "library": "lucide",
-                          "fill": "#737570"
+                          "fill": "$field/placeholder"
                         },
                         {
                           "type": "text",
                           "id": "JlkR2",
                           "name": "TOC Text 2",
-                          "fill": "#B8B9B6",
+                          "fill": "$muted",
                           "content": "Verification",
                           "fontFamily": "Geist",
                           "fontSize": 12.5,
@@ -803,7 +758,7 @@
                       "type": "rectangle",
                       "id": "j6RrAJ",
                       "name": "TOC Divider",
-                      "fill": "#2E2E2E",
+                      "fill": "$border/border",
                       "width": "fill_container",
                       "height": 1
                     },
@@ -811,7 +766,7 @@
                       "type": "text",
                       "id": "z0oWSq",
                       "name": "Coverage Label",
-                      "fill": "#737570",
+                      "fill": "$field/placeholder",
                       "content": "COVERS",
                       "fontFamily": "JetBrains Mono",
                       "fontSize": 9,
@@ -834,13 +789,13 @@
                           "height": 12,
                           "icon": "book-open",
                           "library": "lucide",
-                          "fill": "#8B8D88"
+                          "fill": "$field/placeholder"
                         },
                         {
                           "type": "text",
                           "id": "xKG2O",
                           "name": "Coverage Text 0",
-                          "fill": "#B8B9B6",
+                          "fill": "$muted",
                           "content": "React",
                           "fontFamily": "Geist",
                           "fontSize": 12,
@@ -864,13 +819,13 @@
                           "height": 12,
                           "icon": "book-open",
                           "library": "lucide",
-                          "fill": "#8B8D88"
+                          "fill": "$field/placeholder"
                         },
                         {
                           "type": "text",
                           "id": "C6CYNz",
                           "name": "Coverage Text 1",
-                          "fill": "#B8B9B6",
+                          "fill": "$muted",
                           "content": "Queries",
                           "fontFamily": "Geist",
                           "fontSize": 12,
@@ -894,13 +849,13 @@
                           "height": 12,
                           "icon": "book-open",
                           "library": "lucide",
-                          "fill": "#8B8D88"
+                          "fill": "$field/placeholder"
                         },
                         {
                           "type": "text",
                           "id": "NbdEB",
                           "name": "Coverage Text 2",
-                          "fill": "#B8B9B6",
+                          "fill": "$muted",
                           "content": "Playwright",
                           "fontFamily": "Geist",
                           "fontSize": 12,
@@ -915,9 +870,9 @@
                   "id": "WTA67",
                   "name": "Edit Page Card",
                   "width": "fill_container",
-                  "fill": "#111111",
-                  "cornerRadius": 10,
-                  "stroke": "#2E2E2E",
+                  "fill": "$background/background",
+                  "cornerRadius": "$radius/3xl",
+                  "stroke": "$border/border",
                   "strokeWidth": 1,
                   "strokeAlignment": "inner",
                   "layout": "vertical",
@@ -928,7 +883,7 @@
                       "type": "text",
                       "id": "nXZDN",
                       "name": "Edit Page Title",
-                      "fill": "#FFFFFF",
+                      "fill": "$foreground/foreground",
                       "content": "Improve this page",
                       "fontFamily": "JetBrains Mono",
                       "fontSize": 12,
@@ -938,7 +893,7 @@
                       "type": "text",
                       "id": "RsRor",
                       "name": "Edit Page Body",
-                      "fill": "#B8B9B6",
+                      "fill": "$muted",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "Found a gap? Open a docs issue or suggest an edit on GitHub.",
@@ -958,7 +913,7 @@
                           "type": "text",
                           "id": "vIjpQ",
                           "name": "Edit Page Link Text",
-                          "fill": "#FF9D33",
+                          "fill": "$accent/soft-foreground",
                           "content": "Edit this page",
                           "fontFamily": "Geist",
                           "fontSize": 12,
@@ -972,7 +927,7 @@
                           "height": 12,
                           "icon": "external-link",
                           "library": "lucide",
-                          "fill": "#FF8400"
+                          "fill": "$accent/accent"
                         }
                       ]
                     }

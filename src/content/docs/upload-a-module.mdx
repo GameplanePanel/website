@@ -1,0 +1,132 @@
+---
+title: Upload a Module
+description: Publish a local module bundle into an upload source, validate synchronization, and install the exact version safely.
+section: develop
+group: modules-sources
+order: 7
+icon: upload
+eyebrow: EXTEND
+readTime: 13 MIN
+covers: ["Upload source", "Digest", "Canary"]
+next: mod-registry-credentials
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
+
+<DocsArticleMeta groupId="modules-sources" readTime="13 MIN" />
+
+Publish a local module bundle into an upload source, validate synchronization, and install the exact version safely.
+
+<DocsCallout icon="shield-alert" title="Module bundles are executable infrastructure content">
+  Reject an unexpected digest or policy state. Verify provenance before canary installation.
+</DocsCallout>
+
+## Prepare source and bundle
+
+Only an **Upload ModuleSource** accepts a local archive; validate the bundle before it leaves authoring.
+
+<DocsSectionList
+  items={[
+    { icon: "folder-archive", label: "Configure at least one source of type Upload", text: "An Upload ModuleSource stores bundles as labeled ConfigMaps in the operator namespace." },
+    { icon: "package", label: "Package metadata, template, assets, schema, and version", text: "Bundle as .tar.gz: module.yaml, template.yaml, README.md, icon.png." },
+    { icon: "check", label: "Validate identity, semver, capabilities, images", text: "Run gp-module validate --strict before uploading." },
+  ]}
+/>
+
+### Validate before uploading
+
+Offline validation ensures the module is complete, signed correctly, and ready for publication:
+
+```sh
+gp-module validate path/to/bundle --strict
+```
+
+The validator checks:
+- icon is ≤512 KiB (gp-module validate warns above this; non-blocking unless run with --strict)
+- gp-module validate additionally warns if the total bundle exceeds 1 MiB (also non-blocking unless --strict)
+- the upload API itself hard-rejects any bundle over 900 KiB regardless of validator warnings — this is the limit that actually blocks an upload, so keep bundles well under it even though the CLI's own warning threshold is higher.
+
+### Create a Module resource
+
+After uploading and syncing, reference the exact digest in your Module manifest:
+
+```yaml
+apiVersion: gameplane.local/v1alpha1
+kind: Module
+metadata:
+  name: minecraft-java-main
+spec:
+  name: minecraft-java
+  version: 1.20.4
+  digest: sha256:abcdef1234567890...
+  source:
+    name: upload-source
+```
+
+## Upload and synchronize
+
+Choose the upload source and archive, then verify catalog identity and provenance after synchronization.
+
+<DocsSectionList
+  items={[
+    { icon: "download", label: "Open Modules → Upload module and select the target source", text: "In the Gameplane web dashboard, navigate to Modules, click Upload module, select the target Upload ModuleSource, and choose the validated .tar.gz bundle." },
+    { icon: "refresh-cw", label: "Wait for sync and locate the exact name and version", text: "The operator's ModuleSource controller re-indexes uploaded bundles on a configurable interval. The bundle is stored as a labeled ConfigMap and the catalog is refreshed." },
+    { icon: "check", label: "Confirm source, digest, verification, policy, and capability summary", text: "Click the module in the catalog to view name, version, source, digest, verification status, policy, and capabilities." },
+  ]}
+/>
+
+## Install, canary, and replace
+
+Install the exact version, test every declared capability, and publish a new version instead of mutating a released archive.
+
+<DocsSectionList
+  items={[
+    { icon: "lock", label: "Install the exact version", text: "Create a Module resource that explicitly pins the name, version, and digest. The operator verifies the digest before materializing a GameTemplate." },
+    { icon: "check", label: "Test every declared capability", text: "Console connect, port mappings, environment variables, storage, and lifecycle probes. Document any failures and roll back if needed." },
+    { icon: "refresh-cw", label: "Publish a new version instead of mutating", text: "Increment version in module.yaml, revalidate offline, upload as separate .tar.gz, and create new Module with new digest. Canary the new version in parallel." },
+  ]}
+/>
+
+### Test every declared capability
+
+After installing the Module, verify each capability that the module advertises:
+
+- **Console connect:** Can you open a console session and send commands?
+- **Port mappings:** Are declared ports accessible from the network?
+- **Environment variables:** Do env vars inject correctly into the game process?
+- **Storage:** Are volume mounts readable and writable?
+- **Lifecycle probes:** Do startup, liveness, and readiness probes respond correctly?
+
+Document any failures; if critical capabilities fail, roll back to the previous release immediately.
+
+### Version bumps and canary workflow
+
+Never mutate a released module archive. Instead, version-bump and canary in parallel:
+
+1. Increment `version` in `module.yaml`
+2. Run `gp-module validate path/to/bundle --strict` offline
+3. Upload the new `.tar.gz` as a separate bundle
+4. Create a new Module resource with the new digest
+5. Install the new Module on a test server and run through the capability test again
+6. Keep the previous stable Module installed on production servers until the new version proves stable
+7. Graduate the new version to production only after successful parallel testing
+
+<DocsQuickReference
+  label="UPLOAD FLOW"
+  items={[
+    "01  Upload ModuleSource + validated .tar.gz bundle",
+    "02  Verify name, version, source, digest, policy, capabilities after sync",
+    "03  Install exact version → canary all capabilities → keep rollback release",
+  ]}
+/>
+
+---
+
+## See also
+
+- [Module Authoring](./module-authoring/) — author, scaffold, and validate modules end-to-end
+- [Test, Publish & Sign Modules](./test-publish-sign-modules/) — publish to OCI registries and sign with cosign
+- [Mod Registry Credentials](./mod-registry-credentials/) — configure external module sources (OCI, git, http, local)

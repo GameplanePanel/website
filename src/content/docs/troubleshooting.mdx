@@ -1,0 +1,67 @@
+---
+title: "Troubleshooting index"
+description: "Triage failed starts, storage and network faults, login problems, backup failures, and module synchronization with one evidence-first workflow."
+section: "reference"
+group: "troubleshooting"
+order: 1
+icon: "life-buoy"
+eyebrow: "RUNBOOKS"
+readTime: "20 MIN"
+covers: ["Runbooks", "Diagnostics", "Support"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
+
+Triage failed starts, storage and network faults, login problems, backup failures, and module synchronization with one evidence-first workflow.
+
+<DocsArticleMeta groupId="troubleshooting" readTime="20 MIN" />
+
+<DocsCallout icon="life-buoy" title="Capture evidence before making changes">
+  Capture the resource UID, cluster, namespace, time range, events, conditions, and relevant logs before changing state.
+</DocsCallout>
+
+## Build the evidence bundle
+
+Start with desired spec and observed status, then correlate events, workload state, component logs, audit records, and recent changes.
+
+<DocsSectionList
+  items={[
+    { icon: "check", label: "Record timestamps", text: "Record exact timestamps and timezone for every exported source." },
+    { icon: "check", label: "Separate logs", text: "Separate Gameplane API/operator logs from game-container failures." },
+    { icon: "check", label: "Preserve first error", text: "Preserve the first error; later retries often hide the original cause." },
+  ]}
+/>
+
+## Common failure families
+
+Classify the symptom before choosing a runbook: Pending, image pull, crash loop, probe, volume, service, auth, backup, or source sync.
+
+<DocsSectionList
+  items={[
+    { icon: "check", label: "Pending", text: "Usually points to capacity, placement, PVC, or scheduling policy." },
+    { icon: "check", label: "No console output", text: "Can mean the container never started or the game stream isn't ready." },
+    { icon: "check", label: "Restore and module failures", text: "Require destination/source credentials and controller logs." },
+  ]}
+/>
+
+## Escalate with context
+
+When local checks are exhausted, share a minimal reproducible case without secrets, tokens, world data, or player information.
+
+<DocsQuickReference
+  label="TRIAGE ORDER"
+  items={[
+    "01  Spec → status/conditions → events → workload and PVC/service state",
+    "02  API/operator logs → container logs → game logs → audit history",
+    "03  Recent change → safe rollback → sanitized support bundle",
+  ]}
+/>
+
+---
+
+## Next guides
+
+- [FAQ and community support](./faq/)

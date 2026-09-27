@@ -1,0 +1,119 @@
+---
+title: "Modules & Sources"
+description: "Install game capabilities from trusted catalogs, operate source synchronization, and move safely between module versions and digests."
+section: develop
+group: modules-sources
+order: 1
+icon: package-plus
+eyebrow: EXTEND
+readTime: 14 MIN
+covers: ["Catalog", "Sources", "OCI"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
+
+<DocsArticleMeta groupId="modules-sources" readTime="14 MIN" />
+
+Modules are the catalog's install unit — this page covers reading the merged catalog and configuring the sources it's built from.
+
+<DocsCallout icon="shield-alert" title="Module provenance and signatures matter">
+A module is executable infrastructure content. Treat provenance, signatures, digest pinning, and source credentials as security controls.
+</DocsCallout>
+
+## Read the module catalog
+
+Available, installed, verified, policy-blocked, and update-ready states explain what can be deployed and why.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "Review supported game capabilities",
+      text: "Review supported game capabilities before deploying a template.",
+    },
+    {
+      icon: "check",
+      label: "Prefer signed, verified releases",
+      text: "Prefer signed, verified releases and preserve the selected digest.",
+    },
+    {
+      icon: "check",
+      label: "Check dependent servers",
+      text: "Use upgrade, rollback, and uninstall only after checking dependent servers.",
+    },
+  ]}
+/>
+
+The dashboard's **Modules** page displays the merged catalog across all configured module sources. Each source indexes a registry, Git repository, archive, or upload bucket, and the operator continuously syncs the latest available modules into the cluster's catalog. Individual modules enter the catalog in one of five states:
+
+- **Available** — indexed by a source but not yet installed.
+- **Installed** — present in the cluster; ready to instantiate into GameServers.
+- **Verified** — cryptographically signed and integrity-checked.
+- **Failed** — install or signature verification failed (shown as a generic failed status; check the source's verification policy and the Module's error reason).
+- **Update** — the pinned version is unavailable but a newer one exists; upgrade is offered.
+
+## Configure module sources
+
+Sources can represent OCI, Git, archive, upload, or registry-backed discovery with sync status and credentials.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "Use Kubernetes Secrets",
+      text: "Use Kubernetes Secrets for registry tokens and private source keys.",
+    },
+    {
+      icon: "check",
+      label: "Set sync interval and monitor",
+      text: "Set a reasonable sync interval and investigate stale or failed states.",
+    },
+    {
+      icon: "check",
+      label: "Apply source policies",
+      text: "Apply source allow-lists and verification policy consistently across clusters.",
+    },
+  ]}
+/>
+
+A **ModuleSource** is a cluster-scoped CRD that points to one module store and declares credentials, refresh timing, and policy constraints. The operator reconciles each source on a configurable interval (default: 1 hour) and maintains a `Synced` condition reflecting the last pull. If a sync fails, the condition captures the error.
+
+The chart's `defaultModuleSource` picks one of two backends via `type`: OCI registry (pull pre-built, cosign-signed bundles — recommended for production) or Git repository (index the `gameplane-module` repo directly for rapid iteration). A separate `uploadModuleSource` block (enabled by default) accepts modules uploaded through the dashboard, stored as ConfigMaps in the operator namespace.
+
+Disable the default if you manage ModuleSource resources via GitOps, or create additional sources to index private registries or custom catalogs. The ModuleSource CRD also supports HTTP (tar.gz/zip archives) and local directory backends for specialized use cases.
+
+## Author and publish modules
+
+<DocsCallout icon="rocket" title="Coming in v0.3.0">
+Module authoring features (`gp-module` CLI, web Module Builder, and related APIs) will be available in v0.3.0. For v0.2.0, import pre-built modules from official registries or upload bundles directly.
+</DocsCallout>
+
+Package metadata, templates, assets, and compatibility as versioned OCI content with a reproducible release process.
+
+<DocsQuickReference
+  label="MODULE RELEASE LOOP"
+  items={[
+    "01  Validate schema, templates, capabilities, and supported versions",
+    "02  Build, sign, push, then verify the exact OCI digest",
+    "03  Sync the source, install, deploy a canary, and test rollback",
+  ]}
+/>
+
+In v0.3.0, Gameplane will ship a unified toolkit for authoring and publishing:
+
+- **`gp-module` CLI** — scaffold, validate offline, preview runtime config, and package modules for distribution.
+- **Web Dashboard Module Builder** — a visual 3-step wizard for building modules directly in the cluster.
+
+The `gp-module` command will cover:
+
+- `init` — scaffold a module from an archetype (SteamCMD, Java, or generic).
+- `validate` — lint metadata, CRD schemas, image digests, ports, and environment configuration.
+- `preview` — simulate server creation, evaluating dynamic memory limits and variable precedence.
+- `package` — enforce asset size limits (icon ≤ 512 KiB, bundle ≤ 1 MiB) and push to an OCI registry.
+
+The web Module Builder will guide you through preset selection, container image pinning (with digest verification), port and storage configuration, and one-click installation into an upload source.
+
+Once packaged, you'll sign modules with Cosign using your cluster's key, push the signed OCI artifact to a registry, and create or update the corresponding ModuleSource to index it. The operator pulls the latest modules on the next sync interval; the dashboard renders them in the catalog and allows install/upgrade/rollback workflows.

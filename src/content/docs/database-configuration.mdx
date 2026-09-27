@@ -1,0 +1,255 @@
+---
+title: "Database configuration and lifecycle"
+description: "Select a supported topology, secure its connection, control migrations, and recover platform state independently of game worlds."
+section: "platform"
+group: "cluster-storage"
+order: 6
+icon: "database"
+eyebrow: "DATA"
+readTime: "18 MIN"
+covers: ["SQLite", "PostgreSQL", "Migrations"]
+next: "multi-cluster"
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
+
+<DocsArticleMeta groupId="cluster-storage" readTime="18 MIN" />
+
+The platform database holds users, roles, sessions, settings, and audit state — isolated from game-world backups. Select a supported topology, secure its connection, control schema migrations, and practice recovery steps independently of your game servers.
+
+<DocsCallout icon="database" title="Game-world backups do not contain platform state">
+  Game-world backups store only game data (worlds, player inventories, configurations). Users, roles, sessions, settings, and audit state are stored in the platform database and recovered separately.
+</DocsCallout>
+
+## Select and provision
+
+Document engine, version, availability model, storage, ownership, connection limits, and TLS.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "database",
+      label: "Use SQLite only within its documented single-instance constraints.",
+      text: "Default for single-node setups. Single connection, write-serialized via WAL mode. Requires RWO (read-write-once) PersistentVolume on the control plane.",
+    },
+    {
+      icon: "shield-check",
+      label: "For PostgreSQL, define DNS, TLS/CA, user ownership, pooling, and limits.",
+      text: "Opt-in via --db-driver=postgres --db-dsn=. Supports multi-replica Kubernetes deployments. Document connection pool limits, application user permissions, and TLS certificate paths.",
+    },
+    {
+      icon: "lock",
+      label: "Keep credentials in a Kubernetes Secret and database traffic private.",
+      text: "Store database passwords in a Secret mounted as environment variables (GAMEPLANE_DB_DSN). Encrypt in-transit traffic via TLS or in-cluster mTLS.",
+    },
+  ]}
+/>
+
+### SQLite
+
+SQLite is embedded, requires no external service, and is the default for single-node clusters. It stores data in a single file on a PersistentVolume mounted to the API pod.
+
+```yaml
+# Example: SQLite configuration in Helm values
+api:
+  storage:
+    size: 2Gi
+    storageClassName: ""  # Uses cluster default; override to a specific StorageClass
+    existingClaim: ""     # Leave empty to auto-create, or set to a pre-provisioned PVC name
+```
+
+**Constraints:**
+- Single connection total (enforced by the driver, `SetMaxOpenConns(1)`): all reads and writes are serialized, not just writes.
+- RWO (read-write-once) volume only: the PersistentVolume can be mounted by one pod at a time.
+- Set `--db-driver=sqlite` (the default); no DSN override needed for the standard location.
+
+### PostgreSQL
+
+PostgreSQL is an external relational database engine. Use it for:
+- Multi-replica deployments (multiple API pods with `--db-driver=postgres`).
+- Longer data retention and advanced backup/recovery workflows.
+- Regulated environments requiring separate database administration.
+
+<DocsCallout icon="info" title="PostgreSQL is experimental">
+  PostgreSQL support is experimental and is not compiled into the officially published api image — the image must be rebuilt with `go build -tags postgres ./cmd` (or an equivalent custom image build) before `--db-driver=postgres` will work; otherwise the API fails to start with "postgres support not compiled in".
+</DocsCallout>
+
+**Required configuration:**
+```yaml
+# Example: PostgreSQL connection parameters
+api:
+  db:
+    driver: postgres
+    dsn: "postgres://user:password@host:5432/gameplane?sslmode=require"
+  # Pass as environment variable or Secret; never in the pod spec.
+```
+
+**Best practices:**
+- Use TLS (`sslmode=require`) for all connections.
+- Create a dedicated database user with minimal necessary permissions (CREATE TABLE, INSERT, UPDATE, DELETE on gameplane schema only).
+- Set connection pool limits in your PostgreSQL configuration to prevent resource exhaustion.
+- Document the backup schedule and procedure for your PostgreSQL instance.
+
+## Migrate and operate
+
+Tie schema migrations to a pinned release and observe connectivity, locks, latency, growth, and failures.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "activity",
+      label: "State whether migrations run automatically or as an explicit job.",
+      text: "By default, migrations run at API startup (automatic). Document whether your environment requires manual schema updates via kubectl exec.",
+    },
+    {
+      icon: "box",
+      label: "Monitor saturation, locks, latency, storage, and failed migrations.",
+      text: "Watch database disk usage (especially SQLite file growth), connection counts, query latency percentiles, and audit table size. Set alerts for failed migrations during startup.",
+    },
+    {
+      icon: "refresh-cw",
+      label: "Rotate credentials with overlap and test reconnection before revocation.",
+      text: "When changing database credentials, update the Secret, wait for the next API pod restart, confirm successful login via logs, then revoke the old password.",
+    },
+  ]}
+/>
+
+### Automatic migrations
+
+By default, the API reconciles schema on every startup:
+
+```bash
+# Migrations run automatically when the API container starts.
+# Monitor the startup logs for migration success or errors.
+kubectl -n gameplane-system logs -l app.kubernetes.io/name=gameplane-api --tail=50
+```
+
+**Migration behavior:**
+- Migrations are idempotent; re-running the same migration set is safe.
+- Schema version is tracked internally; migrations are executed in order from the point where the previous run stopped.
+- Failed migrations block API startup (fail-closed). Address the error, resolve the database state, and retry.
+
+### Monitoring and observability
+
+**Check database connectivity:**
+```bash
+# For SQLite, verify the PVC is mounted and writable.
+kubectl -n gameplane-system exec -it deploy/gameplane-api -- ls -lh /data/gameplane.db
+
+# For PostgreSQL, check connection logs.
+kubectl -n gameplane-system logs -l app.kubernetes.io/name=gameplane-api | grep -i "database\|connection"
+```
+
+**Metrics:**
+- Database file size (for SQLite) or table size (for PostgreSQL).
+- Audit log table growth (may require retention policy if table grows unbounded).
+- API startup time (migrations add latency on upgrades).
+
+**Audit state size:**
+```sql
+-- PostgreSQL example: check audit table size
+SELECT schemaname, tablename, pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename)) AS size
+FROM pg_tables
+WHERE tablename LIKE 'audit%'
+ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC;
+```
+
+### Credential rotation
+
+When rotating database credentials:
+
+1. **Update the Secret** with the new password.
+2. **Restart the API deployment** to pick up the new credentials.
+3. **Monitor startup logs** to confirm successful reconnection.
+4. **Revoke the old password** at the database level only after confirming the new one works.
+
+For PostgreSQL, most drivers support connection pooling with retry; the API will reconnect on the next pod restart.
+
+## Back up and recover
+
+Restore database, values, identity configuration, CRDs, and Secrets as one version-compatible recovery set.
+
+Platform database recovery is a three-step process:
+
+1. **Back up the database file (SQLite) or export a logical backup (PostgreSQL).**
+2. **Stop the API pods** to prevent writes during restoration.
+3. **Restore the database** from your backup and verify that the API restarts cleanly.
+
+### SQLite backup and restore
+
+**Backup:**
+```bash
+# 1. Create a snapshot of the SQLite file PVC.
+kubectl -n gameplane-system exec deploy/gameplane-api -- \
+  cp /data/gameplane.db /data/gameplane.db.backup
+
+# 2. Or use your storage system's native snapshot (recommended for production).
+# Example: kubectl exec to a storage admin pod, snapshot the PVC.
+```
+
+**Restore:**
+```bash
+# 1. Stop the API to prevent concurrent writes.
+kubectl -n gameplane-system scale deploy gameplane-api --replicas=0
+
+# 2. Delete the corrupted PVC and recreate it from a snapshot (or manually restore the file).
+kubectl -n gameplane-system delete pvc gameplane-api-data
+
+# 3. Restart the API; it will re-mount the recovered PVC.
+kubectl -n gameplane-system scale deploy gameplane-api --replicas=1
+
+# 4. Monitor startup logs for migration success.
+kubectl -n gameplane-system logs -l app.kubernetes.io/name=gameplane-api --tail=50
+```
+
+### PostgreSQL backup and restore
+
+**Backup:**
+```bash
+# Use pg_dump for a logical backup (recommended).
+pg_dump -h <postgres-host> -U <user> -d gameplane > gameplane.sql
+
+# Or use pgBackRest / WAL archiving for continuous backups (production-grade).
+```
+
+**Restore:**
+```bash
+# 1. Stop the API pods.
+kubectl -n gameplane-system scale deploy gameplane-api --replicas=0
+
+# 2. Drop and recreate the schema (or restore from a snapshot).
+psql -h <postgres-host> -U <admin-user> -d postgres -c "DROP DATABASE gameplane;"
+psql -h <postgres-host> -U <admin-user> -d postgres -c "CREATE DATABASE gameplane OWNER <gameplane-user>;"
+
+# 3. Restore the backup.
+psql -h <postgres-host> -U <gameplane-user> -d gameplane < gameplane.sql
+
+# 4. Restart the API.
+kubectl -n gameplane-system scale deploy gameplane-api --replicas=1
+
+# 5. Monitor startup logs.
+kubectl -n gameplane-system logs -l app.kubernetes.io/name=gameplane-api --tail=50
+```
+
+### Recovery validation
+
+After restoring the database, verify:
+
+- **API startup:** logs show no migration errors.
+- **Login works:** dashboard login succeeds with a known account.
+- **Audit trail intact:** System Logs page displays expected audit events.
+- **Settings persist:** Admin settings (OIDC, notification sinks, etc.) are readable.
+
+---
+
+<DocsQuickReference
+  label="DATABASE RUNBOOK"
+  items={[
+    "01  Record engine/version, endpoint, TLS, Secret, schema, backup",
+    "02  Upgrade gate → backup + migration notes + connection headroom",
+    "03  Restore DB → matching release → validate schema, login, audit, settings",
+  ]}
+/>

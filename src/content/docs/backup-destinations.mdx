@@ -1,0 +1,203 @@
+---
+title: Backup Destinations
+description: Connect a restic repository through Kubernetes Secrets, then prove it with a recoverable backup before scheduling.
+section: operate
+group: files-backups
+order: 6
+icon: hard-drive
+eyebrow: RECOVERY
+readTime: 13 MIN
+covers: [Repository, Secrets, "Restore test"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+
+A backup destination is a restic-compatible repository where Gameplane stores encrypted server snapshots. Before scheduling automated backups, you must create a destination that proves the repository is reachable and can restore data.
+
+<DocsSectionList
+  items={[
+    { icon: "hard-drive", label: "Supported Repository", text: "Any restic-compatible backend: S3, Azure, B2, SFTP, REST, or local NAS." },
+    { icon: "lock", label: "Credentials as Secret", text: "Repository URL, password, and optional keys stored in a Kubernetes Secret." },
+    { icon: "shield-check", label: "Permission & Access Control", text: "Service accounts can only reference Secrets in the namespace where backups run." },
+  ]}
+/>
+
+## Prepare repository and Secret
+
+Make the repository reachable from backup jobs and store its URL, credentials, and keys in a Kubernetes Secret.
+
+<DocsCallout icon="info" title="Keep credentials secure">
+  Never paste repository credentials into descriptions or values committed to source control. Always use Secrets to reference the credentials at runtime.
+</DocsCallout>
+
+### Use a supported restic-compatible repository
+
+Restic works with a wide variety of backends. Choose one that suits your infrastructure:
+
+- **S3-compatible** (AWS S3, MinIO, DigitalOcean Spaces, Backblaze B2): highly available, widely supported
+- **SFTP**: any SSH server with file access (NAS, dedicated backup host)
+- **REST**: if your repository provides a REST HTTP interface
+- **Local**: NFS, SMB, or other network-mounted storage (for on-premises clusters)
+- **Cloud-native**: Azure Blob Storage, Google Cloud Storage, etc.
+
+**Restic repository initialization:** If the repository is new, initialize it with restic:
+
+```bash
+restic init --repo s3:s3.amazonaws.com/my-backup-bucket
+# Restic will prompt for a password and create a repository structure
+```
+
+### Create the required labelled Secret and keys
+
+Backup jobs reference a Kubernetes Secret in the **`gameplane-games` namespace** (the default namespace where backups run) to retrieve the repository credentials. Gameplane automatically discovers and lists Secrets with the label `gameplane.local/backup-destination=true`.
+
+**Secret structure for restic repositories:**
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: my-backup-repo          # Stable name for reference in the UI
+  namespace: gameplane-games    # Default namespace where backups run
+  labels:
+    gameplane.local/backup-destination: "true"
+type: Opaque
+stringData:
+  repo: "s3:s3.amazonaws.com/my-backup-bucket"
+  password: "secure-password-here"
+  # Optional: environment-specific keys (e.g., AWS credentials, SSH key)
+  aws-access-key-id: "YOUR_KEY_ID"
+  aws-secret-access-key: "YOUR_SECRET_KEY"
+```
+
+**Key fields:**
+
+- `repo`: the restic backend URL (e.g., `s3:...`, `sftp://...`, `rest:http://...`)
+- `password`: the password set during repository initialization
+- Additional keys depend on your backend (AWS credentials, SSH keys, etc.)
+
+**Apply the Secret:**
+
+```bash
+kubectl apply -f backup-repo-secret.yaml -n gameplane-games
+```
+
+### Grant only the service account and namespace access required
+
+Backup and Restore jobs run in the `gameplane-games` namespace. If you use Kubernetes RBAC or network policies, ensure the backup jobs can:
+
+- Read the backup destination Secret (already available since it's in the same namespace)
+- Write to the configured repository (via egress networking)
+
+By default, the backup egress policy (`operator.backupEgress` in Helm values) opens outbound TCP 443 (HTTPS) and TCP 22 (SFTP) to allow restic to reach common repository backends. If your repository uses a non-standard port, update the Helm values during installation:
+
+```yaml
+operator:
+  backupEgress:
+    enabled: true
+    ports:
+      - { protocol: TCP, port: 443 }
+      - { protocol: TCP, port: 8080 }  # Custom port for your REST server
+```
+
+## Add the destination
+
+Use a stable destination name and reference the Secret rather than exposing the credential value.
+
+### From the Dashboard
+
+1. Open **Settings** → **Backup destinations**
+2. Click **Add destination**
+3. Enter a stable **name** (e.g., `aws-production`, `nfs-secondary`) — this is how backups and schedules refer to the destination
+4. Enter the **repository URL** (the restic backend, e.g., `s3:...`, `sftp://...`)
+5. Enter the **password** (the restic repository password)
+6. Click **Save**
+
+The dashboard validates the credentials and creates a Kubernetes Secret with the label `gameplane.local/backup-destination=true`, storing the URL as `repo` and password as `password` in the Secret keys.
+
+### Via kubectl
+
+Create a Secret with the label, and Gameplane automatically discovers it:
+
+```bash
+kubectl create secret generic my-backup-destination \
+  -n gameplane-games \
+  --from-literal=repo='s3:s3.amazonaws.com/my-bucket' \
+  --from-literal=password='my-password'
+
+kubectl label secret my-backup-destination \
+  -n gameplane-games \
+  gameplane.local/backup-destination=true
+```
+
+### Reuse the stable name across manual backups and schedules
+
+Once the destination is added, you can reference it by name when:
+
+- Creating a manual backup: **Server** → **Backups** → **Create backup** → select the destination
+- Setting up a scheduled backup: **Server** → **Backups** → **Schedules** → create schedule with the destination
+
+Using the same destination name across all backups ensures your retention and restore workflows are predictable.
+
+## Validate and maintain
+
+Create a small backup and disposable restore, then rotate credentials only after a new end-to-end proof succeeds.
+
+### Validate the destination with a test backup
+
+Before scheduling production backups:
+
+1. Select a test server (or create a small one)
+2. Navigate to **Backups** → **Create backup**
+3. Select the destination and choose a small dataset or enable quiesce (so the backup is quick and non-disruptive)
+4. Start the backup and monitor its progress
+5. Once it completes, verify the **snapshot ID** was captured (visible in the backup details)
+
+A successful backup proves:
+- The Secret credentials are correct
+- The repository is reachable from the cluster
+- The snapshot was written and is readable
+
+### Test restoration before enabling schedules
+
+After a successful backup, test a restore to confirm data integrity:
+
+1. Navigate to the **Backups** section of the test server
+2. Click the snapshot and select **Restore**
+3. Either restore to the same server (suspends the server for the restore duration) or create a new server from the backup
+4. Verify the restored files match the original (check game world data, plugins, config files, etc.)
+5. Delete the test restore once verified
+
+Only after a successful backup *and* restore should you enable automated **BackupSchedules** on this destination. This end-to-end proof ensures that backups are truly recoverable before they become critical infrastructure.
+
+### Rotate credentials safely
+
+When you need to rotate repository credentials or keys:
+
+1. **Create a new destination Secret** with updated credentials
+2. **Test it** with a small manual backup and restore (same validation as above)
+3. **Update active schedules** to use the new destination
+4. **Wait for in-flight backups** to the old destination to complete
+5. **Delete or archive** the old Secret only after all schedules have migrated
+6. **Verify no schedules** reference the old destination by checking the dashboard or running:
+
+```bash
+kubectl get backupschedules -A -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.spec.repoRef.name}{"\n"}{end}'
+```
+
+<DocsQuickReference
+  label="DESTINATION ACCEPTANCE"
+  items={[
+    "01  Reachable repository + labelled Secret in configured namespace",
+    "02  Add stable destination name + Secret/key reference",
+    "03  Manual backup + disposable restore before schedules depend on it",
+  ]}
+/>
+
+## Next steps
+
+- **Repository management:** [Backup Repository Operations](./backup-repository-operations/) covers managing snapshots, retention policies, and multi-destination strategies
+- **Automated backups:** [Backups & Recovery](./backups-recovery/) hub for scheduling backups with retention and restore operations
+- **Cluster disaster recovery:** [Platform Disaster Recovery](./platform-disaster-recovery/) covers cluster-level recovery beyond server backups

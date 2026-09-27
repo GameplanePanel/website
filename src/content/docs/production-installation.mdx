@@ -1,0 +1,102 @@
+---
+title: "Production Helm installation"
+description: "Build a pinned, reviewable release with explicit security, storage, database, access, backup, and telemetry choices."
+section: "platform"
+group: "cluster-storage"
+order: 8
+icon: "rocket"
+eyebrow: "INSTALL"
+readTime: "18 MIN"
+covers: ["Helm", "Security", "Acceptance"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
+
+<DocsArticleMeta groupId="cluster-storage" readTime="18 MIN" />
+
+Build a pinned, reviewable release with explicit security, storage, database, access, backup, and telemetry choices.
+
+<DocsCallout icon="archive" title="Archive your accepted release">
+  Archive the exact chart, image digests, values, and rendered manifests accepted for each environment.
+</DocsCallout>
+
+## Establish a production baseline
+
+Pin every artifact and make environment ownership explicit before the first workload reaches the cluster.
+
+Gameplane's Helm chart is distributed as an OCI artifact on GitHub Container Registry (GHCR). Every release includes pinned component image versions, so locking the chart version locks the software stack:
+
+- **Chart version** pins the operator, API, and web dashboard images.
+- **Optional component images** (audit sidecar, telemetry receiver, sentinel, tunnel clients, MCP server) are pulled only when enabled.
+- **GameServer agent images** are pulled per-server, on-demand, so pre-staging is not required.
+
+Before your first production install, document and approve the release you intend to deploy: the specific chart version (e.g., `0.2.0-beta.8`) and any image tag or pull secret overrides in your values file.
+
+## Render and review
+
+Treat rendered manifests as the production change set, with Secrets kept outside committed values.
+
+Helm's template rendering step separates two concerns:
+
+1. **Values file** (safe to commit): Helm defaults, component toggles, namespace, ingress host, resource requests, RBAC settings, storage class.
+2. **Secrets** (kept outside Git): database credentials, OIDC client secrets, syslog endpoints, backup encryption keys, API keys for monitoring or telemetry.
+
+Use `helm template` to render the chart locally with your values, inspect the YAML for correctness (resource names, labels, selectors, PVCs), and commit the rendered output as your production record. This makes every change reviewable and auditable before it ever touches the cluster.
+
+<DocsCallout icon="shield-alert" title="Review CRDs, RBAC, and network policies">
+  Review the rendered cluster roles, network policies, and CRD schemas. Gameplane's default network policies deny all ingress and egress from the games namespace; adjust if your game protocols require specific egress (e.g., external master servers, CDN fetches).
+</DocsCallout>
+
+## Install and accept
+
+Use an atomic, waited install, then accept the release only after control-plane and workload smoke tests.
+
+The `--atomic` and `--wait` flags ensure Helm rolls back automatically if the control plane fails to become ready during the 5-minute default timeout. This prevents partial or stranded installs.
+
+After the Helm release completes:
+
+1. **Control-plane smoke test:** Verify the operator and API are running and healthy.
+   ```sh
+   kubectl -n gameplane-system get deployment
+   kubectl -n gameplane-system logs -l app.kubernetes.io/name=gameplane-api --tail=50
+   ```
+
+2. **Workload smoke test:** Create a test GameServer and verify it reaches `Ready`.
+
+3. **Accept the release:** Only after both tests pass, document the release as accepted in your change log.
+
+<DocsQuickReference
+  label="PRODUCTION INSTALL"
+  items={[
+    "helm show values oci://ghcr.io/valgulnecron/charts/gameplane --version <version> > values-reference.yaml",
+    "helm template gameplane oci://ghcr.io/valgulnecron/charts/gameplane --version <version> -f values-prod.yaml > rendered.yaml",
+    "helm upgrade --install gameplane oci://ghcr.io/valgulnecron/charts/gameplane --version <version> -f values-prod.yaml --atomic --wait -n gameplane-system --create-namespace",
+  ]}
+/>
+
+## Version and prerequisites
+
+Gameplane requires:
+- **Kubernetes 1.28+**
+- **Helm 3.13+**
+- **A default StorageClass** for game-server data PVCs (any RWO CSI driver works)
+- **Optional: an ingress controller** (nginx-ingress by default) and cert-manager for TLS
+
+The current stable release is **v0.2.0-beta.8**. Install by specifying the version explicitly to ensure reproducibility.
+
+## Image signature verification
+
+All released images, the chart, and official game modules are signed with cosign and recorded in the Sigstore Rekor transparency log:
+
+```sh
+cosign verify --key cosign.pub \
+  ghcr.io/valgulnecron/gameplane/operator:0.2.0-beta.8
+```
+
+Pre-rotation releases (v0.2.0-beta.7 and earlier) used the retired Ed25519 key and lack transparency log entries — verify those with `cosign-legacy.pub` and `--insecure-ignore-tlog=true`.
+
+## Next steps
+
+Once your production baseline is in place, configure networking and ingress: [Ingress, TLS, and external access](./ingress-tls-access/)

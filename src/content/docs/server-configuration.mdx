@@ -1,0 +1,229 @@
+---
+title: "Server configuration"
+description: "Control versions, resources, environment, lifecycle, placement, ownership, and destructive operations without losing declarative intent."
+section: operate
+group: servers-config
+order: 4
+icon: info-2
+eyebrow: CONFIGURE
+readTime: "14 MIN"
+covers: ["Resources", "Lifecycle", "Placement"]
+next: "network-automation"
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
+
+This guide covers the major configuration concerns when running a GameServer: version pinning, compute resources, environment variables, lifecycle timing, scheduling, and safety boundaries. Each change integrates declaratively with the GameServer spec and is reconciled by the operator.
+
+<DocsArticleMeta groupId="servers-config" readTime="14 MIN" />
+
+<DocsCallout icon="layers" title="Pod template changes require reconciliation.">
+Changes that affect the pod template (image, resources, storage, environment, probes) trigger a rolling restart of the underlying StatefulSet pod. Schedule these updates like planned maintenance to avoid disrupting active player sessions.
+</DocsCallout>
+
+## Version and resources
+
+Pin the game binary and compute resources, and plan storage growth deliberately.
+
+### Version pinning
+
+When a GameTemplate declares multiple versions (e.g., Minecraft Java Edition offers 1.20.1, 1.21, latest snapshot), use `spec.version` to select one:
+
+```yaml
+spec:
+  templateRef:
+    name: minecraft-java-edition
+  version: "1.21"  # Pin a specific version
+```
+
+Omitting `version` falls back to the template's default version (marked `default: true` in the template's version catalog, or the first entry if no default is specified). To override any template version with a custom image entirely, set `spec.image` instead:
+
+```yaml
+spec:
+  image: "ghcr.io/my-org/custom-game:v2.5"  # Bypasses template version selection
+```
+
+<DocsCallout icon="info" title="Review compatibility before version changes.">
+Before upgrading or downgrading versions, check the template's documentation and any compatibility notes in the module README. Some versions may have breaking changes to config fields or saved data formats.
+</DocsCallout>
+
+### Compute resources
+
+Set Kubernetes resource requests and limits to ensure predictable pod scheduling and QoS.
+
+```yaml
+spec:
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: 2000m
+      memory: 4Gi
+```
+
+**Requests** reserve capacity on a node; the node must have available resources or the pod will not schedule. **Limits** cap resource usage; if a process exceeds the limit, the kubelet terminates and restarts the container.
+
+When requests equal limits (as shown above), Kubernetes assigns the pod **Guaranteed QoS**, the highest tier. Guaranteed pods are the last to be evicted during node resource pressure, making them suitable for sensitive or high-value servers. Set limits higher than requests if you want to allow occasional bursts without consuming baseline capacity.
+
+### Storage expansion
+
+GameTemplates can declare persistent volumes for game data (worlds, configs, logs). Expand these volumes without downtime by editing the GameServer spec:
+
+```yaml
+spec:
+  storage:
+    data:
+      capacity: 50Gi  # Increased from 20Gi
+```
+
+Before increasing a PVC, confirm that your cluster's StorageClass supports `allowVolumeExpansion: true`. Most managed Kubernetes platforms (EKS, AKS, GKE) and distributions like k3s enable expansion by default, but on-premises clusters may not. If expansion is not supported, the operator reports a `StorageExpandFailed` condition.
+
+## Environment and lifecycle
+
+Combine plaintext environment variables with Secret references, and set graceful-shutdown and health-check timing to match the game's behavior.
+
+### Environment variables
+
+Pass configuration to the game via environment variables. Two patterns are supported:
+
+**Plaintext values:**
+```yaml
+spec:
+  env:
+    - name: "DIFFICULTY"
+      value: "hard"
+    - name: "PVPMODE"
+      value: "true"
+```
+
+**Secret references** (for credentials, API keys, and sensitive data):
+```yaml
+spec:
+  env:
+    - name: "DATABASE_PASSWORD"
+      valueFrom:
+        secretKeyRef:
+          name: "my-db-secret"
+          key: "password"
+    - name: "API_KEY"
+      valueFrom:
+        configMapKeyRef:
+          name: "game-config"
+          key: "api-key"
+```
+
+<DocsCallout icon="shield-alert" title="Never expose credentials in plaintext.">
+Do not include passwords, API keys, or tokens in plaintext `value` fields. A misconfigured screenshot or pod description could expose secrets. Always pull sensitive data from Secrets and ConfigMaps via `valueFrom`.
+</DocsCallout>
+
+### Graceful shutdown
+
+When a GameServer is suspended or deleted, the operator allows the game a grace period to save its state and disconnect players cleanly. Set `spec.stopGracePeriodSeconds` to control how long the operator waits:
+
+```yaml
+spec:
+  stopGracePeriodSeconds: 60
+```
+
+The operator first runs the template's **lifecycle.stop** sequence (if defined) — typically save-world and kick-all-players RCON commands — and waits up to this many seconds for the game to reach not-ready (as measured by the readiness probe). Once the probe reports not-ready or the grace period expires, the pod is forcibly terminated.
+
+For games that save slowly (e.g., large modded Minecraft worlds with many dimensions), set this high enough (60–180 seconds is typical). Too low, and players lose unsaved progress; too high, and server suspension or deletion becomes sluggish.
+
+### Startup, readiness, and liveness probes
+
+Probes tell Kubernetes when the game is ready to receive players and when it is alive:
+
+```yaml
+spec:
+  probes:
+    startup:
+      tcpSocket:
+        port: "game"
+      failureThreshold: 30
+      periodSeconds: 10
+    readiness:
+      tcpSocket:
+        port: "game"
+      initialDelaySeconds: 10
+      periodSeconds: 5
+    liveness:
+      exec:
+        command: ["/bin/sh", "-c", "ping -c 1 localhost:25565"]
+      initialDelaySeconds: 60
+      periodSeconds: 30
+```
+
+- **Startup probe:** Gives the game extra time to boot before readiness/liveness checks begin. Fails the pod after `failureThreshold × periodSeconds` seconds of no response.
+- **Readiness probe:** Reports whether the game is ready to accept players. Failing the readiness probe does not restart the pod; it only removes the pod from the load-balancer endpoint list.
+- **Liveness probe:** Detects a hung or crashed game and triggers a restart. A failed liveness probe kills the container and the kubelet restarts it.
+
+Tune `initialDelaySeconds` and `periodSeconds` to match your game's boot time and responsiveness. Too aggressive, and the game restarts constantly; too lenient, and hung servers appear online to players.
+
+## Placement and safety
+
+Use Kubernetes scheduling rules and per-server RBAC to control server placement, and establish safety boundaries before enabling transfer, wipe, or deletion.
+
+### Node scheduling
+
+Pin a server to specific nodes or node pools using `spec.nodeSelector`, `spec.tolerations`, and `spec.affinity`:
+
+```yaml
+spec:
+  nodeSelector:
+    kubernetes.io/hostname: "node-1"
+    gameplane.local/pool: "high-performance"
+  tolerations:
+    - key: "dedicated"
+      operator: "Equal"
+      value: "gaming"
+      effect: "NoSchedule"
+  affinity:
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: "app"
+                operator: "In"
+                values: ["colocate-service"]
+          topologyKey: "kubernetes.io/hostname"
+```
+
+- **nodeSelector:** Pods schedule only on nodes bearing all the specified labels.
+- **tolerations:** Pods tolerate nodes with matching taints (useful for dedicated or resource-constrained nodes).
+- **affinity:** Fine-grained pod-to-pod and pod-to-zone co-location and anti-affinity rules.
+
+### Per-server access control
+
+The dashboard and API enforce role-based access control on a per-GameServer basis. Owners and admins can modify any setting; other users are blocked by the operator unless their role grants `servers:write`. See the [Permission Catalog](./permission-catalog/) for the full matrix of role capabilities.
+
+### Safety boundaries: Ownership and danger zone
+
+Three destructive operations require explicit safeguards:
+
+1. **Transfer ownership:** Only the current owner or an admin can transfer a server to another user. Transferring a server is irreversible on the dashboard; consider disabling transfer and handling ownership changes via direct user communication or GitOps.
+2. **Wipe data:** Clears the persistent volume used by the game (worlds, saves, configs). The operator runs a background Job to safely delete all files, then acknowledges the operation on the status. A failed wipe is non-recoverable via the Job (e.g., permissions).
+3. **Delete:** Removes the GameServer, its StatefulSet, and all associated resources, including data. Deletion is immediate once confirmed; backups are your only recovery path.
+
+<DocsCallout icon="info" title="Establish a backup routine first.">
+Before a user or operator deletes a server, ensure a recent backup exists. Enable [Backups & Recovery](./backups-recovery/) and set up a backup destination (S3, Azure Blob, or on-cluster Restic) as part of your operational runbook.
+</DocsCallout>
+
+<DocsQuickReference
+  label="SAFE CONFIG CHANGE"
+  items={[
+    "01  Capture current YAML and create a verified backup",
+    "02  Apply one concern at a time and watch conditions and events",
+    "03  Validate players, ports, storage, and ownership after reconciliation",
+  ]}
+/>
+
+## See also
+
+- [General Server Settings](./general-server-settings/) — CPU, memory, environment variables in detail.
+- [Template-specific Configuration](./template-configuration/) — Game-specific config fields from the template's ConfigSchema.
+- [Lifecycle & Health Probes](./lifecycle-probes/) — Deep dive on startup, readiness, liveness, and graceful shutdown.
+- [Ownership & Danger Zone](./ownership-danger-zone/) — Transfer, wipe, and deletion workflows.
+- [Network & Automation](./network-automation/) — Service exposure and load-balancer configuration.

@@ -1,1 +1,1125 @@
-{"type":"frame","id":"ei1qC","x":0,"y":22443,"name":"Screen/Compare","theme":{"H:Mode":"Dark"},"width":1440,"fill":"$H:--background","layout":"vertical","children":[{"id":"x7DNCy","type":"ref","ref":"Qczsa","name":"Nav","width":"fill_container"},{"type":"frame","id":"HawOd","name":"CompareBody","width":"fill_container","fill":"$H:--background","layout":"vertical","gap":48,"padding":[80,80,96,80],"alignItems":"center","children":[{"type":"frame","id":"HWPei","name":"header","width":"fill_container","layout":"vertical","gap":12,"alignItems":"center","children":[{"type":"text","id":"pADPl","fill":"$H:--primary","content":"COMPARE","textAlign":"center","fontFamily":"$H:--font-primary","fontSize":12,"fontWeight":"600","letterSpacing":1},{"type":"text","id":"a5n0Z","fill":"$H:--foreground","textGrowth":"fixed-width","width":700,"content":"How Gameplane compares","textAlign":"center","fontFamily":"$H:--font-primary","fontSize":34,"fontWeight":"700"},{"type":"text","id":"k1aeXA","fill":"$H:--muted-foreground","textGrowth":"fixed-width","width":680,"content":"A quick look at how a Kubernetes-native control plane differs from single-host, Docker-based panels.","textAlign":"center","fontFamily":"$H:--font-secondary","fontSize":16,"fontWeight":"normal"}]},{"type":"frame","id":"s2lIMU","name":"compareTable","clip":true,"width":960,"cornerRadius":"$H:--radius-m","stroke":"$H:--border","strokeWidth":1,"strokeAlignment":"inner","layout":"vertical","children":[{"type":"frame","id":"Hs5HT","name":"thead","width":"fill_container","fill":"$H:--secondary","padding":[16,24],"children":[{"type":"text","id":"F22nc8","fill":"$H:--muted-foreground","textGrowth":"fixed-width","width":320,"content":"APPROACH","fontFamily":"$H:--font-primary","fontSize":11,"fontWeight":"600","letterSpacing":1},{"type":"text","id":"y7SAS","fill":"$H:--muted-foreground","textGrowth":"fixed-width","width":320,"content":"DOCKER-BASED PANELS","fontFamily":"$H:--font-primary","fontSize":11,"fontWeight":"600","letterSpacing":1},{"type":"text","id":"wFigX","fill":"$H:--primary","textGrowth":"fixed-width","width":320,"content":"GAMEPLANE","fontFamily":"$H:--font-primary","fontSize":11,"fontWeight":"600","letterSpacing":1}]},{"type":"frame","id":"NgOpJ","name":"Hosting model","width":"fill_container","fill":"$H:--card","stroke":"$H:--border","strokeWidth":{"bottom":1},"strokeAlignment":"inner","strokeLinejoin":"round","padding":[20,24],"children":[{"type":"text","id":"ET059","fill":"$H:--foreground","textGrowth":"fixed-width","width":320,"content":"Hosting model","fontFamily":"$H:--font-primary","fontSize":14,"fontWeight":"600"},{"type":"text","id":"JQkU4","fill":"$H:--muted-foreground","textGrowth":"fixed-width","width":320,"content":"Single host, Docker containers","lineHeight":1.5,"fontFamily":"$H:--font-secondary","fontSize":13,"fontWeight":"normal"},{"type":"text","id":"gligV","fill":"$H:--foreground","textGrowth":"fixed-width","width":320,"content":"Kubernetes primitives — CRDs, an operator, StatefulSets, PVCs","lineHeight":1.5,"fontFamily":"$H:--font-secondary","fontSize":13,"fontWeight":"normal"}]},{"type":"frame","id":"ZbDKz","name":"Scaling","width":"fill_container","fill":"$H:--card","stroke":"$H:--border","strokeWidth":{"bottom":1},"strokeAlignment":"inner","strokeLinejoin":"round","padding":[20,24],"children":[{"type":"text","id":"a2smMX","fill":"$H:--foreground","textGrowth":"fixed-width","width":320,"content":"Scaling","fontFamily":"$H:--font-primary","fontSize":14,"fontWeight":"600"},{"type":"text","id":"bxH7S","fill":"$H:--muted-foreground","textGrowth":"fixed-width","width":320,"content":"One host per install","lineHeight":1.5,"fontFamily":"$H:--font-secondary","fontSize":13,"fontWeight":"normal"},{"type":"text","id":"F8g72","fill":"$H:--foreground","textGrowth":"fixed-width","width":320,"content":"Same control plane, from a k3s homelab to a multi-node production cluster","lineHeight":1.5,"fontFamily":"$H:--font-secondary","fontSize":13,"fontWeight":"normal"}]},{"type":"frame","id":"FD6T3","name":"Operational model","width":"fill_container","fill":"$H:--card","stroke":"$H:--border","strokeWidth":{"bottom":1},"strokeAlignment":"inner","strokeLinejoin":"round","padding":[20,24],"children":[{"type":"text","id":"KLGFp","fill":"$H:--foreground","textGrowth":"fixed-width","width":320,"content":"Operational model","fontFamily":"$H:--font-primary","fontSize":14,"fontWeight":"600"},{"type":"text","id":"qH8rl","fill":"$H:--muted-foreground","textGrowth":"fixed-width","width":320,"content":"Tooling differs by install size","lineHeight":1.5,"fontFamily":"$H:--font-secondary","fontSize":13,"fontWeight":"normal"},{"type":"text","id":"fLdTD","fill":"$H:--foreground","textGrowth":"fixed-width","width":320,"content":"Same tooling at every scale","lineHeight":1.5,"fontFamily":"$H:--font-secondary","fontSize":13,"fontWeight":"normal"}]},{"type":"frame","id":"ixHhO","name":"Automation path","width":"fill_container","fill":"$H:--card","stroke":"#00000000","strokeWidth":{"bottom":1},"strokeAlignment":"inner","strokeLinejoin":"round","padding":[20,24],"children":[{"type":"text","id":"C8gr1i","fill":"$H:--foreground","textGrowth":"fixed-width","width":320,"content":"Automation path","fontFamily":"$H:--font-primary","fontSize":14,"fontWeight":"600"},{"type":"text","id":"EFyQo","fill":"$H:--muted-foreground","textGrowth":"fixed-width","width":320,"content":"Dashboard-driven","lineHeight":1.5,"fontFamily":"$H:--font-secondary","fontSize":13,"fontWeight":"normal"},{"type":"text","id":"kvI3a","fill":"$H:--foreground","textGrowth":"fixed-width","width":320,"content":"Dashboard or kubectl apply — both stay in sync via the operator","lineHeight":1.5,"fontFamily":"$H:--font-secondary","fontSize":13,"fontWeight":"normal"}]}]},{"type":"text","id":"aut7X","fill":"$H:--muted-foreground","textGrowth":"fixed-width","width":700,"content":"This is a high-level snapshot, not a feature-by-feature audit. For a fuller comparison against AMP, Pterodactyl, and PufferPanel, see the docs.","textAlign":"center","fontFamily":"$H:--font-secondary","fontSize":13,"fontWeight":"normal"},{"type":"frame","id":"FClwO","name":"callout","width":840,"fill":"$H:--card","cornerRadius":"$H:--radius-m","stroke":"$H:--border","strokeWidth":1,"strokeAlignment":"inner","gap":24,"padding":32,"children":[{"type":"frame","id":"bHISk","width":56,"height":56,"fill":"$H:--secondary","cornerRadius":12,"justifyContent":"center","alignItems":"center","children":[{"type":"icon","id":"R7kROo","width":26,"height":26,"icon":"boxes","library":"lucide","fill":"$H:--primary"}]},{"type":"frame","id":"wVJRJ","width":"fill_container","layout":"vertical","gap":8,"children":[{"type":"text","id":"YkfFT","fill":"$H:--foreground","content":"Why Kubernetes-native matters","fontFamily":"$H:--font-primary","fontSize":18,"fontWeight":"600"},{"type":"text","id":"V3kZgg","fill":"$H:--muted-foreground","textGrowth":"fixed-width","width":"fill_container","content":"The operator handles everything a cluster admin expects from a K8s controller — declarative reconciliation, owner references, leader election. Advanced users can bypass the dashboard entirely and manage Gameplane with kubectl apply.","lineHeight":1.6,"fontFamily":"$H:--font-secondary","fontSize":14,"fontWeight":"normal"}]}]},{"type":"text","id":"GGgUI","fill":"$H:--muted-foreground","content":"Gameplane itself is open-source, licensed AGPL-3.0-or-later — see the license on GitHub.","textAlign":"center","fontFamily":"$H:--font-secondary","fontSize":13,"fontWeight":"normal"},{"type":"frame","id":"Mv1E2","name":"cta","width":"fill_container","layout":"vertical","gap":20,"padding":[8,0,0,0],"alignItems":"center","children":[{"type":"text","id":"J90gzv","fill":"$H:--foreground","content":"Ready to try it in your own cluster?","textAlign":"center","fontFamily":"$H:--font-primary","fontSize":22,"fontWeight":"700"},{"type":"frame","id":"v2uDSl","name":"ctaRow","gap":16,"alignItems":"center","children":[{"id":"k8hFn","type":"ref","ref":"H:ZGI9Z","descendants":{"H:oNDwn":{"type":"icon","id":"qOZTr","width":24,"height":24,"icon":"github","library":"lucide","fill":"$H:--primary-foreground"},"H:J3Z6N":{"content":"GitHub"}}},{"id":"I4qrU","type":"ref","ref":"H:EAwax","descendants":{"H:nHmDC":{"type":"icon","id":"WZK6k","width":24,"height":24,"icon":"play","library":"lucide","fill":"$H:--foreground"},"H:kqX7U":{"content":"Demo"}}}]}]}]},{"id":"rLAEi","type":"ref","ref":"gnZrl","name":"Footer","width":"fill_container"}]}
+{
+  "type": "frame",
+  "id": "ei1qC",
+  "x": 0,
+  "y": 22443,
+  "name": "Screen/Compare",
+  "theme": {
+    "semantic": "dark"
+  },
+  "width": 1440,
+  "fill": "$background/background",
+  "layout": "vertical",
+  "children": [
+    {
+      "id": "x7DNCy",
+      "type": "ref",
+      "ref": "Qczsa",
+      "name": "Nav",
+      "width": "fill_container"
+    },
+    {
+      "type": "frame",
+      "id": "HawOd",
+      "name": "CompareBody",
+      "width": "fill_container",
+      "fill": "$background/background",
+      "layout": "vertical",
+      "gap": 48,
+      "padding": [
+        80,
+        80,
+        96,
+        80
+      ],
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "frame",
+          "id": "HWPei",
+          "name": "header",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 12,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "pADPl",
+              "fill": "$accent/accent",
+              "content": "COMPARE",
+              "textAlign": "center",
+              "fontFamily": "$typography/font-mono",
+              "fontSize": 12,
+              "fontWeight": "600",
+              "letterSpacing": 1
+            },
+            {
+              "type": "text",
+              "id": "a5n0Z",
+              "fill": "$foreground/foreground",
+              "textGrowth": "fixed-width",
+              "width": 700,
+              "content": "How Gameplane compares",
+              "textAlign": "center",
+              "fontFamily": "$typography/font-mono",
+              "fontSize": 34,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "k1aeXA",
+              "fill": "$muted",
+              "textGrowth": "fixed-width",
+              "width": 900,
+              "content": "Pterodactyl and CubeCoders AMP are control panels; Agones is a Kubernetes operator library — not a direct competitor, but a reference point for teams building on Kubernetes primitives.",
+              "textAlign": "center",
+              "fontFamily": "$typography/font-sans",
+              "fontSize": 16,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "s2lIMU",
+          "name": "compareTable",
+          "clip": true,
+          "width": 960,
+          "cornerRadius": "$radius/2xl",
+          "stroke": "$border/border",
+          "strokeWidth": 1,
+          "strokeAlignment": "inner",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "frame",
+              "id": "Hs5HT",
+              "name": "thead",
+              "width": "fill_container",
+              "fill": "$default/default",
+              "padding": [
+                16,
+                24
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "FybQ6",
+                  "name": "DIMENSION",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": 190,
+                  "content": "DIMENSION",
+                  "fontFamily": "$typography/font-mono",
+                  "fontSize": 11,
+                  "fontWeight": "600",
+                  "letterSpacing": 1
+                },
+                {
+                  "type": "frame",
+                  "id": "LqFoE",
+                  "name": "GameplaneHeaderCell",
+                  "width": "fill_container",
+                  "fill": "$accent/soft",
+                  "cornerRadius": "$radius/md",
+                  "padding": [
+                    4,
+                    8
+                  ],
+                  "justifyContent": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "u3hoOr",
+                      "name": "GAMEPLANE",
+                      "fill": "$accent/accent",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "GAMEPLANE",
+                      "fontFamily": "$typography/font-mono",
+                      "fontSize": 11,
+                      "fontWeight": "600",
+                      "letterSpacing": 1
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "SATwk",
+                  "name": "PTERODACTYL",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "PTERODACTYL",
+                  "fontFamily": "$typography/font-mono",
+                  "fontSize": 11,
+                  "fontWeight": "600",
+                  "letterSpacing": 1
+                },
+                {
+                  "type": "text",
+                  "id": "ylbGG",
+                  "name": "CUBECODERS AMP",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "CUBECODERS AMP",
+                  "fontFamily": "$typography/font-mono",
+                  "fontSize": 11,
+                  "fontWeight": "600",
+                  "letterSpacing": 1
+                },
+                {
+                  "type": "text",
+                  "id": "Kg5Tp",
+                  "name": "AGONES",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "AGONES",
+                  "fontFamily": "$typography/font-mono",
+                  "fontSize": 11,
+                  "fontWeight": "600",
+                  "letterSpacing": 1
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "t8N3R",
+              "name": "Deployment/runtime model",
+              "width": "fill_container",
+              "fill": "$surface/surface",
+              "stroke": "$border/border",
+              "strokeWidth": {
+                "bottom": 1
+              },
+              "strokeAlignment": "inner",
+              "strokeLinejoin": "round",
+              "padding": [
+                20,
+                24
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "S1ODoc",
+                  "name": "dimension",
+                  "fill": "$foreground/foreground",
+                  "textGrowth": "fixed-width",
+                  "width": 190,
+                  "content": "Deployment/runtime model",
+                  "lineHeight": 1.3,
+                  "fontFamily": "$typography/font-mono",
+                  "fontSize": 14,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "YAcEJ",
+                  "name": "gameplane",
+                  "fill": "$foreground/foreground",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Kubernetes-native CRDs and controller-runtime operator; scales from k3s homelab to multi-node clusters. [BETA]",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "po8gL",
+                  "name": "pterodactyl",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Self-hosted Panel with PHP/MySQL/Redis dependencies; Wings backend manages Docker containers.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "qb7Fl",
+                  "name": "amp",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Web-based control panel supporting Windows (native) and Linux (Debian 10+).",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "e3vUO",
+                  "name": "agones",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Kubernetes-native library extending K8s with GameServer/Fleet CRDs.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "jVMfo",
+              "name": "Scaling & auto-sleep",
+              "width": "fill_container",
+              "fill": "$surface/surface",
+              "stroke": "$border/border",
+              "strokeWidth": {
+                "bottom": 1
+              },
+              "strokeAlignment": "inner",
+              "strokeLinejoin": "round",
+              "padding": [
+                20,
+                24
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "BDoRu",
+                  "name": "dimension",
+                  "fill": "$foreground/foreground",
+                  "textGrowth": "fixed-width",
+                  "width": 190,
+                  "content": "Scaling & auto-sleep",
+                  "lineHeight": 1.3,
+                  "fontFamily": "$typography/font-mono",
+                  "fontSize": 14,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "HybvF",
+                  "name": "gameplane",
+                  "fill": "$foreground/foreground",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Opt-in idle auto-sleep with configurable wake windows, manual wake button, or wake-on-connect. Minecraft/Terraria full protocol support; others use packet heuristics. [optional]",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "WjVYH",
+                  "name": "pterodactyl",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Multi-node support with cron-based power scheduling; no dedicated idle/auto-sleep feature.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "TXN3Y",
+                  "name": "amp",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Instance Automatic Sleep feature; multi-server architecture with controller managing instances.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "f4rh5C",
+                  "name": "agones",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Fleet autoscaling via buffer/webhook strategies; no idle/sleep state.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "J8E2Zg",
+              "name": "Inbound connectivity (NAT traversal, relay)",
+              "width": "fill_container",
+              "fill": "$surface/surface",
+              "stroke": "$border/border",
+              "strokeWidth": {
+                "bottom": 1
+              },
+              "strokeAlignment": "inner",
+              "strokeLinejoin": "round",
+              "padding": [
+                20,
+                24
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "iYvjv",
+                  "name": "dimension",
+                  "fill": "$foreground/foreground",
+                  "textGrowth": "fixed-width",
+                  "width": 190,
+                  "content": "Inbound connectivity (NAT traversal, relay)",
+                  "lineHeight": 1.3,
+                  "fontFamily": "$typography/font-mono",
+                  "fontSize": 14,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "U19w7v",
+                  "name": "gameplane",
+                  "fill": "$foreground/foreground",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Integrated frp, Tailscale, playit relay sidecars; playit mappings user-managed via playit.gg account. [optional; disabled by default]",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "lMuAt",
+                  "name": "pterodactyl",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "No integrated relay sidecars; manual proxy/port forwarding configuration required.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "UzwVp",
+                  "name": "amp",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "not publicly documented (checked 2026-09-02)",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "F3X8iP",
+                  "name": "agones",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "No relay or NAT traversal features documented.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "P8HXaC",
+              "name": "Backup and restore",
+              "width": "fill_container",
+              "fill": "$surface/surface",
+              "stroke": "$border/border",
+              "strokeWidth": {
+                "bottom": 1
+              },
+              "strokeAlignment": "inner",
+              "strokeLinejoin": "round",
+              "padding": [
+                20,
+                24
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "H3MflF",
+                  "name": "dimension",
+                  "fill": "$foreground/foreground",
+                  "textGrowth": "fixed-width",
+                  "width": 190,
+                  "content": "Backup and restore",
+                  "lineHeight": 1.3,
+                  "fontFamily": "$typography/font-mono",
+                  "fontSize": 14,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "bSFOO",
+                  "name": "gameplane",
+                  "fill": "$foreground/foreground",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Restic snapshots to S3-compatible storage; on-demand or cron-scheduled via BackupSchedule; one-click restore.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "FV62q",
+                  "name": "pterodactyl",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Wings (local, default) or S3-compatible backup drivers; cron scheduling and on-demand backups.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "PzxGF",
+                  "name": "amp",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "not publicly documented (checked 2026-09-02)",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "gDrzp",
+                  "name": "agones",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "not applicable (Agones is a Kubernetes operator library)",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "U0zEk",
+              "name": "Access control & authentication",
+              "width": "fill_container",
+              "fill": "$surface/surface",
+              "stroke": "$border/border",
+              "strokeWidth": {
+                "bottom": 1
+              },
+              "strokeAlignment": "inner",
+              "strokeLinejoin": "round",
+              "padding": [
+                20,
+                24
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "T4vuE",
+                  "name": "dimension",
+                  "fill": "$foreground/foreground",
+                  "textGrowth": "fixed-width",
+                  "width": 190,
+                  "content": "Access control & authentication",
+                  "lineHeight": 1.3,
+                  "fontFamily": "$typography/font-mono",
+                  "fontSize": 14,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "aXfV1",
+                  "name": "gameplane",
+                  "fill": "$foreground/foreground",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Local argon2id + OIDC (Keycloak/Google/GitHub); three built-in roles (admin/operator/viewer); custom roles supported.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "rurxe",
+                  "name": "pterodactyl",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "2FA configurable per account or admin-only; subuser management via Artisan CLI.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "MJBAk",
+                  "name": "amp",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Role-based access control; OIDC single-sign-on in Advanced Edition.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "yK52o",
+                  "name": "agones",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "not applicable (Agones is a Kubernetes operator library)",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "FzTb4",
+              "name": "Game template distribution",
+              "width": "fill_container",
+              "fill": "$surface/surface",
+              "stroke": "$border/border",
+              "strokeWidth": {
+                "bottom": 1
+              },
+              "strokeAlignment": "inner",
+              "strokeLinejoin": "round",
+              "padding": [
+                20,
+                24
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "JxVLk",
+                  "name": "dimension",
+                  "fill": "$foreground/foreground",
+                  "textGrowth": "fixed-width",
+                  "width": 190,
+                  "content": "Game template distribution",
+                  "lineHeight": 1.3,
+                  "fontFamily": "$typography/font-mono",
+                  "fontSize": 14,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "VQ9Mt",
+                  "name": "gameplane",
+                  "fill": "$foreground/foreground",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "OCI bundles via ModuleSource (git/http/oci/local/upload); optional cosign signature verification per source. 16 ready-to-use templates shipped.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "SzBtF",
+                  "name": "pterodactyl",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Community eggs repository (eggs.pterodactyl.io) with nests and custom egg creation support.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "XUKve",
+                  "name": "amp",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Customizable templates framework; community-contributed templates available via external repositories.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "r6p2Y",
+                  "name": "agones",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "not applicable (Agones is a Kubernetes operator library)",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "H3fp5Z",
+              "name": "Multi-tenancy & multi-cluster",
+              "width": "fill_container",
+              "fill": "$surface/surface",
+              "stroke": "$border/border",
+              "strokeWidth": {
+                "bottom": 1
+              },
+              "strokeAlignment": "inner",
+              "strokeLinejoin": "round",
+              "padding": [
+                20,
+                24
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "EwJtN",
+                  "name": "dimension",
+                  "fill": "$foreground/foreground",
+                  "textGrowth": "fixed-width",
+                  "width": 190,
+                  "content": "Multi-tenancy & multi-cluster",
+                  "lineHeight": 1.3,
+                  "fontFamily": "$typography/font-mono",
+                  "fontSize": 14,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "VyskL",
+                  "name": "gameplane",
+                  "fill": "$foreground/foreground",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Cluster CRD for remote registration/monitoring; console/log streaming local-cluster only. [local cluster only for streaming]",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "AiMwS",
+                  "name": "pterodactyl",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Single Panel managing multiple nodes; no documented remote cluster or cross-cluster streaming.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "bc4XI",
+                  "name": "amp",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Multi-server management via controller architecture; multi-tenancy not supported in AMP 2 (planned for AMP 3).",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "iZCI6",
+                  "name": "agones",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Multi-cluster allocation via GameServerAllocationPolicy; allocator service with mTLS authentication.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "rTcSy",
+              "name": "Licensing",
+              "width": "fill_container",
+              "fill": "$surface/surface",
+              "stroke": "$border/border",
+              "strokeWidth": {
+                "bottom": 1
+              },
+              "strokeAlignment": "inner",
+              "strokeLinejoin": "round",
+              "padding": [
+                20,
+                24
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "z55FT",
+                  "name": "dimension",
+                  "fill": "$foreground/foreground",
+                  "textGrowth": "fixed-width",
+                  "width": 190,
+                  "content": "Licensing",
+                  "lineHeight": 1.3,
+                  "fontFamily": "$typography/font-mono",
+                  "fontSize": 14,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "j1Iu1",
+                  "name": "gameplane",
+                  "fill": "$foreground/foreground",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "GNU Affero General Public License v3.0 or later (AGPL-3.0-or-later).",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "Z0Dcl",
+                  "name": "pterodactyl",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "MIT License (Panel and Wings).",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "JXOeo",
+                  "name": "amp",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Proprietary; per-instance tiers (Standard/Professional/Advanced/Enterprise).",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "dFgjl",
+                  "name": "agones",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Apache License 2.0.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "uhc0r",
+              "name": "Target operator scope (self-hosted vs. managed SaaS)",
+              "width": "fill_container",
+              "fill": "$surface/surface",
+              "stroke": "#00000000",
+              "strokeWidth": {
+                "bottom": 1
+              },
+              "strokeAlignment": "inner",
+              "strokeLinejoin": "round",
+              "padding": [
+                20,
+                24
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "g7G6tz",
+                  "name": "dimension",
+                  "fill": "$foreground/foreground",
+                  "textGrowth": "fixed-width",
+                  "width": 190,
+                  "content": "Target operator scope (self-hosted vs. managed SaaS)",
+                  "lineHeight": 1.3,
+                  "fontFamily": "$typography/font-mono",
+                  "fontSize": 14,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "h3JxIc",
+                  "name": "gameplane",
+                  "fill": "$foreground/foreground",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Self-hosted only; runs on Kubernetes (k3s, kubeadm, managed services); no managed SaaS offering.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "sUnrZ",
+                  "name": "pterodactyl",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Self-hosted only; requires Linux system capable of running Docker containers.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "yFpsP",
+                  "name": "amp",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Self-installed on user hardware (Windows or Linux); no managed SaaS version.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "OQd1P",
+                  "name": "agones",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Self-hosted operator software; runs anywhere Kubernetes can run.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "aut7X",
+          "fill": "$muted",
+          "textGrowth": "fixed-width",
+          "width": 700,
+          "content": "Sources for every cell: docs/comparison-sources.md. Checked 2026-09-02.",
+          "textAlign": "center",
+          "fontFamily": "$typography/font-sans",
+          "fontSize": 13,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "FClwO",
+          "name": "callout",
+          "width": 840,
+          "fill": "$surface/surface",
+          "cornerRadius": "$radius/2xl",
+          "stroke": "$border/border",
+          "strokeWidth": 1,
+          "strokeAlignment": "inner",
+          "gap": 24,
+          "padding": 32,
+          "children": [
+            {
+              "type": "frame",
+              "id": "bHISk",
+              "width": 56,
+              "height": 56,
+              "fill": "$default/default",
+              "cornerRadius": "$radius/2xl",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "R7kROo",
+                  "width": 26,
+                  "height": 26,
+                  "icon": "boxes",
+                  "library": "lucide",
+                  "fill": "$accent/accent"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "wVJRJ",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "YkfFT",
+                  "fill": "$foreground/foreground",
+                  "content": "Why Kubernetes-native matters",
+                  "fontFamily": "$typography/font-mono",
+                  "fontSize": 18,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "V3kZgg",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "The operator handles everything a cluster admin expects from a K8s controller — declarative reconciliation, owner references, leader election. Advanced users can bypass the dashboard entirely and manage Gameplane with kubectl apply.",
+                  "lineHeight": 1.6,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "GGgUI",
+          "fill": "$muted",
+          "content": "Gameplane itself is open-source, licensed AGPL-3.0-or-later — see the license on GitHub.",
+          "textAlign": "center",
+          "fontFamily": "$typography/font-sans",
+          "fontSize": 13,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "Mv1E2",
+          "name": "cta",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            0,
+            0,
+            0
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "J90gzv",
+              "fill": "$foreground/foreground",
+              "content": "Ready to try it in your own cluster?",
+              "textAlign": "center",
+              "fontFamily": "$typography/font-mono",
+              "fontSize": 22,
+              "fontWeight": "700"
+            },
+            {
+              "type": "frame",
+              "id": "v2uDSl",
+              "name": "ctaRow",
+              "gap": 16,
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "C1Iv2V",
+                  "type": "ref",
+                  "ref": "kVpWj",
+                  "fill": "$accent/accent",
+                  "descendants": {
+                    "KeEQj": {
+                      "type": "icon",
+                      "id": "uExXh",
+                      "width": 24,
+                      "height": 24,
+                      "icon": "github",
+                      "library": "lucide",
+                      "fill": "$accent/foreground"
+                    },
+                    "ubO3k": {
+                      "content": "GitHub",
+                      "fill": "$accent/foreground",
+                      "fontFamily": "$typography/font-mono"
+                    }
+                  }
+                },
+                {
+                  "id": "S2cQHh",
+                  "type": "ref",
+                  "ref": "VzPOH",
+                  "fill": "$background/background",
+                  "stroke": "$border/border",
+                  "descendants": {
+                    "vjsch": {
+                      "type": "icon",
+                      "id": "koD4c",
+                      "width": 24,
+                      "height": 24,
+                      "icon": "play",
+                      "library": "lucide",
+                      "fill": "$foreground/foreground"
+                    },
+                    "F2L1qp": {
+                      "content": "Demo",
+                      "fill": "$foreground/foreground",
+                      "fontFamily": "$typography/font-mono"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rLAEi",
+      "type": "ref",
+      "ref": "gnZrl",
+      "name": "Footer",
+      "width": "fill_container"
+    }
+  ]
+}

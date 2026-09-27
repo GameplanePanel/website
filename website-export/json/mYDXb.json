@@ -3,14 +3,14 @@
   "id": "mYDXb",
   "x": 0,
   "y": 79648,
-  "name": "Screen/Docs \u2014 User Administration",
+  "name": "Screen/Docs — User Administration",
   "theme": {
-    "H:Mode": "Dark"
+    "semantic": "dark"
   },
   "clip": true,
   "width": 1440,
   "height": 900,
-  "fill": "$H:--background",
+  "fill": "$background/background",
   "children": [
     {
       "id": "t7ObL",
@@ -26,7 +26,7 @@
       "name": "Docs Main",
       "width": "fill_container",
       "height": "fill_container",
-      "fill": "$H:--background",
+      "fill": "$background/background",
       "layout": "vertical",
       "children": [
         {
@@ -66,7 +66,7 @@
                   "type": "text",
                   "id": "o1C3E6",
                   "name": "Article Eyebrow",
-                  "fill": "#FF8400",
+                  "fill": "$accent/accent",
                   "content": "ACCESS",
                   "fontFamily": "JetBrains Mono",
                   "fontSize": 11,
@@ -77,7 +77,7 @@
                   "type": "text",
                   "id": "CkxiV",
                   "name": "Article Title",
-                  "fill": "#FFFFFF",
+                  "fill": "$foreground/foreground",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
                   "content": "User administration",
@@ -90,7 +90,7 @@
                   "type": "text",
                   "id": "a6FI6",
                   "name": "Article Lead",
-                  "fill": "#B8B9B6",
+                  "fill": "$muted",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
                   "content": "Invite and maintain local users, reset credentials, assign roles, and distinguish current capabilities from planned service accounts.",
@@ -107,82 +107,37 @@
                   "alignItems": "center",
                   "children": [
                     {
-                      "type": "frame",
-                      "id": "EuDB7",
+                      "id": "cVi5B",
+                      "type": "ref",
+                      "ref": "NZPtq",
                       "name": "Meta Chip 0",
-                      "fill": "#FF84001F",
-                      "cornerRadius": 999,
-                      "stroke": "#FF840066",
-                      "strokeWidth": 1,
-                      "strokeAlignment": "inner",
-                      "padding": [
-                        5,
-                        9
-                      ],
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "Z3OXp",
-                          "name": "Meta Chip Label 0",
-                          "fill": "#FF9D33",
-                          "content": "ADMIN GUIDE",
-                          "fontFamily": "JetBrains Mono",
-                          "fontSize": 9,
-                          "fontWeight": "600"
+                      "descendants": {
+                        "NLG8t": {
+                          "content": "ADMIN GUIDE"
                         }
-                      ]
+                      }
                     },
                     {
-                      "type": "frame",
-                      "id": "RyuqP",
+                      "id": "DyR8v",
+                      "type": "ref",
+                      "ref": "EbSsA",
                       "name": "Meta Chip 1",
-                      "fill": "#1A1A1A",
-                      "cornerRadius": 999,
-                      "stroke": "#2E2E2E",
-                      "strokeWidth": 1,
-                      "strokeAlignment": "inner",
-                      "padding": [
-                        5,
-                        9
-                      ],
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "JU7kh",
-                          "name": "Meta Chip Label 1",
-                          "fill": "#B8B9B6",
-                          "content": "v0.2",
-                          "fontFamily": "JetBrains Mono",
-                          "fontSize": 9,
-                          "fontWeight": "600"
+                      "descendants": {
+                        "yb6zz": {
+                          "content": "v0.2"
                         }
-                      ]
+                      }
                     },
                     {
-                      "type": "frame",
-                      "id": "yDM3k",
+                      "id": "CyOHE",
+                      "type": "ref",
+                      "ref": "EbSsA",
                       "name": "Meta Chip 2",
-                      "fill": "#1A1A1A",
-                      "cornerRadius": 999,
-                      "stroke": "#2E2E2E",
-                      "strokeWidth": 1,
-                      "strokeAlignment": "inner",
-                      "padding": [
-                        5,
-                        9
-                      ],
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "SCI5y",
-                          "name": "Meta Chip Label 2",
-                          "fill": "#B8B9B6",
-                          "content": "15 MIN",
-                          "fontFamily": "JetBrains Mono",
-                          "fontSize": 9,
-                          "fontWeight": "600"
+                      "descendants": {
+                        "yb6zz": {
+                          "content": "15 MIN"
                         }
-                      ]
+                      }
                     }
                   ]
                 },
@@ -191,9 +146,9 @@
                   "id": "eTx9F",
                   "name": "Article Callout",
                   "width": "fill_container",
-                  "fill": "#FF84000F",
-                  "cornerRadius": 8,
-                  "stroke": "#FF84004D",
+                  "fill": "$accent/soft",
+                  "cornerRadius": "$radius/xl",
+                  "stroke": "$border/border",
                   "strokeWidth": 1,
                   "strokeAlignment": "inner",
                   "gap": 10,
@@ -211,13 +166,13 @@
                       "height": 16,
                       "icon": "users-round",
                       "library": "lucide",
-                      "fill": "#FF8400"
+                      "fill": "$accent/soft-foreground"
                     },
                     {
                       "type": "text",
                       "id": "iISme",
                       "name": "Article Callout Text",
-                      "fill": "#E7E7E4",
+                      "fill": "$accent/soft-foreground",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "Service-account creation is availability-dependent; do not document a token workflow until the shipped UI and API support it.",
@@ -239,7 +194,7 @@
                       "type": "text",
                       "id": "ziPPc",
                       "name": "Section Title 1",
-                      "fill": "#FFFFFF",
+                      "fill": "$foreground/foreground",
                       "content": "Invite a local user",
                       "fontFamily": "JetBrains Mono",
                       "fontSize": 17,
@@ -249,7 +204,7 @@
                       "type": "text",
                       "id": "DctvL",
                       "name": "Section Body 1",
-                      "fill": "#B8B9B6",
+                      "fill": "$muted",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "Create a unique identity, secure initial credential, and the minimum global role; add per-server collaboration separately.",
@@ -263,9 +218,9 @@
                       "id": "nxjxs",
                       "name": "Section List 1",
                       "width": "fill_container",
-                      "fill": "#1A1A1A",
-                      "cornerRadius": 8,
-                      "stroke": "#2E2E2E",
+                      "fill": "$surface/surface",
+                      "cornerRadius": "$radius/2xl",
+                      "stroke": "$border/border",
                       "strokeWidth": 1,
                       "strokeAlignment": "inner",
                       "layout": "vertical",
@@ -291,13 +246,13 @@
                               "height": 13,
                               "icon": "check",
                               "library": "lucide",
-                              "fill": "#FF8400"
+                              "fill": "$accent/accent"
                             },
                             {
                               "type": "text",
                               "id": "fV1KX",
                               "name": "Section 1 Item Text 0",
-                              "fill": "#E7E7E4",
+                              "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
                               "content": "Use unique username, optional display/email, and 12+ character password.",
@@ -323,13 +278,13 @@
                               "height": 13,
                               "icon": "check",
                               "library": "lucide",
-                              "fill": "#FF8400"
+                              "fill": "$accent/accent"
                             },
                             {
                               "type": "text",
                               "id": "cE8NO",
                               "name": "Section 1 Item Text 1",
-                              "fill": "#E7E7E4",
+                              "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
                               "content": "Assign least privilege and scope server access separately.",
@@ -355,13 +310,13 @@
                               "height": 13,
                               "icon": "check",
                               "library": "lucide",
-                              "fill": "#FF8400"
+                              "fill": "$accent/accent"
                             },
                             {
                               "type": "text",
                               "id": "v9q3r",
                               "name": "Section 1 Item Text 2",
-                              "fill": "#E7E7E4",
+                              "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
                               "content": "Send credentials securely and verify the first private sign-in.",
@@ -387,7 +342,7 @@
                       "type": "text",
                       "id": "LURNl",
                       "name": "Section Title 2",
-                      "fill": "#FFFFFF",
+                      "fill": "$foreground/foreground",
                       "content": "Edit roles and reset credentials",
                       "fontFamily": "JetBrains Mono",
                       "fontSize": 17,
@@ -397,7 +352,7 @@
                       "type": "text",
                       "id": "OYYHK",
                       "name": "Section Body 2",
-                      "fill": "#B8B9B6",
+                      "fill": "$muted",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "Role changes affect global authorization; local and OIDC credentials have different owners.",
@@ -411,9 +366,9 @@
                       "id": "ybswt",
                       "name": "Section List 2",
                       "width": "fill_container",
-                      "fill": "#1A1A1A",
-                      "cornerRadius": 8,
-                      "stroke": "#2E2E2E",
+                      "fill": "$surface/surface",
+                      "cornerRadius": "$radius/2xl",
+                      "stroke": "$border/border",
                       "strokeWidth": 1,
                       "strokeAlignment": "inner",
                       "layout": "vertical",
@@ -439,13 +394,13 @@
                               "height": 13,
                               "icon": "check",
                               "library": "lucide",
-                              "fill": "#FF8400"
+                              "fill": "$accent/accent"
                             },
                             {
                               "type": "text",
                               "id": "u2VrN",
                               "name": "Section 2 Item Text 0",
-                              "fill": "#E7E7E4",
+                              "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
                               "content": "Edit display name, email, and primary role deliberately.",
@@ -471,13 +426,13 @@
                               "height": 13,
                               "icon": "check",
                               "library": "lucide",
-                              "fill": "#FF8400"
+                              "fill": "$accent/accent"
                             },
                             {
                               "type": "text",
                               "id": "soVQg",
                               "name": "Section 2 Item Text 1",
-                              "fill": "#E7E7E4",
+                              "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
                               "content": "Reset only local passwords in Gameplane with a new 12+ character value.",
@@ -503,13 +458,13 @@
                               "height": 13,
                               "icon": "check",
                               "library": "lucide",
-                              "fill": "#FF8400"
+                              "fill": "$accent/accent"
                             },
                             {
                               "type": "text",
                               "id": "rLFEM",
                               "name": "Section 2 Item Text 2",
-                              "fill": "#E7E7E4",
+                              "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
                               "content": "Manage OIDC password, MFA, and disablement at the provider.",
@@ -535,7 +490,7 @@
                       "type": "text",
                       "id": "ckTWM",
                       "name": "Section Title 3",
-                      "fill": "#FFFFFF",
+                      "fill": "$foreground/foreground",
                       "content": "Review lifecycle and availability",
                       "fontFamily": "JetBrains Mono",
                       "fontSize": 17,
@@ -545,7 +500,7 @@
                       "type": "text",
                       "id": "UDp39",
                       "name": "Section Body 3",
-                      "fill": "#B8B9B6",
+                      "fill": "$muted",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "Audit access changes and remove dormant roles/collaboration; treat service accounts as version-dependent until shipped.",
@@ -559,9 +514,9 @@
                       "id": "A3u6wK",
                       "name": "Quick Reference",
                       "width": "fill_container",
-                      "fill": "#0D0D0D",
-                      "cornerRadius": 8,
-                      "stroke": "#2E2E2E",
+                      "fill": "$surface/tertiary",
+                      "cornerRadius": "$radius/xl",
+                      "stroke": "$border/border",
                       "strokeWidth": 1,
                       "strokeAlignment": "inner",
                       "layout": "vertical",
@@ -572,7 +527,7 @@
                           "type": "text",
                           "id": "ekZbm",
                           "name": "Quick Reference Label",
-                          "fill": "#FF8400",
+                          "fill": "$accent/accent",
                           "content": "USER LIFECYCLE",
                           "fontFamily": "JetBrains Mono",
                           "fontSize": 9,
@@ -583,8 +538,8 @@
                           "type": "text",
                           "id": "gHAue",
                           "name": "Quick Reference Line 1",
-                          "fill": "#FFFFFF",
-                          "content": "01  Invite \u2192 unique identity + 12-char password + least privilege",
+                          "fill": "$foreground/foreground",
+                          "content": "01  Invite → unique identity + 12-char password + least privilege",
                           "fontFamily": "JetBrains Mono",
                           "fontSize": 11.5,
                           "fontWeight": "normal"
@@ -593,7 +548,7 @@
                           "type": "text",
                           "id": "JbxMX",
                           "name": "Quick Reference Line 2",
-                          "fill": "#FFFFFF",
+                          "fill": "$foreground/foreground",
                           "content": "02  Local reset in Gameplane; OIDC credentials remain upstream",
                           "fontFamily": "JetBrains Mono",
                           "fontSize": 11.5,
@@ -603,7 +558,7 @@
                           "type": "text",
                           "id": "l6sQz",
                           "name": "Quick Reference Line 3",
-                          "fill": "#FFFFFF",
+                          "fill": "$foreground/foreground",
                           "content": "03  Audit role/collaboration changes; service accounts depend on release",
                           "fontFamily": "JetBrains Mono",
                           "fontSize": 11.5,
@@ -618,7 +573,7 @@
                   "id": "qfaqi",
                   "name": "Article Next Link",
                   "width": "fill_container",
-                  "stroke": "#2E2E2E",
+                  "stroke": "$border/border",
                   "strokeWidth": {
                     "top": 1
                   },
@@ -644,7 +599,7 @@
                           "type": "text",
                           "id": "Tz0Va",
                           "name": "Next Link Eyebrow",
-                          "fill": "#737570",
+                          "fill": "$field/placeholder",
                           "content": "NEXT GUIDE",
                           "fontFamily": "Geist",
                           "fontSize": 10,
@@ -654,7 +609,7 @@
                           "type": "text",
                           "id": "kBBIl",
                           "name": "Next Link Title",
-                          "fill": "#FFFFFF",
+                          "fill": "$foreground/foreground",
                           "content": "System log viewer",
                           "fontFamily": "JetBrains Mono",
                           "fontSize": 13,
@@ -670,7 +625,7 @@
                       "height": 15,
                       "icon": "arrow-right",
                       "library": "lucide",
-                      "fill": "#B8B9B6"
+                      "fill": "$muted"
                     }
                   ]
                 }
@@ -689,9 +644,9 @@
                   "id": "WPY9s",
                   "name": "Docs Table of Contents",
                   "width": "fill_container",
-                  "fill": "#171717",
-                  "cornerRadius": 10,
-                  "stroke": "#2E2E2E",
+                  "fill": "$surface/secondary",
+                  "cornerRadius": "$radius/2xl",
+                  "stroke": "$border/border",
                   "strokeWidth": 1,
                   "strokeAlignment": "inner",
                   "layout": "vertical",
@@ -702,7 +657,7 @@
                       "type": "text",
                       "id": "X2CKdD",
                       "name": "TOC Label",
-                      "fill": "#737570",
+                      "fill": "$field/placeholder",
                       "content": "ON THIS PAGE",
                       "fontFamily": "JetBrains Mono",
                       "fontSize": 9,
@@ -725,13 +680,13 @@
                           "height": 12,
                           "icon": "hash",
                           "library": "lucide",
-                          "fill": "#FF8400"
+                          "fill": "$accent/accent"
                         },
                         {
                           "type": "text",
                           "id": "svmre",
                           "name": "TOC Text 0",
-                          "fill": "#FFFFFF",
+                          "fill": "$foreground/foreground",
                           "content": "Invite",
                           "fontFamily": "Geist",
                           "fontSize": 12.5,
@@ -755,13 +710,13 @@
                           "height": 12,
                           "icon": "hash",
                           "library": "lucide",
-                          "fill": "#737570"
+                          "fill": "$field/placeholder"
                         },
                         {
                           "type": "text",
                           "id": "js6BR",
                           "name": "TOC Text 1",
-                          "fill": "#B8B9B6",
+                          "fill": "$muted",
                           "content": "Roles and resets",
                           "fontFamily": "Geist",
                           "fontSize": 12.5,
@@ -785,13 +740,13 @@
                           "height": 12,
                           "icon": "hash",
                           "library": "lucide",
-                          "fill": "#737570"
+                          "fill": "$field/placeholder"
                         },
                         {
                           "type": "text",
                           "id": "yKEEE",
                           "name": "TOC Text 2",
-                          "fill": "#B8B9B6",
+                          "fill": "$muted",
                           "content": "Lifecycle",
                           "fontFamily": "Geist",
                           "fontSize": 12.5,
@@ -803,7 +758,7 @@
                       "type": "rectangle",
                       "id": "HiVgm",
                       "name": "TOC Divider",
-                      "fill": "#2E2E2E",
+                      "fill": "$border/border",
                       "width": "fill_container",
                       "height": 1
                     },
@@ -811,7 +766,7 @@
                       "type": "text",
                       "id": "j5sID",
                       "name": "Coverage Label",
-                      "fill": "#737570",
+                      "fill": "$field/placeholder",
                       "content": "COVERS",
                       "fontFamily": "JetBrains Mono",
                       "fontSize": 9,
@@ -834,13 +789,13 @@
                           "height": 12,
                           "icon": "book-open",
                           "library": "lucide",
-                          "fill": "#8B8D88"
+                          "fill": "$field/placeholder"
                         },
                         {
                           "type": "text",
                           "id": "X8s7ME",
                           "name": "Coverage Text 0",
-                          "fill": "#B8B9B6",
+                          "fill": "$muted",
                           "content": "Users",
                           "fontFamily": "Geist",
                           "fontSize": 12,
@@ -864,13 +819,13 @@
                           "height": 12,
                           "icon": "book-open",
                           "library": "lucide",
-                          "fill": "#8B8D88"
+                          "fill": "$field/placeholder"
                         },
                         {
                           "type": "text",
                           "id": "bPhPs",
                           "name": "Coverage Text 1",
-                          "fill": "#B8B9B6",
+                          "fill": "$muted",
                           "content": "Roles",
                           "fontFamily": "Geist",
                           "fontSize": 12,
@@ -894,13 +849,13 @@
                           "height": 12,
                           "icon": "book-open",
                           "library": "lucide",
-                          "fill": "#8B8D88"
+                          "fill": "$field/placeholder"
                         },
                         {
                           "type": "text",
                           "id": "R784g",
                           "name": "Coverage Text 2",
-                          "fill": "#B8B9B6",
+                          "fill": "$muted",
                           "content": "Providers",
                           "fontFamily": "Geist",
                           "fontSize": 12,
@@ -915,9 +870,9 @@
                   "id": "ns83k",
                   "name": "Edit Page Card",
                   "width": "fill_container",
-                  "fill": "#111111",
-                  "cornerRadius": 10,
-                  "stroke": "#2E2E2E",
+                  "fill": "$background/background",
+                  "cornerRadius": "$radius/3xl",
+                  "stroke": "$border/border",
                   "strokeWidth": 1,
                   "strokeAlignment": "inner",
                   "layout": "vertical",
@@ -928,7 +883,7 @@
                       "type": "text",
                       "id": "fg6i3",
                       "name": "Edit Page Title",
-                      "fill": "#FFFFFF",
+                      "fill": "$foreground/foreground",
                       "content": "Improve this page",
                       "fontFamily": "JetBrains Mono",
                       "fontSize": 12,
@@ -938,7 +893,7 @@
                       "type": "text",
                       "id": "KDcLr",
                       "name": "Edit Page Body",
-                      "fill": "#B8B9B6",
+                      "fill": "$muted",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "Found a gap? Open a docs issue or suggest an edit on GitHub.",
@@ -958,7 +913,7 @@
                           "type": "text",
                           "id": "zjHy2",
                           "name": "Edit Page Link Text",
-                          "fill": "#FF9D33",
+                          "fill": "$accent/soft-foreground",
                           "content": "Edit this page",
                           "fontFamily": "Geist",
                           "fontSize": 12,
@@ -972,7 +927,7 @@
                           "height": 12,
                           "icon": "external-link",
                           "library": "lucide",
-                          "fill": "#FF8400"
+                          "fill": "$accent/accent"
                         }
                       ]
                     }

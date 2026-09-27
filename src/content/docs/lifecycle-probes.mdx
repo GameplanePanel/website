@@ -1,0 +1,160 @@
+---
+title: "Lifecycle and health probes"
+description: "Control desired running state, graceful shutdown, and probe timing so slow games recover without restart loops or data loss."
+section: operate
+group: servers-config
+order: 7
+icon: heart-handshake
+eyebrow: CONFIGURE
+readTime: "14 MIN"
+covers: ["Suspend", "Graceful stop", "Health"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
+
+<DocsArticleMeta groupId="servers-config" readTime="14 MIN" />
+
+Control desired running state, graceful shutdown, and probe timing so slow games recover without restart loops or data loss.
+
+<DocsCallout icon="heart-handshake" title="Use intentional Stop or Suspend for maintenance; do not weaken probes to hide a real process failure.">
+Disabling readiness/liveness probes masks underlying failures. If your game crashes frequently, investigate the root cause instead of loosening probe thresholds.
+</DocsCallout>
+
+## Running, suspended, and restart behavior
+
+Desired state determines whether Kubernetes maintains a running replica or scales the StatefulSet to zero.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "Auto-restart maintains Running after failures",
+      text: "By default, the operator scales the StatefulSet to 1 and keeps the server Running even after crashes.",
+    },
+    {
+      icon: "check",
+      label: "Suspend scales to zero and preserves data",
+      text: "Setting suspend=true in the dashboard or via kubectl scales the pod down to zero replicas. The Suspended phase is reached and all persistent data (world files, configs) remains on the PVC.",
+    },
+    {
+      icon: "check",
+      label: "Use Stop or Suspend intentionally for maintenance",
+      text: "Stopping a server through the dashboard patches spec.suspend=true. This is distinct from automatic sleep triggered by idle time — your manual stop always takes precedence.",
+    },
+  ]}
+/>
+
+## Graceful termination
+
+The operator waits for the template stop sequence within the configured 0–600 second grace window.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "Default grace period is 30 seconds",
+      text: "The StopGracePeriodSeconds defaults to 30 seconds. Large worlds, complex save routines, or slow storage may require more.",
+    },
+    {
+      icon: "check",
+      label: "The grace period only matters when the template declares a stop sequence",
+      text: "If the GameTemplate has no stop sequence, the grace period is ignored. The pod is forcibly terminated after the Kubernetes default grace period (termination grace period seconds).",
+    },
+    {
+      icon: "check",
+      label: "Verify the final save through console and logs",
+      text: "Check the console tab and pod logs after stopping to confirm the save completed successfully before the pod shut down.",
+    },
+  ]}
+/>
+
+## Tune readiness, liveness, and startup
+
+Override timing one probe family at a time; startup protects boot, readiness gates traffic, and liveness triggers recovery.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "Startup probe protects the boot sequence",
+      text: "The startup probe prevents readiness and liveness checks from running until the game finishes initialization. Use this for games that take minutes to start.",
+    },
+    {
+      icon: "check",
+      label: "Readiness probe gates traffic and console availability",
+      text: "The readiness probe signals when the game is ready to accept players. It gates both player connections (via the service) and the RCON console. If the game enters a wedged state but is still running, readiness will fail and the console becomes unavailable until it recovers.",
+    },
+    {
+      icon: "check",
+      label: "Liveness probe triggers pod restart on recovery failure",
+      text: "The liveness probe, if defined, will cause the pod to restart if the game becomes permanently unresponsive. Do not enable liveness on games that hang during legitimate save sequences.",
+    },
+  ]}
+/>
+
+<DocsQuickReference
+  label="PROBE MODEL"
+  items={[
+    "01  Auto-restart off → zero replicas, Suspended, data preserved",
+    "02  Grace period 0–600s; requires template stop sequence",
+    "03  Startup protects boot; readiness gates traffic; liveness recovers",
+  ]}
+/>
+
+## Configuring via YAML
+
+Override probes in the GameServer spec to tune timing for your specific game:
+
+```yaml
+apiVersion: gameplane.io/v1alpha1
+kind: GameServer
+metadata:
+  name: my-game
+spec:
+  templateRef:
+    name: minecraft
+  # Set suspend to true to stop the server
+  suspend: false
+  
+  # Set the grace period for graceful shutdown (0-600 seconds)
+  stopGracePeriodSeconds: 60
+  
+  # Override template probes with custom timing
+  probes:
+    startup:
+      # Allow up to 10 minutes for the game to start
+      failureThreshold: 300
+      periodSeconds: 2
+    readiness:
+      # Check readiness every 5 seconds
+      periodSeconds: 5
+      failureThreshold: 3
+    liveness:
+      # Check liveness every 30 seconds
+      periodSeconds: 30
+      failureThreshold: 3
+```
+
+## Suspending with idle auto-sleep
+
+If you enable idle auto-sleep (`spec.idle.enabled: true`), the operator scales the server down automatically after it reports zero players for the configured idle period. The graceful termination sequence still runs — the template's stop sequence executes with the same grace period, and data is preserved.
+
+For more details, see the [`spec.idle` configuration in the architecture docs](./architecture/).
+
+## Understanding phases and transitions
+
+- **Pending** → **Starting** → **Running**: The pod is initializing and probes are passing.
+- **Running** (steady state): The game is healthy and accepting connections.
+- **Stopping**: The grace period is active; the template stop sequence is running if defined.
+- **Stopped**: The pod has been forcibly terminated (grace period expired or no stop sequence).
+- **Suspended**: The pod is scaled to zero via `spec.suspend=true`. Data is preserved; use Start to resume.
+- **Failed**: The pod crashed and is not recovering. Check the console and logs.
+
+Hover over the phase badge on the server overview to see the current condition and reason.
+
+---
+
+Next guide: [Ownership and danger zone](./ownership-danger-zone/)

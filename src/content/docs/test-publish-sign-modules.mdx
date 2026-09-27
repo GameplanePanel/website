@@ -1,0 +1,89 @@
+---
+title: "Test, Publish & Sign Modules"
+description: "Prove a module locally, publish immutable OCI bundles, and use digest pinning and signatures for trustworthy upgrades."
+section: develop
+group: modules-sources
+order: 6
+icon: flask-conical-conical
+eyebrow: "AUTHOR MODULES"
+readTime: "20 MIN"
+covers: ["Testing", "OCI", "Cosign"]
+next: "rest-api-reference"
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+
+Prove a module locally, publish immutable OCI bundles, and use digest pinning and signatures for trustworthy upgrades.
+
+<DocsCallout icon="shield-alert" title="Signature mismatches fail safely">
+  A signature mismatch must leave the Module failed without replacing the last known-good GameTemplate.
+</DocsCallout>
+
+## Local acceptance
+
+Validate and install through the same source path users will run, then exercise every advertised capability and version.
+
+<DocsSectionList
+  items={[
+    { icon: "check", label: "Validate metadata/schema", text: "Wait for ModuleSource synchronization to confirm catalog visibility." },
+    { icon: "play", label: "Test server operations", text: "Create, readiness, console, files, players, backup, restore, and stop." },
+    { icon: "archive", label: "Verify PVC persistence", text: "Previous version-specific PVCs survive version/loader switches." },
+  ]}
+/>
+
+Before publishing, validate that your `module.yaml` and `template.yaml` meet the schema requirements and that they appear in the ModuleSource catalog. Then create a test GameServer from your module and exercise every advertised feature: start the server, verify readiness, interact with the console, download files, check player lists, create and restore backups, and cleanly stop. Test upgrading from the previous version to confirm that data persists across version boundaries and that loader switches (if supported) don't corrupt PVCs.
+
+## Sources and upgrades
+
+Use semantic versions and immutable digests, then test discovery, explicit installation, rollback, and source failure.
+
+<DocsSectionList
+  items={[
+    { icon: "package", label: "Prefer OCI for production", text: "Immutable digests and signature verification are OCI-registry concepts." },
+    { icon: "refresh-cw", label: "Keep catalog refresh separate", text: "Source polling should not trigger implicit upgrades; use explicit install/upgrade requests." },
+    { icon: "info", label: "Test failure paths", text: "Bad bundles, missing versions, uninstall blockers, and recovery flows." },
+  ]}
+/>
+
+Publish modules to an OCI registry (`ghcr.io`, `quay.io`, or your self-hosted registry) and tag each release with a semantic version. OCI registries give you immutable content digests (`sha256:…`) and enable cosign signature verification, which are not available for git/http/local/upload sources.
+
+Test discovery by pulling the catalog from your ModuleSource; confirm the module and all versions appear. Test explicit installation by specifying a version and a digest pin. Test upgrade by installing a previous version, then upgrading to the latest. Finally, test rollback and failure recovery by verifying that a misbehaving bundle does not replace the last known-good GameTemplate.
+
+## Supply-chain trust
+
+Sign official bundles by digest, publish the matching public key, and keep private keys only in CI Secrets.
+
+<DocsSectionList
+  items={[
+    { icon: "lock", label: "Key generation", text: "Generate a signing key pair once; store the private key in CI Secrets." },
+    { icon: "check", label: "Sign by digest", text: "Use cosign to attach a signature to each published bundle, recorded in Sigstore Rekor." },
+    { icon: "shield-check", label: "Verify offline", text: "The operator verifies signatures without requiring Rekor connectivity (air-gap friendly)." },
+  ]}
+/>
+
+Sign each OCI bundle with a private key using cosign. The public key is committed to your repository and shipped to users; the private key never leaves your CI environment. Signatures are recorded in the public Sigstore Rekor transparency log, allowing users to prove that a bundle was signed and when. The operator's verification path is **keyed** and **offline** — it does not require Fulcio or Rekor connectivity — so air-gapped clusters can still verify signatures.
+
+To get started, generate a key pair using `cosign generate-key-pair`, store the private key in your CI system's Secrets (e.g., GitHub Actions "release-signing" environment), and commit the public key to your repository root.
+
+<DocsQuickReference
+  label="MODULE RELEASE"
+  items={[
+    "01  make dev-up && make modules-push",
+    "02  cosign sign --key env://COSIGN_PRIVATE_KEY --tlog-upload=false <digest>",
+    "03  cosign verify --key cosign.pub --insecure-ignore-tlog=true <digest>",
+  ]}
+/>
+
+The `make modules-push` command builds and pushes your module bundle, returning its OCI digest (in the form `sha256:…`). Use that digest to sign with cosign: `--key env://COSIGN_PRIVATE_KEY` reads the private key from an environment variable, and `--tlog-upload=false` keeps signing local (offline-friendly). To verify offline, use `cosign verify --insecure-ignore-tlog=true` with the public key committed to your repo.
+
+For production releases, enable `--tlog-upload=true` to record signatures in the Rekor log, giving users proof that the bundle was signed at a specific time. For air-gapped authoring, keep the default (`--tlog-upload=false`) so bundles can be signed in CI and installed offline.
+
+---
+
+## Further reading
+
+- [Module Authoring](./module-authoring/) — full schema reference for `module.yaml` and `template.yaml`.
+- [Module Authoring Quickstart](./module-authoring-quickstart/) — scaffolding and validation with `gp-module`.
+- [REST API Reference](./rest-api-reference/) — API endpoints for module catalog and installation.

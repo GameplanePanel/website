@@ -1,0 +1,84 @@
+---
+title: "General Server Settings"
+description: "Manage stable identity, useful operator metadata, and image selection while understanding which values require replacement."
+section: "operate"
+group: "servers-config"
+order: 5
+icon: "info"
+eyebrow: "CONFIGURE"
+readTime: "9 MIN"
+covers: ["Identity", "Description", "Image"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+
+Manage stable identity, useful operator metadata, and image selection while understanding which values require replacement.
+
+<DocsCallout icon="package" title="Image overrides are explicit exceptions">
+  An image override bypasses the template default. Pin it only for a tested exception with a rollback path.
+</DocsCallout>
+
+## Understand immutable identity
+
+The GameServer name and UID anchor workload identity; template and version changes belong in their dedicated workflows.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "lock",
+      label: "Server name cannot be edited",
+      text: "The server name is immutable after creation and tied to the workload identity.",
+    },
+    {
+      icon: "copy",
+      label: "Clone or recreate for infrastructure identity changes",
+      text: "When infrastructure identity must change, clone or create a replacement when infrastructure identity must change.",
+    },
+    {
+      icon: "shield-check",
+      label: "Move data only through verified backup and restore",
+      text: "Move data only through verified backup and restore plan.",
+    },
+  ]}
+/>
+
+## Maintain useful metadata
+
+Description is searchable operator context, not player-facing MOTD or an incident notebook.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "file-code",
+      label: "Summarize purpose, owner, and lifecycle expectations briefly",
+      text: "Keep descriptions brief and focused on operational context.",
+    },
+    {
+      icon: "refresh-cw",
+      label: "Update metadata when ownership or operational purpose changes",
+      text: "Maintain metadata accuracy as responsibilities shift.",
+    },
+    {
+      icon: "lock",
+      label: "Never include secrets, private addresses, or player data",
+      text: "Metadata is visible to all operators; treat it as public operational notes.",
+    },
+  ]}
+/>
+
+## Override the image deliberately
+
+Leave the field blank to inherit the template; a tested repository and immutable tag or digest is an explicit exception.
+
+When you leave the image field blank, the server inherits the image selected by the template's version. A tested repository and immutable tag or digest is an explicit exception—pin an image only when you have a rollback path and have validated the version in your environment.
+
+<DocsQuickReference
+  label="IMAGE OVERRIDE"
+  items={[
+    "01  Blank → inherit the installed template and selected version",
+    "02  Pin → repository + immutable tag/digest; save one change",
+    "03  Watch pull events, then verify game, files, ports, and backups",
+  ]}
+/>

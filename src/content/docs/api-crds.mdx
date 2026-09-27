@@ -1,0 +1,99 @@
+---
+title: API and CRD reference
+description: Automate Gameplane through Kubernetes resources and scoped identities while keeping desired state, observed status, and audit history aligned.
+section: develop
+group: api-reference
+order: 1
+icon: braces
+eyebrow: REFERENCE
+readTime: 18 MIN
+covers: ["CRDs", "Status", "GitOps"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+
+Automate Gameplane through Kubernetes resources and scoped identities while keeping desired state, observed status, and audit history aligned.
+
+<DocsCallout icon="info" title="Write spec, read status">
+  Controllers own conditions and observed fields; automation should never patch them as desired state.
+</DocsCallout>
+
+## Core resources
+
+GameServer, GameTemplate, Module, ModuleSource, Backup, BackupSchedule, Cluster, and Restore encode the platform's declarative contracts. These eight resources form the core API surface.
+
+<DocsCallout icon="milestone" title="Coming in v0.3.0">
+NetworkCapture, the ninth core CRD (packet capture), ships in v0.3.0 and is not available in beta.8.
+</DocsCallout>
+
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "Use installed CRD versions",
+      text: "Use apiVersion and kind from the installed CRDs, not copied state examples.",
+    },
+    {
+      icon: "check",
+      label: "Separate names and UIDs",
+      text: "Treat names and UIDs separately when correlating resources across restores.",
+    },
+    {
+      icon: "check",
+      label: "Leverage labels and ownership",
+      text: "Use labels and owner references for automation and cleanup.",
+    },
+  ]}
+/>
+
+## Status, phases, and conditions
+
+Observed generation, phase, reason, message, and conditions explain whether the controller has applied the latest intent. Every resource tracks its current state via `.status` fields that the controller populates.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "Wait for observedGeneration",
+      text: "Wait for observedGeneration before treating status as current.",
+    },
+    {
+      icon: "check",
+      label: "Use condition metadata",
+      text: "Use condition type, status, reason, and timestamp in runbooks.",
+    },
+    {
+      icon: "check",
+      label: "Watch Kubernetes events",
+      text: "Watch events when a phase alone cannot explain a blocked reconciliation.",
+    },
+  ]}
+/>
+
+## kubectl and API access
+
+Use Kubernetes RBAC for CRD workflows and scoped Gameplane service accounts for product APIs and integrations. The declarative loop below shows the most common workflow.
+
+<DocsQuickReference
+  label="DECLARATIVE LOOP"
+  items={[
+    "kubectl apply -f gameserver.yaml",
+    "kubectl get gameserver <name> -o yaml",
+    "kubectl describe gameserver <name>  # conditions + events",
+  ]}
+/>
+
+## API and integration references
+
+- **[CRD Catalog](./crd-catalog/)** — full schema, field descriptions, and examples for every core CRD.
+- **[GameServer & Template Schema](./gameserver-template-schema/)** — detailed reference for game server configuration and template lifecycle.
+- **[Status, Phases & Conditions](./status-phases-conditions/)** — reconciliation state tracking and observed-generation semantics.
+- **[Module & Cluster CRDs](./module-cluster-crds/)** — ModuleSource, Module, and Cluster resource references.
+- **[Backup & Restore CRDs](./backup-restore-crds/)** — Backup, BackupSchedule, and Restore resources.
+- **[REST API Reference](./rest-api-reference/)** — HTTP endpoints, authentication, and request/response schemas.
+- **[WebSocket & Event Streams](./websocket-event-streams/)** — real-time console, logs, and status updates.
+- **[API & Realtime Development](./api-realtime-development/)** — extend REST, SSE, and WebSocket behavior while preserving auth, scoping, and audit invariants.
+- **[Helm Values Reference](./helm-values-reference/)** — operator and api configuration options.
+- **[Kubectl & GitOps Recipes](./kubectl-gitops-recipes/)** — common workflows, Kustomize patterns, and reconciliation debugging.

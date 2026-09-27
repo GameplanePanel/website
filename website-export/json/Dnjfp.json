@@ -3,14 +3,14 @@
   "id": "Dnjfp",
   "x": 0,
   "y": 85348,
-  "name": "Screen/Docs \u2014 Local Development Setup",
+  "name": "Screen/Docs — Local Development Setup",
   "theme": {
-    "H:Mode": "Dark"
+    "semantic": "dark"
   },
   "clip": true,
   "width": 1440,
   "height": 900,
-  "fill": "$H:--background",
+  "fill": "$background/background",
   "children": [
     {
       "id": "WEVUE",
@@ -26,7 +26,7 @@
       "name": "Docs Main",
       "width": "fill_container",
       "height": "fill_container",
-      "fill": "$H:--background",
+      "fill": "$background/background",
       "layout": "vertical",
       "children": [
         {
@@ -66,7 +66,7 @@
                   "type": "text",
                   "id": "XX2KX",
                   "name": "Article Eyebrow",
-                  "fill": "#FF8400",
+                  "fill": "$accent/accent",
                   "content": "DEVELOP",
                   "fontFamily": "JetBrains Mono",
                   "fontSize": 11,
@@ -77,7 +77,7 @@
                   "type": "text",
                   "id": "r0W1J7",
                   "name": "Article Title",
-                  "fill": "#FFFFFF",
+                  "fill": "$foreground/foreground",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
                   "content": "Local development setup",
@@ -90,7 +90,7 @@
                   "type": "text",
                   "id": "dSV43",
                   "name": "Article Lead",
-                  "fill": "#B8B9B6",
+                  "fill": "$muted",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
                   "content": "Build Gameplane on a host or devcontainer, then run the full stack against kind or a selected remote cluster.",
@@ -107,82 +107,37 @@
                   "alignItems": "center",
                   "children": [
                     {
-                      "type": "frame",
-                      "id": "wtrXu",
+                      "id": "L3PxBH",
+                      "type": "ref",
+                      "ref": "NZPtq",
                       "name": "Meta Chip 0",
-                      "fill": "#FF84001F",
-                      "cornerRadius": 999,
-                      "stroke": "#FF840066",
-                      "strokeWidth": 1,
-                      "strokeAlignment": "inner",
-                      "padding": [
-                        5,
-                        9
-                      ],
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "O06u1",
-                          "name": "Meta Chip Label 0",
-                          "fill": "#FF9D33",
-                          "content": "DEVELOPER GUIDE",
-                          "fontFamily": "JetBrains Mono",
-                          "fontSize": 9,
-                          "fontWeight": "600"
+                      "descendants": {
+                        "NLG8t": {
+                          "content": "DEVELOPER GUIDE"
                         }
-                      ]
+                      }
                     },
                     {
-                      "type": "frame",
-                      "id": "b8Xga",
+                      "id": "ipaN7",
+                      "type": "ref",
+                      "ref": "EbSsA",
                       "name": "Meta Chip 1",
-                      "fill": "#1A1A1A",
-                      "cornerRadius": 999,
-                      "stroke": "#2E2E2E",
-                      "strokeWidth": 1,
-                      "strokeAlignment": "inner",
-                      "padding": [
-                        5,
-                        9
-                      ],
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "q3P6bj",
-                          "name": "Meta Chip Label 1",
-                          "fill": "#B8B9B6",
-                          "content": "v0.2",
-                          "fontFamily": "JetBrains Mono",
-                          "fontSize": 9,
-                          "fontWeight": "600"
+                      "descendants": {
+                        "yb6zz": {
+                          "content": "v0.2"
                         }
-                      ]
+                      }
                     },
                     {
-                      "type": "frame",
-                      "id": "K0bKI",
+                      "id": "GYEFo",
+                      "type": "ref",
+                      "ref": "EbSsA",
                       "name": "Meta Chip 2",
-                      "fill": "#1A1A1A",
-                      "cornerRadius": 999,
-                      "stroke": "#2E2E2E",
-                      "strokeWidth": 1,
-                      "strokeAlignment": "inner",
-                      "padding": [
-                        5,
-                        9
-                      ],
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "b96eHd",
-                          "name": "Meta Chip Label 2",
-                          "fill": "#B8B9B6",
-                          "content": "14 MIN",
-                          "fontFamily": "JetBrains Mono",
-                          "fontSize": 9,
-                          "fontWeight": "600"
+                      "descendants": {
+                        "yb6zz": {
+                          "content": "14 MIN"
                         }
-                      ]
+                      }
                     }
                   ]
                 },
@@ -191,9 +146,9 @@
                   "id": "MOUrX",
                   "name": "Article Callout",
                   "width": "fill_container",
-                  "fill": "#FF84000F",
-                  "cornerRadius": 8,
-                  "stroke": "#FF84004D",
+                  "fill": "$accent/soft",
+                  "cornerRadius": "$radius/xl",
+                  "stroke": "$border/border",
                   "strokeWidth": 1,
                   "strokeAlignment": "inner",
                   "gap": 10,
@@ -211,13 +166,13 @@
                       "height": 16,
                       "icon": "blocks",
                       "library": "lucide",
-                      "fill": "#FF8400"
+                      "fill": "$accent/soft-foreground"
                     },
                     {
                       "type": "text",
                       "id": "VmszZ",
                       "name": "Article Callout Text",
-                      "fill": "#E7E7E4",
+                      "fill": "$accent/soft-foreground",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "Desired state belongs in CRD spec; observed state and conditions belong to controllers.",
@@ -239,7 +194,7 @@
                       "type": "text",
                       "id": "OJMY6",
                       "name": "Section Title 1",
-                      "fill": "#FFFFFF",
+                      "fill": "$foreground/foreground",
                       "content": "Workspace map",
                       "fontFamily": "JetBrains Mono",
                       "fontSize": 17,
@@ -249,7 +204,7 @@
                       "type": "text",
                       "id": "GXRi3",
                       "name": "Section Body 1",
-                      "fill": "#B8B9B6",
+                      "fill": "$muted",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "The workspace joins runtime components, shared libraries, optional services, packaging, e2e infrastructure, and two submodules.",
@@ -263,9 +218,9 @@
                       "id": "P99bVI",
                       "name": "Section List 1",
                       "width": "fill_container",
-                      "fill": "#1A1A1A",
-                      "cornerRadius": 8,
-                      "stroke": "#2E2E2E",
+                      "fill": "$surface/surface",
+                      "cornerRadius": "$radius/2xl",
+                      "stroke": "$border/border",
                       "strokeWidth": 1,
                       "strokeAlignment": "inner",
                       "layout": "vertical",
@@ -291,13 +246,13 @@
                               "height": 13,
                               "icon": "check",
                               "library": "lucide",
-                              "fill": "#FF8400"
+                              "fill": "$accent/accent"
                             },
                             {
                               "type": "text",
                               "id": "k9hy6",
                               "name": "Section 1 Item Text 0",
-                              "fill": "#E7E7E4",
+                              "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
                               "content": "go.work joins operator, API, agent, shared Go modules, MCP, and tests.",
@@ -323,13 +278,13 @@
                               "height": 13,
                               "icon": "check",
                               "library": "lucide",
-                              "fill": "#FF8400"
+                              "fill": "$accent/accent"
                             },
                             {
                               "type": "text",
                               "id": "kteWq",
                               "name": "Section 1 Item Text 1",
-                              "fill": "#E7E7E4",
+                              "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
                               "content": "web is React; charts and deploy own packaging and local orchestration.",
@@ -355,13 +310,13 @@
                               "height": 13,
                               "icon": "check",
                               "library": "lucide",
-                              "fill": "#FF8400"
+                              "fill": "$accent/accent"
                             },
                             {
                               "type": "text",
                               "id": "aANYw",
                               "name": "Section 1 Item Text 2",
-                              "fill": "#E7E7E4",
+                              "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
                               "content": "modules and website are separately versioned gitlink repositories.",
@@ -387,7 +342,7 @@
                       "type": "text",
                       "id": "SkIEu",
                       "name": "Section Title 2",
-                      "fill": "#FFFFFF",
+                      "fill": "$foreground/foreground",
                       "content": "Cluster development loop",
                       "fontFamily": "JetBrains Mono",
                       "fontSize": 17,
@@ -397,7 +352,7 @@
                       "type": "text",
                       "id": "x2PUz3",
                       "name": "Section Body 2",
-                      "fill": "#B8B9B6",
+                      "fill": "$muted",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "The Make targets create local infrastructure, build and load images, push modules, install the chart, and run the web UI.",
@@ -411,9 +366,9 @@
                       "id": "tW9Fk",
                       "name": "Section List 2",
                       "width": "fill_container",
-                      "fill": "#1A1A1A",
-                      "cornerRadius": 8,
-                      "stroke": "#2E2E2E",
+                      "fill": "$surface/surface",
+                      "cornerRadius": "$radius/2xl",
+                      "stroke": "$border/border",
                       "strokeWidth": 1,
                       "strokeAlignment": "inner",
                       "layout": "vertical",
@@ -439,13 +394,13 @@
                               "height": 13,
                               "icon": "check",
                               "library": "lucide",
-                              "fill": "#FF8400"
+                              "fill": "$accent/accent"
                             },
                             {
                               "type": "text",
                               "id": "nZ3wY",
                               "name": "Section 2 Item Text 0",
-                              "fill": "#E7E7E4",
+                              "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
                               "content": "make dev-up creates kind and the local OCI registry.",
@@ -471,13 +426,13 @@
                               "height": 13,
                               "icon": "check",
                               "library": "lucide",
-                              "fill": "#FF8400"
+                              "fill": "$accent/accent"
                             },
                             {
                               "type": "text",
                               "id": "oNYgh",
                               "name": "Section 2 Item Text 1",
-                              "fill": "#E7E7E4",
+                              "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
                               "content": "make web-dev runs Vite on 5173 with REST and WebSocket proxying.",
@@ -503,13 +458,13 @@
                               "height": 13,
                               "icon": "check",
                               "library": "lucide",
-                              "fill": "#FF8400"
+                              "fill": "$accent/accent"
                             },
                             {
                               "type": "text",
                               "id": "ZXMiW",
                               "name": "Section 2 Item Text 2",
-                              "fill": "#E7E7E4",
+                              "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
                               "content": "make dev-down removes kind; CLUSTER=remote uses a reachable registry.",
@@ -535,7 +490,7 @@
                       "type": "text",
                       "id": "UtJWO",
                       "name": "Section Title 3",
-                      "fill": "#FFFFFF",
+                      "fill": "$foreground/foreground",
                       "content": "Debug the environment",
                       "fontFamily": "JetBrains Mono",
                       "fontSize": 17,
@@ -545,7 +500,7 @@
                       "type": "text",
                       "id": "zlBhY",
                       "name": "Section Body 3",
-                      "fill": "#B8B9B6",
+                      "fill": "$muted",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "Keep host and cluster registry addresses, kube context, namespaces, image tags, and Helm values aligned.",
@@ -559,9 +514,9 @@
                       "id": "uzddE",
                       "name": "Quick Reference",
                       "width": "fill_container",
-                      "fill": "#0D0D0D",
-                      "cornerRadius": 8,
-                      "stroke": "#2E2E2E",
+                      "fill": "$surface/tertiary",
+                      "cornerRadius": "$radius/xl",
+                      "stroke": "$border/border",
                       "strokeWidth": 1,
                       "strokeAlignment": "inner",
                       "layout": "vertical",
@@ -572,7 +527,7 @@
                           "type": "text",
                           "id": "PEkFP",
                           "name": "Quick Reference Label",
-                          "fill": "#FF8400",
+                          "fill": "$accent/accent",
                           "content": "LOCAL LOOP",
                           "fontFamily": "JetBrains Mono",
                           "fontSize": 9,
@@ -583,7 +538,7 @@
                           "type": "text",
                           "id": "Mlv1o",
                           "name": "Quick Reference Line 1",
-                          "fill": "#FFFFFF",
+                          "fill": "$foreground/foreground",
                           "content": "01  git submodule update --init --recursive",
                           "fontFamily": "JetBrains Mono",
                           "fontSize": 11.5,
@@ -593,7 +548,7 @@
                           "type": "text",
                           "id": "ZooTm",
                           "name": "Quick Reference Line 2",
-                          "fill": "#FFFFFF",
+                          "fill": "$foreground/foreground",
                           "content": "02  make dev-up && make web-dev",
                           "fontFamily": "JetBrains Mono",
                           "fontSize": 11.5,
@@ -603,7 +558,7 @@
                           "type": "text",
                           "id": "XNEIF",
                           "name": "Quick Reference Line 3",
-                          "fill": "#FFFFFF",
+                          "fill": "$foreground/foreground",
                           "content": "03  make dev-down   # or CLUSTER=remote make dev-up",
                           "fontFamily": "JetBrains Mono",
                           "fontSize": 11.5,
@@ -618,7 +573,7 @@
                   "id": "z8xnSh",
                   "name": "Article Next Link",
                   "width": "fill_container",
-                  "stroke": "#2E2E2E",
+                  "stroke": "$border/border",
                   "strokeWidth": {
                     "top": 1
                   },
@@ -644,7 +599,7 @@
                           "type": "text",
                           "id": "M91R9r",
                           "name": "Next Link Eyebrow",
-                          "fill": "#737570",
+                          "fill": "$field/placeholder",
                           "content": "NEXT GUIDE",
                           "fontFamily": "Geist",
                           "fontSize": 10,
@@ -654,7 +609,7 @@
                           "type": "text",
                           "id": "q2lA9J",
                           "name": "Next Link Title",
-                          "fill": "#FFFFFF",
+                          "fill": "$foreground/foreground",
                           "content": "Repository and components",
                           "fontFamily": "JetBrains Mono",
                           "fontSize": 13,
@@ -670,7 +625,7 @@
                       "height": 15,
                       "icon": "arrow-right",
                       "library": "lucide",
-                      "fill": "#B8B9B6"
+                      "fill": "$muted"
                     }
                   ]
                 }
@@ -689,9 +644,9 @@
                   "id": "tBkGv",
                   "name": "Docs Table of Contents",
                   "width": "fill_container",
-                  "fill": "#171717",
-                  "cornerRadius": 10,
-                  "stroke": "#2E2E2E",
+                  "fill": "$surface/secondary",
+                  "cornerRadius": "$radius/2xl",
+                  "stroke": "$border/border",
                   "strokeWidth": 1,
                   "strokeAlignment": "inner",
                   "layout": "vertical",
@@ -702,7 +657,7 @@
                       "type": "text",
                       "id": "JNFCw",
                       "name": "TOC Label",
-                      "fill": "#737570",
+                      "fill": "$field/placeholder",
                       "content": "ON THIS PAGE",
                       "fontFamily": "JetBrains Mono",
                       "fontSize": 9,
@@ -725,13 +680,13 @@
                           "height": 12,
                           "icon": "hash",
                           "library": "lucide",
-                          "fill": "#FF8400"
+                          "fill": "$accent/accent"
                         },
                         {
                           "type": "text",
                           "id": "Ihqn7",
                           "name": "TOC Text 0",
-                          "fill": "#FFFFFF",
+                          "fill": "$foreground/foreground",
                           "content": "Toolchain",
                           "fontFamily": "Geist",
                           "fontSize": 12.5,
@@ -755,13 +710,13 @@
                           "height": 12,
                           "icon": "hash",
                           "library": "lucide",
-                          "fill": "#737570"
+                          "fill": "$field/placeholder"
                         },
                         {
                           "type": "text",
                           "id": "f4aaU",
                           "name": "TOC Text 1",
-                          "fill": "#B8B9B6",
+                          "fill": "$muted",
                           "content": "Cluster loop",
                           "fontFamily": "Geist",
                           "fontSize": 12.5,
@@ -785,13 +740,13 @@
                           "height": 12,
                           "icon": "hash",
                           "library": "lucide",
-                          "fill": "#737570"
+                          "fill": "$field/placeholder"
                         },
                         {
                           "type": "text",
                           "id": "i2Y5zW",
                           "name": "TOC Text 2",
-                          "fill": "#B8B9B6",
+                          "fill": "$muted",
                           "content": "Debug",
                           "fontFamily": "Geist",
                           "fontSize": 12.5,
@@ -803,7 +758,7 @@
                       "type": "rectangle",
                       "id": "caYpY",
                       "name": "TOC Divider",
-                      "fill": "#2E2E2E",
+                      "fill": "$border/border",
                       "width": "fill_container",
                       "height": 1
                     },
@@ -811,7 +766,7 @@
                       "type": "text",
                       "id": "h8VFk",
                       "name": "Coverage Label",
-                      "fill": "#737570",
+                      "fill": "$field/placeholder",
                       "content": "COVERS",
                       "fontFamily": "JetBrains Mono",
                       "fontSize": 9,
@@ -834,13 +789,13 @@
                           "height": 12,
                           "icon": "book-open",
                           "library": "lucide",
-                          "fill": "#8B8D88"
+                          "fill": "$field/placeholder"
                         },
                         {
                           "type": "text",
                           "id": "nRNdU",
                           "name": "Coverage Text 0",
-                          "fill": "#B8B9B6",
+                          "fill": "$muted",
                           "content": "Toolchain",
                           "fontFamily": "Geist",
                           "fontSize": 12,
@@ -864,13 +819,13 @@
                           "height": 12,
                           "icon": "book-open",
                           "library": "lucide",
-                          "fill": "#8B8D88"
+                          "fill": "$field/placeholder"
                         },
                         {
                           "type": "text",
                           "id": "K675pr",
                           "name": "Coverage Text 1",
-                          "fill": "#B8B9B6",
+                          "fill": "$muted",
                           "content": "kind",
                           "fontFamily": "Geist",
                           "fontSize": 12,
@@ -894,13 +849,13 @@
                           "height": 12,
                           "icon": "book-open",
                           "library": "lucide",
-                          "fill": "#8B8D88"
+                          "fill": "$field/placeholder"
                         },
                         {
                           "type": "text",
                           "id": "VUey2",
                           "name": "Coverage Text 2",
-                          "fill": "#B8B9B6",
+                          "fill": "$muted",
                           "content": "Submodules",
                           "fontFamily": "Geist",
                           "fontSize": 12,
@@ -915,9 +870,9 @@
                   "id": "Ua9Ds",
                   "name": "Edit Page Card",
                   "width": "fill_container",
-                  "fill": "#111111",
-                  "cornerRadius": 10,
-                  "stroke": "#2E2E2E",
+                  "fill": "$background/background",
+                  "cornerRadius": "$radius/3xl",
+                  "stroke": "$border/border",
                   "strokeWidth": 1,
                   "strokeAlignment": "inner",
                   "layout": "vertical",
@@ -928,7 +883,7 @@
                       "type": "text",
                       "id": "ydpZ0",
                       "name": "Edit Page Title",
-                      "fill": "#FFFFFF",
+                      "fill": "$foreground/foreground",
                       "content": "Improve this page",
                       "fontFamily": "JetBrains Mono",
                       "fontSize": 12,
@@ -938,7 +893,7 @@
                       "type": "text",
                       "id": "t4mHZ",
                       "name": "Edit Page Body",
-                      "fill": "#B8B9B6",
+                      "fill": "$muted",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "Found a gap? Open a docs issue or suggest an edit on GitHub.",
@@ -958,7 +913,7 @@
                           "type": "text",
                           "id": "Gysy0",
                           "name": "Edit Page Link Text",
-                          "fill": "#FF9D33",
+                          "fill": "$accent/soft-foreground",
                           "content": "Edit this page",
                           "fontFamily": "Geist",
                           "fontSize": 12,
@@ -972,7 +927,7 @@
                           "height": 12,
                           "icon": "external-link",
                           "library": "lucide",
-                          "fill": "#FF8400"
+                          "fill": "$accent/accent"
                         }
                       ]
                     }

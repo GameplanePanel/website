@@ -1,0 +1,135 @@
+---
+title: Metrics, Alerts & Dashboards
+description: Prometheus endpoints, platform metrics, alert rules, and optional Grafana assets for production operations.
+section: platform
+group: audit-observability
+order: 4
+icon: box
+eyebrow: OBSERVABILITY REFERENCE
+readTime: 12 MIN
+covers: ["Prometheus metrics", "Alert rules", "Grafana dashboards", "Observability setup"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+
+Gameplane exports Prometheus metrics from the operator, API, and agent sidecars. Recommended alert rules and Grafana dashboards are bundled with the Helm chart but disabled by default.
+
+## Enable observability
+
+To start collecting metrics, enable the serviceMonitor integration in your Helm values:
+
+```yaml
+serviceMonitors:
+  enabled: true
+  labels: {}  # labels for Prometheus selector matching
+```
+
+This creates ServiceMonitors for the operator, API, and telemetry-receiver components, plus PodMonitors for agent sidecars. Each scrapes plain HTTP metrics on port `9090` (the control port `8090` stays mTLS-only).
+
+## Operator metrics
+
+The operator exports **controller-runtime** standard metrics plus fleet gauges. Aggregate fleet metrics with `max by (phase) (...)` when you have 2+ operator replicas — each replica reports the same cache-derived counts.
+
+### Core metric families
+
+| Metric | Labels | Purpose |
+|---|---|---|
+| `gameplane_gameservers` | `phase` | GameServers per lifecycle phase: Pending, Starting, Running, Stopping, Stopped, Suspended, Failed |
+| `gameplane_backups` | `phase` | Backups per phase: Pending, Running, Succeeded, Failed |
+| `gameplane_gameservers_idle` | `state` | Wake-on-connect sleeping vs. awake server count |
+| `controller_runtime_reconcile_time_seconds` | `controller` | Reconcile latency histogram (Operator, Cluster, Backup, Module) |
+| `controller_runtime_reconcile_errors_total` | `controller` | Reconcile error rate counter |
+| `workqueue_depth` | `name` | Items waiting in each reconciliation queue |
+| `workqueue_longest_running_processor_seconds` | `name` | Longest-running reconcile (detects stuck controllers) |
+
+## API metrics
+
+The API server exposes custom application metrics via Prometheus:
+
+| Metric | Labels | Purpose |
+|---|---|---|
+| `gameplane_audit_webhook_events_total` | `result` | Audit webhook delivery outcomes |
+| `gameplane_audit_s3_events_total` | `result` | Audit S3 mirror delivery outcomes |
+| `gameplane_notify_deliveries_total` | `kind`, `result` | Notification sink delivery outcomes |
+
+## Agent metrics
+
+Each game server's agent sidecar reports per-server observability on port `9090`:
+
+| Metric | Labels | Meaning |
+|---|---|---|
+| `gameplane_agent_cpu_millicores` | `server`, `namespace`, `template`, `game` | Game process CPU usage (millicores from `/proc`) |
+| `gameplane_agent_cpu_limit_millicores` | `server`, `namespace`, `template`, `game` | Container CPU limit (millicores) |
+| `gameplane_agent_memory_bytes` | `server`, `namespace`, `template`, `game` | Game process memory usage (bytes from `/proc`) |
+| `gameplane_agent_memory_limit_bytes` | `server`, `namespace`, `template`, `game` | Container memory limit (bytes) |
+| `gameplane_agent_disk_used_bytes` | `server`, `namespace`, `template`, `game` | Disk used in the server's data directory |
+| `gameplane_agent_disk_total_bytes` | `server`, `namespace`, `template`, `game` | Total disk capacity of the data directory |
+| `gameplane_agent_players_online` | `server`, `namespace`, `template`, `game` | Players currently online (via RCON) |
+| `gameplane_agent_players_max` | `server`, `namespace`, `template`, `game` | Max player capacity (−1 for unlimited, unknown if RCON fails) |
+
+All agent metrics include the source server name, namespace, template, and game identifiers. Metrics are emitted only when readable (e.g., players_max is absent if RCON fails or capacity is unknown).
+
+## Alert rules
+
+Enable PrometheusRules in Helm values to activate recommended alerts:
+
+```yaml
+prometheusRules:
+  enabled: true
+  labels: {}  # labels for Prometheus rule selector matching
+```
+
+### Operator alerts
+
+| Alert | Signal | Duration | Response |
+|---|---|---|---|
+| **GameplaneOperatorReconcileErrors** | Reconciliation errors sustained per controller | 10m | Check operator logs; inspect the failing controller |
+| **GameplaneOperatorWorkqueueBacklog** | Work queue has 50+ items | 15m | Operator is falling behind — check throttling or dependencies |
+| **GameplaneOperatorReconcileStuck** | Single reconcile running >5 minutes | 10m | Wedged controller — inspect the longest-running task |
+
+### Fleet alerts
+
+| Alert | Signal | Duration | Response |
+|---|---|---|---|
+| **GameplaneGameServerFailed** | One or more GameServers stuck in Failed phase | 10m | Check the GameServer status and operator logs for crash or bad template |
+| **GameplaneBackupFailed** | A Backup in Failed phase (data-loss risk) | 15m | Inspect the Backup status and operator logs; recovery may be at risk |
+
+<DocsCallout icon="info" title="Alert rule portability">
+Rules use only the operator's own metrics (`controller_runtime_*`, `workqueue_*`, and `gameplane_*` gauges) with no install-specific job names or relabel assumptions. They are portable across Prometheus setups.
+</DocsCallout>
+
+## Grafana dashboards
+
+A pre-built operator dashboard is bundled as a ConfigMap. Enable auto-import via Helm:
+
+```yaml
+grafanaDashboards:
+  enabled: true
+  labels:
+    grafana_dashboard: "1"  # default label; override if your Grafana sidecar differs
+```
+
+The dashboard visualizes:
+- GameServer phase distribution and transition rates
+- Backup success and failure rates
+- Operator reconcile latency and error trends
+- Workqueue depth and longest-running reconciles
+- System resource usage across the control plane
+
+<DocsCallout icon="shield-alert" title="ServiceMonitors, PrometheusRules, and Grafana dashboards are disabled by default">
+You must explicitly enable these in your Helm values to activate metrics collection, alert rules, and dashboard imports. This prevents unexpected Prometheus and Grafana dependencies in disconnected or minimal clusters.
+</DocsCallout>
+
+## Custom observability
+
+For production environments, integrate your own observability stack:
+
+1. **Create or modify ServiceMonitor/PodMonitor resources** to target the metrics ports (`9090` for agents and telemetry-receiver, a separate port for the API) with your custom Prometheus relabeling and authentication.
+2. **Wire alerts into your alertmanager** by deploying additional PrometheusRule resources that scrape the same metrics or combine them with your own signals.
+3. **Build dashboards** using the bundled Grafana dashboard as a starting point — export it from Grafana or adapt the ConfigMap YAML in `charts/gameplane/dashboards/`.
+
+## Next steps
+
+- [Production Observability](./production-observability/) — scaling metrics collection across a fleet
+- [Notification Sinks](./notification-sinks/) — route alerts to Slack, PagerDuty, or webhooks
+- [System Log Viewer](./system-log-viewer/) — audit logs and operator event streams

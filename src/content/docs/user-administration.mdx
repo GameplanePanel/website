@@ -1,0 +1,98 @@
+---
+title: User Administration
+description: Invite and maintain local users, reset credentials, assign roles, and distinguish current capabilities from planned service accounts.
+section: platform
+group: users-access
+order: 2
+icon: userss
+eyebrow: ACCESS
+readTime: 15 MIN
+covers: ["Users", "Roles", "Providers"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+
+Invite and maintain local users, reset credentials, assign roles, and distinguish current capabilities from planned service accounts.
+
+<DocsCallout icon="info" title="Service accounts coming in v0.3.0">
+  Service-account creation is availability-dependent; do not document a token workflow until the shipped UI and API support it.
+</DocsCallout>
+
+## Invite a local user
+
+Create a unique identity, secure initial credential, and the minimum global role; add per-server collaboration separately.
+
+<DocsSectionList
+  items={[
+    { icon: "users", label: "Unique Identity", text: "Use a unique username, optional display name/email, and 12+ character password." },
+    { icon: "shield", label: "Least Privilege", text: "Assign the minimum required global role; scope server access separately via role bindings." },
+    { icon: "lock", label: "Secure Handoff", text: "Send credentials securely (not email) and verify the user signs in privately for the first time." },
+  ]}
+/>
+
+New users start with a **primary role** applied cluster-wide. The three built-in roles are:
+
+- **Admin** — full access to users, servers, templates, backups, cluster settings, and audit logs
+- **Operator** — manage servers and backups; cannot create/edit users or templates
+- **Viewer** — read-only access to servers, backups, and status
+
+You can refine permissions per namespace (e.g., restrict an operator to a specific game project) using per-namespace role bindings in the **Role Bindings** section of the user's card.
+
+## Edit roles and reset credentials
+
+Role changes affect global authorization; local and OIDC credentials have different owners.
+
+<DocsSectionList
+  items={[
+    { icon: "users", label: "Role Changes", text: "Edit display name, email, and primary role deliberately — changes apply on the user's next login." },
+    { icon: "lock", label: "Local Password Reset", text: "Reset only local passwords in Gameplane with a new 12+ character value; does not affect OIDC users." },
+    { icon: "shield-check", label: "OIDC Management", text: "For OIDC-linked users, manage password, MFA, and account status at the upstream provider (Keycloak, Okta, etc.)." },
+  ]}
+/>
+
+**To reset a local user's password:**
+
+1. Find the user in the dashboard Users page
+2. Click the user card to open details
+3. Tap **Reset Password** and enter a new 12+ character value
+4. The user can log in with the new password immediately
+
+**For OIDC users:**
+
+- Password resets happen at the identity provider, not in Gameplane
+- MFA and account disablement are provider-controlled
+- The user's role and email in Gameplane mirror the provider's state
+
+<DocsCallout icon="info" title="Coming in v0.3.0">
+  Install-time OIDC role auto-mapping via `api.oidc.roleMappings` ships in v0.3.0. In beta.8, map OIDC roles manually after each login.
+</DocsCallout>
+
+## Review lifecycle and availability
+
+Audit access changes and remove dormant roles/collaboration; treat service accounts as version-dependent until shipped.
+
+Periodically review:
+
+- **Active users** — remove unused accounts to reduce the attack surface
+- **Role changes** — audit the role history in the **Audit & Observability** logs
+- **Per-namespace bindings** — clean up stale role bindings if a user's scope narrows
+- **Providers** — verify OIDC providers are still responsive; expired provider certificates log an error in the system log
+
+<DocsQuickReference
+  label="USER LIFECYCLE"
+  items={[
+    "01  Invite → unique identity + 12-char password + least privilege",
+    "02  Local reset in Gameplane; OIDC credentials remain upstream",
+    "03  Audit role/collaboration changes; service accounts depend on release",
+  ]}
+/>
+
+---
+
+## See also
+
+- [Users, Auth & RBAC](./users-auth-rbac/) — Overview of authentication and role-based access control
+- [Permission Catalog](./permission-catalog/) — Detailed permission definitions and role matrix
+- [Audit, Observability & Admin](./audit-observability-admin/) — Monitor user actions and system events

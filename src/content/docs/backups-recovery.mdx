@@ -1,0 +1,149 @@
+---
+title: Backups and recovery
+description: Create recoverable snapshots, schedule retention-aware backups, and restore into a new or existing server with a verification plan.
+section: operate
+group: files-backups
+order: 5
+icon: archive
+eyebrow: RECOVERY
+readTime: 15 MIN
+covers: ["Snapshots", "Retention", "Restore"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+
+Create recoverable snapshots, schedule retention-aware backups, and restore into a new or existing server with a verification plan.
+
+<DocsCallout icon="archive-restore" title="Completed backups must be verified.">
+  A completed backup is only useful after you have verified its destination, metadata, and restore path.
+</DocsCallout>
+
+## Create and inspect backups
+
+Use per-server or global views to start snapshots, filter phases, and inspect destination, size, timestamps, and errors.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "Record server identity, world path, destination, and backup phase.",
+      text: "",
+    },
+    {
+      icon: "check",
+      label: "Wait for completion before restarting, deleting, or wiping a server.",
+      text: "",
+    },
+    {
+      icon: "check",
+      label: "Use the detail drawer to capture logs and failure context before retrying.",
+      text: "",
+    },
+  ]}
+/>
+
+**Backup phases:**
+- **Pending** — backup job scheduled, awaiting resources
+- **Running** — restic or volume snapshot in progress
+- **Succeeded** — snapshot completed and verified
+- **Failed** — snapshot did not complete; check logs for errors
+
+## Schedules, destinations, and retention
+
+Backups combine a cron schedule with a restic repository, credentials, and explicit retention policy.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "Store repository credentials in labelled Kubernetes Secrets.",
+      text: "",
+    },
+    {
+      icon: "check",
+      label: "Balance keep-last, hourly, daily, weekly, monthly, and yearly retention.",
+      text: "",
+    },
+    {
+      icon: "check",
+      label: "Watch active schedules and alert on missed or failed runs.",
+      text: "",
+    },
+  ]}
+/>
+
+### Backup strategies
+
+Gameplane supports two backup strategies:
+
+**Restic-snapshot** (default):
+- Runs `restic backup` directly against the data volume
+- Stores snapshots in a restic repository (S3, GCS, SFTP, or local backend)
+- Supports both per-server and global snapshot browsing
+- Requires explicit restic repository credentials in a Secret
+- Can restore into an existing server or a new one
+
+**Volume-snapshot** (CSI):
+- Uses Kubernetes CSI VolumeSnapshot for snapshot capture
+- Delegates to the cluster's storage provider (EBS, GCP Persistent Disks, etc.)
+- Does not require a separate restic repository
+- Can only restore into a newly provisioned GameServer (original server is untouched)
+
+Choose based on your storage backend and retention requirements.
+
+### Retention policies
+
+Retention rules apply after the backup completes. Restic supports overlapping policies:
+
+- **keep-last N** — always keep the N most recent backups
+- **keep-hourly N** — keep N hourly backups
+- **keep-daily N** — keep N daily backups
+- **keep-weekly N** — keep N weekly backups (Monday)
+- **keep-monthly N** — keep N monthly backups (1st day)
+- **keep-yearly N** — keep N yearly backups (1st day)
+
+Leave all empty to keep everything (not recommended in production). The operator prunes snapshots when trim conditions are met.
+
+## Restore safely
+
+Restore into a new server for verification, or overwrite only after stopping writes and confirming ownership.
+
+<DocsQuickReference
+  label="RESTORE CHECKLIST"
+  items={[
+    "01  Verify source backup, checksum, destination, and available storage",
+    "02  Prefer a new server for validation; stop writes before overwrite",
+    "03  Start, inspect events and logs, then test world and player data",
+  ]}
+/>
+
+### Restore workflow
+
+1. **Verify the source backup** exists and has `status.phase=Succeeded` with a valid `snapshotID`.
+2. **Choose a target server:**
+   - For restic-snapshot backups: specify an existing GameServer (will be suspended and overwritten) or a new one.
+   - For volume-snapshot backups: the target must not exist; the operator creates a new GameServer with the snapshot data.
+3. **Check available storage** on the target node or cluster to ensure the restore can complete.
+4. **Start the restore** and monitor the Restore resource's phase:
+   - **Pending** — validating source backup and target server
+   - **Suspending** — pausing writes on the target (restic-snapshot only)
+   - **Running** — copying data into the server
+   - **Resuming** — resuming game and auto-save (restic-snapshot only)
+   - **Succeeded** — data in place; verify world and player data
+   - **Failed** — check events and logs for errors
+5. **Verify the restored data** by starting the server, checking player data, and testing critical gameplay features.
+
+### Best practices
+
+- **Always test on a new server first.** Create a temporary server and restore the backup there before overwriting a production server.
+- **Verify checksums** if your storage backend provides them (some restic backends support this).
+- **Stop automatic writes** before overwriting an existing server. Suspending the server via the Backups page does this; waiting for quiesce ensures the last auto-save is flushed.
+- **Document restore time estimates** for disaster recovery runbooks. Restic restore speed depends on storage latency and network bandwidth; volume snapshots are typically faster.
+- **Test restores regularly.** A backup is only valid once you've successfully restored from it in a test environment.
+
+## Next steps
+
+- [Backup Destinations](./backup-destinations/) — Configure S3, GCS, SFTP, and local restic repositories
+- [Backup Repository Operations](./backup-repository-operations/) — Manage repository maintenance, integrity checks, and cleanup

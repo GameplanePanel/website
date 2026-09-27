@@ -1,0 +1,37 @@
+---
+import Icon from "../Icon.astro";
+
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: Heading[];
+}
+
+const { headings } = Astro.props;
+const h2h3 = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+{h2h3.length > 0 && (
+  <div class="rounded-m border border-border bg-card p-5">
+    <h3 class="mb-3 font-primary text-[11px] font-semibold tracking-[0.8px] text-primary">
+      ON THIS PAGE
+    </h3>
+    <ul class="space-y-2 text-[13px] text-muted-foreground">
+      {h2h3.map((heading) => (
+        <li class={heading.depth === 3 ? "ml-3" : ""}>
+          <a
+            href={`#${heading.slug}`}
+            class="flex items-center gap-1.5 hover:text-foreground"
+          >
+            <Icon name="hash" class="h-3.5 w-3.5 shrink-0" />
+            <span>{heading.text}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+)}

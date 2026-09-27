@@ -1,0 +1,257 @@
+---
+title: "Platform Disaster Recovery"
+description: "Rebuild Gameplane on a clean cluster from a tested recovery set, then restore platform identity and worlds in a controlled sequence."
+section: platform
+group: cluster-storage
+order: 7
+icon: life-buoy
+eyebrow: RECOVERY
+readTime: 22 MIN
+covers: ["Platform state", "Worlds", "RPO/RTO"]
+next: "credential-rotation"
+---
+
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+
+<DocsArticleMeta groupId="cluster-storage" readTime="22 MIN" />
+
+Rebuild Gameplane on a clean cluster from a tested recovery set, then restore platform identity and worlds in a controlled sequence.
+
+<DocsCallout icon="shield-alert" title="World snapshots alone cannot rebuild identities, roles, settings, audit state, module sources, or platform Secrets.">
+  A world backup only captures game data. To recover from a platform-wide outage (cluster loss, database corruption, credential compromise), you must also capture and restore Gameplane's own state: release versions, configuration, CRDs, database, encryption keys, identity providers, repository credentials, DNS, TLS certificates, and ownership records.
+</DocsCallout>
+
+<DocsSectionList
+  items={[
+    {
+      icon: "package",
+      label: "Define the recovery set",
+      text: "Capture every versioned artifact, platform state source, credential, trust root, and ownership record required to rebuild.",
+    },
+    {
+      icon: "arrow-right-left",
+      label: "Rebuild in dependency order",
+      text: "Prepare infrastructure first, install the matching release, then restore platform state before worlds.",
+    },
+    {
+      icon: "check",
+      label: "Validate and rehearse",
+      text: "Compare the rebuilt environment to the recovery manifest and run scheduled isolated drills.",
+    },
+  ]}
+/>
+
+## Define the recovery set
+
+Capture every versioned artifact, platform state source, credential, trust root, and ownership record required to rebuild.
+
+A disaster recovery manifest should document and preserve:
+
+- **Release and configuration:** Gameplane version (e.g., `v0.2.0-beta.8`), Helm values (including `api.db.driver`, ingress hostname, OIDC settings, storage class defaults), cluster Kubernetes version, and all base-image versions (restic, busybox, kubectl).
+- **CRD and operator state:** All GameServer, GameTemplate, Module, ModuleSource, and Cluster CRD definitions; the operator's RBAC role and ClusterRole; and the operator's audit/observability configuration.
+- **Platform database:** SQLite file or PostgreSQL backup dump, including all tables for users, roles, permissions, audit logs, RBAC overrides, and platform settings.
+- **Secrets and certificates:** All platform Secrets (backup repository credentials, OIDC client secrets, API signing keys, TLS certificates, image registry credentials, database credentials, webhook auth tokens), stored securely off-cluster with access controls.
+- **Module sources and registry credentials:** Module source configurations (Git URLs, OCI registries, local paths), registry pull secrets, and Cosign public keys for verification.
+- **Cluster trust roots:** DNS provider credentials (if dynamic), TLS certificate private keys, OIDC IdP certificates, and any custom CA certificates.
+- **Ownership records:** A mapping of GameServer/GameTemplate names to their owners, stored in the database; also any external ownership tracking (e.g., team/permission matrix) kept outside Gameplane.
+
+<DocsCallout icon="info" title="Test restoration procedures with a subset first.">
+  Before a crisis, rehearse the recovery plan with synthetic or replica data on a staging cluster. A manifest that hasn't been validated is just a hope.
+</DocsCallout>
+
+## Rebuild in dependency order
+
+Prepare infrastructure first, install the matching release, then restore platform state before worlds.
+
+A platform-wide rebuild must follow this sequence:
+
+### 1. Prepare the target Kubernetes cluster
+
+- **Ensure the target cluster meets the same specifications as the original:** Kubernetes 1.28+, nodes with sufficient capacity for the operator, API, and game workloads, storage backend provisioned, and network connectivity to backup destinations.
+- **Provision storage:** Persistent volumes for API state (if using SQLite), and test access to backup repositories (S3, SFTP, local restic backend).
+- **Set up edge infrastructure:** DNS, TLS certificates, load balancer pools, and any relay services (if using frp/Tailscale for NAT traversal).
+- **Configure monitoring and audit sinks:** Provision the destination for syslog, webhook, or S3 audit events and Prometheus scrape targets.
+
+### 2. Install the matching Gameplane release
+
+- **Install the exact version** that was running when the backup was taken. Use the backup manifest's recorded Helm values:
+
+  ```bash
+  helm upgrade --install gameplane oci://ghcr.io/valgulnecron/charts/gameplane \
+    --version 0.2.0-beta.8 \
+    --namespace gameplane-system \
+    --create-namespace \
+    --values /path/to/recorded-values.yaml
+  ```
+
+- **Verify the operator and API are running:**
+
+  ```bash
+  kubectl -n gameplane-system get deploy -l app.kubernetes.io/name=gameplane
+  kubectl -n gameplane-system logs -f deploy/gameplane-operator
+  ```
+
+- **Do not create GameServers or restore worlds yet.** Wait until platform state is restored.
+
+### 3. Restore the platform database and Secrets
+
+- **Restore the database** using the backup dump captured from the original cluster:
+
+  - For SQLite: copy the backed-up `gameplane.db` into the API's PVC, then restart the API pod.
+  - For PostgreSQL: restore the dump into the database server (ensure the version matches), then verify connectivity from the API pod.
+
+  ```bash
+  # Example: restore SQLite via kubectl exec
+  kubectl -n gameplane-system exec -i deploy/gameplane-api -- \
+    cp /dev/stdin /data/gameplane.db < /path/to/gameplane.db.backup
+  kubectl -n gameplane-system rollout restart deploy/gameplane-api
+  ```
+
+- **Restore Secrets** that the API and operator reference (OIDC client secrets, backup repo credentials, webhook auth tokens, TLS certs):
+
+  ```bash
+  kubectl apply -f /path/to/secrets-backup.yaml
+  ```
+
+  Ensure Secrets are created in the correct namespaces (`gameplane-system` for platform Secrets, `gameplane` for game-related Secrets).
+
+- **Verify the API is healthy** and can authenticate users:
+
+  ```bash
+  kubectl -n gameplane-system logs deploy/gameplane-api | grep "started\|listening"
+  curl -s http://localhost:8080/health  # or port-forward if needed
+  ```
+
+### 4. Restore CRD definitions and resource ownership
+
+- **Apply the backed-up CRD manifest** to register the schema for GameServer, GameTemplate, Module, ModuleSource, Cluster, etc.:
+
+  ```bash
+  kubectl apply -f /path/to/crds-backup.yaml
+  ```
+
+- **Import backed-up GameTemplates and Clusters** (do not yet create or restore GameServers):
+
+  ```bash
+  kubectl apply -f /path/to/gametemplates-backup.yaml
+  kubectl apply -f /path/to/clusters-backup.yaml
+  ```
+
+  These are lightweight; they define the blueprint and multi-cluster topology without triggering any game workloads.
+
+- **Verify RBAC and user roles are intact** by checking the platform's Users & Access page — all roles, permission mappings, and audit log entries should match the original.
+
+### 5. Verify module sources and registries
+
+- **Restore ModuleSource resources** that point to Git repositories, OCI registries, or local module directories:
+
+  ```bash
+  kubectl apply -f /path/to/modulesources-backup.yaml
+  ```
+
+- **Verify registry connectivity** and pull secret validity:
+
+  ```bash
+  kubectl -n gameplane-system get secrets | grep -E 'registry|pull-secret'
+  kubectl -n gameplane-system describe secret <name>
+  ```
+
+- **Test module availability** by navigating to the Modules page and checking that all sources are reachable and module counts match the original.
+
+### 6. Restore worlds into isolated servers (optional staging step)
+
+- **Create a test GameServer** and restore a snapshot of a world to it using the dashboard:
+  - Go to **Backups** and select an existing backup.
+  - Click **Restore** and choose the test server as the target.
+  - Monitor the Restore resource's phase (Pending → Suspending → Running → Resuming → Succeeded).
+
+  Or use the REST API:
+
+  ```bash
+  # Forward the API port to your local machine first (if not exposed)
+  kubectl -n gameplane-system port-forward svc/gameplane-api 8080:80 &
+
+  # Create a Restore resource via the API
+  curl -X POST http://localhost:8080/restores \
+    -H "Authorization: Bearer $TOKEN" \
+    -H "Content-Type: application/json" \
+    -d '{
+      "backupRef": {"name": "world-backup-1"},
+      "serverRef": {"name": "test-server"}
+    }'
+  ```
+
+- **Verify the restored world** is playable and data is intact before proceeding to production servers.
+
+### 7. Restore or recreate production GameServers
+
+- **Decide per-server:** restore from a backup, or re-provision and let players rejoin.
+  - **Restore from backup:** fastest for world data, but assumes the backup is recent and valid.
+  - **Recreate:** safest for platform bugs or data corruption; ensures all configuration is fresh.
+
+- **Restore into production servers:**
+
+  ```bash
+  # Re-apply all backed-up GameServers (they will start without world data first)
+  kubectl apply -f /path/to/gameservers-backup.yaml
+
+  # For each world that has a corresponding backup, trigger a restore via the dashboard:
+  # Backups → select backup → Restore → choose target server → confirm
+  ```
+
+  Alternatively, use the REST API to trigger restores programmatically:
+
+  ```bash
+  kubectl -n gameplane-system port-forward svc/gameplane-api 8080:80 &
+
+  # For each world backup
+  curl -X POST http://localhost:8080/restores \
+    -H "Authorization: Bearer $TOKEN" \
+    -H "Content-Type: application/json" \
+    -d '{
+      "backupRef": {"name": "world-backup-1"},
+      "serverRef": {"name": "server-1"}
+    }'
+  ```
+
+- **Reconnect endpoints and re-enable player access** once servers are ready.
+
+## Validate and rehearse
+
+Compare the rebuilt environment to the recovery manifest and run scheduled isolated drills.
+
+### Validation checklist
+
+- **Platform state:** Users, roles, audit logs, settings, and module sources match the original.
+- **Cluster topology:** Multi-cluster Clusters are registered and can reach remote kubeconfigs.
+- **Storage and backups:** StorageClass is correct, backup destinations are reachable, and a new backup can be created.
+- **Networking and TLS:** Ingress is reachable at the original hostname, TLS certs are valid, and DNS resolves.
+- **Monitoring and audit:** Webhook/syslog/S3 audit delivery is active, metrics are flowing to Prometheus, and alerts are firing as expected.
+
+### Disaster recovery drills
+
+- **Quarterly or twice yearly:** run a full recovery drill on a staging cluster using a dated backup.
+- **Document the actual RPO and RTO:** measure how long each phase takes (database restore, CRD restoration, GameServer setup, world restore) and record any gaps in the recovery manifest.
+- **Rotate recovery credentials** as part of the drill; verify that old backups can still be restored with current secrets.
+
+<DocsQuickReference
+  label="RECOVERY ORDER"
+  items={[
+    "Release + values + DB + CRDs + Secrets + repositories + DNS/TLS",
+    "Rebuild dependencies → matching release → platform state → worlds",
+    "Rehearse on schedule; record achieved RPO/RTO and gaps",
+  ]}
+/>
+
+---
+
+## Related guides
+
+- [Backups & Recovery](./backups-recovery/) — create and restore game world snapshots
+- [Backup Destinations](./backup-destinations/) — configure S3, GCS, SFTP, and local restic repositories
+- [Credential Rotation](./credential-rotation/) — rotate certificates, keys, and platform credentials
+- [Database Configuration & Lifecycle](./database-configuration/) — configure SQLite or PostgreSQL for the API
+- [High Availability](./high-availability/) — replicate the control plane and database for production resilience

@@ -4,35 +4,97 @@ import CtaSection from "../components/CtaSection.astro";
 import Icon from "../components/Icon.astro";
 import SectionHeader from "../components/SectionHeader.astro";
 import { GITHUB_URL } from "../config";
-import { withBase } from "../lib/url";
 
-const rows = [
+interface CompareRow {
+  dimension: string;
+  gameplane: string;
+  pterodactyl: string;
+  amp: string;
+  agones: string;
+}
+
+interface Cell {
+  text: string;
+  tags: string[];
+}
+
+const parseCell = (text: string): Cell => {
+  const tagMatches = text.match(/\[([^\]]+)\]/g) || [];
+  const tags = tagMatches.map((tag) => tag.slice(1, -1));
+  const cleanText = text.replace(/\s*\[[^\]]+\]/g, "").trim();
+  return { text: cleanText, tags };
+};
+
+const rows: CompareRow[] = [
   {
-    label: "Hosting model",
-    docker: "Single host, Docker containers",
-    gameplane: "Kubernetes primitives — CRDs, an operator, StatefulSets, PVCs",
+    dimension: "Deployment/runtime model",
+    gameplane: "Kubernetes-native CRDs and controller-runtime operator; scales from k3s homelab to multi-node clusters. [BETA]",
+    pterodactyl: "Self-hosted Panel with PHP/MySQL/Redis dependencies; Wings backend manages Docker containers.",
+    amp: "Web-based control panel supporting Windows (native) and Linux (Debian 10+).",
+    agones: "Kubernetes-native library extending K8s with GameServer/Fleet CRDs.",
   },
   {
-    label: "Scaling",
-    docker: "One host per install",
-    gameplane: "Same control plane, from a k3s homelab to a multi-node production cluster",
+    dimension: "Scaling & auto-sleep",
+    gameplane: "Opt-in idle auto-sleep with configurable wake windows, manual wake button, or wake-on-connect. Minecraft/Terraria full protocol support; others use packet heuristics. [optional]",
+    pterodactyl: "Multi-node support with cron-based power scheduling; no dedicated idle/auto-sleep feature.",
+    amp: "Instance Automatic Sleep feature; multi-server architecture with controller managing instances.",
+    agones: "Fleet autoscaling via buffer/webhook strategies; no idle/sleep state.",
   },
   {
-    label: "Operational model",
-    docker: "Tooling differs by install size",
-    gameplane: "Same tooling at every scale",
+    dimension: "Inbound connectivity (NAT traversal, relay)",
+    gameplane: "Integrated frp, Tailscale, playit relay sidecars; playit mappings user-managed via playit.gg account. [optional; disabled by default]",
+    pterodactyl: "No integrated relay sidecars; manual proxy/port forwarding configuration required.",
+    amp: "not publicly documented (checked 2026-09-02)",
+    agones: "No relay or NAT traversal features documented.",
   },
   {
-    label: "Automation path",
-    docker: "Dashboard-driven",
-    gameplane: "Dashboard or kubectl apply — both stay in sync via the operator",
+    dimension: "Backup and restore",
+    gameplane: "Restic snapshots to S3-compatible storage; on-demand or cron-scheduled via BackupSchedule; one-click restore.",
+    pterodactyl: "Wings (local, default) or S3-compatible backup drivers; cron scheduling and on-demand backups.",
+    amp: "not publicly documented (checked 2026-09-02)",
+    agones: "not applicable (Agones is a Kubernetes operator library)",
+  },
+  {
+    dimension: "Access control & authentication",
+    gameplane: "Local argon2id + OIDC (Keycloak/Google/GitHub); three built-in roles (admin/operator/viewer); custom roles supported.",
+    pterodactyl: "2FA configurable per account or admin-only; subuser management via Artisan CLI.",
+    amp: "Role-based access control; OIDC single-sign-on in Advanced Edition.",
+    agones: "not applicable (Agones is a Kubernetes operator library)",
+  },
+  {
+    dimension: "Game template distribution",
+    gameplane: "OCI bundles via ModuleSource (git/http/oci/local/upload); optional cosign signature verification per source. 16 ready-to-use templates shipped.",
+    pterodactyl: "Community eggs repository (eggs.pterodactyl.io) with nests and custom egg creation support.",
+    amp: "Customizable templates framework; community-contributed templates available via external repositories.",
+    agones: "not applicable (Agones is a Kubernetes operator library)",
+  },
+  {
+    dimension: "Multi-tenancy & multi-cluster",
+    gameplane: "Cluster CRD for remote registration/monitoring; console/log streaming local-cluster only. [local cluster only for streaming]",
+    pterodactyl: "Single Panel managing multiple nodes; no documented remote cluster or cross-cluster streaming.",
+    amp: "Multi-server management via controller architecture; multi-tenancy not supported in AMP 2 (planned for AMP 3).",
+    agones: "Multi-cluster allocation via GameServerAllocationPolicy; allocator service with mTLS authentication.",
+  },
+  {
+    dimension: "Licensing",
+    gameplane: "GNU Affero General Public License v3.0 or later (AGPL-3.0-or-later).",
+    pterodactyl: "MIT License (Panel and Wings).",
+    amp: "Proprietary; per-instance tiers (Standard/Professional/Advanced/Enterprise).",
+    agones: "Apache License 2.0.",
+  },
+  {
+    dimension: "Target operator scope (self-hosted vs. managed SaaS)",
+    gameplane: "Self-hosted only; runs on Kubernetes (k3s, kubeadm, managed services); no managed SaaS offering.",
+    pterodactyl: "Self-hosted only; requires Linux system capable of running Docker containers.",
+    amp: "Self-installed on user hardware (Windows or Linux); no managed SaaS version.",
+    agones: "Self-hosted operator software; runs anywhere Kubernetes can run.",
   },
 ];
 ---
 
 <MarketingLayout
   title="Compare — Gameplane"
-  description="How Gameplane's Kubernetes-native control plane differs from single-host, Docker-based game server panels like AMP, Pterodactyl, and PufferPanel."
+  description="How Gameplane compares to Pterodactyl, CubeCoders AMP and Agones — deployment model, auto-sleep, relays, backups, access control, templates, multi-cluster and licensing."
 >
   <section
     class="flex flex-col items-center gap-8 px-6 pb-16 pt-12 md:gap-12 md:px-20 md:pb-24 md:pt-20"
@@ -40,55 +102,111 @@ const rows = [
     <SectionHeader
       eyebrow="COMPARE"
       title="How Gameplane compares"
-      subtitle="A quick look at how a Kubernetes-native control plane differs from single-host, Docker-based panels."
+      subtitle="Pterodactyl and CubeCoders AMP are control panels; Agones is a Kubernetes operator library — not a direct competitor, but a reference point for teams building on Kubernetes primitives."
     />
 
-    <div class="w-full max-w-[960px]">
+    <div class="w-full max-w-[1280px]">
       <!-- Mobile: one stacked card per row -->
       <div class="flex flex-col gap-4 md:hidden">
         {
           rows.map((row) => (
-            <div class="flex flex-col gap-4 rounded-m border border-border bg-card p-5">
-              <h3 class="font-primary text-sm font-semibold text-foreground">{row.label}</h3>
-              <div class="flex flex-col gap-1.5 border-t border-border pt-4">
-                <span class="font-primary text-[10px] font-semibold tracking-widest text-muted-foreground">
-                  DOCKER-BASED PANELS
-                </span>
-                <p class="text-[13px] leading-normal text-muted-foreground">{row.docker}</p>
-              </div>
+            <div class="flex flex-col gap-4 rounded-2xl border border-border bg-card p-5">
+              <h3 class="font-primary text-sm font-semibold text-foreground">{row.dimension}</h3>
               <div class="flex flex-col gap-1.5 border-t border-border pt-4">
                 <span class="font-primary text-[10px] font-semibold tracking-widest text-primary">
                   GAMEPLANE
                 </span>
-                <p class="text-[13px] leading-normal text-foreground">{row.gameplane}</p>
+                <p class="text-[13px] leading-relaxed text-foreground">
+                  {parseCell(row.gameplane).text}
+                  {parseCell(row.gameplane).tags.map((tag) => (
+                    <span class="ml-2 inline-block rounded bg-accent-soft px-2 py-0.5 text-[10px] font-semibold text-accent">
+                      {tag}
+                    </span>
+                  ))}
+                </p>
+              </div>
+              <div class="flex flex-col gap-1.5 border-t border-border pt-4">
+                <span class="font-primary text-[10px] font-semibold tracking-widest text-muted-foreground">
+                  PTERODACTYL
+                </span>
+                <p class="text-[13px] leading-relaxed text-muted-foreground">{row.pterodactyl}</p>
+              </div>
+              <div class="flex flex-col gap-1.5 border-t border-border pt-4">
+                <span class="font-primary text-[10px] font-semibold tracking-widest text-muted-foreground">
+                  CUBECODERS AMP
+                </span>
+                <p class="text-[13px] leading-relaxed text-muted-foreground">{row.amp}</p>
+              </div>
+              <div class="flex flex-col gap-1.5 border-t border-border pt-4">
+                <span class="font-primary text-[10px] font-semibold tracking-widest text-muted-foreground">
+                  AGONES
+                </span>
+                <p class="text-[13px] leading-relaxed text-muted-foreground">{row.agones}</p>
               </div>
             </div>
           ))
         }
       </div>
 
-      <!-- Desktop/tablet: 3-column table -->
+      <!-- Desktop/tablet: 5-column table -->
       <div class="hidden overflow-x-auto md:block">
-        <div class="min-w-[720px] overflow-hidden rounded-m border border-border">
-          <div class="grid grid-cols-3 gap-6 bg-secondary px-6 py-4">
-            <span class="font-primary text-[11px] font-semibold tracking-widest text-muted-foreground"
-              >APPROACH</span
-            >
-            <span class="font-primary text-[11px] font-semibold tracking-widest text-muted-foreground"
-              >DOCKER-BASED PANELS</span
-            >
-            <span class="font-primary text-[11px] font-semibold tracking-widest text-primary"
-              >GAMEPLANE</span
-            >
+        <div class="overflow-hidden rounded-2xl border border-border">
+          <div class="grid grid-cols-[200px_repeat(4,minmax(0,1fr))] gap-px bg-border">
+            <div class="bg-card px-4 py-3"></div>
+            <div class="bg-accent-soft px-4 py-3">
+              <span class="font-primary text-[11px] font-semibold tracking-widest text-accent">
+                GAMEPLANE
+              </span>
+            </div>
+            <div class="bg-card px-4 py-3">
+              <span class="font-primary text-[11px] font-semibold tracking-widest text-muted-foreground">
+                PTERODACTYL
+              </span>
+            </div>
+            <div class="bg-card px-4 py-3">
+              <span class="font-primary text-[11px] font-semibold tracking-widest text-muted-foreground">
+                CUBECODERS AMP
+              </span>
+            </div>
+            <div class="bg-card px-4 py-3">
+              <span class="font-primary text-[11px] font-semibold tracking-widest text-muted-foreground">
+                AGONES
+              </span>
+            </div>
           </div>
           {
-            rows.map((row, index) => (
-              <div
-                class={`grid grid-cols-3 gap-6 bg-card px-6 py-5 ${index < rows.length - 1 ? "border-b border-border" : ""}`}
-              >
-                <span class="font-primary text-sm font-semibold text-foreground">{row.label}</span>
-                <span class="text-[13px] leading-normal text-muted-foreground">{row.docker}</span>
-                <span class="text-[13px] leading-normal text-foreground">{row.gameplane}</span>
+            rows.map((row) => (
+              <div class="grid grid-cols-[200px_repeat(4,minmax(0,1fr))] gap-px bg-border">
+                <div class="bg-card px-4 py-3">
+                  <span class="font-primary text-sm font-semibold text-foreground">
+                    {row.dimension}
+                  </span>
+                </div>
+                <div class="bg-card px-4 py-3">
+                  <p class="text-[13px] leading-relaxed text-foreground">
+                    {parseCell(row.gameplane).text}
+                    {parseCell(row.gameplane).tags.map((tag) => (
+                      <span class="ml-1 inline-block rounded bg-accent-soft px-1.5 py-0.5 text-[10px] font-semibold text-accent">
+                        {tag}
+                      </span>
+                    ))}
+                  </p>
+                </div>
+                <div class="bg-card px-4 py-3">
+                  <p class="text-[13px] leading-relaxed text-muted-foreground">
+                    {row.pterodactyl}
+                  </p>
+                </div>
+                <div class="bg-card px-4 py-3">
+                  <p class="text-[13px] leading-relaxed text-muted-foreground">
+                    {row.amp}
+                  </p>
+                </div>
+                <div class="bg-card px-4 py-3">
+                  <p class="text-[13px] leading-relaxed text-muted-foreground">
+                    {row.agones}
+                  </p>
+                </div>
               </div>
             ))
           }
@@ -97,17 +215,20 @@ const rows = [
     </div>
 
     <p class="max-w-[700px] text-center text-[13px] text-muted-foreground">
-      This is a high-level snapshot, not a feature-by-feature audit. For a fuller comparison
-      against AMP, Pterodactyl, and PufferPanel, see the
-      <a class="text-foreground underline hover:text-primary" href={withBase("/docs/comparison/")}
-        >docs</a
-      >.
+      Sources for every cell:
+      <a
+        class="text-foreground underline hover:text-primary"
+        href={`${GITHUB_URL}/blob/master/docs/comparison-sources.md`}
+      >
+        docs/comparison-sources.md
+      </a>
+      — Checked 2026-09-02.
     </p>
 
     <div
-      class="flex w-full max-w-[840px] flex-col gap-6 rounded-m border border-border bg-card p-6 md:flex-row md:p-8"
+      class="flex w-full max-w-[840px] flex-col gap-6 rounded-2xl border border-border bg-card p-6 md:flex-row md:p-8"
     >
-      <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-secondary">
+      <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-secondary">
         <Icon name="boxes" class="h-[26px] w-[26px] text-primary" />
       </div>
       <div class="flex flex-col gap-2">

@@ -1,0 +1,116 @@
+---
+title: Files, Players & Mods
+description: Handle day-to-day game administration from the browser while preserving world safety, permissions, and a reproducible mod manifest.
+section: operate
+group: files-backups
+order: 1
+icon: folder-archive
+readTime: 13 MIN
+covers: ["Files", "Players", "Mods"]
+next: server-configuration
+---
+
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+
+The Files, Players & Mods hub guides you through the three core day-to-day administration tasks: managing server files and directories, moderating players online, and installing or updating game mods and modpacks.
+
+<DocsArticleMeta groupId="files-backups" readTime="13 MIN" />
+
+<DocsCallout icon="shield-alert" title="Back up before making irreversible changes">
+  Back up world data before editing live files, changing a modpack, or running irreversible player actions. Use the Backup & Recovery tools to create snapshots before experiments.
+</DocsCallout>
+
+## Work with server files
+
+Browse known server paths, create folders and files, upload assets, and edit text configuration in place. The file manager enforces path isolation and prevents accidental symlink escapes.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "folder",
+      label: "Stay inside exposed paths",
+      text: "Preserve file ownership and permissions; respect directory boundaries.",
+    },
+    {
+      icon: "download",
+      label: "Stop before editing runtime-rewritten files",
+      text: "Save or stop the game before editing files it rewrites at runtime.",
+    },
+    {
+      icon: "copy",
+      label: "Create a fresh backup",
+      text: "Backup before replacing world or configuration directories.",
+    },
+  ]}
+/>
+
+## Manage players
+
+Use the player view for online capacity, whitelist and ban operations, and auditable moderation. The player list shows who is online, and the moderation log tracks all changes with timestamps and reasons.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "shield-check",
+      label: "Confirm player identity",
+      text: "Verify the player before applying whitelist or ban changes.",
+    },
+    {
+      icon: "file-code",
+      label: "Pair moderation with a reason",
+      text: "Record why you're kicking, banning, or unbanning a player so it can be audited later.",
+    },
+    {
+      icon: "info",
+      label: "Communicate disruptive changes",
+      text: "Use broadcasts and planned restarts to notify players of maintenance or modpack updates.",
+    },
+  ]}
+/>
+
+## Install mods and modpacks
+
+Choose a registry, allow-listed URL, upload, or game-specific ID flow, then verify loader compatibility. Mods are installed into a manifest file that persists across restarts and can be version-controlled.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "package",
+      label: "Choose a trusted source",
+      text: "Select a mod from a trusted registry or known provider to avoid supply-chain attacks.",
+    },
+    {
+      icon: "check",
+      label: "Review dependencies and versions",
+      text: "Verify that all mod dependencies are present, file provenance is trusted, and update checks are supported.",
+    },
+    {
+      icon: "play",
+      label: "Save, restart, and verify",
+      text: "Save the manifest, restart gracefully, and watch game logs to ensure all mods load correctly.",
+    },
+  ]}
+/>
+
+<DocsQuickReference
+  label="MOD CHANGE LOOP"
+  items={[
+    "Choose a trusted source and verify game, loader, and version",
+    "Review dependencies, file provenance, and update-check support",
+    "Save the manifest, restart gracefully, and watch game logs",
+  ]}
+/>
+
+---
+
+## Related guides
+
+For detailed procedures, see:
+
+- **[File Manager](./file-manager/)** — Browse, upload, and edit server files in detail
+- **[Player Administration](./player-administration/)** — Whitelist, ban, and moderate players with audit trails
+- **[Mods & Modpacks](./mods-modpacks/)** — Install, update, and manage game mod collections
+- **[Backups & Recovery](./backups-recovery/)** — Create snapshots before making changes

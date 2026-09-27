@@ -1,0 +1,175 @@
+---
+title: "Notification Events & Payloads"
+description: "Event names, structured payload fields, delivery adapters, credentials, retries, and test behavior."
+section: "platform"
+group: "audit-observability"
+order: 6
+icon: "message-circle"
+eyebrow: "INTEGRATION REFERENCE"
+readTime: "8 MIN"
+covers: ["Events", "Webhooks", "Payload schema", "Retry policy"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+
+Gameplane emits notifications for critical cluster events — server health transitions, backup and restore completions — and routes them to your chosen sinks. Every event is strongly typed with structured fields, making it straightforward to filter, parse, and route.
+
+## Event catalog
+
+The notification system emits six event types across three resource categories. Each event fires once on transition; state is never re-emitted.
+
+| Event | Resource | When triggered | On by default |
+|---|---|---|---|
+| `server.unhealthy` | GameServer | Health check fails or agent heartbeat lost | ✓ |
+| `server.recovered` | GameServer | A previously-unhealthy server becomes healthy again | ✓ |
+| `backup.failed` | Backup | Backup enters Failed phase | ✓ |
+| `backup.succeeded` | Backup | Backup enters Succeeded phase | — |
+| `restore.failed` | Restore | Restore enters Failed phase | ✓ |
+| `restore.succeeded` | Restore | Restore enters Succeeded phase | — |
+
+<DocsCallout icon="info" title="Defaults cover failures and recovery pairs">
+  When a sink has no explicit event filter, it receives failures and recovery events (so you're alerted both when outages begin and when they end). Success notifications are opt-in.
+</DocsCallout>
+
+## Payload structure
+
+Webhook sinks receive the full structured event as JSON. Discord, Slack, ntfy, and SMTP format the same data into their respective message shapes.
+
+### Common fields
+
+Every payload contains these fields:
+
+```json
+{
+  "type": "server.unhealthy",
+  "ts": "2026-07-04T10:12:00Z",
+  "kind": "GameServer",
+  "name": "survival-1",
+  "namespace": "gameplane-games",
+  "instance": "prod",
+  "reason": "Liveness probe failure",
+  "message": "Pod has been in an unhealthy state for 5 minutes",
+  "test": false
+}
+```
+
+| Field | Type | Description |
+|---|---|---|
+| `type` | string | Event name (e.g., `server.unhealthy`) |
+| `ts` | string | Timestamp in RFC 3339 format (UTC) |
+| `kind` | string | CRD kind: `GameServer`, `Backup`, or `Restore` |
+| `name` | string | Resource name (server, backup, or restore name) |
+| `namespace` | string | Kubernetes namespace containing the resource |
+| `instance` | string | Gameplane instance name (from Admin Settings → General → Instance name) |
+| `reason` | string | Concise event reason (may be empty for some events) |
+| `message` | string | Detailed event message (may be empty) |
+| `test` | boolean | `true` for synthetic test sends; `false` for real events |
+
+<DocsCallout icon="shield-alert" title="Event payload is part of the API contract">
+  Field names and structure are locked for webhook consumers. Renaming or removing fields requires a major version bump and advance notice.
+</DocsCallout>
+
+## Delivery by sink type
+
+Each sink kind formats the event data for its platform while preserving the core fields. The delivery behavior (retries, observability) is consistent across all types.
+
+| Adapter | Credential | Payload format | Observability |
+|---|---|---|---|
+| **Webhook** | Optional `authorization` header | Full JSON (fields above) | Delivery counters at `/metrics`; HTTP status logged |
+| **Discord** | Webhook URL | One embed, color-coded (red for failures, green for successes) | Same metrics; delivery status in logs |
+| **Slack** | Incoming webhook URL | Plain text message (`{"text": "…"}`) | Works with every incoming-webhook variant and Mattermost compatibles |
+| **ntfy** | Topic URL + optional token | Plain-text POST with metadata in headers (`Title`, `Priority`, `Tags`) | High priority on failures; default otherwise |
+| **SMTP** | `host`, `from`, `to` (comma-separated); optional `port`, `username`/`password`, `tls` mode | Plain-text email with event fields | Delivered to inbox; undeliverable bounces to sender |
+
+### Retry policy
+
+When delivery fails, the system retries twice:
+
+- **Initial attempt:** immediate
+- **First retry:** 2 seconds
+- **Second retry:** 8 seconds
+
+Only retried on **network errors** (timeouts, DNS failures, connection refused) and **5xx server errors** (temporary service unavailability). **4xx responses** (bad token, revoked webhook, authentication failure) are **not retried** — they indicate permanent misconfiguration.
+
+Events in the delivery queue are **best-effort**: if the queue fills, new events are dropped and counted at `/metrics` under `gameplane_notify_deliveries_total{result="dropped"}`. A slow or down sink never blocks reconciliation, API requests, or other operations.
+
+## Test sends
+
+Test a sink without waiting for a real event:
+
+```bash
+curl -X POST https://<dashboard>/api/admin/notifications/sinks/{name}/test \
+  -H "Authorization: Bearer <token>"
+```
+
+Returns one of:
+- `200 {"delivered":true}` — success
+- `404` — sink not found
+- `422` — sink has no credential Secret configured
+- `502` — delivery failed (detailed error in response body)
+
+The endpoint is rate-limited (~12 per minute per IP) to prevent abuse.
+
+## Sink configuration
+
+Sinks are stored in the database but their credentials are always stored in Kubernetes Secrets, never in the database. Each sink references a Secret by name (`configRef`).
+
+<DocsQuickReference
+  label="SECRET LABELS"
+  items={[
+    "gameplane.local/notification-sink=true (required for API read/write)",
+    "gameplane.local/managed-by=gameplane-api (prevents deletion via dashboard if absent)",
+  ]}
+/>
+
+You can pre-create a Secret with `kubectl` and wire it up manually:
+
+```bash
+# Pre-create a Discord sink Secret
+kubectl -n gameplane-system create secret generic team-alerts \
+  --from-literal=url='https://discord.com/api/webhooks/...'
+
+# Label it so the API can use it
+kubectl -n gameplane-system label secret team-alerts \
+  gameplane.local/notification-sink=true
+
+# Then configure the sink via the dashboard or API
+PUT /admin/config/notifications
+{
+  "sinks": [
+    {
+      "name": "team-alerts",
+      "kind": "discord",
+      "configRef": "team-alerts",
+      "enabled": true
+    }
+  ]
+}
+```
+
+Or use the dashboard form to create it directly — the API stores the credential as a Secret automatically.
+
+## Monitoring delivery health
+
+Watch the delivery metrics at `/metrics` under `gameplane_notify_deliveries_total`:
+
+```
+gameplane_notify_deliveries_total{kind="discord|slack|smtp|webhook|ntfy",
+                                  result="sent|failed|dropped|skipped_no_secret"}
+```
+
+- `sent` — successful delivery
+- `failed` — delivery attempted but failed (check logs for details)
+- `dropped` — event dropped because the queue was full
+- `skipped_no_secret` — sink enabled but `configRef` Secret does not exist
+
+A growing `failed` or `dropped` delta means alerts are not arriving. Check the API logs and verify each sink's credential Secret exists and contains the correct keys for its kind.
+
+## Restart behavior
+
+Notifications only fire for transitions observed **while the API pod is running**. If a backup starts and completes entirely while the API is down, no notification is sent (the event is still visible in the dashboard, kubectl, and Prometheus alerts like `GameplaneBackupFailed`). There is no watermark to replay missed events across restarts.
+
+---
+
+**Next:** [Platform Settings & Telemetry](./platform-settings-telemetry/)

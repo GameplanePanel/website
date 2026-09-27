@@ -1,0 +1,107 @@
+---
+title: Console, Events & Logs
+description: Trace a server from Kubernetes scheduling through container startup and game readiness, then use the live console without losing diagnostic context.
+section: operate
+group: console-logs
+order: 1
+icon: terminal
+readTime: 9 MIN
+covers: ["Events", "Console", "Logs"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+
+Trace a server from Kubernetes scheduling through container startup and game readiness, then use the live console without losing diagnostic context.
+
+<DocsCallout icon="info" title="Events vs. logs">
+  Events explain why a workload could not start; logs explain what happened after a container started.
+</DocsCallout>
+
+## Start with events
+
+Events are the control-plane timeline for scheduling, images, volumes, probes, and reconciliation.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "info",
+      label: "Filter by severity, reason, and source",
+      text: "Events on a server's Overview page show warnings and failures; sort by newest first.",
+    },
+    {
+      icon: "info",
+      label: "Read newest-first, preserve timestamps",
+      text: "Compare controller events across the pod, StatefulSet, and GameServer objects using RFC3339 timestamps.",
+    },
+    {
+      icon: "shield-alert",
+      label: "Scheduling and mounts first",
+      text: "Warnings about scheduling or mounts usually precede useful container output.",
+    },
+  ]}
+/>
+
+The `/servers/{name}/events` endpoint returns a snapshot of the 50 most recent Kubernetes Events affecting the server's pod and its parent objects.
+
+## Use console and RCON safely
+
+The live console is an operational channel, not a substitute for configuration or an audit trail.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "shield-check",
+      label: "Confirm target and permission",
+      text: "Verify the server name and your operator role before sending commands.",
+    },
+    {
+      icon: "play",
+      label: "Use replay and fullscreen controls",
+      text: "Browser-side playback, clear, and fullscreen controls do not interrupt the stream.",
+    },
+    {
+      icon: "activity",
+      label: "Prefer planned commands",
+      text: "Use broadcast and restart workflows for player-facing state changes.",
+    },
+  ]}
+/>
+
+### Console modes
+
+**PTY mode** (`consoleMode: pty`): Attaches the browser directly to the container's stdin/stdout via the Kubernetes pod-attach API. The dashboard streams live output and forwards keystrokes as raw input. Use this for interactive debugging or live monitoring.
+
+**RCON mode** (`consoleMode: rcon`): Sends line-based commands to a game server admin protocol (Minecraft Java's RCON, Valheim's RCON, etc.). Responses come back as discrete log lines. Commands typed here are sent to the game's RCON protocol as-is; use the pre-built Action buttons (validated by the agent's `gameaction` module against the template's schema) for anything that should be schema-checked before it reaches the server.
+
+Both modes appear under the same **Console** tab in the dashboard. The template's `spec.consoleMode` field (or the default when `spec.rcon` is configured) determines which mode is available.
+
+## Diagnose with logs
+
+Switch between container and game logs, follow live output, and export evidence before changing state.
+
+### Container logs
+
+Container startup logs (stdout/stderr from the game process) stream via the Kubernetes pod-logs API as **Container output** in the dashboard. This is the earliest output from the container's entry point before the game's own log file exists.
+
+### Game logs
+
+The game's primary log file is configured in the template's `spec.logPath` (e.g., `/data/logs/latest.log` for Minecraft). The agent sidecar tails this file and streams it to the **Game log** source of the Logs tab via the `/logs/tail` WebSocket endpoint. Download the full log file without interrupting the stream using the **Download** button.
+
+### Failed start triage
+
+<DocsQuickReference
+  label="FAILED START TRIAGE"
+  items={[
+    "01  Read Events for scheduling, image, volume, or probe failures",
+    "02  Follow container logs, then game logs when the process is ready",
+    "03  Export timestamps and context before restart or configuration changes",
+  ]}
+/>
+
+---
+
+## Next guide
+
+[Files, players, and mods](./files-players-mods/)

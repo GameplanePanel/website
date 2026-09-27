@@ -4,15 +4,16 @@ description: Gameplane splits control across an operator, REST API, in-cluster a
 section: core-concepts
 order: 1
 icon: network
+eyebrow: CONCEPTS
 ---
 
 import ArchFlow from "../../components/docs/ArchFlow.astro";
 
 <ArchFlow
   nodes={[
-    { icon: "globe", title: "Browser", subtitle: "User" },
+    { icon: "laptop", title: "Browser", subtitle: "User" },
     { icon: "server", title: "API", subtitle: "Gateway" },
-    { icon: "refresh-cw", title: "Operator", subtitle: "Controller" },
+    { icon: "workflow", title: "Operator", subtitle: "Controller" },
     { icon: "boxes", title: "Kubernetes", subtitle: "Cluster" },
     { icon: "cpu", title: "Agent", subtitle: "Sidecar" },
   ]}

@@ -1,0 +1,92 @@
+---
+title: "Server overview and connections"
+description: "Read desired state, health, capacity, connection endpoint, and live game context before taking an action."
+section: operate
+group: servers-config
+order: 2
+icon: server
+eyebrow: "OPERATE"
+readTime: "10 MIN"
+covers: ["Health", "Endpoint", "Quick actions"]
+next: "general-server-settings"
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
+
+<DocsArticleMeta groupId="servers-config" readTime="10 MIN" />
+
+Read desired state, health, capacity, connection endpoint, and live game context before taking an action.
+
+<DocsCallout icon="shield-alert" title="Treat state, conditions, events, and live game status as one story—not four independent indicators.">
+  Every significant change (restart, scale, configuration update) touches the state machine. Read the phase, conditions, events, and live player count together to understand why a server is in its current state and what actions are safe.
+</DocsCallout>
+
+## Read the server header
+
+Confirm identity and current reconciliation state before opening an action or console.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "Check server, cluster, namespace, template, version, loader, and uptime",
+      text: "Verify the server is pinned to the expected game template version. Template version changes are immutable after creation.",
+    },
+    {
+      icon: "check",
+      label: "Distinguish Pending, Starting, Running, Stopping, Stopped, Suspended, and Failed phases",
+      text: "The phase reflects the desired state of the reconciliation loop. Starting and Stopping are transient; check active events to see what the operator is waiting for.",
+    },
+    {
+      icon: "check",
+      label: "Check active players before Start, Stop, Restart, or console actions",
+      text: "The agent reports live player count; 0 is safe, unknown (null) means the query failed and should be retried. Never stop mid-session without notice.",
+    },
+  ]}
+/>
+
+## Inspect resources and connectivity
+
+Use resource cards and the displayed endpoint to validate both workload health and the player network path.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "Compare CPU, memory, and disk use with configured capacity",
+      text: "Resource requests and limits are set in General Server Settings. The dashboard shows live usage from the kubelet. If usage is creeping close to the limit, the pod is at risk of an OOM kill.",
+    },
+    {
+      icon: "check",
+      label: "Copy host and port together; verify service type and external routing",
+      text: "The endpoint name (e.g. game-port), protocol, and external address appear in the connections section. NodePort, LoadBalancer, and Hostport each expose the address differently; ClusterIP has no external endpoint.",
+    },
+    {
+      icon: "check",
+      label: "Correlate metric changes with recent scheduling, image, probe, and agent events",
+      text: "The events timeline shows when the operator deployed the pod, when the container became ready (readiness probe success), and when the agent last reported a heartbeat. A metric spike after agent startup suggests the game was cold-started.",
+    },
+  ]}
+/>
+
+## Check game state and quick actions
+
+Save and communicate before changing world state, files, mods, versions, restores, or player-facing rules.
+
+<DocsCallout icon="info" title="World state changes need a backup and notice.">
+  Before modifying save files, mods, or server config, ensure a backup is recent and any players are offline. Post a maintenance window notice or stop the server first.
+</DocsCallout>
+
+The quick-actions bar offers one-click access to common operations:
+
+<DocsQuickReference
+  label="OPERATING LOOP"
+  items={[
+    "01  Identify → cluster, namespace, version, state, and uptime",
+    "02  Validate → resources, endpoint, events, players, world state",
+    "03  Save and broadcast → one action → confirm status and audit",
+  ]}
+/>

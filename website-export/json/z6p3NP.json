@@ -3,14 +3,14 @@
   "id": "z6p3NP",
   "x": 0,
   "y": 92188,
-  "name": "Screen/Docs \u2014 Database Migrations",
+  "name": "Screen/Docs — Database Migrations",
   "theme": {
-    "H:Mode": "Dark"
+    "semantic": "dark"
   },
   "clip": true,
   "width": 1440,
   "height": 900,
-  "fill": "$H:--background",
+  "fill": "$background/background",
   "children": [
     {
       "id": "Z3E2q",
@@ -26,7 +26,7 @@
       "name": "Docs Main",
       "width": "fill_container",
       "height": "fill_container",
-      "fill": "$H:--background",
+      "fill": "$background/background",
       "layout": "vertical",
       "children": [
         {
@@ -66,7 +66,7 @@
                   "type": "text",
                   "id": "qVZ8E",
                   "name": "Article Eyebrow",
-                  "fill": "#FF8400",
+                  "fill": "$accent/accent",
                   "content": "DEVELOP",
                   "fontFamily": "JetBrains Mono",
                   "fontSize": 11,
@@ -77,7 +77,7 @@
                   "type": "text",
                   "id": "OA6Gg",
                   "name": "Article Title",
-                  "fill": "#FFFFFF",
+                  "fill": "$foreground/foreground",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
                   "content": "Database and migrations",
@@ -90,7 +90,7 @@
                   "type": "text",
                   "id": "ouu6K",
                   "name": "Article Lead",
-                  "fill": "#B8B9B6",
+                  "fill": "$muted",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
                   "content": "Change the API store without breaking SQLite-first installs, optional PostgreSQL builds, startup ordering, or rollback safety.",
@@ -107,82 +107,37 @@
                   "alignItems": "center",
                   "children": [
                     {
-                      "type": "frame",
-                      "id": "ZfKGg",
+                      "id": "cgLWl",
+                      "type": "ref",
+                      "ref": "NZPtq",
                       "name": "Meta Chip 0",
-                      "fill": "#FF84001F",
-                      "cornerRadius": 999,
-                      "stroke": "#FF840066",
-                      "strokeWidth": 1,
-                      "strokeAlignment": "inner",
-                      "padding": [
-                        5,
-                        9
-                      ],
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "yj4rm",
-                          "name": "Meta Chip Label 0",
-                          "fill": "#FF9D33",
-                          "content": "DEVELOPER GUIDE",
-                          "fontFamily": "JetBrains Mono",
-                          "fontSize": 9,
-                          "fontWeight": "600"
+                      "descendants": {
+                        "NLG8t": {
+                          "content": "DEVELOPER GUIDE"
                         }
-                      ]
+                      }
                     },
                     {
-                      "type": "frame",
-                      "id": "nLeTS",
+                      "id": "f2pcy",
+                      "type": "ref",
+                      "ref": "EbSsA",
                       "name": "Meta Chip 1",
-                      "fill": "#1A1A1A",
-                      "cornerRadius": 999,
-                      "stroke": "#2E2E2E",
-                      "strokeWidth": 1,
-                      "strokeAlignment": "inner",
-                      "padding": [
-                        5,
-                        9
-                      ],
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "C0rMNv",
-                          "name": "Meta Chip Label 1",
-                          "fill": "#B8B9B6",
-                          "content": "v0.2",
-                          "fontFamily": "JetBrains Mono",
-                          "fontSize": 9,
-                          "fontWeight": "600"
+                      "descendants": {
+                        "yb6zz": {
+                          "content": "v0.2"
                         }
-                      ]
+                      }
                     },
                     {
-                      "type": "frame",
-                      "id": "Pb5Kk",
+                      "id": "k4DIT",
+                      "type": "ref",
+                      "ref": "EbSsA",
                       "name": "Meta Chip 2",
-                      "fill": "#1A1A1A",
-                      "cornerRadius": 999,
-                      "stroke": "#2E2E2E",
-                      "strokeWidth": 1,
-                      "strokeAlignment": "inner",
-                      "padding": [
-                        5,
-                        9
-                      ],
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "BdUAb",
-                          "name": "Meta Chip Label 2",
-                          "fill": "#B8B9B6",
-                          "content": "16 MIN",
-                          "fontFamily": "JetBrains Mono",
-                          "fontSize": 9,
-                          "fontWeight": "600"
+                      "descendants": {
+                        "yb6zz": {
+                          "content": "16 MIN"
                         }
-                      ]
+                      }
                     }
                   ]
                 },
@@ -191,9 +146,9 @@
                   "id": "L5E9uo",
                   "name": "Article Callout",
                   "width": "fill_container",
-                  "fill": "#FF84000F",
-                  "cornerRadius": 8,
-                  "stroke": "#FF84004D",
+                  "fill": "$accent/soft",
+                  "cornerRadius": "$radius/xl",
+                  "stroke": "$border/border",
                   "strokeWidth": 1,
                   "strokeAlignment": "inner",
                   "gap": 10,
@@ -211,13 +166,13 @@
                       "height": 16,
                       "icon": "database-zap",
                       "library": "lucide",
-                      "fill": "#FF8400"
+                      "fill": "$accent/soft-foreground"
                     },
                     {
                       "type": "text",
                       "id": "yzfpz",
                       "name": "Article Callout Text",
-                      "fill": "#E7E7E4",
+                      "fill": "$accent/soft-foreground",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "Released migration files are immutable; every schema change gets the next ordered transactional file.",
@@ -239,7 +194,7 @@
                       "type": "text",
                       "id": "Pke10",
                       "name": "Section Title 1",
-                      "fill": "#FFFFFF",
+                      "fill": "$foreground/foreground",
                       "content": "Storage model",
                       "fontFamily": "JetBrains Mono",
                       "fontSize": 17,
@@ -249,7 +204,7 @@
                       "type": "text",
                       "id": "x3jw86",
                       "name": "Section Body 1",
-                      "fill": "#B8B9B6",
+                      "fill": "$muted",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "Platform identity and settings live in the database while desired infrastructure remains in CRDs.",
@@ -263,9 +218,9 @@
                       "id": "tUfli",
                       "name": "Section List 1",
                       "width": "fill_container",
-                      "fill": "#1A1A1A",
-                      "cornerRadius": 8,
-                      "stroke": "#2E2E2E",
+                      "fill": "$surface/surface",
+                      "cornerRadius": "$radius/2xl",
+                      "stroke": "$border/border",
                       "strokeWidth": 1,
                       "strokeAlignment": "inner",
                       "layout": "vertical",
@@ -291,13 +246,13 @@
                               "height": 13,
                               "icon": "check",
                               "library": "lucide",
-                              "fill": "#FF8400"
+                              "fill": "$accent/accent"
                             },
                             {
                               "type": "text",
                               "id": "w6qvf",
                               "name": "Section 1 Item Text 0",
-                              "fill": "#E7E7E4",
+                              "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
                               "content": "SQLite is default and single-connection; PostgreSQL uses a build tag.",
@@ -323,13 +278,13 @@
                               "height": 13,
                               "icon": "check",
                               "library": "lucide",
-                              "fill": "#FF8400"
+                              "fill": "$accent/accent"
                             },
                             {
                               "type": "text",
                               "id": "JCCKz",
                               "name": "Section 1 Item Text 1",
-                              "fill": "#E7E7E4",
+                              "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
                               "content": "Users, sessions, roles, config, and audit data live here.",
@@ -355,13 +310,13 @@
                               "height": 13,
                               "icon": "check",
                               "library": "lucide",
-                              "fill": "#FF8400"
+                              "fill": "$accent/accent"
                             },
                             {
                               "type": "text",
                               "id": "Ipl4d",
                               "name": "Section 1 Item Text 2",
-                              "fill": "#E7E7E4",
+                              "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
                               "content": "Embedded migration SQL runs in filename order at startup.",
@@ -387,7 +342,7 @@
                       "type": "text",
                       "id": "Te6oU",
                       "name": "Section Title 2",
-                      "fill": "#FFFFFF",
+                      "fill": "$foreground/foreground",
                       "content": "Write a migration",
                       "fontFamily": "JetBrains Mono",
                       "fontSize": 17,
@@ -397,7 +352,7 @@
                       "type": "text",
                       "id": "H94wU",
                       "name": "Section Body 2",
-                      "fill": "#B8B9B6",
+                      "fill": "$muted",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "Add one portable, immutable, zero-padded SQL file and use a transaction that records success only at completion.",
@@ -411,9 +366,9 @@
                       "id": "G0Mwbm",
                       "name": "Section List 2",
                       "width": "fill_container",
-                      "fill": "#1A1A1A",
-                      "cornerRadius": 8,
-                      "stroke": "#2E2E2E",
+                      "fill": "$surface/surface",
+                      "cornerRadius": "$radius/2xl",
+                      "stroke": "$border/border",
                       "strokeWidth": 1,
                       "strokeAlignment": "inner",
                       "layout": "vertical",
@@ -439,13 +394,13 @@
                               "height": 13,
                               "icon": "check",
                               "library": "lucide",
-                              "fill": "#FF8400"
+                              "fill": "$accent/accent"
                             },
                             {
                               "type": "text",
                               "id": "gRJls",
                               "name": "Section 2 Item Text 0",
-                              "fill": "#E7E7E4",
+                              "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
                               "content": "Never rewrite an already released migration.",
@@ -471,13 +426,13 @@
                               "height": 13,
                               "icon": "check",
                               "library": "lucide",
-                              "fill": "#FF8400"
+                              "fill": "$accent/accent"
                             },
                             {
                               "type": "text",
                               "id": "J2Q8H",
                               "name": "Section 2 Item Text 1",
-                              "fill": "#E7E7E4",
+                              "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
                               "content": "Keep SQL portable across SQLite and PostgreSQL.",
@@ -503,13 +458,13 @@
                               "height": 13,
                               "icon": "check",
                               "library": "lucide",
-                              "fill": "#FF8400"
+                              "fill": "$accent/accent"
                             },
                             {
                               "type": "text",
                               "id": "hBSB9",
                               "name": "Section 2 Item Text 2",
-                              "fill": "#E7E7E4",
+                              "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
                               "content": "Use SQLite-safe rebuilds where constraints cannot be altered.",
@@ -535,7 +490,7 @@
                       "type": "text",
                       "id": "A4sUDo",
                       "name": "Section Title 3",
-                      "fill": "#FFFFFF",
+                      "fill": "$foreground/foreground",
                       "content": "Validate and operate",
                       "fontFamily": "JetBrains Mono",
                       "fontSize": 17,
@@ -545,7 +500,7 @@
                       "type": "text",
                       "id": "wP0mo",
                       "name": "Section Body 3",
-                      "fill": "#B8B9B6",
+                      "fill": "$muted",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "Test fresh schema, prior-version upgrade, reopen, transaction rollback, and both database build modes.",
@@ -559,9 +514,9 @@
                       "id": "XdFZV",
                       "name": "Quick Reference",
                       "width": "fill_container",
-                      "fill": "#0D0D0D",
-                      "cornerRadius": 8,
-                      "stroke": "#2E2E2E",
+                      "fill": "$surface/tertiary",
+                      "cornerRadius": "$radius/xl",
+                      "stroke": "$border/border",
                       "strokeWidth": 1,
                       "strokeAlignment": "inner",
                       "layout": "vertical",
@@ -572,7 +527,7 @@
                           "type": "text",
                           "id": "XFvs6",
                           "name": "Quick Reference Label",
-                          "fill": "#FF8400",
+                          "fill": "$accent/accent",
                           "content": "MIGRATION LOOP",
                           "fontFamily": "JetBrains Mono",
                           "fontSize": 9,
@@ -583,7 +538,7 @@
                           "type": "text",
                           "id": "p2LgJ",
                           "name": "Quick Reference Line 1",
-                          "fill": "#FFFFFF",
+                          "fill": "$foreground/foreground",
                           "content": "01  api/internal/db/migrations/006_<change>.sql",
                           "fontFamily": "JetBrains Mono",
                           "fontSize": 11.5,
@@ -593,7 +548,7 @@
                           "type": "text",
                           "id": "nO0oy",
                           "name": "Quick Reference Line 2",
-                          "fill": "#FFFFFF",
+                          "fill": "$foreground/foreground",
                           "content": "02  cd api && go test ./internal/db",
                           "fontFamily": "JetBrains Mono",
                           "fontSize": 11.5,
@@ -603,7 +558,7 @@
                           "type": "text",
                           "id": "jeUYl",
                           "name": "Quick Reference Line 3",
-                          "fill": "#FFFFFF",
+                          "fill": "$foreground/foreground",
                           "content": "03  go test -tags postgres ./internal/db",
                           "fontFamily": "JetBrains Mono",
                           "fontSize": 11.5,
@@ -618,7 +573,7 @@
                   "id": "fAmYu",
                   "name": "Article Next Link",
                   "width": "fill_container",
-                  "stroke": "#2E2E2E",
+                  "stroke": "$border/border",
                   "strokeWidth": {
                     "top": 1
                   },
@@ -644,7 +599,7 @@
                           "type": "text",
                           "id": "XWmF7",
                           "name": "Next Link Eyebrow",
-                          "fill": "#737570",
+                          "fill": "$field/placeholder",
                           "content": "NEXT GUIDE",
                           "fontFamily": "Geist",
                           "fontSize": 10,
@@ -654,7 +609,7 @@
                           "type": "text",
                           "id": "AOgnJ",
                           "name": "Next Link Title",
-                          "fill": "#FFFFFF",
+                          "fill": "$foreground/foreground",
                           "content": "Testing, coverage, and E2E",
                           "fontFamily": "JetBrains Mono",
                           "fontSize": 13,
@@ -670,7 +625,7 @@
                       "height": 15,
                       "icon": "arrow-right",
                       "library": "lucide",
-                      "fill": "#B8B9B6"
+                      "fill": "$muted"
                     }
                   ]
                 }
@@ -689,9 +644,9 @@
                   "id": "Fmkza",
                   "name": "Docs Table of Contents",
                   "width": "fill_container",
-                  "fill": "#171717",
-                  "cornerRadius": 10,
-                  "stroke": "#2E2E2E",
+                  "fill": "$surface/secondary",
+                  "cornerRadius": "$radius/2xl",
+                  "stroke": "$border/border",
                   "strokeWidth": 1,
                   "strokeAlignment": "inner",
                   "layout": "vertical",
@@ -702,7 +657,7 @@
                       "type": "text",
                       "id": "x85727",
                       "name": "TOC Label",
-                      "fill": "#737570",
+                      "fill": "$field/placeholder",
                       "content": "ON THIS PAGE",
                       "fontFamily": "JetBrains Mono",
                       "fontSize": 9,
@@ -725,13 +680,13 @@
                           "height": 12,
                           "icon": "hash",
                           "library": "lucide",
-                          "fill": "#FF8400"
+                          "fill": "$accent/accent"
                         },
                         {
                           "type": "text",
                           "id": "o5RSoL",
                           "name": "TOC Text 0",
-                          "fill": "#FFFFFF",
+                          "fill": "$foreground/foreground",
                           "content": "Storage model",
                           "fontFamily": "Geist",
                           "fontSize": 12.5,
@@ -755,13 +710,13 @@
                           "height": 12,
                           "icon": "hash",
                           "library": "lucide",
-                          "fill": "#737570"
+                          "fill": "$field/placeholder"
                         },
                         {
                           "type": "text",
                           "id": "ehzZ9",
                           "name": "TOC Text 1",
-                          "fill": "#B8B9B6",
+                          "fill": "$muted",
                           "content": "Migration file",
                           "fontFamily": "Geist",
                           "fontSize": 12.5,
@@ -785,13 +740,13 @@
                           "height": 12,
                           "icon": "hash",
                           "library": "lucide",
-                          "fill": "#737570"
+                          "fill": "$field/placeholder"
                         },
                         {
                           "type": "text",
                           "id": "Y0d3ar",
                           "name": "TOC Text 2",
-                          "fill": "#B8B9B6",
+                          "fill": "$muted",
                           "content": "Validation",
                           "fontFamily": "Geist",
                           "fontSize": 12.5,
@@ -803,7 +758,7 @@
                       "type": "rectangle",
                       "id": "bYSMc",
                       "name": "TOC Divider",
-                      "fill": "#2E2E2E",
+                      "fill": "$border/border",
                       "width": "fill_container",
                       "height": 1
                     },
@@ -811,7 +766,7 @@
                       "type": "text",
                       "id": "ONqrr",
                       "name": "Coverage Label",
-                      "fill": "#737570",
+                      "fill": "$field/placeholder",
                       "content": "COVERS",
                       "fontFamily": "JetBrains Mono",
                       "fontSize": 9,
@@ -834,13 +789,13 @@
                           "height": 12,
                           "icon": "book-open",
                           "library": "lucide",
-                          "fill": "#8B8D88"
+                          "fill": "$field/placeholder"
                         },
                         {
                           "type": "text",
                           "id": "TDehn",
                           "name": "Coverage Text 0",
-                          "fill": "#B8B9B6",
+                          "fill": "$muted",
                           "content": "SQLite",
                           "fontFamily": "Geist",
                           "fontSize": 12,
@@ -864,13 +819,13 @@
                           "height": 12,
                           "icon": "book-open",
                           "library": "lucide",
-                          "fill": "#8B8D88"
+                          "fill": "$field/placeholder"
                         },
                         {
                           "type": "text",
                           "id": "AuTib",
                           "name": "Coverage Text 1",
-                          "fill": "#B8B9B6",
+                          "fill": "$muted",
                           "content": "PostgreSQL",
                           "fontFamily": "Geist",
                           "fontSize": 12,
@@ -894,13 +849,13 @@
                           "height": 12,
                           "icon": "book-open",
                           "library": "lucide",
-                          "fill": "#8B8D88"
+                          "fill": "$field/placeholder"
                         },
                         {
                           "type": "text",
                           "id": "aL2vH",
                           "name": "Coverage Text 2",
-                          "fill": "#B8B9B6",
+                          "fill": "$muted",
                           "content": "Schema",
                           "fontFamily": "Geist",
                           "fontSize": 12,
@@ -915,9 +870,9 @@
                   "id": "eEo9v",
                   "name": "Edit Page Card",
                   "width": "fill_container",
-                  "fill": "#111111",
-                  "cornerRadius": 10,
-                  "stroke": "#2E2E2E",
+                  "fill": "$background/background",
+                  "cornerRadius": "$radius/3xl",
+                  "stroke": "$border/border",
                   "strokeWidth": 1,
                   "strokeAlignment": "inner",
                   "layout": "vertical",
@@ -928,7 +883,7 @@
                       "type": "text",
                       "id": "qFft7",
                       "name": "Edit Page Title",
-                      "fill": "#FFFFFF",
+                      "fill": "$foreground/foreground",
                       "content": "Improve this page",
                       "fontFamily": "JetBrains Mono",
                       "fontSize": 12,
@@ -938,7 +893,7 @@
                       "type": "text",
                       "id": "wkmFh",
                       "name": "Edit Page Body",
-                      "fill": "#B8B9B6",
+                      "fill": "$muted",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "Found a gap? Open a docs issue or suggest an edit on GitHub.",
@@ -958,7 +913,7 @@
                           "type": "text",
                           "id": "yUKEd",
                           "name": "Edit Page Link Text",
-                          "fill": "#FF9D33",
+                          "fill": "$accent/soft-foreground",
                           "content": "Edit this page",
                           "fontFamily": "Geist",
                           "fontSize": 12,
@@ -972,7 +927,7 @@
                           "height": 12,
                           "icon": "external-link",
                           "library": "lucide",
-                          "fill": "#FF8400"
+                          "fill": "$accent/accent"
                         }
                       ]
                     }

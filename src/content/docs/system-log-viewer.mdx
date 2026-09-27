@@ -1,0 +1,83 @@
+---
+title: "System log viewer"
+description: "Follow API and operator output separately, preserve raw evidence, and correlate platform errors with events and audit."
+section: platform
+group: audit-observability
+order: 2
+icon: check
+eyebrow: OBSERVABILITY
+readTime: "11 MIN"
+covers: ["API logs", "Operator logs", "Evidence"]
+next: notification-sinks
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+
+Follow API and operator output separately, preserve raw evidence, and correlate platform errors with events and audit.
+
+<DocsCallout icon="download" title="Download raw records before restarting">
+  Download raw records before restarting a component or changing the stream filter.
+</DocsCallout>
+
+## Select the right stream
+
+API and operator logs describe different layers and must remain distinguishable during triage.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "API",
+      text: "Covers sessions, HTTP, database, streams, rate limits, integrations.",
+    },
+    {
+      icon: "cpu",
+      label: "Operator",
+      text: "Covers reconciliation, workloads, modules, backups, Kubernetes.",
+    },
+    {
+      icon: "history",
+      label: "Tail enough history",
+      text: "Stop Follow before changing filters or components.",
+    },
+  ]}
+/>
+
+## Read and export records
+
+Use timestamp, level, path, resource, status, and latency together, preserving multiline JSON exactly.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "info",
+      label: "Retain context",
+      text: "Do not search only for ERROR; retain the surrounding causal records.",
+    },
+    {
+      icon: "download",
+      label: "Record metadata",
+      text: "Download before restart and record cluster, namespace, pod, timezone.",
+    },
+    {
+      icon: "shield",
+      label: "Redact sensitive data",
+      text: "Redact Secrets and player data from shared excerpts.",
+    },
+  ]}
+/>
+
+## Correlate an incident
+
+Join API request/audit evidence to operator reconciliation, conditions, events, agent output, and the earliest error.
+
+<DocsQuickReference
+  label="LOG CORRELATION"
+  items={[
+    "01  API = sessions/requests/streams; Operator = reconciliation/K8s",
+    "02  Tail enough history, Follow live, Download before restart",
+    "03  Correlate time + actor + UID across audit, events, operator, game",
+  ]}
+/>

@@ -1,0 +1,151 @@
+---
+title: "Operate the server fleet"
+description: "Understand fleet states, run lifecycle actions safely, and move from a high-level alert to the exact server event that caused it."
+section: operate
+group: servers-config
+order: 1
+icon: server
+eyebrow: OPERATE
+readTime: 10 MIN
+covers: ["Fleet", "Lifecycle", "Ownership"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
+
+<DocsArticleMeta groupId="servers-config" readTime="10 MIN" />
+
+The server index is the fastest way to triage a large fleet by state, game, owner, node, or resource pressure. Learn how to read fleet states, trigger lifecycle actions safely, and trace an alert back to the exact event that caused it.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "activity",
+      label: "Fleet states",
+      text: "Running, stopped, failed, starting, and suspended are distinct states, visible in the index with filtering.",
+    },
+    {
+      icon: "play",
+      label: "Lifecycle actions",
+      text: "Start, stop, restart, clone, wake, and wipe-data actions all preserve desired state through operator reconciliation.",
+    },
+    {
+      icon: "shield-alert",
+      label: "Ownership and safety",
+      text: "Treat transfers and destructive actions as audited workflows with a recovery path.",
+    },
+  ]}
+/>
+
+## Fleet states and filters
+
+The server index is the fastest way to triage a large fleet by state, game, owner, node, or resource pressure.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "Running, stopped, failed, starting, and suspended",
+      text: "are distinct states visible in the dashboard.",
+    },
+    {
+      icon: "search",
+      label: "Search by server name",
+      text: "and combine filters without losing cluster scope.",
+    },
+    {
+      icon: "box",
+      label: "CPU, memory, players, and node placement",
+      text: "give immediate context in the fleet view.",
+    },
+  ]}
+/>
+
+### State definitions
+
+- **Running** — the game server pod is Running and has passed readiness probes
+- **Starting** — the pod is being created and initializing (readiness check in progress)
+- **Stopping** — spec.suspend=true (or idle sleep) was requested and the pod is still Ready while the template's graceful stop sequence runs over RCON before scaling to zero
+- **Suspended** — spec.suspend=true (manual stop) or idle auto-sleep both report this phase; distinguished only by the Ready/Progressing/Healthy condition reason (default vs IdleAsleep), not by a separate "Stopped" phase
+- **Failed** — the pod or liveness probe has failed and the server is not recovering
+- **Pending** — the pod is waiting for cluster resources (transient state)
+
+Filter the fleet by any combination of these states without losing the cluster scope.
+
+## Lifecycle actions
+
+Start, stop, restart, clone, wake, and wipe-data actions allow you to manage server state while the operator ensures eventual consistency.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "refresh-cw",
+      label: "Restart gracefully",
+      text: "before escalating to a forced stop.",
+    },
+    {
+      icon: "copy",
+      label: "Clone copies configuration",
+      text: "but intentionally excludes world data.",
+    },
+    {
+      icon: "check",
+      label: "Quick actions",
+      text: "run template-defined commands like save, broadcast, time, weather, and reload.",
+    },
+  ]}
+/>
+
+### Available actions
+
+Most lifecycle actions return HTTP 202 (Accepted), indicating the operator will reconcile the change asynchronously:
+
+**Core lifecycle (HTTP 202):**
+- **Start** (`POST /servers/{name}:start`) — sets `spec.suspend=false`, scaling up the pod if it was suspended
+- **Stop** (`POST /servers/{name}:stop`) — sets `spec.suspend=true`, gracefully shutting down and scaling to zero
+- **Restart** (`POST /servers/{name}:restart`) — stamps an annotation that triggers a pod restart; does not pause the server
+- **Wake** (`POST /servers/{name}:wake`) — wakes a server sleeping under idle auto-sleep (wake-on-connect); no-op if already running
+- **Wipe data** (`POST /servers/{name}:wipe-data`) — suspends the server, erases all files in the world volume, and resumes (for "reset world" workflows). Requires confirmation (server name typed back as `confirm` parameter).
+
+**Configuration copying (HTTP 200):**
+- **Clone** (`POST /servers/{name}:clone`) — creates a new GameServer by copying the entire spec from the source (image, version, config, resources, networking), with a specified `newName`. The clone inherits the source's spec.suspend value (so a running source produces a running clone); stop it afterward if you want it to come up stopped. World data is not copied.
+
+### Quick actions (template-defined)
+
+Templates can define up to 32 quick action buttons that run arbitrary RCON commands. Examples: `save` (writes state to disk), `broadcast` (announces to all players), `time` (set day/night), `weather` (change weather), `reload` (reloads configuration). Each action is instantaneous and requires no parameters unless the template defines optional or required input fields.
+
+<DocsCallout icon="info" title="Desired-state vs. immediate actions">
+  A desired-state action (Start, Stop, Wake) is not complete until its status and conditions confirm reconciliation — the operator may take 30–60 seconds to fully apply a state change. Quick actions execute immediately but do not change the server's phase; ensure the pod is Running before issuing them.
+</DocsCallout>
+
+## Ownership and safety
+
+Treat transfers and destructive actions as audited workflows with a recovery path.
+
+### Safe change checklist
+
+<DocsQuickReference
+  label="SAFE CHANGE CHECK"
+  items={[
+    "01  Check owner, collaborators, and current conditions",
+    "02  Create or verify a recent backup before world changes",
+    "03  Run the action and confirm events, status, and audit entry",
+  ]}
+/>
+
+- **Owner** — only the owner or an admin can delete, transfer ownership, edit collaborators, or wipe data; collaborators can use the other lifecycle actions (start, stop, restart, wake, clone)
+- **Backups** — always verify a recent backup exists before running wipe-data or clone
+- **Audit trail** — every action is logged with the user, timestamp, and outcome in the audit event stream
+- **Recovery** — stopped servers retain all data; even deleted servers can be restored from a backup
+
+### Tracing an alert to its root event
+
+Use the **Events & Logs** tab on any server to find the exact event that triggered a state change:
+
+1. If a server failed, look for a liveness-probe failure or pod eviction event
+2. If CPU spiked, check the metrics and look for a resource-limit event or node-pressure condition
+3. If players dropped, check the console log for a crash or a graceful shutdown initiated by an owner
+
+[Next guide: Console, events, and logs →](./console-events-logs/)

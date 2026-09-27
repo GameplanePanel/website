@@ -1,0 +1,28 @@
+---
+import { GROUPS } from "../../lib/docs-nav";
+
+interface Props {
+  groupId?: string;
+  readTime?: string;
+  version?: string;
+}
+
+const { groupId, readTime, version = "v0.2" } = Astro.props;
+const group = groupId ? GROUPS.find((g) => g.id === groupId) : undefined;
+---
+
+<div class="flex flex-wrap gap-2">
+  {group && (
+    <span class="inline-flex items-center rounded-2xl bg-accent-soft px-3 py-1 text-[11px] font-medium text-accent-soft-foreground">
+      {group.label}
+    </span>
+  )}
+  <span class="inline-flex items-center rounded-2xl bg-secondary px-3 py-1 text-[11px] font-medium text-foreground">
+    {version}
+  </span>
+  {readTime && (
+    <span class="inline-flex items-center rounded-2xl bg-secondary px-3 py-1 text-[11px] font-medium text-foreground">
+      {readTime}
+    </span>
+  )}
+</div>

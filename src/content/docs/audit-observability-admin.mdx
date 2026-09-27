@@ -1,0 +1,78 @@
+---
+title: "Audit, observability, and administration"
+description: "Preserve a trustworthy change history, inspect system health, route notifications, and manage instance-wide settings without losing operational evidence."
+section: "platform"
+group: "audit-observability"
+order: 1
+icon: "activity"
+readTime: "14 MIN"
+covers: ["Audit", "Logs", "Alerts"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+
+<DocsCallout icon="shield-alert" title="Preserve evidence before rotating.">
+  Export incident evidence before changing audit filters, restarting components, or rotating credentials. The audit log is your primary forensic trail; rotating or resetting credentials without exporting first may render historical records unverifiable.
+</DocsCallout>
+
+## Audit log and chain integrity
+
+Mutation and denied-access records connect actor, method, resource, status, and time in a tamper-evident chain. Every audit event is hashed with its predecessor, which reliably detects naive in-DB tampering and corruption, but not a privileged database attacker who also rewrites the stored checkpoint — treat the external sinks (webhook, stdout, S3), not the chain itself, as the tamper-proof record. Audit records are kept indefinitely by default (set `api.audit.retentionDays` in Helm to cap retention).
+
+- **Re-check chain integrity before relying on an exported audit window.** The API offers an admin-only `GET /admin/audit/verify` endpoint that validates the entire audit chain (recomputing hashes from the database) and reports whether it is intact or, if not, the ID of the first row where the chain breaks.
+- **Filter by actor, HTTP method, and status class.** The Dashboard's Audit page (Admin Settings → Audit & Observability) lets you narrow by actor, HTTP method, and status class (2xx/4xx/5xx). Denied requests (4xx) show up under that same status filter alongside everything else.
+- **Export CSV with the incident timezone and scope recorded.** Each export includes a header with the cluster name, namespace, resource UID, time range queried, and the authenticated actor who performed the export. This is essential for incident root-cause analysis.
+
+## Metrics, system logs, and telemetry
+
+Use fleet metrics for symptom detection, Kubernetes events for control-plane causes, and API/operator logs for service diagnostics.
+
+- **Keep API and operator streams separate when following live logs.** Both services emit structured logs; keep them in separate streams to avoid losing context when debugging a single component's behavior.
+- **Use structured-level filters and download raw evidence for correlation.** The Dashboard Logs page (Admin Settings → Observability) supports filtering by level; download the full log window as JSON for offline analysis across multiple components.
+- **Document telemetry settings and privacy expectations for operators.** Telemetry is opt-in and off by default (no `api.telemetry.endpoint` or bundled receiver configured out of the box, and an admin-only dashboard toggle must also be turned on before anything is sent). When enabled, the telemetry-receiver collects anonymous cluster usage (server counts, resource requests, uptime) but does not capture game data, player information, or audit events. Audit telemetry settings in Platform Settings so all cluster operators are aware of what is being transmitted.
+
+## Notifications and platform settings
+
+Configure event sinks, instance identity, external URL, update channel, and build information as shared operational contracts.
+
+<DocsCallout icon="check" title="Coming in v0.3.0">
+  Notifications (webhook, ntfy, Slack, SMTP) arrive in v0.3.0. Upgrade when available to route server lifecycle events, backups, and alerts to your team's incident channels.
+</DocsCallout>
+
+### Notification sinks
+
+Once available, multiple sink kinds support event routing:
+
+- **Webhook**: POST each event as JSON to a URL (e.g., a custom integration endpoint)
+- **ntfy.sh**: POST to a public or self-hosted ntfy topic with optional authentication
+- **Slack**: Send formatted messages to a Slack channel via a Slack App webhook
+- **SMTP**: Email alerts to a list of operator addresses
+
+Each sink is tested independently via the Dashboard form before saving. The API delivers events asynchronously; test delivery in the Admin Settings → Notifications panel to confirm SMTP/Slack/webhook connectivity before relying on critical alerts.
+
+### Platform settings
+
+- **Instance identity**: Display name, description, and (if public) a logo shown on the login page and in share links
+- **External URL**: The canonical URL used in share links, email notifications, and API documentation. Must be reachable by external players and notified clients.
+- **Update channel**: A read-only label (`stable` or `edge`) showing whether this install tracks tagged releases or rolling `:edge` images, derived from the Helm chart's `image.tag`/`updates.channel`; Gameplane is always upgraded via Helm, not through this setting.
+- **Build information**: Version, commit hash, and build timestamp for support and diagnostics — used by the MCP server and API documentation endpoints
+
+<DocsQuickReference
+  label="INCIDENT EVIDENCE"
+  items={[
+    "01  Record cluster, namespace, resource UID, time range, and actor when exporting audit records",
+    "02  Export audit records, Kubernetes events, API/operator logs, and backup status (if affected)",
+    "03  Test notification delivery and preserve version/build information for correlation",
+  ]}
+/>
+
+---
+
+## Related guides
+
+- [System Log Viewer](./system-log-viewer/) — Real-time dashboard log inspection and filtering
+- [Production Observability](./production-observability/) — Prometheus, dashboards, and fleet-wide metrics
+- [Metrics, Alerts & Dashboards](./metrics-alerts-dashboards/) — Scraping, alerting rules, and Grafana sinks
+- [Notification Sinks](./notification-sinks/) — Configuring webhooks, ntfy, Slack, and SMTP
+- [Platform Settings & Telemetry](./platform-settings-telemetry/) — Instance identity, update channels, and opt-in telemetry

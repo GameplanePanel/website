@@ -1,0 +1,29 @@
+---
+import Icon from "../Icon.astro";
+
+interface Props {
+  slug: string;
+  githubUrl?: string;
+}
+
+const { slug, githubUrl = "https://github.com/ValgulNecron/gameplane-website" } = Astro.props;
+const editUrl = `${githubUrl}/edit/main/src/content/docs/${slug}.mdx`;
+---
+
+<div class="rounded-m border border-border bg-card p-5">
+  <h3 class="mb-1 font-primary text-[13px] font-semibold text-foreground">
+    Improve this page
+  </h3>
+  <p class="mb-3 text-[13px] text-muted-foreground">
+    Found a typo or missing detail? Help us improve the docs.
+  </p>
+  <a
+    href={editUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="flex items-center gap-1.5 text-[13px] font-medium text-primary hover:text-primary/80"
+  >
+    <span>Edit this page</span>
+    <Icon name="external-link" class="h-3.5 w-3.5" />
+  </a>
+</div>

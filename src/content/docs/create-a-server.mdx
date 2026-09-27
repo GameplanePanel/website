@@ -1,0 +1,59 @@
+---
+title: "Create a Server"
+description: "Move from a verified game template to a reachable server through deliberate steps: template, version, configuration, network, and review."
+section: "operate"
+group: "servers-config"
+order: 3
+icon: "package-plus"
+readTime: "12 MIN"
+eyebrow: "OPERATE"
+covers: ["Wizard", "Resources", "Networking"]
+next: "server-configuration"
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+
+Move from a verified game template to a reachable server through five deliberate steps: template, version, configuration, network, and review.
+
+<DocsCallout icon="shield-alert" title="Review as a safety rail">
+Use the review step as a safety rail: confirm storage, exposure, and generated YAML before creating anything.
+</DocsCallout>
+
+## Choose a template and version
+
+Installed modules define supported games, versions, loaders, ports, and optional capabilities.
+
+<DocsSectionList
+  items={[
+    { icon: "check", label: "Prefer verified module releases", text: "Record the selected digest for reproducibility." },
+    { icon: "check", label: "Pin the game version and loader", text: "Instead of relying on latest." },
+    { icon: "check", label: "Review module capabilities", text: "Before enabling mods, console, or backups." },
+  ]}
+/>
+
+## Configure compute and storage
+
+Size the pod and persistent volume for the workload, then add environment, secrets, and placement rules.
+
+<DocsSectionList
+  items={[
+    { icon: "check", label: "Use equal CPU and memory requests/limits", text: "For Guaranteed QoS." },
+    { icon: "check", label: "Choose a StorageClass", text: "That supports the access mode and expansion you need." },
+    { icon: "check", label: "Use Secret references", text: "For credentials; never place tokens in plain variables." },
+  ]}
+/>
+
+## Expose and review
+
+Pick a service model, validate every port, then watch the GameServer reconcile to Ready.
+
+<DocsQuickReference
+  label="CREATE FLOW"
+  items={[
+    "01  Choose ClusterIP, NodePort, or LoadBalancer",
+    "02  Confirm ports, hostname, annotations, and CIDRs",
+    "03  Review YAML, create, then follow events to Ready",
+  ]}
+/>

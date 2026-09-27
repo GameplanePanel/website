@@ -2,48 +2,65 @@
 title: Changelog
 description: Recent releases, newest first.
 section: reference
-order: 4
+group: releases-roadmap
+order: 2
 icon: history
+eyebrow: DOCUMENTATION
+readTime: 5 MIN
 ---
 
+import DocsCallout from "../../components/docs/DocsCallout.astro";
 import ChangeEntry from "../../components/docs/ChangeEntry.astro";
 
+<DocsCallout icon="package" title="Coming in v0.3.0">
+  The changes below (Unreleased) are included in v0.3.0-rc.1, tagged but not yet published as a release. They will be available in v0.3.0 GA when it ships.
+</DocsCallout>
+
 <div class="flex flex-col">
-  <ChangeEntry version="v0.2.0-beta.7" date="2026-07-18" highlight>
-    Stabilization release: full audit of code, API, and docs. Fixed WebSocket RBAC cluster bypass,
-    Hostport now binds only advertised ports, SSE/WebSocket streams no longer force-closed at 60s,
-    and resolved Modules page crash. Docs refreshed for all 8 CRDs and clarified SQLite as
-    production-tested.
+  <ChangeEntry version="Unreleased" date="in development" highlight>
+    **Network capture:** admin-only, on-demand packet capture from running game pods as ephemeral sidecars, exported as PCAPNG (Wireshark-compatible).
+    **Module authoring toolkit:** gp-module CLI and web dashboard for scaffolding, validating, previewing, and packaging custom game modules.
+    **User theme customization:** preset themes (Modern Pink, Legacy Orange) and custom accent/surface colors with WCAG AA contrast validation.
+    **13 new top-steam-game modules** (FiveM, Farming Simulator 25, Euro Truck Simulator 2, Mount & Blade Bannerlord, tModLoader, Team Fortress 2, BeamMP, Left 4 Dead 2, The Isle, ARK, Arma Reforger, Hell Let Loose, Squad).
+    **Install-time configuration:** Helm-seeded OIDC role mappings and default StorageClass for game-data PVCs.
+    **Share link expiry options:** no-expiry, 15/30/60/90-day presets, or custom date picker.
+    **Security audit remediation:** share link isolation, permission checks on GameServer mutations, Secret/ConfigMap reference validation, and symlink/zip-slip guards hardened across mod extraction.
+    **REST and CLI console protocols** for games with HTTP admin APIs (FiveM) and PTY-only games (Terraria).
   </ChangeEntry>
+
+  <ChangeEntry version="v0.2.0-beta.8" date="2026-08-22">
+    Dependency sweep: Go module updates across telemetry-receiver, sentinel, mcp-server, operator, api and agent; web dependency bumps (`@tanstack/react-virtual`, `lucide-react`, `@types/node`, `globals`, `jsdom`, `postcss`); and CI/image pins aligned to stable releases (`setup-envtest` release-0.19→release-0.24, envtest Kubernetes 1.31.0→1.36.2, `kind` v0.24.0→v0.32.0, nginx 1.30→1.31, restic 0.18→0.19).
+    **Wake-on-connect for idle auto-sleep** via sentinel component holding advertised ports and waking servers on connection attempts.
+    **Load-balancer address pools:** GameServers can request specific pools or explicit public IPs when exposed as LoadBalancer services, integrated with MetalLB and Cilium.
+    **Signing key rotated** from Ed25519 to ECDSA P-256 with Rekor transparency logging for all images, charts, and module bundles.
+  </ChangeEntry>
+
+  <ChangeEntry version="v0.2.0-beta.7" date="2026-07-18">
+    Stabilization release: full audit of code, dashboard, API, and docs. Fixed WebSocket RBAC cluster bypass, Hostport now binds only advertised ports, SSE/WebSocket streams no longer force-closed at 60s, and resolved Modules page crash. Docs refreshed for all 8 CRDs and clarified SQLite as production-tested.
+  </ChangeEntry>
+
   <ChangeEntry version="v0.2.0-beta.6" date="2026-07-17">
-    Major release: four new console protocols (Rust WebRcon, DayZ BattlEye, Satisfactory HTTPS,
-    Palworld REST), per-GameServer RBAC with owners/collaborators, read-only MCP server, native
-    S3 audit sink, OIDC provider management with group→role mapping, ntfy notifications, mod
-    install manifests and one-click updates, Factorio mod-portal registry, version switching,
-    and admin System Logs.
+    Major release: four new console protocols (Rust WebRcon, DayZ BattlEye, Satisfactory HTTPS, Palworld REST), per-GameServer RBAC with owners/collaborators, read-only MCP server, native S3 audit sink, OIDC provider management with group→role mapping, ntfy notifications, mod install manifests and one-click updates, Factorio mod-portal registry, version switching, and admin System Logs.
   </ChangeEntry>
+
   <ChangeEntry version="v0.2.0-beta.5" date="2026-07-03">
-    Added: this website, the published cosign verification key (cosign.pub, with post-sign
-    verification in CI), automatic GitHub Release pages, and the last UI-audit parity items —
-    login password visibility toggle, user emails on the Users page, port overrides in the
-    Create Server wizard, and a redesigned "Back up now" flow.
+    Added: this website, the published cosign verification key (cosign.pub, with post-sign verification in CI), automatic GitHub Release pages, and the last UI-audit parity items — login password visibility toggle, user emails on the Users page, port overrides in the Create Server wizard, and a redesigned "Back up now" flow.
   </ChangeEntry>
+
   <ChangeEntry version="v0.2.0-beta.4" date="2026-07-01">
-    Added: fleet metrics (gameserver/backup phase gauges with Grafana panels and alerts),
-    server-side audit-log export, an audit webhook push sink, the audit-to-syslog bridge, and
-    cosign-signed component images.
+    Added: fleet metrics (gameserver/backup phase gauges with Grafana panels and alerts), server-side audit-log export, an audit webhook push sink, the audit-to-syslog bridge, and cosign-signed component images.
   </ChangeEntry>
+
   <ChangeEntry version="v0.2.0-beta.3" date="2026-06-27">
-    Added: bundled observability — Prometheus alerts and a Grafana dashboard, signed module
-    bundles with Cosign verification.
+    Added: bundled observability — Prometheus alerts and a Grafana dashboard, signed module bundles with Cosign verification.
   </ChangeEntry>
+
   <ChangeEntry version="v0.2.0-beta.2" date="2026-06-22">
-    Breaking: CRD API group renamed kestrel.gg → gameplane.local as part of the project's rebrand
-    to Gameplane.
+    Breaking: CRD API group renamed kestrel.gg → gameplane.local as part of the project's rebrand to Gameplane.
   </ChangeEntry>
+
   <ChangeEntry version="v0.2.0-beta.1" date="2026-06-22" last>
-    First beta: GameServer lifecycle, console/logs/files/players, backups & restore, signed OCI
-    modules, RBAC & audit.
+    First beta: GameServer lifecycle, console/logs/files/players, backups & restore, signed OCI modules, RBAC & audit.
   </ChangeEntry>
 </div>
 

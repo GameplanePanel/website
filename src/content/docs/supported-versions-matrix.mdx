@@ -1,0 +1,53 @@
+---
+title: Supported versions and compatibility
+description: One authoritative matrix for platform dependencies, development tools, release alignment, deprecations, and support windows.
+section: reference
+group: upgrades
+order: 3
+icon: boxes
+eyebrow: REFERENCE
+covers: ["Version compatibility", "Supported tools", "Platform requirements", "Development environments"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+
+One source of truth: chart, images, CRDs, and database schema travel together in every release. Never infer support from "latest" releases of underlying tools.
+
+## Platform compatibility
+
+Production clusters require explicitly tested version tuples.
+
+| Component | Supported | Baseline | Notes |
+|---|---|---|---|
+| Gameplane / chart | Pinned release | Matching | Chart, images, CRDs, and DB schema travel together. |
+| Kubernetes | 1.28+ | Required | Use an explicitly tested version tuple for production. |
+| Helm | 3.13+ | Required | OCI chart installation and rendering baseline. |
+| StorageClass | Supported CSI | Default or named | Access mode, expansion, topology, and reclaim must be known. |
+
+## Developer and contract versions
+
+Baseline tool versions for building, extending, and testing Gameplane.
+
+| Component | Supported | Baseline | Notes |
+|---|---|---|---|
+| Go | 1.26+ | Repo / CI | All Go modules share the workspace baseline. |
+| Node.js | 22.12+ | Web + website | Lockfile install is the supported path. |
+| oras | ≥ 1.2 | Module tooling | Builds and pushes OCI module bundles. |
+| CRD / API | v1alpha1 | gameplane.local | Breaking field changes require version planning. |
+
+<DocsCallout icon="info" title="Record version tuples, never infer support.">
+  Document the complete Helm release version, all image digests, CRD group version, database schema version, and the Kubernetes version tuple. These travel together and must be recorded for audit and rollback purposes.
+</DocsCallout>
+
+## Release schedules and support windows
+
+Gameplane follows semantic versioning. Beta releases (`v0.x.0-betaY`) include significant features and are suitable for testing and non-critical deployments. Stable releases (`v1.0.0+`) are production-ready with long-term support.
+
+**Current stable release:** v0.2.0-beta.8 (latest published)  
+**Development release:** v0.3.0-rc.1 (tagged, not published as a release; see [Changelog](./changelog/) for v0.3.0 features)
+
+Deprecation notices for upcoming major or breaking changes appear in release notes and this reference page.
+
+## Next guide
+
+[Uninstall & Decommission](./uninstall-decommission/)

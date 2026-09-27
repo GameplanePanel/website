@@ -1,0 +1,179 @@
+---
+title: Helm values reference
+description: Production-facing chart settings, accepted types, defaults, and the operational effect of each value.
+section: develop
+group: api-reference
+order: 11
+icon: list
+eyebrow: REFERENCE
+covers: ["Helm chart configuration", "Installation settings", "Production values"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+
+Production-facing chart settings, accepted types, defaults, and the operational effect of each value.
+
+<DocsCallout icon="info" title="Render and diff before every change.">
+Use `helm template` or `helm diff` to preview your values before applying them to production. Secret values should always be referenced from Kubernetes Secrets, never committed to version control.
+</DocsCallout>
+
+## Core and image settings
+
+Configure container images, registry access, and fundamental cluster behavior.
+
+| Key | Type | Default | Description |
+|---|---|---|---|
+| `image.registry` | string | `ghcr.io/valgulnecron/gameplane` | Container registry where component images are published. Override to point to a private mirror for air-gapped installs. |
+| `image.tag` | string | *(empty — uses chart's `appVersion`)* | Image tag for all components. Empty defaults to the chart version (e.g., chart v0.2.0 pulls `v0.2.0` images). Set to `"edge"` to track rolling images published on every master push. |
+| `image.pullPolicy` | enum | `IfNotPresent` | Kubernetes image pull behavior: `IfNotPresent`, `Always`, or `Never`. Use `Always` for `:edge` tags; use `IfNotPresent` for production release tags. |
+| `image.pullSecrets` | list | `[]` | Array of image pull Secret names if your registry requires authentication. Example: `[{name: myregistry}]` |
+| `gamesNamespace` | string | `gameplane-games` | Kubernetes namespace where the operator creates GameServer pods. Does not need to exist at install time — the operator creates it. |
+
+## Operator configuration
+
+Control operator behavior, logging, high availability, and module storage.
+
+| Key | Type | Default | Description |
+|---|---|---|---|
+| `operator.replicas` | integer | `1` | Operator Deployment replicas. Use `1` for single-cluster installs; set higher for HA with `leaderElect: true`. |
+| `operator.logLevel` | enum | `info` | Zap log level: `debug`, `info`, or `error` (warn not supported by zap's `--zap-log-level`). |
+| `operator.leaderElect` | boolean | `true` | Enable leader election for HA deployments. Set to `false` for single-replica or resource-constrained clusters to avoid missed lease renewals causing crash loops. |
+| `operator.addressManager` | enum | `none` | Load-balancer address manager: `metallb`, `cilium`, or `none`. Controls how the operator expresses GameServer pool/address preferences on the Service. |
+| `operator.metalLBNamespace` | string | `metallb-system` | Namespace where MetalLB's IPAddressPool resources live (consulted only when `addressManager: metallb`). |
+
+## Networking and ingress
+
+Configure external access, TLS, and dashboard routing.
+
+| Key | Type | Default | Description |
+|---|---|---|---|
+| `ingress.enabled` | boolean | `true` | Create an Ingress for the dashboard and API. Disable only for headless/API-only installs. |
+| `ingress.className` | string | `nginx` | Ingress controller class, e.g., `nginx`, `istio`, or your cloud provider's controller. |
+| `ingress.host` | hostname | `gameplane.local` | DNS hostname presented to users and OIDC providers. Must be reachable and match OIDC redirect URLs. |
+| `ingress.tls` | boolean | `true` | Enable HTTPS. Session cookies and login credentials require TLS in production. Set to `false` only for throwaway dev clusters; provide a cert via cert-manager annotations or a pre-created `gameplane-tls` Secret. |
+| `web.enabled` | boolean | `true` | Deploy the web/dashboard frontend. Disable only for API-only installs; the ingress then points directly at the API. |
+
+## Authentication
+
+Configure local accounts and OIDC single sign-on. Local password-based accounts are always available; OIDC is optional.
+
+| Key | Type | Default | Description |
+|---|---|---|---|
+| `api.oidc.enabled` | boolean | `false` | Enable OIDC identity provider integration for single sign-on. When disabled, only local password authentication is available. |
+| `api.oidc.issuer` | string | *(required if enabled)* | OIDC provider issuer URL (e.g., `https://accounts.google.com`, `https://keycloak.example.com/realms/gameplane`). |
+| `api.oidc.clientID` | string | *(required if enabled)* | OAuth 2.0 Client ID issued by your OIDC provider. |
+| `api.oidc.clientSecretRef` | object | `{name: gameplane-oidc, key: clientSecret}` | Reference to a Kubernetes Secret holding the OAuth client secret. Create the Secret first: `kubectl create secret generic gameplane-oidc --from-literal=clientSecret=<your-secret>`. |
+| `api.oidc.redirectURL` | string | *(empty)* | Explicit OAuth redirect URL. When empty, derived from `ingress.host` (e.g., `https://gameplane.local/auth/oidc/callback`). Override only if your ingress URL differs from the redirect URL your OIDC provider expects. |
+
+<DocsCallout icon="info" title="Coming in v0.3.0">
+The following OIDC fields enable install-time role mapping and customization of the login UI. They are not available in v0.2.0-beta.8 — upgrade to v0.3.0 to use them.
+
+| Key | Type | Default | Description |
+|---|---|---|---|
+| `api.oidc.displayName` | string | `"Single sign-on"` | Label for the OIDC login button shown on the login screen (before authentication). |
+| `api.oidc.groupsClaim` | string | *(empty — defaults to "groups")* | OIDC claim name containing group or role memberships. Examples: `groups`, `roles`, `membership`, `department`. When empty, uses the default claim "groups". |
+| `api.oidc.defaultRole` | string | *(empty — defaults to "viewer")* | Default dashboard role for new OIDC users when no group matches a configured mapping. Accepted: `viewer`, `operator`, `admin`, `deny` (deny = reject login). When empty, defaults to "viewer". |
+| `api.oidc.roleMappings` | object | `{admin: [], operator: [], viewer: []}` | Map OIDC groups to dashboard roles at install/upgrade time. Example: `admin: ["gameplane-admins", "ops-team"]`. DB-managed role overrides (set via dashboard) take precedence and survive Helm upgrades. |
+</DocsCallout>
+
+## API database and persistence
+
+Configure data persistence, audit logging, and telemetry.
+
+| Key | Type | Default | Description |
+|---|---|---|---|
+| `api.db.driver` | enum | `sqlite` | Database backend: `sqlite` (single-node, built-in) or `postgres` (multi-node, external server). Requires `-tags postgres` image rebuild for PostgreSQL support. |
+| `api.db.dsn` | string | `file:/data/gameplane.db?_pragma=journal_mode(WAL)` | Database connection string. SQLite path (only when `driver: sqlite`). For PostgreSQL, use a connection string like `postgres://gameplane:***@postgres/gameplane?sslmode=require`. |
+| `api.storage.size` | string | `2Gi` | Size of the SQLite PersistentVolumeClaim (only when `db.driver: sqlite`). Adjust based on audit log retention and historical data. |
+| `api.storage.storageClassName` | string | *(empty)* | Storage class for the SQLite PVC. When empty, uses the cluster's default storage class. |
+| `api.storage.existingClaim` | string | *(empty)* | **Coming in v0.3.0** — Use an existing PersistentVolumeClaim instead of creating one. Leave empty to create a new PVC. When migrating, ensure the existing claim has the `helm.sh/resource-policy: keep` annotation. |
+| `api.audit.retentionDays` | integer | `0` | Audit event retention in days. `0` keeps all events indefinitely; set a positive number to prune older records daily. |
+| `api.audit.webhook.url` | string | *(empty)* | Outbound webhook URL for audit events. The API POSTs each event as JSON (best-effort, non-blocking). Point it at a log aggregator, SIEM, or the bundled `audit-syslog-bridge`. |
+
+## Observability and monitoring
+
+Configure logging, metrics, and alerting sinks.
+
+| Key | Type | Default | Description |
+|---|---|---|---|
+| `api.audit.stdout` | boolean | `false` | Mirror audit events to stdout as structured JSON lines, for capture by cluster log aggregators (Loki, ELK, CloudWatch). Events always land in the database regardless. |
+| `api.audit.syslogBridge.enabled` | boolean | `false` | Deploy the bundled RFC 5424 syslog bridge (audit-syslog-bridge image). When enabled and `webhook.url` is unset, the API auto-wires to it. |
+| `api.audit.syslogBridge.syslog.addr` | string | *(empty — required if enabled)* | Syslog collector address in `host:port` format, e.g., `syslog.example:514`. |
+| `api.audit.syslogBridge.syslog.network` | enum | `tcp` | Syslog transport: `tcp` (recommended for reliability) or `udp` (no delivery confirmation). |
+| `api.telemetry.endpoint` | string | *(empty)* | External telemetry receiver URL, e.g., `https://telemetry.example.com/ingest`. Disables the bundled receiver auto-wiring. |
+| `serviceMonitors.enabled` | boolean | `false` | Create Prometheus Operator ServiceMonitor resources for scraping Gameplane metrics. Requires Prometheus Operator to be installed in your cluster. |
+
+## Storage and modules
+
+Configure persistent volumes and local module sources.
+
+| Key | Type | Default | Description |
+|---|---|---|---|
+| `operator.localModules.existingClaim` | string | *(empty)* | PersistentVolumeClaim for local module bundles (homebrew/homelab pattern: drop module directories on disk and they appear in the catalog). Provide exactly one of `existingClaim` or `hostPath`. |
+| `operator.localModules.hostPath` | string | *(empty)* | Host path for local module bundles (node-local storage). Use only on single-node clusters; requires `nodeSelector` to pin the operator to that node. |
+
+## Cluster operations
+
+Enable credential-minting and node/kubeconfig management.
+
+| Key | Type | Default | Description |
+|---|---|---|---|
+| `clusterOps.enabled` | boolean | `false` | Enable cluster credential operations: bootstrap tokens (Add node) and short-lived kubeconfigs (Download kubeconfig). Grants powerful kube-system + CSR-approval RBAC. |
+| `clusterOps.externalAddress` | string | *(empty)* | External API server address in `join-token` commands and downloaded kubeconfigs, e.g., `"1.2.3.4:6443"` or `"https://k8s.example.com:6443"`. When empty, uses the in-cluster address (typically unreachable from outside). |
+
+## Network policies
+
+Configure default-deny policies for game pods and backups.
+
+| Key | Type | Default | Description |
+|---|---|---|---|
+| `networkPolicies.enabled` | boolean | `true` | Create default-deny NetworkPolicies in `gamesNamespace`. Disable only when using a service mesh that handles policies or in non-networked environments. |
+| `networkPolicies.gameEgress.enabled` | boolean | `true` | Allow game pods outbound access to the public internet (HTTP/HTTPS) for downloads. Private ranges (RFC 1918 + link-local) are always blocked to prevent SSRF. |
+| `networkPolicies.backupEgress.enabled` | boolean | `true` | Allow backup/restore Job pods to reach external restic repositories (S3, REST, SFTP, etc.). Covers HTTPS and SSH ports by default. |
+| `networkPolicies.gameIngress.enabled` | boolean | `true` | Create per-GameServer Ingress NetworkPolicies allowing player traffic from `fromCIDRs`. Operator configures the exact advertised ports per server. |
+| `networkPolicies.gameIngress.fromCIDRs` | list | `["0.0.0.0/0"]` | CIDR ranges allowed to reach game ports. Set to a LAN range (e.g., `["192.168.1.0/24"]`) to restrict access. Cannot be an empty list; set `enabled: false` instead. |
+
+## Advanced: MCP and telemetry
+
+Configure optional integrations.
+
+| Key | Type | Default | Description |
+|---|---|---|---|
+| `mcpServer.enabled` | boolean | `false` | Deploy a read-only Model Context Protocol (MCP) server for AI assistant integrations. Read-only, stdio JSON-RPC only (no network port). See `mcp-server/README.md`. |
+| `api.telemetry.receiver.enabled` | boolean | `false` | Deploy the bundled telemetry receiver (telemetry-receiver image) for opt-in anonymous usage stats. When enabled and `endpoint` is unset, the API auto-wires to it. Admin toggle in dashboard controls whether anything is sent. |
+
+## Example: minimal production install
+
+```yaml
+image:
+  tag: "0.2.0"
+
+ingress:
+  enabled: true
+  host: gameplane.example.com
+  tls: true
+
+api:
+  db:
+    driver: sqlite
+  storage:
+    size: 2Gi
+  oidc:
+    enabled: true
+    issuer: https://keycloak.example.com/realms/gameplane
+    clientID: gameplane-app
+    clientSecretRef:
+      name: gameplane-oidc
+      key: clientSecret
+
+networkPolicies:
+  enabled: true
+  gameEgress:
+    enabled: true
+  gameIngress:
+    enabled: true
+    fromCIDRs:
+      - 0.0.0.0/0
+```
+
+See the full [Helm chart values.yaml](https://github.com/ValgulNecron/Gameplane/blob/master/charts/gameplane/values.yaml) for all options and detailed comments.

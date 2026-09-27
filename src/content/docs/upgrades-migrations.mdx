@@ -1,0 +1,218 @@
+---
+title: Upgrades and migrations
+description: Move between pinned releases with backups, release notes, rendered values, migration checks, staged validation, and an explicit rollback decision.
+section: reference
+group: upgrades
+order: 1
+icon: refresh-cw
+eyebrow: LIFECYCLE
+readTime: 15 MIN
+covers: ["Helm", "Migrations", "Rollback"]
+next: troubleshooting
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
+
+Gameplane releases are pinned with signed container images and strict Kubernetes compatibility. Every upgrade is reversible if planned carefully; every migration is documented in the release notes.
+
+<DocsArticleMeta groupId="upgrades" readTime="15 MIN" />
+
+<DocsCallout icon="refresh-cw" title="Plan platform changes in isolation">
+  Do not combine a platform upgrade with unrelated server, storage, authentication, or network changes. Each change introduces risk vectors; combining them makes root-cause analysis impossible when something breaks.
+</DocsCallout>
+
+## Plan the change
+
+Read release notes and compatibility constraints. Export your current configuration. Verify you have recent, recoverable backups in place.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "file-code",
+      label: "Release Notes",
+      text: "Review the Changelog and any upgrade notes for your target version. Unreleased features marked as 'Coming in v0.3.0' require `v0.3.0-rc.1` or later.",
+    },
+    {
+      icon: "database",
+      label: "Inventory CRDs and Data",
+      text: "Export your GameServers, GameTemplates, Clusters, Modules, and Backups. Use kubectl to list resources or fetch them as YAML.",
+    },
+    {
+      icon: "info",
+      label: "Export Current Helm Values",
+      text: "Run `helm get values gameplane -n gameplane-system > values-backup.yaml` to preserve your install-time settings (OIDC, storage class, replica counts, etc.) before upgrading.",
+    },
+    {
+      icon: "check",
+      label: "Verify Recent Backups",
+      text: "Every running GameServer should have at least one successful backup in the last 24 hours. Check the Backups page in the dashboard for completion status.",
+    },
+  ]}
+/>
+
+### Export your current values
+
+Before upgrading, save your Helm configuration so you can rollback if needed:
+
+```bash
+# Export your installed Helm values (including OIDC, storage, and other overrides)
+helm get values gameplane -n gameplane-system > gameplane-values-backup.yaml
+
+# List all installed CRDs
+kubectl get gameservers,gametemplates,clusters,backups,modules -A -o yaml > crds-backup.yaml
+
+# Check the current version
+helm list -n gameplane-system
+```
+
+### Check for breaking changes
+
+Most releases are backward-compatible, but some introduce schema changes or require manual steps. Always check:
+
+- [CHANGELOG](./changelog/) — upgrade notes at the top of the release section
+- [Supported Versions Matrix](./supported-versions-matrix/) — which clusters/Kubernetes versions are compatible
+- Network changes — if the release adds new `NetworkPolicy` or changes to `spec.networking`
+- CRD migrations — if any CRD fields were removed, renamed, or changed in meaning
+
+## Stage and observe
+
+Upgrade a non-production or canary environment first. Watch the rollout, check migrations, and verify core workflows.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "activity",
+      label: "Diff and Render",
+      text: "Use `helm template` to render your values against the new chart version before applying them. Spot unexpected changes.",
+    },
+    {
+      icon: "refresh-cw",
+      label: "Upgrade Canary First",
+      text: "If you have a dev or staging cluster, upgrade it before production. Verify that operator reconciliation, API startup, and web dashboard load correctly.",
+    },
+    {
+      icon: "check",
+      label: "Watch Migrations and Rollouts",
+      text: "Monitor operator logs, API events, and pod status during the upgrade. CRD schema migrations run automatically during the upgrade; watch for reconciliation errors.",
+    },
+    {
+      icon: "check",
+      label: "Verify Core Workflows",
+      text: "Log in to the dashboard. Create a test server, check the console, list backups, and verify authentication still works before rolling to production.",
+    },
+  ]}
+/>
+
+### Run the upgrade
+
+Once you have verified your values and backups, apply the upgrade to your cluster:
+
+```bash
+# Upgrade to a specific version (e.g., 0.2.0-beta.8)
+helm upgrade gameplane oci://ghcr.io/valgulnecron/charts/gameplane \
+  --namespace gameplane-system \
+  --version 0.2.0-beta.8 \
+  --values gameplane-values-backup.yaml \
+  --wait
+
+# Watch the rollout
+kubectl rollout status deploy/gameplane-operator -n gameplane-system
+kubectl rollout status deploy/gameplane-api -n gameplane-system
+
+# Check for errors in operator and API logs
+kubectl logs -n gameplane-system deploy/gameplane-operator -f
+```
+
+### Observe the cluster
+
+During and after the upgrade, monitor for issues:
+
+```bash
+# Watch CRD reconciliation
+kubectl describe gameserver <name> -n default  # Check Status and Conditions
+
+# Check API health
+kubectl logs -n gameplane-system deploy/gameplane-api --tail=50
+
+# Verify connectivity to pods
+kubectl get pods -n gameplane-system
+kubectl get pods -n default -l app=gameplane  # Game server pods
+```
+
+## Rollback or complete
+
+If migrations fail or core workflows are broken, use the release-specific rollback procedure. Otherwise, verify your environment and close the rollback window.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "refresh-cw",
+      label: "Rollback Procedure",
+      text: "Each release documents a rollback path. For most releases, rolling back is a `helm upgrade` to the previous version plus a manual CRD schema downgrade. See the release notes for specifics.",
+    },
+    {
+      icon: "shield-check",
+      label: "Data Compatibility",
+      text: "Rollback is safe only when you understand the data compatibility. Some CRD schema changes are backward-compatible (adding optional fields); others are not (removing required fields). Review the CHANGELOG before rolling back.",
+    },
+    {
+      icon: "file-code",
+      label: "Verify Final State",
+      text: "After upgrade (or rollback), run your core smoke tests: create a server, check the console, verify backups, confirm login works.",
+    },
+  ]}
+/>
+
+### Rollback if needed
+
+Only use the rollback procedure if migrations failed or core workflows are broken:
+
+```bash
+# 1. Review the release notes for this version's rollback procedure
+# 2. Export current CRDs in case you need to debug
+kubectl get crds -o yaml > crds-upgrade-state.yaml
+
+# 3. Roll back the Helm chart (example: rolling back from 0.2.0-beta.8 to 0.2.0-beta.7)
+helm upgrade gameplane oci://ghcr.io/valgulnecron/charts/gameplane \
+  --namespace gameplane-system \
+  --version 0.2.0-beta.7 \
+  --values gameplane-values-backup.yaml \
+  --wait
+
+# 4. Verify operator and API pods are running
+kubectl rollout status deploy/gameplane-operator -n gameplane-system
+kubectl rollout status deploy/gameplane-api -n gameplane-system
+
+# 5. Test core workflows again (create server, check console, etc.)
+```
+
+<DocsQuickReference
+  label="UPGRADE GATE"
+  items={[
+    "01  Backups verified; values exported; release notes and diff reviewed",
+    "02  Canary healthy; migrations complete; core workflows tested",
+    "03  Production observed; version recorded; rollback window closed",
+  ]}
+/>
+
+## Rollback decision
+
+Close the rollback window only when:
+
+- **Data integrity verified:** All CRD records migrated cleanly (check `kubectl describe` for migration errors in Conditions).
+- **Workflows tested:** Logged in, created a server, ran console commands, verified backups and authentication.
+- **Version recorded:** Note the new version in your runbooks and team docs so you can rollback to the exact prior version if needed in the next 24 hours.
+
+Once 24 hours have passed without issues, backups of the pre-upgrade state become less relevant (newer backups have accumulated). At that point, safely delete old backup snapshots to reclaim storage.
+
+## Next steps
+
+If you encounter issues during upgrade:
+
+- Check the [Troubleshooting](./troubleshooting/) guide for common errors and recovery steps.
+- Review operator logs: `kubectl logs -n gameplane-system deploy/gameplane-operator`
+- Review the [CHANGELOG](./changelog/) for known issues in your target version.
+- For help, reach out in the [community channels](./get-involved/).

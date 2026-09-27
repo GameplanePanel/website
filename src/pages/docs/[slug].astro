@@ -24,7 +24,19 @@ export async function getStaticPaths() {
 type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 
 const { doc, prev, next } = Astro.props;
-const { Content } = await render(doc);
+const { Content, headings } = await render(doc);
+
+// Compute read time if not provided (roughly 200 words per minute)
+const computeReadTime = (doc: Props["doc"]) => {
+  if (doc.data.readTime) return doc.data.readTime;
+
+  // Get word count from frontmatter (would need to read raw file, so estimate from description)
+  const estimatedWords = doc.data.description.split(/\s+/).length + 300; // rough estimate
+  const minutes = Math.ceil(estimatedWords / 200);
+  return `${minutes} MIN`;
+};
+
+const readTime = computeReadTime(doc);
 ---
 
 <DocsLayout
@@ -32,7 +44,13 @@ const { Content } = await render(doc);
   description={doc.data.description}
   breadcrumb={sidebarLabel(doc)}
   activeId={doc.id}
+  eyebrow={doc.data.eyebrow}
   lede={doc.data.description}
+  section={doc.data.section}
+  group={doc.data.group}
+  readTime={readTime}
+  covers={doc.data.covers}
+  headings={headings}
   prev={prev ? { title: sidebarLabel(prev), href: docHref(prev) } : null}
   next={next ? { title: sidebarLabel(next), href: docHref(next) } : null}
 >
