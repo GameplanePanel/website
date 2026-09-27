@@ -42,13 +42,13 @@ These permissions govern individual game servers and their backups. They are nam
 | `schedules:read` | server / cluster | View backup schedules | — |
 | `schedules:write` | server / cluster | Create, edit, and delete schedules | Recurring snapshots |
 | `destinations:read` | server / cluster | View backup destinations | — |
-| `destinations:manage` | server / cluster | Create, edit, and delete destinations | S3, Restic, NFS |
+| `destinations:manage` | server / cluster | Create, edit, and delete destinations | Restic repo URL (e.g. S3-compatible) |
 
 **backups:read** and **backups:write** — View and manage individual backup snapshots. `backups:write` covers both manual snapshot creation and explicit deletion.
 
 **schedules:read** and **schedules:write** — View and manage automated backup schedules. A schedule triggers recurring snapshots at a specified interval.
 
-**destinations:read** and **destinations:manage** — View and configure backup destinations (S3-compatible storage, Restic repositories, and networked storage).
+**destinations:read** and **destinations:manage** — View and configure backup destinations — restic repository URLs, most commonly pointing at S3-compatible object storage.
 
 ## Platform & administrative permissions
 
@@ -73,7 +73,7 @@ These permissions govern cluster-wide resources: templates, modules, nodes, user
 
 **audit:read** — View the audit log of all state-changing operations (creates, edits, deletes, and sensitive operations like console access, ownership transfers, and wipes).
 
-**config:read** and **config:manage** — View and change global platform settings (OIDC providers, theme defaults, audit sinks, telemetry, and notification targets).
+**config:read** and **config:manage** — View and change global platform settings (OIDC providers, audit sinks, telemetry, and notification targets).
 
 ## Scope & binding dimensions
 
@@ -85,7 +85,7 @@ Permissions are bound to users through roles, and each binding is scoped across 
 
 3. **Resource** — scoped permissions like `servers:read` apply within the namespace; cluster-scoped permissions like `templates:read` are never namespace-restricted.
 
-**Owner & collaborator fallback** — When a namespace permission check fails (e.g., the caller has `servers:read` in namespace A but requests access to a server in namespace B), the API checks if the caller is the server's owner or a collaborator. Owner-only operations (transferring ownership, managing collaborators, wiping data, and deleting a server) require the server's owner or an admin, even if the caller holds `servers:write` in that namespace. Servers without a recorded owner can only be managed by an admin.
+**Owner & collaborator fallback** — When a namespace permission check fails (e.g., the caller has `servers:read` in namespace A but requests access to a server in namespace B), the API checks if the caller is the server's owner or a collaborator. Owner-only operations (transferring ownership, managing collaborators, wiping data, and deleting a server) require the server's owner or an admin, even if the caller holds `servers:write` in that namespace. For a server with no recorded owner (e.g. one created via kubectl or GitOps), only these owner-only operations are admin-only — ordinary reads and writes via `servers:read`/`servers:write` still work normally for anyone holding those namespace permissions.
 
 <DocsCallout icon="info" title="Unknown permission strings are rejected.">
   The permission vocabulary is fixed on the server. Custom roles may combine any subset of the catalog permissions. Requests that reference an unknown permission (a typo or a permission from a future version) are rejected with a 400 Bad Request.

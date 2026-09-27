@@ -51,7 +51,7 @@ restic init --repo s3:s3.amazonaws.com/my-backup-bucket
 
 ### Create the required labelled Secret and keys
 
-Backup jobs reference a Kubernetes Secret in the **operator namespace** (`gameplane-system` by default) to retrieve the repository credentials. Gameplane automatically discovers and lists Secrets with the label `gameplane.local/backup-destination=true`.
+Backup jobs reference a Kubernetes Secret in the **`gameplane-games` namespace** (the default namespace where backups run) to retrieve the repository credentials. Gameplane automatically discovers and lists Secrets with the label `gameplane.local/backup-destination=true`.
 
 **Secret structure for restic repositories:**
 

@@ -48,6 +48,7 @@ Backup specifies the source server and repository; BackupSchedule adds a cron sc
 | `Backup.spec.quiesce` | bool | true | Pause game writes before snapshot (via RCON or game-specific hook). Requires agent support. |
 | `Backup.spec.volumeSnapshotClassName` | string | — | CSI VolumeSnapshotClass name when strategy is `volume-snapshot`. Empty selects the cluster default. |
 | `Backup.spec.tags` | []string | — | Optional labels attached to restic snapshots for filtering (restic-snapshot only). |
+| `Backup.status.phase` | string | — | One of `Pending`, `Running`, `Succeeded`, `Failed` (Backup phases). |
 | `BackupSchedule.spec.schedule` | string | required | Cron expression (5 fields, optional 6th for seconds). Cluster timezone applies. |
 | `BackupSchedule.spec.retention` | object | — | Retention policy: `keepLast`, `keepHourly`, `keepDaily`, `keepWeekly`, `keepMonthly`, `keepYearly`. All optional; if unset, all snapshots are kept. |
 | `BackupSchedule.spec.suspend` | bool | false | Pause the schedule without deleting it. |
@@ -119,8 +120,6 @@ type: Opaque
 stringData:
   repo: "s3:s3.amazonaws.com/my-backup-bucket"
   password: "secure-password-here"
-  aws-access-key-id: "YOUR_KEY_ID"
-  aws-secret-access-key: "YOUR_SECRET_KEY"
 ```
 
 Reference it in Backup or BackupSchedule via `repoRef`:

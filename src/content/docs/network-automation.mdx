@@ -19,7 +19,7 @@ Expose game ports intentionally, restrict source networks, and automate recurrin
 
 <DocsArticleMeta groupId="network-automation" readTime="12 MIN" />
 
-<DocsCallout icon="info" title="Public exposure is a security boundary">
+<DocsCallout icon="workflow" title="Public exposure is a security boundary">
   Review service type, ports, annotations, DNS, and CIDRs together.
 </DocsCallout>
 
@@ -106,10 +106,10 @@ A **BackupSchedule** CRD runs backups on a recurring cron schedule. Each schedul
 3. Applies retention policy (delete old backups).
 4. Records the operation in the audit log.
 
-**Liveness probes and restart policy**: GameServers also support Kubernetes-native readiness and liveness probes defined in the template. If a server fails its liveness probe, Kubernetes restarts the pod (per `restartPolicy`). Combined with scheduled backups, this provides automatic recovery from transient failures.
+**Liveness probes and restart policy**: GameServers also support Kubernetes-native readiness and liveness probes defined in the template. If a server fails its liveness probe, the kubelet restarts the failing container in place (the pod itself is not recreated). Combined with scheduled backups, this provides automatic recovery from transient failures.
 
 <DocsQuickReference
-  label="AUTOMATION CHECKLIST"
+  label="AUTOMATION CHECK"
   items={[
     "01  Validate cron timezone, target server, destination, and retention",
     "02  Announce maintenance and save before a planned restart",
@@ -119,4 +119,4 @@ A **BackupSchedule** CRD runs backups on a recurring cron schedule. Each schedul
 
 ---
 
-### Next guide: [Backups and recovery](./backups-recovery/)
+**Next guide:** [Backups and recovery](./backups-recovery/)

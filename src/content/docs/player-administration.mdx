@@ -14,15 +14,11 @@ import DocsCallout from "../../components/docs/DocsCallout.astro";
 import DocsSectionList from "../../components/docs/DocsSectionList.astro";
 import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
 
-The Players tab shows real-time online capacity and persistent access state (whitelist and bans). All moderation actions flow through RCON to the game, ensuring the server's authority is preserved and every action is auditable.
+The Players tab shows real-time online capacity and persistent access state (whitelist and bans).
 
-<DocsSectionList
-  items={[
-    { icon: "users", label: "Online players", text: "Live capacity; updated every 5 seconds via RCON." },
-    { icon: "shield", label: "Whitelist and bans", text: "Persistent access state, managed per-game." },
-    { icon: "activity", label: "Moderation coordination", text: "Save and broadcast before disruptive actions." },
-  ]}
-/>
+<DocsCallout icon="shield-alert" title="Confirm exact player identity before changing access.">
+Display names may be ambiguous across games and identity modes. Verify using console logs or the game's built-in `/list` output before moderation.
+</DocsCallout>
 
 ## Read player status
 
@@ -31,10 +27,6 @@ Online is live capacity; whitelist and ban totals are persistent access state.
 - Compare unusual counts with console and game logs. A disconnect flood (players vanishing between heartbeats) or a ban/kick in progress may explain mismatches.
 - Do not treat whitelist or ban totals as current connections. These are *access* flags, not *presence* — a banned player offline still shows in the count.
 - Resolve the exact identity before applying an access change. Display names may be ambiguous across games and identity modes (UUID, username, IP, SteamID, etc.).
-
-<DocsCallout icon="shield-alert" title="Confirm exact player identity before changing access.">
-Display names may be ambiguous across games and identity modes. Verify using console logs or the game's built-in `/list` output before moderation.
-</DocsCallout>
 
 ## Manage whitelist and bans
 

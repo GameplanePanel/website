@@ -13,9 +13,12 @@ covers: ["Ownership", "RBAC", "Deletion"]
 import DocsCallout from "../../components/docs/DocsCallout.astro";
 import DocsSectionList from "../../components/docs/DocsSectionList.astro";
 import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
 
-<DocsCallout icon="check" title="Coming in v0.3.0">
-  Ownership, collaborators, and owner-only operations (transfer, wipe, delete) are new in Gameplane v0.3.0. These features are not available in v0.2.0-beta.8.
+<DocsArticleMeta groupId="servers-config" readTime="13 MIN" />
+
+<DocsCallout icon="shield-alert" title="Coming in v0.3.0: owner-or-admin tightening">
+  Ownership, collaborators, transfer, wipe, and delete are already available in v0.2.0-beta.8. In beta.8, users with the operator role can still transfer ownership, wipe data, or delete servers they don't own; v0.3.0 restricts these four operations to the server's owner or a cluster admin only.
 </DocsCallout>
 
 Ownership controls accountability and destructive authority; collaboration grants operator access to one server. Both require explicit owner decisions before irreversible actions like data wiping and server deletion.

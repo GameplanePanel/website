@@ -17,7 +17,7 @@ import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
 
 <DocsArticleMeta groupId="modules-sources" readTime="14 MIN" />
 
-A **module** is executable infrastructure content: a versioned OCI artifact bundling a `GameTemplate` manifest, metadata, assets, and compatibility declarations. Treat provenance, signatures, digest pinning, and source credentials as security controls.
+Modules are the catalog's install unit — this page covers reading the merged catalog and configuring the sources it's built from.
 
 <DocsCallout icon="shield-alert" title="Module provenance and signatures matter">
 A module is executable infrastructure content. Treat provenance, signatures, digest pinning, and source credentials as security controls.
@@ -52,8 +52,8 @@ The dashboard's **Modules** page displays the merged catalog across all configur
 - **Available** — indexed by a source but not yet installed.
 - **Installed** — present in the cluster; ready to instantiate into GameServers.
 - **Verified** — cryptographically signed and integrity-checked.
-- **Policy-blocked** — installation denied by the cluster's module verification policy.
-- **Update-ready** — a newer digest exists; upgrade available.
+- **Failed** — install or signature verification failed (shown as a generic failed status; check the source's verification policy and the Module's error reason).
+- **Update** — the pinned version is unavailable but a newer one exists; upgrade is offered.
 
 ## Configure module sources
 
@@ -79,13 +79,9 @@ Sources can represent OCI, Git, archive, upload, or registry-backed discovery wi
   ]}
 />
 
-A **ModuleSource** is a cluster-scoped CRD that points to one module store and declares credentials, refresh timing, and policy constraints. The operator reconciles each source on a configurable interval (default: 1 hour) and maintains a `Synced` condition reflecting the last pull. If a sync fails, the condition captures the error; manually-triggered syncs are possible via the dashboard.
+A **ModuleSource** is a cluster-scoped CRD that points to one module store and declares credentials, refresh timing, and policy constraints. The operator reconciles each source on a configurable interval (default: 1 hour) and maintains a `Synced` condition reflecting the last pull. If a sync fails, the condition captures the error.
 
-The chart's `defaultModuleSource` offers three backends:
-
-- **OCI registry** — pull pre-built, cosign-signed bundles from a container registry (recommended for production).
-- **Git repository** — index the `gameplane-module` repository directly for rapid iteration.
-- **Upload bucket** — accept modules uploaded through the dashboard (stored as ConfigMaps in the operator namespace).
+The chart's `defaultModuleSource` picks one of two backends via `type`: OCI registry (pull pre-built, cosign-signed bundles — recommended for production) or Git repository (index the `gameplane-module` repo directly for rapid iteration). A separate `uploadModuleSource` block (enabled by default) accepts modules uploaded through the dashboard, stored as ConfigMaps in the operator namespace.
 
 Disable the default if you manage ModuleSource resources via GitOps, or create additional sources to index private registries or custom catalogs. The ModuleSource CRD also supports HTTP (tar.gz/zip archives) and local directory backends for specialized use cases.
 

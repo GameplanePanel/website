@@ -118,7 +118,7 @@ The stream multiplexes events across all servers the user has permission to see 
 
 ### WebSocket console and logs
 
-Console (RCON/PTY execution) and pod logs are bidirectional WebSocket streams (`/ws/servers/{name}/console`, `/ws/servers/{name}/console-pty`, `/ws/servers/{name}/logs`). The WebSocket handler:
+Console (RCON/PTY execution) and pod logs are bidirectional WebSocket streams (`/ws/servers/{name}/console`, `/ws/servers/{name}/console-pty`, `/ws/servers/{name}/logs`, `/ws/servers/{name}/logs/pod`). The WebSocket handler:
 
 1. Validates session and permission (same middleware as REST)
 2. Dials the in-pod agent over mTLS
@@ -127,7 +127,7 @@ Console (RCON/PTY execution) and pod logs are bidirectional WebSocket streams (`
 
 **Agent proxy:** Commands sent over the WebSocket are executed in the game pod via the agent sidecar. RCON goes to the game's remote console port; PTY goes to a shell session inside the pod.
 
-**Pod logs:** `GET /ws/servers/{name}/podlogs` streams live output from Kubernetes pod logs (stdout/stderr of the game container). Failure modes differ from agent logs (pod logs are captured by kubelet; agent logs come from the sidecar — if the agent crashes or the pod is evicted, pod logs may be incomplete or unavailable).
+**Pod logs:** `GET /ws/servers/{name}/logs/pod` streams live output from Kubernetes pod logs (stdout/stderr of the game container). Failure modes differ from agent logs (pod logs are captured by kubelet; agent logs come from the sidecar — if the agent crashes or the pod is evicted, pod logs may be incomplete or unavailable).
 
 **Heartbeat:** WebSocket connections are protected against idle timeouts with keepalive frames; the connection closes when either endpoint disconnects.
 
@@ -141,17 +141,17 @@ Adding a new API endpoint is a four-step workflow: mount the route, define the h
 
 ### Step 1: Define the permission
 
-Open `api/internal/rbac/catalog.go` and add a constant for the new permission:
+Open `api/internal/rbac/catalog.go` and add a permission to the `Catalog` slice:
 
 ```go
-const (
-  PermGameServerEdit = "gameserver:edit"
-  PermGameServerDelete = "gameserver:delete"
-  PermMyServerEdit = "gameserver:edit:my"  // new: example
-)
+{
+  Key: "servers:my-new-action",
+  Label: "...",
+  Namespaced: true,
+}
 ```
 
-Update the permission-to-rule mapping in the same file or in `internal/rbac/rbac.go` if the permission applies only to certain paths or methods.
+Add this inside the relevant `PermGroup` to define the new permission key.
 
 ### Step 2: Implement the handler
 
@@ -210,17 +210,23 @@ func (h *handlers) serversEdit(w http.ResponseWriter, r *http.Request) {
 
 ### Step 3: Mount the route
 
-Edit `api/cmd/main.go` and add the route to the chi router:
+Edit `api/internal/rbac/rbac.go` and add a `rule` entry to the `rules` table:
+
+```go
+{method: "PATCH", path: "/servers/{name}", permission: "servers:my-new-action"}
+```
+
+Then mount the plain chi route in `api/cmd/main.go`:
 
 ```go
 r.Route("/servers/{name}", func(r chi.Router) {
-  r.With(rbac.Require(PermGameServerView)).Get("/", h.serversView)
-  r.With(rbac.Require(PermGameServerEdit)).Patch("/", h.serversEdit)
-  r.With(rbac.Require(PermGameServerDelete)).Delete("/", h.serversDelete)
+  r.Get("/", h.serversView)
+  r.Patch("/", h.serversEdit)
+  r.Delete("/", h.serversDelete)
 })
 ```
 
-The `rbac.Require()` middleware validates permission before the handler runs. If the user lacks permission, the middleware returns `403 Forbidden`.
+The global `rbac.Middleware` (applied once in main.go) validates permission against the rules table. If the user lacks permission, the middleware returns `403 Forbidden`.
 
 ### Step 4: Test the route
 

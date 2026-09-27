@@ -1,11 +1,10 @@
 ---
-title: Console, events, and logs
+title: Console, Events & Logs
 description: Trace a server from Kubernetes scheduling through container startup and game readiness, then use the live console without losing diagnostic context.
 section: operate
 group: console-logs
 order: 1
 icon: terminal
-eyebrow: RUNBOOK
 readTime: 9 MIN
 covers: ["Events", "Console", "Logs"]
 ---
@@ -74,7 +73,7 @@ The live console is an operational channel, not a substitute for configuration o
 
 **PTY mode** (`consoleMode: pty`): Attaches the browser directly to the container's stdin/stdout via the Kubernetes pod-attach API. The dashboard streams live output and forwards keystrokes as raw input. Use this for interactive debugging or live monitoring.
 
-**RCON mode** (`consoleMode: rcon`): Sends line-based commands to a game server admin protocol (Minecraft Java's RCON, Valheim's RCON, etc.). Responses come back as discrete log lines. All commands are validated against the template's schema to prevent injection; the agent's `gameaction` module escapes dangerous patterns before forwarding.
+**RCON mode** (`consoleMode: rcon`): Sends line-based commands to a game server admin protocol (Minecraft Java's RCON, Valheim's RCON, etc.). Responses come back as discrete log lines. Commands typed here are sent to the game's RCON protocol as-is; use the pre-built Action buttons (validated by the agent's `gameaction` module against the template's schema) for anything that should be schema-checked before it reaches the server.
 
 Both modes appear under the same **Console** tab in the dashboard. The template's `spec.consoleMode` field (or the default when `spec.rcon` is configured) determines which mode is available.
 
@@ -84,11 +83,11 @@ Switch between container and game logs, follow live output, and export evidence 
 
 ### Container logs
 
-Container startup logs (stdout/stderr from the game process) stream via the Kubernetes pod-logs API as **Startup logs** in the dashboard. This is the earliest output from the container's entry point before the game's own log file exists.
+Container startup logs (stdout/stderr from the game process) stream via the Kubernetes pod-logs API as **Container output** in the dashboard. This is the earliest output from the container's entry point before the game's own log file exists.
 
 ### Game logs
 
-The game's primary log file is configured in the template's `spec.logPath` (e.g., `/data/logs/latest.log` for Minecraft). The agent sidecar tails this file and streams it to the **Logs** tab via the `/logs/tail` WebSocket endpoint. Download the full log file without interrupting the stream using the **Download** button.
+The game's primary log file is configured in the template's `spec.logPath` (e.g., `/data/logs/latest.log` for Minecraft). The agent sidecar tails this file and streams it to the **Game log** source of the Logs tab via the `/logs/tail` WebSocket endpoint. Download the full log file without interrupting the stream using the **Download** button.
 
 ### Failed start triage
 

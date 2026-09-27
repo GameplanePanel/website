@@ -7,7 +7,7 @@ order: 2
 icon: puzzle
 eyebrow: AUTHOR MODULES
 readTime: 12 MIN
-covers: ["Module format", "OCI artifacts", "Template configuration", "Versioning", "Signing"]
+covers: ["Module format", "OCI artifacts", "Distribution", "Versioning", "Signing"]
 ---
 
 import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
@@ -82,14 +82,12 @@ icon: icon.png                               # optional, filename in the bundle
 - `name` is the canonical module identifier within a source. Two modules with the same name in the same source are rejected.
 - `version` **must exactly match** the OCI tag the bundle is pushed under — drift is an error.
 - `game` is a free-form identifier grouping templates with the same upstream game, used for versioning schemes (e.g., `minecraft-java`, `minecraft-bedrock`).
-- `categories` appears as filter chips in the dashboard Modules catalog. Use official values (Sandbox, Survivor, Shooter, etc.) or define your own — the dashboard auto-discovers new chips.
+- `categories` appears as filter chips in the dashboard Modules catalog. Use official values (Sandbox, Survival, Shooter, etc.) or define your own — the dashboard auto-discovers new chips.
 - `gameplaneMinVersion` gates installation on operator version; a module that requires v0.3.0+ will refuse install on v0.2.0.
 
 ## Bundling and distribution
 
-Modules are distributed as **OCI artifacts** — the same registries that hold your game-server images also hold module metadata. A bundle is a single artifact with typed layers:
-
-<CodeLabel>OCI LAYERS</CodeLabel>
+Modules are distributed as **OCI artifacts** — the same registries that hold your game-server images also hold module metadata. A bundle is a single artifact with typed layers.
 
 | Layer | Media type | Notes |
 |---|---|---|
@@ -137,6 +135,10 @@ make modules-push REGISTRY=ghcr.io/valgulnecron/gameplane-modules
 ```
 
 For private registries, log in once with `oras login <registry>`. The cluster uses a `kubernetes.io/dockerconfigjson` secret (`ModuleSource.spec.oci.pullSecretRef`) — the same credential format kubelet uses for private images.
+
+## Bundle format
+
+A module bundle is a single OCI artifact with named layers, tagged `application/vnd.gameplane.module.v1+json`. Each layer carries metadata, template, documentation, and optional resources in a portable, signed container that registries can verify and operators can pull reliably.
 
 ## Module sources
 

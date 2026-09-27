@@ -24,17 +24,17 @@ Replicate only supported components, remove avoidable single points of failure, 
   Edge routing, database, storage, scheduling capacity, and leader behavior must survive the same failure. Merely running two copies without testing the loss of one domain leaves you with two identical failures, not redundancy.
 </DocsCallout>
 
-<DocsSectionList
-  items={[
-    { icon: "shield-check", label: "Replica safety", text: "Publish replica counts and leader-election behavior for each component." },
-    { icon: "network", label: "Failure domain coverage", text: "Spread replicas across nodes, zones, and independent infrastructure failure domains." },
-    { icon: "activity", label: "Disruption testing", text: "Measure system behavior under planned outage of each critical component." },
-  ]}
-/>
-
 ## Define the supported contract
 
 Publish replica safety, leader election, migration ownership, session behavior, and remaining single points of failure.
+
+<DocsSectionList
+  items={[
+    { icon: "shield-check", label: "Replica safety", text: "List supported replica counts and leader-election behavior." },
+    { icon: "database", label: "Database limits", text: "State database requirements and embedded-mode limitations." },
+    { icon: "network", label: "Dependency separation", text: "Separate cluster-scoped dependencies from application replicas." },
+  ]}
+/>
 
 Before deploying with redundancy, decide which components will replicate and at what minimum count. The Gameplane control plane offers safe replication at 2+ replicas; game servers themselves are stateless replicas (one per instance) and scale independently.
 
@@ -54,6 +54,14 @@ Separate cluster-scoped dependencies from application replicas:
 ## Spread dependencies
 
 Place safe replicas and durable dependencies across nodes, zones, and independent failure domains.
+
+<DocsSectionList
+  items={[
+    { icon: "arrow-right-left", label: "Anti-affinity & topology", text: "Use anti-affinity, topology spread, and appropriate disruption budgets." },
+    { icon: "shield-check", label: "Redundant paths", text: "Provide redundant edge, supported HA database, storage, DNS, and backups." },
+    { icon: "activity", label: "Failover capacity", text: "Reserve failover capacity instead of saturating every node." },
+  ]}
+/>
 
 Running 2+ operator replicas on the same node does not prevent node loss. Spread replicas across failure domains using pod anti-affinity, topology spread constraints, and disruption budgets. Test that loss of any single domain (node, availability zone, data center) leaves you with:
 - Operator can still elect a leader and reconcile changes

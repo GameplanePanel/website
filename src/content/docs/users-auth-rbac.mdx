@@ -47,7 +47,7 @@ Invite and edit local users, reset credentials deliberately, and use API tokens 
   ]}
 />
 
-Local users are invited via the dashboard (**Admin Settings → Users → Add user**). Set a temporary password and email a login link to the user. Users reset their own password on first login. To create service accounts for automation, create a local user without initial password access, grant them an appropriate custom role or built-in role (usually `viewer` or `operator` scoped to specific namespaces), and have them generate API tokens from their account settings.
+Local users are invited via the dashboard (**Admin Settings → Users → Add user**). Set the user's initial password directly (or leave it blank for an OIDC-only account) and share it with them out of band; there is no built-in email invite flow. To create service accounts for automation, create a local user without initial password access, grant them an appropriate custom role or built-in role (usually `viewer` or `operator` scoped to specific namespaces), and have them generate API tokens from their account settings.
 
 ## Roles and permissions
 
@@ -78,7 +78,7 @@ Built-in and custom roles group explicit permissions for servers, backups, templ
 Gameplane defines three built-in roles that cannot be deleted:
 
 - **Admin**: Full access to all resources, including users, roles, and global settings.
-- **Operator**: Manage game servers, backups, templates, and backup schedules. Read access to modules, cluster info, and the permission catalog.
+- **Operator**: Manage game servers, backups, templates, and backup schedules. Read access to modules, backup destinations, cluster info, and the permission catalog.
 - **Viewer**: Read-only access across the control panel (servers, backups, templates, modules, cluster info, permissions).
 
 ### Custom roles
@@ -109,7 +109,7 @@ Configure identity providers through Helm install-time settings or the dashboard
 
 Add OIDC providers under **Admin Settings → Authentication → Add provider**. Fill in the issuer URL, client ID, and client secret (stored securely in a Kubernetes Secret). The callback URL is automatically derived from your external URL setting.
 
-Supported providers include Keycloak, Authentik, Google, GitHub, and any RFC-7519 compliant OpenID Connect provider. Detailed setup guides for each provider are available in the [OIDC provider setup documentation](./oidc/).
+Supported providers include Keycloak, Authentik, Google, GitHub, and any RFC-7519 compliant OpenID Connect provider. Detailed setup guides for Keycloak, Authentik, Google, and GitHub follow the same issuer/client ID/secret pattern.
 
 When a user logs in via OIDC for the first time, Gameplane creates a user row with the `viewer` role. Admins must promote new OIDC users manually via the dashboard or custom role bindings.
 

@@ -17,7 +17,7 @@ import ChangeEntry from "../../components/docs/ChangeEntry.astro";
 </DocsCallout>
 
 <div class="flex flex-col">
-  <ChangeEntry version="Unreleased" subtext="in development" highlight>
+  <ChangeEntry version="Unreleased" date="in development" highlight>
     **Network capture:** admin-only, on-demand packet capture from running game pods as ephemeral sidecars, exported as PCAPNG (Wireshark-compatible).
     **Module authoring toolkit:** gp-module CLI and web dashboard for scaffolding, validating, previewing, and packaging custom game modules.
     **User theme customization:** preset themes (Modern Pink, Legacy Orange) and custom accent/surface colors with WCAG AA contrast validation.
@@ -29,7 +29,7 @@ import ChangeEntry from "../../components/docs/ChangeEntry.astro";
   </ChangeEntry>
 
   <ChangeEntry version="v0.2.0-beta.8" date="2026-08-22">
-    Dependency sweep: all Go modules bumped to latest versions, web dependencies updated (React, Vite, Playwright, TanStack, Tailwind, HeroUI, Lucide, Vitest), and CI image pins aligned to stable releases (Node 24→26, Go 1.26→1.27, nginx 1.30→1.31, restic 0.18→0.19).
+    Dependency sweep: Go module updates across telemetry-receiver, sentinel, mcp-server, operator, api and agent; web dependency bumps (`@tanstack/react-virtual`, `lucide-react`, `@types/node`, `globals`, `jsdom`, `postcss`); and CI/image pins aligned to stable releases (`setup-envtest` release-0.19→release-0.24, envtest Kubernetes 1.31.0→1.36.2, `kind` v0.24.0→v0.32.0, nginx 1.30→1.31, restic 0.18→0.19).
     **Wake-on-connect for idle auto-sleep** via sentinel component holding advertised ports and waking servers on connection attempts.
     **Load-balancer address pools:** GameServers can request specific pools or explicit public IPs when exposed as LoadBalancer services, integrated with MetalLB and Cilium.
     **Signing key rotated** from Ed25519 to ECDSA P-256 with Rekor transparency logging for all images, charts, and module bundles.

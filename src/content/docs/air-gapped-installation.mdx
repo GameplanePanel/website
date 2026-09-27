@@ -19,33 +19,34 @@ import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
 
 Mirror every required artifact and trust root, then install and upgrade without hidden public-network dependencies.
 
-<DocsCallout icon="shield-alert" title="Offline install acceptance criteria">
+<DocsCallout icon="lock" title="Offline install acceptance criteria">
 An offline install is accepted only when rendered manifests contain no public endpoint or mutable tag. Render once and validate before disconnecting from the public internet.
 </DocsCallout>
+
+
+## Build the release bundle
+
+Inventory, verify, and mirror all artifacts by digest before entering the restricted environment.
 
 <DocsSectionList
   items={[
     {
-      icon: "archive",
-      label: "Release bundle",
-      text: "Inventory, verify, and mirror all artifacts by digest before entering the restricted environment.",
+      icon: "check",
+      label: "Include chart, images, CRDs, modules, signatures, SBOMs, and checksums.",
+      text: "",
     },
     {
-      icon: "hard-drive",
-      label: "Restricted cluster",
-      text: "Provide registry trust, pull credentials, DNS, proxy rules, storage, edge, identity, database, backup, and observability locally.",
+      icon: "check",
+      label: "Mirror verified artifacts by digest to approved internal registries.",
+      text: "",
     },
     {
-      icon: "shield-check",
-      label: "Isolation test",
-      text: "Render and scan offline, then test install, module sync, GameServer creation, backup, upgrade, and rollback with egress blocked.",
+      icon: "check",
+      label: "Package values, public keys, CA certificates, notes, and rollback bundle.",
+      text: "",
     },
   ]}
 />
-
-## Release bundle
-
-Inventory, verify, and mirror all artifacts by digest before entering the restricted environment.
 
 ### What to mirror
 
@@ -65,6 +66,9 @@ Collect **all of the following by digest** (immutable hash references, not mutab
   - `ghcr.io/valgulnecron/gameplane/audit-syslog-bridge` (audit relay, optional)
   - `ghcr.io/valgulnecron/gameplane/telemetry-receiver` (usage metrics, optional)
   - `ghcr.io/valgulnecron/gameplane/mcp-server` (AI integration, optional)
+  - `ghcr.io/valgulnecron/gameplane/tunnel-frp` (via `tunnelImages.frp`, relay tunnel components, optional)
+  - `ghcr.io/valgulnecron/gameplane/tunnel-tailscale` (via `tunnelImages.tailscale`, relay tunnel components, optional)
+  - `ghcr.io/valgulnecron/gameplane/tunnel-playit` (via `tunnelImages.playit`, relay tunnel components, optional)
 - **Game modules** — all bundles from `ghcr.io/valgulnecron/gameplane-modules`, versioned per your module source config
 - **CRD manifests** — the nine CRD schemas (bundled in the chart)
 - **Cosign public keys** — `cosign.pub` (current key, ECDSA P-256) and `cosign-legacy.pub` (pre-rotation, Ed25519)
@@ -127,6 +131,26 @@ Bundle everything in a single archive for transport to the air-gapped environmen
 ## Prepare the restricted cluster
 
 Provide registry trust, pull credentials, DNS, proxy rules, storage, edge, identity, database, backup, and observability locally.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "Configure registry mirrors, imagePullSecrets, private CA, and no-proxy.",
+      text: "",
+    },
+    {
+      icon: "check",
+      label: "Rewrite references to internal endpoints without changing digests.",
+      text: "",
+    },
+    {
+      icon: "check",
+      label: "Pre-provision every dependency that would otherwise require public egress.",
+      text: "",
+    },
+  ]}
+/>
 
 ### Configure registry mirrors and CA trust
 

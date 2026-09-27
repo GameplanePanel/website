@@ -13,10 +13,13 @@ covers: ["Runbooks", "Diagnostics", "Support"]
 import DocsCallout from "../../components/docs/DocsCallout.astro";
 import DocsSectionList from "../../components/docs/DocsSectionList.astro";
 import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
 
 Triage failed starts, storage and network faults, login problems, backup failures, and module synchronization with one evidence-first workflow.
 
-<DocsCallout icon="info" title="Capture evidence before making changes">
+<DocsArticleMeta groupId="troubleshooting" readTime="20 MIN" />
+
+<DocsCallout icon="life-buoy" title="Capture evidence before making changes">
   Capture the resource UID, cluster, namespace, time range, events, conditions, and relevant logs before changing state.
 </DocsCallout>
 
@@ -24,17 +27,25 @@ Triage failed starts, storage and network faults, login problems, backup failure
 
 Start with desired spec and observed status, then correlate events, workload state, component logs, audit records, and recent changes.
 
-- Record exact timestamps and timezone for every exported source
-- Separate Gameplane API/operator logs from game-container failures
-- Preserve the first error; later retries often hide the original cause
+<DocsSectionList
+  items={[
+    { icon: "check", label: "Record timestamps", text: "Record exact timestamps and timezone for every exported source." },
+    { icon: "check", label: "Separate logs", text: "Separate Gameplane API/operator logs from game-container failures." },
+    { icon: "check", label: "Preserve first error", text: "Preserve the first error; later retries often hide the original cause." },
+  ]}
+/>
 
 ## Common failure families
 
 Classify the symptom before choosing a runbook: Pending, image pull, crash loop, probe, volume, service, auth, backup, or source sync.
 
-- **Pending** usually points to capacity, placement, PVC, or scheduling policy
-- **No console output** can mean the container never started or the game stream isn't ready
-- **Restore and module failures** require destination/source credentials and controller logs
+<DocsSectionList
+  items={[
+    { icon: "check", label: "Pending", text: "Usually points to capacity, placement, PVC, or scheduling policy." },
+    { icon: "check", label: "No console output", text: "Can mean the container never started or the game stream isn't ready." },
+    { icon: "check", label: "Restore and module failures", text: "Require destination/source credentials and controller logs." },
+  ]}
+/>
 
 ## Escalate with context
 

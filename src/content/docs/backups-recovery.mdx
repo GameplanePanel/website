@@ -16,33 +16,33 @@ import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
 
 Create recoverable snapshots, schedule retention-aware backups, and restore into a new or existing server with a verification plan.
 
-<DocsSectionList
-  items={[
-    {
-      icon: "file-code",
-      label: "Create and inspect backups",
-      text: "On-demand snapshots and scheduled recurring backups with phase tracking and detailed logs.",
-    },
-    {
-      icon: "history",
-      label: "Schedules, destinations, and retention",
-      text: "Configure cron schedules, restic repositories, credentials, and retention policies.",
-    },
-    {
-      icon: "refresh-cw",
-      label: "Restore safely",
-      text: "Verify backups before restoring into a new or existing server.",
-    },
-  ]}
-/>
+<DocsCallout icon="archive-restore" title="Completed backups must be verified.">
+  A completed backup is only useful after you have verified its destination, metadata, and restore path.
+</DocsCallout>
 
 ## Create and inspect backups
 
 Use per-server or global views to start snapshots, filter phases, and inspect destination, size, timestamps, and errors.
 
-- Record server identity, world path, destination, and backup phase.
-- Wait for completion before restarting, deleting, or wiping a server.
-- Use the detail drawer to capture logs and failure context before retrying.
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "Record server identity, world path, destination, and backup phase.",
+      text: "",
+    },
+    {
+      icon: "check",
+      label: "Wait for completion before restarting, deleting, or wiping a server.",
+      text: "",
+    },
+    {
+      icon: "check",
+      label: "Use the detail drawer to capture logs and failure context before retrying.",
+      text: "",
+    },
+  ]}
+/>
 
 **Backup phases:**
 - **Pending** — backup job scheduled, awaiting resources
@@ -54,13 +54,25 @@ Use per-server or global views to start snapshots, filter phases, and inspect de
 
 Backups combine a cron schedule with a restic repository, credentials, and explicit retention policy.
 
-- Store repository credentials in labelled Kubernetes Secrets.
-- Balance keep-last, hourly, daily, weekly, monthly, and yearly retention.
-- Watch active schedules and alert on missed or failed runs.
-
-<DocsCallout icon="shield-alert" title="Completed backups must be verified.">
-  A completed backup is only useful after you have verified its destination, metadata, and restore path.
-</DocsCallout>
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "Store repository credentials in labelled Kubernetes Secrets.",
+      text: "",
+    },
+    {
+      icon: "check",
+      label: "Balance keep-last, hourly, daily, weekly, monthly, and yearly retention.",
+      text: "",
+    },
+    {
+      icon: "check",
+      label: "Watch active schedules and alert on missed or failed runs.",
+      text: "",
+    },
+  ]}
+/>
 
 ### Backup strategies
 

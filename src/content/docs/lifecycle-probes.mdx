@@ -13,6 +13,9 @@ covers: ["Suspend", "Graceful stop", "Health"]
 import DocsCallout from "../../components/docs/DocsCallout.astro";
 import DocsSectionList from "../../components/docs/DocsSectionList.astro";
 import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
+
+<DocsArticleMeta groupId="servers-config" readTime="14 MIN" />
 
 Control desired running state, graceful shutdown, and probe timing so slow games recover without restart loops or data loss.
 
@@ -95,7 +98,7 @@ Override timing one probe family at a time; startup protects boot, readiness gat
 <DocsQuickReference
   label="PROBE MODEL"
   items={[
-    "01  Default (suspend=false) → operator maintains Running, auto-restarts on failure",
+    "01  Auto-restart off → zero replicas, Suspended, data preserved",
     "02  Grace period 0–600s; requires template stop sequence",
     "03  Startup protects boot; readiness gates traffic; liveness recovers",
   ]}

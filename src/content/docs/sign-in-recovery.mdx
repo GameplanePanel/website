@@ -7,6 +7,7 @@ icon: "lock"
 eyebrow: "START HERE"
 readTime: "11 MIN"
 covers: ["Local auth", "OIDC", "Recovery"]
+next: "template-configuration"
 ---
 
 import DocsCallout from "../../components/docs/DocsCallout.astro";
@@ -15,7 +16,7 @@ import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
 
 Choose local or federated sign-in, diagnose authentication failures, and recover access without locking out every administrator.
 
-<DocsCallout icon="shield-alert" title="Keep one tested administrative recovery path">
+<DocsCallout icon="shield" title="Keep one tested administrative recovery path">
   Keep one tested administrative recovery path until SSO-only redirects, claims, and role mappings work end to end.
 </DocsCallout>
 
@@ -43,7 +44,7 @@ Local accounts use a Gameplane credential; provider buttons delegate password an
   ]}
 />
 
-**Local auth** requires the account to exist in Gameplane's local user list — created manually under **Admin Settings → Users** or automatically on first OIDC login if role mappings are configured. Each local account stores an `argon2id`-hashed password; the API accepts 12–255 character passwords.
+**Local auth** requires the account to exist in Gameplane's local user list — created manually under **Admin Settings → Users** or automatically on first OIDC login (assigned the viewer role by default, or a higher role if group mapping grants one). Each local account stores an `argon2id`-hashed password; the API enforces a 12-character minimum.
 
 **OIDC** (OpenID Connect) delegates authentication to a third-party identity provider (Keycloak, Authentik, Google Workspace, Okta, etc.). The provider handles password storage and MFA; Gameplane stores only the OIDC subject ID (issuer + subject claim) and optional group claims for role mapping. Providers are configured dynamically in **Admin Settings → Authentication** and take effect on the next user login (no API restart required).
 
@@ -83,7 +84,7 @@ If you exceed either limit, wait 1 minute and retry. The rate limit is tied to t
 - Check **Admin Settings → General → External URL** — it must match your dashboard's public hostname exactly (e.g., `https://gameplane.example.com`).
 - Verify the provider's issuer URL. Example test: `curl https://<issuer-url>/.well-known/openid-configuration` — the response must include an `authorization_endpoint` and `token_endpoint`.
 - Confirm the callback URL in the provider (e.g., `https://gameplane.example.com/auth/oidc/<provider-name>/callback`) matches the provider's OIDC configuration exactly.
-- Check the provider's system clock against the API container's clock — OIDC ID tokens are only valid for ~5 minutes and include a `iat` (issued-at) claim that the API validates strictly.
+- Check the provider's system clock against the API container's clock — server and IdP clocks must be synchronized (within 5 minutes) for successful authentication.
 
 **Local login failures** are usually due to a wrong username/email or incorrect password. The login endpoint does not reveal which — you will see a generic "invalid credentials" error either way.
 
@@ -101,7 +102,7 @@ An administrator with the `users:manage` role can reset any local user's passwor
 
 The user's effective role in Gameplane is determined by:
 - **Local account**: the role manually assigned in **Admin Settings → Users**
-- **OIDC account**: the role derived from the provider's group claim (if group mapping is configured in **Admin Settings → Authentication**) *or* the role manually assigned in **Admin Settings → Users** as an override
+- **OIDC account**: the role is the viewer role by default (coming in v0.3.0: the role derived from the provider's group claim if group mapping is configured in **Admin Settings → Authentication**) *or* the role manually assigned in **Admin Settings → Users** as an override
 
 To test your own recovery process, log out and use a private/incognito window to attempt re-login. If you are locked out of OIDC and cannot log in via a local backup account, use one of these break-glass paths:
 

@@ -132,7 +132,8 @@ Version filtering uses `spec.versions[].gameVersion` (e.g. "1.21.4" for Minecraf
 
 - **AllowedHosts** (required): hostname allowlist (exact match "cdn.modrinth.com" or suffix ".modrinth.com"). SSRF guard: downloads to private/loopback/link-local addresses are refused.
 - **MaxSizeMB** (default 256): cap per-download size in mebibytes.
-- **Extract** (per-loader or global): when true, treat downloads as archives (.zip, .tar.gz) and unpack each into its own folder so recursive loaders (BepInEx, Bukkit) find the contents.
+
+Set `extract: true` on `spec.capabilities.mods` (shared) or on the relevant `spec.capabilities.mods.loaders.<id>` entry (per-loader) to treat downloads as archives (.zip, .tar.gz) and unpack each into its own folder so recursive loaders (BepInEx, Bukkit) find the contents.
 
 ### Modpacks
 
@@ -144,7 +145,3 @@ When a registry provider has modpacks (e.g., Modrinth modpacks, Thunderstore col
 ### Credentials for protected registries
 
 `spec.capabilities.mods.registry.providers[].credentialsSecretRef` references a Secret with "username" and "token" keys. Currently used by the Factorio provider for mod-portal downloads; the agent injects credentials transparently during installs.
-
-## Next guide
-
-[Test and publish modules](./test-publish-sign-modules/)

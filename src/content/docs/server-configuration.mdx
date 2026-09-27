@@ -8,15 +8,18 @@ icon: info-2
 eyebrow: CONFIGURE
 readTime: "14 MIN"
 covers: ["Resources", "Lifecycle", "Placement"]
+next: "network-automation"
 ---
 
 import DocsCallout from "../../components/docs/DocsCallout.astro";
-import DocsSectionList from "../../components/docs/DocsSectionList.astro";
 import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
 
 This guide covers the major configuration concerns when running a GameServer: version pinning, compute resources, environment variables, lifecycle timing, scheduling, and safety boundaries. Each change integrates declaratively with the GameServer spec and is reconciled by the operator.
 
-<DocsCallout icon="shield-alert" title="Pod template changes require reconciliation.">
+<DocsArticleMeta groupId="servers-config" readTime="14 MIN" />
+
+<DocsCallout icon="layers" title="Pod template changes require reconciliation.">
 Changes that affect the pod template (image, resources, storage, environment, probes) trigger a rolling restart of the underlying StatefulSet pod. Schedule these updates like planned maintenance to avoid disrupting active player sessions.
 </DocsCallout>
 
@@ -194,7 +197,7 @@ spec:
 
 ### Per-server access control
 
-The dashboard and API enforce role-based access control on a per-GameServer basis. Owners and admins can modify any setting; other users are blocked by the operator unless their role grants `servers:edit` and `servers:delete`. See the [Permission Catalog](./permission-catalog/) for the full matrix of role capabilities.
+The dashboard and API enforce role-based access control on a per-GameServer basis. Owners and admins can modify any setting; other users are blocked by the operator unless their role grants `servers:write`. See the [Permission Catalog](./permission-catalog/) for the full matrix of role capabilities.
 
 ### Safety boundaries: Ownership and danger zone
 

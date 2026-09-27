@@ -18,14 +18,6 @@ import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
 
 Gameplane's test suite spans three tiers: unit tests and Vitest (cheapest), envtest for Kubernetes integration (moderate cost), and kind E2E for full-cluster validation (most expensive). Every real-cluster test lives in exactly one CI bucket to prevent login rate-limiter starvation.
 
-<DocsSectionList
-  items={[
-    { icon: "flask-conical", label: "Unit & Integration", text: "Fast, isolated tests for individual components." },
-    { icon: "server", label: "Envtest", text: "Kubernetes API server tests for operators and APIs." },
-    { icon: "boxes", label: "E2E Buckets", text: "Real-cluster tests partitioned by login pressure, not feature area." },
-  ]}
-/>
-
 <DocsCallout icon="shield-alert" title="Port-forward bypasses NetworkPolicy">
   `kubectl port-forward` tunnels through the kubelet, bypassing NetworkPolicy entirely. It cannot prove real in-cluster game connectivity. Use a live E2E run on a kind cluster instead.
 </DocsCallout>
@@ -34,17 +26,25 @@ Gameplane's test suite spans three tiers: unit tests and Vitest (cheapest), envt
 
 Unit, envtest, and kind E2E cover progressively more infrastructure at progressively higher cost.
 
-- **`make test`** runs all unit suites and Vitest without envtest.
-- **`make test-integration`** runs operator/API envtest (Kubernetes API server tests).
-- **`make test-e2e`** builds images and exercises a real kind cluster (~10–20 min).
+<DocsSectionList
+  items={[
+    { icon: "check", label: "make test", text: "Runs all unit suites and Vitest without envtest." },
+    { icon: "check", label: "make test-integration", text: "Runs operator/API envtest." },
+    { icon: "check", label: "make test-e2e", text: "Builds images and exercises a real kind cluster." },
+  ]}
+/>
 
 ## Web and coverage
 
 Vitest/MSW and Playwright mock/live modes cover browser behavior; merged profiles enforce component thresholds.
 
-- **Testing Library** covers routes/components with MSW fixtures. Unit tests run against mock API responses.
-- **Playwright mock** needs no cluster; live mode uses authenticated e2e state. Both share the same test files via a config flag (`GAMEPLANE_E2E_TARGET`).
-- **`make cover`** merges unit/envtest coverage profiles and enforces Go/web gates. Minimum thresholds: web (`92% L / 76% F / 82% B / 92% S`), operator (`72%`), api (`80%`), agent (`90%`), netguard/gameaction (`91%`).
+<DocsSectionList
+  items={[
+    { icon: "check", label: "Testing Library", text: "Covers routes/components with MSW fixtures. Unit tests run against mock API responses." },
+    { icon: "check", label: "Playwright mock", text: "Needs no cluster; live mode uses authenticated e2e state. Both share the same test files via a config flag." },
+    { icon: "check", label: "make cover", text: "Merges unit/envtest coverage profiles and enforces Go/web gates." },
+  ]}
+/>
 
 ## E2E discipline
 

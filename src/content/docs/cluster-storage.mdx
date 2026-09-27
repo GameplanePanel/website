@@ -38,7 +38,7 @@ Confirm supported Kubernetes versions, ready nodes, allocatable capacity, requir
 
 - **Check node readiness and pressure before blaming a server workload.** Gameplane surfaces node conditions (`NotReady`, `MemoryPressure`, `DiskPressure`, `PIDPressure`) in the Cluster Operations dashboard; resolve node-level issues first. If a GameServer pod fails to schedule, check node allocatable resources (CPU, memory, ephemeral storage) via `kubectl describe node`.
 - **Reserve headroom for the operator, agents, ingress, and backup jobs.** The operator and API each request 100m CPU and 64Mi memory (with limits of 500m CPU and 256Mi memory). Agent sidecars in game pods also require CPU and memory; consult the agent image documentation for current resource requests. Backup and restore jobs are bursty; reserve a node or memory ceiling for their temporary pods. A single underprovisioned node can stall the entire cluster.
-- **Enable cluster operations only for administrators who need them.** The Cluster Operations screen (node details, health checks, remediation hints) is gated to `admin` and `operator` roles. Restrict cluster access to users who troubleshoot infrastructure, not those who only manage game servers.
+- **Read access to cluster health is broad by default; managing nodes is not.** All three built-in roles (`admin`, `operator`, `viewer`) can view the Cluster Operations screen by default (`cluster:read`); only `admin` and `operator` can add nodes or mint kubeconfigs (`cluster:manage`). Use custom roles if you need to restrict read access further.
 
 **Kubernetes and Helm versions:** Gameplane requires Kubernetes 1.28+ and Helm 3.13+. Check your cluster's version:
 
@@ -53,8 +53,12 @@ If your cluster is older, upgrade it before installing or upgrading Gameplane. C
 
 Match access modes, reclaim policy, expansion, topology, and backup strategy to the game's world data.
 
-- **Use a default StorageClass or select one explicitly during creation.** Gameplane can apply an install-time default (Helm value `operator.gameDataStorage.storageClassName`) that applies to all GameServers where neither the GameTemplate nor GameServer-level config overrides it. If no default is set, the cluster's default StorageClass is used. Verify one exists and matches your needs (e.g., SSD for high-IOPS games, networked storage for multi-pod backups).
-- **Confirm `allowVolumeExpansion` before increasing a server PVC.** Game worlds grow; if you plan to increase PVC size later, ensure the StorageClass allows expansion. Check with `kubectl get storageclass -o wide` — the `ALLOWVOLUMEEXPANSION` column should be `true`. You can edit a GameServer's `spec.storage.capacity` to trigger a resize (the Kubernetes CSI driver and underlying storage backend must support it).
+- **Use a default StorageClass or select one explicitly during creation.** Select a StorageClass explicitly per server or template via `spec.storage.storageClassName`; if none is set, the cluster's default StorageClass is used. Verify one exists and matches your needs (e.g., SSD for high-IOPS games, networked storage for multi-pod backups).
+
+<DocsCallout icon="milestone" title="Coming in v0.3.0">
+  An install-time Helm default (`operator.gameDataStorage.storageClassName`) is coming in v0.3.0 and is not yet available in beta.8.
+</DocsCallout>
+- **Confirm `allowVolumeExpansion` before increasing a server PVC.** Game worlds grow; if you plan to increase PVC size later, ensure the StorageClass allows expansion. Check with `kubectl get storageclass -o wide` — the `ALLOWVOLUMEEXPANSION` column should be `true`. You can edit a GameServer's `spec.storage.size` to trigger a resize (the Kubernetes CSI driver and underlying storage backend must support it).
 - **Understand whether deletion retains or removes the underlying volume.** StorageClass `reclaimPolicy` is `Delete` (volume deleted on PVC deletion) or `Retain` (volume kept for manual recovery). For production game servers, consider `Retain` to preserve world data even if a GameServer CRD is deleted. Consult your storage provider's documentation on reclaim semantics.
 
 **Backup and storage lifecycle:** Backups are created on-demand or via schedule; they are stored in a backup destination (S3, Azure Blob, local restic repository, etc.), not on the PVC. Restoration creates a new GameServer with a new PVC and restores world data from the backup; the original PVC remains untouched until explicitly deleted.

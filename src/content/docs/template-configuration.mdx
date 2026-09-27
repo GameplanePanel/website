@@ -16,6 +16,10 @@ import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
 
 Every GameServer accepts game-specific configuration through the wizard — fields defined by the GameTemplate's `configSchema`. These template-driven settings let you tune difficulty, whitelist, world seed, heap memory, and other game-specific options without modifying the template itself.
 
+<DocsCallout icon="cpu" title="Set identity and access before first boot">
+  World identity and authentication choices are easiest to correct before the first boot and persistent data creation.
+</DocsCallout>
+
 <DocsSectionList
   items={[
     {
@@ -40,7 +44,7 @@ Every GameServer accepts game-specific configuration through the wizard — fiel
 
 Each GameServer has three identity layers:
 
-1. **Workload name** (the server's identity in the cluster): use a lowercase, dash-separated name (e.g., `pvp-arena-1`). This becomes the pod and StatefulSet name, visible in kubectl and logs.
+1. **Workload name** (the server's identity in the cluster): use a lowercase, dash-separated name (e.g., `pvp-arena-1`). This becomes the StatefulSet name and the pod name prefix (the pod itself is `<name>-0`), visible in kubectl and logs.
 
 2. **Description** (internal notes): an operational note for your ops team, visible on the dashboard's Server Overview. Keep it separate from the MOTD.
 
@@ -82,7 +86,7 @@ Review the YAML in `GameServer.spec.config` to confirm your value is correctly a
 
 ### Credentials and secrets
 
-Some games require API keys, database credentials, or authentication tokens (e.g., external mod registry access). Template ConfigFields of type `password` are stored in a per-server Secret and injected as environment variables on the container; they do not appear inline in the GameServer spec. Reference them with standard Kubernetes `${secret:name:field}` syntax in other config fields (e.g., a `modrinth-token` field references the value via `${secret:modrinth-token:value}`).
+Some games require API keys, database credentials, or authentication tokens (e.g., external mod registry access). Template ConfigFields of type `password` are stored in a per-server Secret and injected as environment variables via `SecretKeyRef`; they never appear inline in the GameServer spec or in `configFiles` templates.
 
 Never pass secrets via plain ConfigFields of type `string`. Always use the `password` type.
 

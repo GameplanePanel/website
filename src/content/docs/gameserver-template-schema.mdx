@@ -68,7 +68,7 @@ The GameServer spec has two layers: **identity** (which template and version to 
 | `spec.mods` | object | (none) | For games that manage mods by ID (see GameTemplate capabilities.mods.idList). Maps to mod providers. |
 | `spec.backupPolicy` | object | (none) | Inline BackupSchedule for this server. When set, the operator creates a managed BackupSchedule owned by this server. |
 | `spec.idle` | object | disabled | Auto-sleep configuration: enabled flag, minutes until sleep, wake windows (cron), and wake-on-connect. |
-| `spec.capture` | object | disabled | Packet-capture configuration: opt-in enabled flag and retention window (seconds). |
+| `spec.capture` | object | disabled | Packet-capture configuration: opt-in enabled flag and retention window (seconds). **(v0.3.0)** |
 | `spec.serviceAccountName` | string | auto-created | Overrides the ServiceAccount the pod runs as. Default is per-server `<name>-agent` with minimal RBAC. |
 
 ## GameTemplate blueprint
@@ -111,11 +111,12 @@ The operator populates `status` fields after reconciliation:
 | `status.observedGeneration` | int64 | The generation of spec that the operator last observed (for detecting stale status). |
 | `status.conditions` | []Condition | Detailed state transitions. Standard Ready, Progressing, and Healthy conditions are surfaced in the UI. |
 | `status.endpoints` | []GameServerEndpoint | Externally reachable addresses (host, port, protocol, pool) once the Service is reconciled. |
+| `status.tunnelEndpoints` | []GameServerEndpoint | Per-port addresses reported by the tunnel pod when `spec.networking.tunnel.enabled` is true (frp/tailscale computed at reconcile time; playit populated asynchronously). |
 | `status.agent` | AgentStatus | Runtime info from the in-pod sidecar: version, heartbeat time, players online, CPU/memory usage, disk usage. |
 | `status.startedAt` | timestamp | Wall-clock time the game container was last observed as Ready. |
 | `status.lastBackupTime` | timestamp | Completion time of the most recent successful backup. |
 | `status.idle` | object | Observed idle auto-sleep state: empty since when, asleep flag, sleep/wake times, reason. |
-| `status.capture` | object | Capture system state: ready flag, active capture name, last capture time, sidecar restart count. |
+| `status.capture` | object | Capture system state: ready flag, active capture name, last capture time, sidecar restart count. **(v0.3.0)** |
 
 <DocsCallout icon="info" title="Verification best practice">
 Use `status.observedGeneration` and `status.conditions` to confirm the operator has applied the latest spec generation. A condition's `status`, `reason`, and `message` fields explain blockers (e.g., image pull failure, insufficient resources, invalid config).
@@ -187,6 +188,10 @@ When `spec.idle.enabled` is true, the operator scales the server down once it re
 | `wakeWindows` | []string | (none) | Cron expressions (cluster timezone) at which a sleeping server wakes up. Max 8 entries. |
 | `wakeOnConnect` | bool | false | Arms the wake sentinel: while asleep, a small pod holds the advertised ports and wakes the server on a genuine join attempt. |
 
+<DocsCallout icon="rocket" title="Coming in v0.3.0">
+`spec.capture` / `status.capture` and the packet-capture sidecar are not yet available in v0.2.0-beta.8; they ship in the upcoming v0.3.0 release.
+</DocsCallout>
+
 ## Capture configuration
 
 When `spec.capture.enabled` is true, the operator injects a packet-capture ephemeral container into the pod:
@@ -251,8 +256,8 @@ spec:
       name: primary-backup-repo
       key: credentials
     retention:
-      daily: 7
-      weekly: 4
+      keepDaily: 7
+      keepWeekly: 4
   
   idle:
     enabled: true

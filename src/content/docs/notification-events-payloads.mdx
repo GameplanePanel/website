@@ -4,7 +4,7 @@ description: "Event names, structured payload fields, delivery adapters, credent
 section: "platform"
 group: "audit-observability"
 order: 6
-icon: "mail"
+icon: "message-circle"
 eyebrow: "INTEGRATION REFERENCE"
 readTime: "8 MIN"
 covers: ["Events", "Webhooks", "Payload schema", "Retry policy"]
@@ -34,7 +34,7 @@ The notification system emits six event types across three resource categories. 
 
 ## Payload structure
 
-Webhook and SMTP sinks receive the full structured event as JSON. Discord, Slack, and ntfy format the same data into their respective message shapes.
+Webhook sinks receive the full structured event as JSON. Discord, Slack, ntfy, and SMTP format the same data into their respective message shapes.
 
 ### Common fields
 
@@ -99,7 +99,7 @@ Events in the delivery queue are **best-effort**: if the queue fills, new events
 Test a sink without waiting for a real event:
 
 ```bash
-curl -X POST https://<dashboard>/api/v1/admin/notifications/sinks/{sink-name}/test \
+curl -X POST https://<dashboard>/api/admin/notifications/sinks/{name}/test \
   -H "Authorization: Bearer <token>"
 ```
 

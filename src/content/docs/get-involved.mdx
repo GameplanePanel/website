@@ -10,10 +10,8 @@ readTime: "3 MIN"
 covers: ["Testing", "Documentation", "Module Development", "Community", "Code Contribution"]
 ---
 
-import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
 import DocsCallout from "../../components/docs/DocsCallout.astro";
-
-<DocsArticleMeta groupId="community" readTime="3 MIN" />
+import Icon from "../../components/Icon.astro";
 
 <div class="flex flex-col gap-4">
   <DocsCallout icon="bug" title="Try it and report bugs">
@@ -38,7 +36,7 @@ import DocsCallout from "../../components/docs/DocsCallout.astro";
 
 <div class="flex flex-wrap gap-3 pt-2">
   <a
-    class="inline-flex h-10 items-center gap-1.5 rounded-pill bg-secondary px-4 font-primary text-sm font-medium text-secondary-foreground no-underline hover:bg-secondary/80"
+    class="inline-flex h-10 items-center gap-1.5 rounded-pill bg-primary px-4 font-primary text-sm font-medium text-primary-foreground no-underline hover:bg-primary/90"
     href="./contributing/"
   >
     Read the Contributing guide
@@ -47,6 +45,7 @@ import DocsCallout from "../../components/docs/DocsCallout.astro";
     class="inline-flex h-10 items-center gap-1.5 rounded-pill border border-border px-4 font-primary text-sm font-medium text-foreground no-underline hover:border-muted-foreground"
     href="https://github.com/ValgulNecron/Gameplane"
   >
+    <Icon name="github" class="h-4 w-4" />
     Open GitHub
   </a>
 </div>

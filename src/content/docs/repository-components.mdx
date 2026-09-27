@@ -17,7 +17,7 @@ import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
 
 Gameplane is split across long-lived components (dashboard, API, operator, and optional services) plus a per-pod agent sidecar. Understanding the repository layout and request paths helps you navigate the codebase and make changes that respect architectural boundaries.
 
-<DocsCallout icon="info" title="Desired state belongs in CRD spec; observed state and conditions belong to controllers.">
+<DocsCallout icon="blocks" title="Desired state belongs in CRD spec; observed state and conditions belong to controllers.">
   When adding new features, determine which layer should own the configuration: API schemas for user intent, CRD types for Kubernetes storage, or operator reconcilers for realizing that intent.
 </DocsCallout>
 
@@ -49,7 +49,7 @@ The repository joins runtime components, shared libraries, optional services, pa
 
 | Module | Purpose |
 |--------|---------|
-| `operator/` | controller-runtime Kubernetes operator; reconciles 9 CRDs (GameServer, GameTemplate, Cluster, Backup, BackupSchedule, Restore, Module, ModuleSource, NetworkCapture) |
+| `operator/` | controller-runtime Kubernetes operator; reconciles 8 CRDs in v0.2.0-beta.8 (GameServer, GameTemplate, Cluster, Backup, BackupSchedule, Restore, Module, ModuleSource) — a 9th, NetworkCapture, is coming in v0.3.0 |
 | `api/` | REST and WebSocket gateway; authentication, RBAC, audit logging; SQLite or PostgreSQL backend |
 | `agent/` | In-pod sidecar managing console (RCON/PTY), files, logs, and heartbeats |
 | `netguard/` | SSRF dial-guard protecting against injection attacks |

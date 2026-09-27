@@ -81,9 +81,9 @@ Before installing, decide on external URL, ingress, TLS, storage, authentication
 # Helm chart values (e.g., in values.override.yaml)
 ingress:
   host: gameplane.your-domain.test  # Dashboard hostname
-  tls:
-    enabled: true
-    issuerName: letsencrypt-prod    # cert-manager ClusterIssuer for TLS
+  tls: true                         # Provide a cert via cert-manager or a pre-created gameplane-tls Secret
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod  # cert-manager ClusterIssuer for TLS
 
 operator:
   gameDataStorage:
@@ -158,7 +158,7 @@ To manage sources via GitOps instead of letting Helm create the default, set `en
 
 ### Full reference
 
-See [`./helm-values-reference`](./) for a complete walkthrough of all Helm values, defaults, and advanced options.
+See [Helm Values Reference](./helm-values-reference/) for a complete walkthrough of all Helm values, defaults, and advanced options.
 
 ## Install and verify
 
@@ -215,14 +215,14 @@ kubectl get crds | grep gameplane
 Expected output:
 
 ```
-backup.gameplane.local
-backupschedule.gameplane.local
-cluster.gameplane.local
-gameserver.gameplane.local
-gametemplate.gameplane.local
-module.gameplane.local
-modulesource.gameplane.local
-restore.gameplane.local
+backups.gameplane.local
+backupschedules.gameplane.local
+clusters.gameplane.local
+gameservers.gameplane.local
+gametemplates.gameplane.local
+modules.gameplane.local
+modulesources.gameplane.local
+restores.gameplane.local
 ```
 
 <DocsCallout icon="info" title="Coming in v0.3.0">
@@ -308,7 +308,7 @@ kubectl -n gameplane-system get ingress gameplane
 
 After a successful install:
 
-- **[Dashboard tour](./dashboard-tour)** — explore the web UI and server management
-- **[Create a server](./create-a-server)** — deploy your first game server
-- **[Production installation](./production-installation)** — HA, TLS, external auth, and monitoring for production clusters
-- **[Upgrades and migrations](./upgrades-migrations)** — plan version upgrades and strategy
+- **[Dashboard tour](./dashboard-tour/)** — explore the web UI and server management
+- **[Create a server](./create-a-server/)** — deploy your first game server
+- **[Production installation](./production-installation/)** — HA, TLS, external auth, and monitoring for production clusters
+- **[Upgrades and migrations](./upgrades-migrations/)** — plan version upgrades and strategy

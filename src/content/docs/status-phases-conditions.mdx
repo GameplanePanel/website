@@ -7,6 +7,7 @@ order: 6
 icon: circle-dot
 eyebrow: API REFERENCE
 covers: ["Resource lifecycle", "CRD status", "Reconciliation"]
+next: "crd-catalog"
 ---
 
 import DocsCallout from "../../components/docs/DocsCallout.astro";
@@ -109,7 +110,10 @@ All Gameplane CRDs follow the Kubernetes pattern: `status.observedGeneration` re
 1. Edit the GameServer spec → `metadata.generation` increments
 2. Controller observes the change and starts reconciliation
 3. Once reconciliation completes, controller updates `status.observedGeneration` to match
-4. **Do not treat a condition as current until `status.observedGeneration ≥ metadata.generation`**
+
+<DocsCallout icon="info" title="Don't trust a stale condition">
+  Compare `status.observedGeneration` with `metadata.generation` before treating a condition as current — if it lags, reconciliation is still catching up.
+</DocsCallout>
 
 This is essential for automation (GitOps, operators): comparing generation values tells you whether the observed state reflects your latest spec change, or is still working toward it.
 
@@ -195,7 +199,3 @@ kubectl get gameserver my-server -o jsonpath='{.metadata.generation},{.status.ob
 # 3,3  ← generation matches; status is current
 # 4,3  ← generation ahead; reconciliation in progress
 ```
-
----
-
-## Next: [CRD Catalog](./crd-catalog/)

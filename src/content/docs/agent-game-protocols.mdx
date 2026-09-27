@@ -1,5 +1,5 @@
 ---
-title: "Agent & Game Protocols"
+title: "Agent and game protocols"
 description: "Extend the per-game sidecar while keeping its authenticated contract, filesystem boundary, and capabilities explicit."
 section: develop
 group: component-guides
@@ -21,7 +21,7 @@ The agent is a per-pod HTTP/HTTPS sidecar running inside every game pod. It tran
 Unsupported capabilities must disappear or degrade safely—not emit a request that cannot succeed.
 </DocsCallout>
 
-## Agent Surface
+## Agent surface
 
 The sidecar serves authenticated operational endpoints with health and metrics as narrow unauthenticated exceptions.
 
@@ -38,7 +38,7 @@ The sidecar serves authenticated operational endpoints with health and metrics a
   ]}
 />
 
-### Authentication & mTLS
+### Authentication and mTLS
 
 Production uses operator-managed mTLS; bearer token is compatibility-only for development.
 
@@ -46,7 +46,7 @@ Production uses operator-managed mTLS; bearer token is compatibility-only for de
 - **Bearer token (fallback):** Shared-secret token mounted from a per-pod Secret. Used only when TLS is not configured.
 - **Unauthenticated exceptions:** `GET /healthz` (liveness probe) and `GET /metrics` (Prometheus, on a separate plain HTTP listener).
 
-### File Operations Boundary
+### File operations boundary
 
 All file operations are confined to the `--data-root` (typically `/data` PVC):
 
@@ -55,7 +55,7 @@ All file operations are confined to the `--data-root` (typically `/data` PVC):
 - Dotfile access restricted
 - Temp files used for atomic writes: write fails halfway → only temp file is removed, pre-existing file untouched
 
-## Game Protocols
+## Game protocols
 
 Adapters normalize RCON, PTY, log files, moderation, status, and graceful stop across games without agent code changes.
 
@@ -68,7 +68,7 @@ Adapters normalize RCON, PTY, log files, moderation, status, and graceful stop a
   ]}
 />
 
-### Request/Response Contracts
+### Request/response contracts
 
 All game-facing operations follow strict contracts:
 
@@ -77,11 +77,11 @@ All game-facing operations follow strict contracts:
 - **Moderation (kick/ban/unban):** Template-driven; a single `commander` renders each action from the module's declared capabilities. Returns `{ ok, raw? }` or `501 Not Implemented` if unsupported.
 - **Quiesce/unquiesce:** Response is `{ quiesced: true/false, reason? }`. Unsupported games degrade gracefully with `quiesced: false` and a reason (e.g., "game does not support save sequences").
 
-## Extend Safely
+## Extend safely
 
 Update OpenAPI, handlers, API proxy, safety libraries, and protocol tests as one wire-contract change.
 
-### Adding a New Protocol Handler
+### Adding a new protocol handler
 
 1. **Declare the new RCON protocol** in the wire-protocol factory (`agent/internal/rcon/`):
    - Implement the `Exec(cmd) (string, error)` interface
@@ -103,7 +103,7 @@ Update OpenAPI, handlers, API proxy, safety libraries, and protocol tests as one
    - Unit tests exercise protocol parsing, edge cases, and error handling
    - E2E tests (`test/e2e/`) verify the new protocol with a real game server on Kind
 
-### Capability-Driven Extension
+### Capability-driven extension
 
 Module capabilities are the contract between the operator and the agent. To add support for a new game feature:
 
@@ -128,7 +128,7 @@ Module capabilities are the contract between the operator and the agent. To add 
   ]}
 />
 
-### Safety Invariants
+### Safety invariants
 
 - **Every request is authenticated:** All protected routes gate on mTLS cert or bearer token.
 - **Path confinement is consolidated:** `ConfinePath(rootDir, untrustedName)` is the single validation point for all filesystem operations. It rejects `..`, `/`, symlink escape, and confines all operations within rootDir.

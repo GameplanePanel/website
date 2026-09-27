@@ -63,7 +63,11 @@ Role changes affect global authorization; local and OIDC credentials have differ
 
 - Password resets happen at the identity provider, not in Gameplane
 - MFA and account disablement are provider-controlled
-- The user's role and email in Gameplane mirror the provider's state (role may be auto-mapped via `api.oidc.roleMappings` if set at install time)
+- The user's role and email in Gameplane mirror the provider's state
+
+<DocsCallout icon="info" title="Coming in v0.3.0">
+  Install-time OIDC role auto-mapping via `api.oidc.roleMappings` ships in v0.3.0. In beta.8, map OIDC roles manually after each login.
+</DocsCallout>
 
 ## Review lifecycle and availability
 

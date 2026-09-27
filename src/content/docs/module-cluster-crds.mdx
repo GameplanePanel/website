@@ -41,7 +41,7 @@ ModuleSource indexes a module catalog (OCI registry, git repo, HTTP archive, or 
 
 | Field | Type | Required | Purpose |
 |---|---|---|---|
-| `spec.type` | enum | yes | oci / git / http / local / upload — selects which of spec.oci/git/http/local is active |
+| `spec.type` | enum | no | oci / git / http / local / upload — selects which of spec.oci/git/http/local is active; defaults to `oci` |
 | `spec.oci` | object | conditional | OCI registry config (required if `type=oci`) |
 | `spec.oci.url` | string | yes | Registry/repository prefix (e.g., `ghcr.io/valgulnecron/gameplane-modules`) |
 | `spec.oci.modules` | array | yes | Explicit list of `{name: string}` entries; registries cannot be enumerated, so the catalog is declarative |
@@ -84,10 +84,10 @@ The Cluster CRD registers a remote Kubernetes cluster for multi-cluster deployme
 | `status.lastCheckTime` | time | read-only | When health was last assessed |
 | `status.message` | string | read-only | Details about the current phase (error reason if Unhealthy) |
 | `status.serverVersion` | string | read-only | Remote cluster's Kubernetes version (e.g., `v1.28.0`), set on successful health check |
-| `status.conditions` | array | read-only | Tracks cluster health and observedGeneration |
+| `status.conditions` | array | read-only | Tracks cluster health and other observed state |
 
 <DocsCallout icon="shield-alert" title="Kubeconfig Secret handling">
-  Secrets are referenced, never embedded in the CRD. The Secret must be created in the operator namespace (typically `gameplane-system`) and labeled `gameplane.local/cluster-kubeconfig: "true"`. The kubeconfig's embedded credentials (client cert, token, or service account) are kept at rest inside the Secret data. The operator reads this Secret only when health-checking the cluster; the remote kubeconfig is never synced to GameServer pods.
+  Secrets are referenced, never embedded in the CRD. The Secret must be created in the operator namespace (typically `gameplane-system`) and labeled `gameplane.local/cluster-kubeconfig: "true"`. The kubeconfig's embedded credentials (client cert, token, or service account) are kept at rest inside the Secret data. The operator reads this Secret only when health-checking the cluster; the remote kubeconfig is never synced to GameServer pods. Status fields including `phase` are controller-owned and read-only, and reflect the spec only once `status.observedGeneration` matches `metadata.generation`.
 </DocsCallout>
 
 ## Quick reference

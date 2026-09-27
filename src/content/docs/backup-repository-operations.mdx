@@ -21,7 +21,7 @@ import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
 A Backup or BackupSchedule references a repository via a Kubernetes Secret containing the restic repository URI and password. This guide covers supported backends, credential management, operational monitoring, and restore validation drills.
 
 <DocsCallout icon="archive" title="A destination is not operational until a scheduled isolated restore succeeds with emergency-access credentials.">
-  Accepting a new backup repository requires proof that recovery is possible using only the documented procedure and credentials, tested under realistic constraints.
+  A completed backup is only useful after you have verified its destination, metadata, and restore path.
 </DocsCallout>
 
 ## Choose and configure a backend
@@ -59,7 +59,7 @@ Restic repository URIs follow the pattern `<backend>:<backend-specific-config>`.
 
 Restic also supports cloud-native backends (Azure Blob, Google Cloud Storage, Swift) via environment variables; see the [Restic documentation](https://restic.readthedocs.io/en/latest/030_preparing_a_new_repo.html) for backend-specific setup.
 
-For S3, the password field typically holds the access key, and additional environment variables (e.g., `AWS_SECRET_ACCESS_KEY`, `AWS_DEFAULT_REGION`) may be configured via the Secret or Job environment. Other backends may have their own credential schemes; consult your backend's restic documentation.
+Gameplane's Backup/BackupSchedule Secret exposes only two keys to the restic Job: `repo` (the repository URI) and `password` (the restic repository's encryption password, mapped to `RESTIC_PASSWORD`) — this is unrelated to any backend access key. The operator does not inject backend-specific credentials (`AWS_ACCESS_KEY_ID`/`AWS_SECRET_ACCESS_KEY`, Azure/GCS/Swift env vars) into the Job, so backends that require them need another route (e.g., node/pod identity such as IRSA) since Gameplane passes no extra environment variables to the restic container.
 
 ## Operate the repository
 
@@ -124,12 +124,14 @@ spec:
 
 Restic's retention policies are defined in `BackupSchedule.spec.retention`. Gameplane supports restic's `keep-*` vocabulary:
 
+- `keepLast: 5` — always keep the 5 most recent snapshots regardless of age
+- `keepHourly: 24` — keep the latest snapshot from each of the last 24 hours
 - `keepDaily: 7` — keep the latest snapshot from each day (7 daily snapshots)
 - `keepWeekly: 4` — keep the latest snapshot from each week (4 weekly snapshots)
 - `keepMonthly: 12` — keep the latest snapshot from each month (12 monthly snapshots)
 - `keepYearly: 3` — keep the latest snapshot from each year (3 yearly snapshots)
 
-The operator prunes old snapshots on the configured schedule (e.g., after each backup). Monitor prune job logs for completion time, bytes freed, and any corruption detected during the pruning process.
+The operator trims retention by deleting old `Backup` custom resources once they fall outside every configured `keep-*` bucket (surfaced via the `RetentionTrimmed` condition on the `BackupSchedule`). It does not run `restic forget`/`prune` against the repository itself, so repository storage is not automatically reclaimed. If you need to reclaim space, run `restic forget --prune` yourself on a schedule that matches your retention policy, and monitor that job's own logs for bytes freed and errors.
 
 ### Credentials and certificate rotation
 

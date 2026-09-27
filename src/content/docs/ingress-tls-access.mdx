@@ -19,7 +19,7 @@ import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
 
 Publish the dashboard and API through a trusted HTTPS edge while separating game ports, management traffic, and identity redirects.
 
-<DocsCallout icon="shield-alert" title="Security boundary">
+<DocsCallout icon="lock" title="Security boundary">
   Dashboard HTTPS and game TCP/UDP exposure are separate interfaces with different owners and security controls.
 </DocsCallout>
 
@@ -30,7 +30,7 @@ Document every HTTP, TCP, and UDP listener from DNS through the owning controlle
 <DocsSectionList
   items={[
     {
-      icon: "network",
+      icon: "globe",
       label: "Separate dashboard/API traffic",
       text: "Separate dashboard/API traffic from game Services.",
     },
@@ -40,7 +40,7 @@ Document every HTTP, TCP, and UDP listener from DNS through the owning controlle
       text: "Select Ingress class, load balancer, DNS, and source-IP behavior.",
     },
     {
-      icon: "arrow-right",
+      icon: "external-link",
       label: "Set canonical external URL",
       text: "Set one canonical external URL and exact OIDC callback/logout URLs.",
     },
@@ -54,8 +54,8 @@ Document every HTTP, TCP, and UDP listener from DNS through the owning controlle
 ingress:
   host: gameplane.your-domain.test
   tls: true
-  issuer: "letsencrypt-prod"  # or your cert-manager issuer name
   annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
     nginx.ingress.kubernetes.io/proxy-body-size: "64m"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
@@ -98,7 +98,7 @@ Make certificate renewal, forwarded headers, WebSockets, and backend trust expli
       text: "Use cert-manager, a certificate Secret, or another supported issuer.",
     },
     {
-      icon: "layers",
+      icon: "workflow",
       label: "Proxy settings",
       text: "Configure proxy hops, forwarded headers, timeouts, and upload limits.",
     },
@@ -164,7 +164,7 @@ Verify certificate renewal, redirects, OIDC, console WebSockets, uploads, API re
 ```sh
 kubectl -n gameplane-system get certificate
 kubectl -n gameplane-system describe certificate gameplane-api-tls
-kubectl -n gameplane-system logs -l app=cert-manager
+kubectl -n cert-manager logs -l app=cert-manager
 ```
 
 Look for warnings about renewal windows or failed issuance.
@@ -180,11 +180,13 @@ Wrong:    https://gameplane.your-domain.test:8080/auth/oidc/callback  (explicit 
 **Console WebSocket**: Test the in-browser console (uses `wss://` over the same TLS edge):
 
 ```sh
-# From inside the cluster
+# From inside the cluster (requires prior login session)
 curl -i -N -H "Connection: Upgrade" -H "Upgrade: websocket" \
-  https://gameplane.your-domain.test/ws/servers/my-server/console \
-  -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)"
+  -b "gameplane_session=$SESSION_TOKEN" \
+  https://gameplane.your-domain.test/ws/servers/my-server/console
 ```
+
+The `$SESSION_TOKEN` is obtained from a prior dashboard or OIDC login, not from a Kubernetes ServiceAccount token.
 
 **File Uploads**: The Ingress `proxy-body-size` limit must exceed your largest world/mod file:
 
@@ -205,9 +207,11 @@ kubectl -n gameplane-system logs -l app=gameplane-api --tail=50
 **API Requests**: Test a simple API call with proper TLS and credentials:
 
 ```sh
-curl -H "Authorization: Bearer $TOKEN" \
+curl -b "gameplane_session=$SESSION_TOKEN" \
   https://gameplane.your-domain.test/api/v1/clusters
 ```
+
+The `$SESSION_TOKEN` comes from a prior dashboard login, not a Kubernetes token.
 
 <DocsQuickReference
   label="EDGE CHECK"

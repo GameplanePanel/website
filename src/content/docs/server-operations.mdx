@@ -67,8 +67,8 @@ The server index is the fastest way to triage a large fleet by state, game, owne
 
 - **Running** — the game server pod is Running and has passed readiness probes
 - **Starting** — the pod is being created and initializing (readiness check in progress)
-- **Stopped** — the server has been suspended via spec.suspend=true; the pod is scaled to zero
-- **Suspended** — another term for Stopped when using idle auto-sleep (wake-on-connect)
+- **Stopping** — spec.suspend=true (or idle sleep) was requested and the pod is still Ready while the template's graceful stop sequence runs over RCON before scaling to zero
+- **Suspended** — spec.suspend=true (manual stop) or idle auto-sleep both report this phase; distinguished only by the Ready/Progressing/Healthy condition reason (default vs IdleAsleep), not by a separate "Stopped" phase
 - **Failed** — the pod or liveness probe has failed and the server is not recovering
 - **Pending** — the pod is waiting for cluster resources (transient state)
 
@@ -110,14 +110,14 @@ Most lifecycle actions return HTTP 202 (Accepted), indicating the operator will 
 - **Wipe data** (`POST /servers/{name}:wipe-data`) — suspends the server, erases all files in the world volume, and resumes (for "reset world" workflows). Requires confirmation (server name typed back as `confirm` parameter).
 
 **Configuration copying (HTTP 200):**
-- **Clone** (`POST /servers/{name}:clone`) — creates a new GameServer by copying the entire spec from the source (image, version, config, resources, networking), with a specified `newName`. The new server is created in a stopped state. World data is not copied.
+- **Clone** (`POST /servers/{name}:clone`) — creates a new GameServer by copying the entire spec from the source (image, version, config, resources, networking), with a specified `newName`. The clone inherits the source's spec.suspend value (so a running source produces a running clone); stop it afterward if you want it to come up stopped. World data is not copied.
 
 ### Quick actions (template-defined)
 
 Templates can define up to 32 quick action buttons that run arbitrary RCON commands. Examples: `save` (writes state to disk), `broadcast` (announces to all players), `time` (set day/night), `weather` (change weather), `reload` (reloads configuration). Each action is instantaneous and requires no parameters unless the template defines optional or required input fields.
 
 <DocsCallout icon="info" title="Desired-state vs. immediate actions">
-  A desired-state action (Start, Stop, Suspend) is not complete until its status and conditions confirm reconciliation — the operator may take 30–60 seconds to fully apply a state change. Quick actions execute immediately but do not change the server's phase; ensure the pod is Running before issuing them.
+  A desired-state action (Start, Stop, Wake) is not complete until its status and conditions confirm reconciliation — the operator may take 30–60 seconds to fully apply a state change. Quick actions execute immediately but do not change the server's phase; ensure the pod is Running before issuing them.
 </DocsCallout>
 
 ## Ownership and safety
@@ -135,7 +135,7 @@ Treat transfers and destructive actions as audited workflows with a recovery pat
   ]}
 />
 
-- **Owner** — only the owner can delete a server; collaborators can only stop/start/restart it
+- **Owner** — only the owner or an admin can delete, transfer ownership, edit collaborators, or wipe data; collaborators can use the other lifecycle actions (start, stop, restart, wake, clone)
 - **Backups** — always verify a recent backup exists before running wipe-data or clone
 - **Audit trail** — every action is logged with the user, timestamp, and outcome in the audit event stream
 - **Recovery** — stopped servers retain all data; even deleted servers can be restored from a backup

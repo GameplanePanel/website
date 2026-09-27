@@ -14,6 +14,9 @@ covers: ["Clusters", "GitOps", "Migration"]
 import DocsCallout from "../../components/docs/DocsCallout.astro";
 import DocsSectionList from "../../components/docs/DocsSectionList.astro";
 import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
+
+<DocsArticleMeta groupId="cluster-storage" readTime="14 MIN" />
 
 Make cluster boundaries explicit and operate independent environments without implying unsupported scheduling or automatic failover.
 
@@ -59,7 +62,7 @@ Reuse policy safely while isolating credentials, failure domains, backups, endpo
     {
       icon: "lock",
       label: "Keep redirect URLs and service accounts cluster-specific",
-      text: "OIDC redirect URIs and OAuth scopes must include each cluster's own domain. RBAC role bindings are per-cluster; registering a cluster grants no implicit access.",
+      text: "OIDC login happens once at the control plane; target clusters are reached through the operator's kubeconfig Secret, not a separate per-cluster login. RBAC role bindings are per-cluster; registering a cluster grants no implicit access.",
     },
     {
       icon: "layers",

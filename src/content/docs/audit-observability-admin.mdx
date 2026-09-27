@@ -1,40 +1,16 @@
 ---
 title: "Audit, observability, and administration"
-description: "Preserve a trustworthy change history, inspect system health, route notifications, and manage instance-wide settings."
+description: "Preserve a trustworthy change history, inspect system health, route notifications, and manage instance-wide settings without losing operational evidence."
 section: "platform"
 group: "audit-observability"
 order: 1
 icon: "activity"
-eyebrow: "ADMIN GUIDE"
 readTime: "14 MIN"
 covers: ["Audit", "Logs", "Alerts"]
 ---
 
 import DocsCallout from "../../components/docs/DocsCallout.astro";
-import DocsSectionList from "../../components/docs/DocsSectionList.astro";
 import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
-
-Preserve a trustworthy change history, inspect system health, route notifications, and manage instance-wide settings without losing operational evidence.
-
-<DocsSectionList
-  items={[
-    {
-      icon: "shield-check",
-      label: "Audit integrity",
-      text: "Tamper-evident mutation and access records connected to actors, methods, and resources.",
-    },
-    {
-      icon: "box",
-      label: "Metrics and logs",
-      text: "Fleet metrics for symptoms, Kubernetes events for control-plane causes, and diagnostic logs.",
-    },
-    {
-      icon: "info",
-      label: "Notifications and settings",
-      text: "Event sinks, cluster identity, external URLs, and telemetry preferences.",
-    },
-  ]}
-/>
 
 <DocsCallout icon="shield-alert" title="Preserve evidence before rotating.">
   Export incident evidence before changing audit filters, restarting components, or rotating credentials. The audit log is your primary forensic trail; rotating or resetting credentials without exporting first may render historical records unverifiable.
@@ -42,10 +18,10 @@ Preserve a trustworthy change history, inspect system health, route notification
 
 ## Audit log and chain integrity
 
-Mutation and denied-access records connect actor, method, resource, status, and time in a tamper-evident chain. Every audit event is hashed with its predecessor, and the chain head is cryptographically committed to detect tampering. Audit records are kept indefinitely by default (set `api.audit.retentionDays` in Helm to cap retention).
+Mutation and denied-access records connect actor, method, resource, status, and time in a tamper-evident chain. Every audit event is hashed with its predecessor, which reliably detects naive in-DB tampering and corruption, but not a privileged database attacker who also rewrites the stored checkpoint — treat the external sinks (webhook, stdout, S3), not the chain itself, as the tamper-proof record. Audit records are kept indefinitely by default (set `api.audit.retentionDays` in Helm to cap retention).
 
-- **Re-check chain integrity before relying on an exported audit window.** The API offers an admin-only `GET /admin/audit/verify` endpoint that validates the entire audit chain (recomputing hashes from the database) and surfaces the current chain head as a checkpoint. Export this checkpoint alongside your audit records.
-- **Filter by actor, method, status, and resource.** The Dashboard's Audit page (Admin Settings → Audit & Observability) lets you narrow by namespace, resource type, action, or actor. Denied events are preserved separately, so you can audit both allowed and blocked changes.
+- **Re-check chain integrity before relying on an exported audit window.** The API offers an admin-only `GET /admin/audit/verify` endpoint that validates the entire audit chain (recomputing hashes from the database) and reports whether it is intact or, if not, the ID of the first row where the chain breaks.
+- **Filter by actor, HTTP method, and status class.** The Dashboard's Audit page (Admin Settings → Audit & Observability) lets you narrow by actor, HTTP method, and status class (2xx/4xx/5xx). Denied requests (4xx) show up under that same status filter alongside everything else.
 - **Export CSV with the incident timezone and scope recorded.** Each export includes a header with the cluster name, namespace, resource UID, time range queried, and the authenticated actor who performed the export. This is essential for incident root-cause analysis.
 
 ## Metrics, system logs, and telemetry
@@ -54,7 +30,7 @@ Use fleet metrics for symptom detection, Kubernetes events for control-plane cau
 
 - **Keep API and operator streams separate when following live logs.** Both services emit structured logs; keep them in separate streams to avoid losing context when debugging a single component's behavior.
 - **Use structured-level filters and download raw evidence for correlation.** The Dashboard Logs page (Admin Settings → Observability) supports filtering by level; download the full log window as JSON for offline analysis across multiple components.
-- **Document telemetry settings and privacy expectations for operators.** Telemetry is opt-in (`telemetry.enabled: false` by default in Helm). When enabled, the telemetry-receiver collects anonymous cluster usage (server counts, resource requests, uptime) but does not capture game data, player information, or audit events. Audit telemetry settings in Platform Settings so all cluster operators are aware of what is being transmitted.
+- **Document telemetry settings and privacy expectations for operators.** Telemetry is opt-in and off by default (no `api.telemetry.endpoint` or bundled receiver configured out of the box, and an admin-only dashboard toggle must also be turned on before anything is sent). When enabled, the telemetry-receiver collects anonymous cluster usage (server counts, resource requests, uptime) but does not capture game data, player information, or audit events. Audit telemetry settings in Platform Settings so all cluster operators are aware of what is being transmitted.
 
 ## Notifications and platform settings
 
@@ -79,7 +55,7 @@ Each sink is tested independently via the Dashboard form before saving. The API 
 
 - **Instance identity**: Display name, description, and (if public) a logo shown on the login page and in share links
 - **External URL**: The canonical URL used in share links, email notifications, and API documentation. Must be reachable by external players and notified clients.
-- **Update channel**: Choose between `stable` (GA releases only) and `next` (release candidates) to opt into pre-release testing
+- **Update channel**: A read-only label (`stable` or `edge`) showing whether this install tracks tagged releases or rolling `:edge` images, derived from the Helm chart's `image.tag`/`updates.channel`; Gameplane is always upgraded via Helm, not through this setting.
 - **Build information**: Version, commit hash, and build timestamp for support and diagnostics — used by the MCP server and API documentation endpoints
 
 <DocsQuickReference

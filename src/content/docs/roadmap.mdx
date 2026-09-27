@@ -35,6 +35,8 @@ Core workflows — deploy a game server, console, files, backups/restore, module
       "Load-balancer address pools — request specific IP pools or explicit addresses via spec.networking.addressPool / address (beta.8).",
       "Fleet metrics on /metrics — gameserver/backup phase gauges with Prometheus export and Grafana dashboards.",
       "Multi-cluster cluster registration with health-checked dashboard selector.",
+      "Audit-log webhook push sink — forward audit events to HTTP endpoints for external logging/SIEM integration.",
+      "Audit-to-syslog bridge relay — forward RFC 5424 audit events to syslog endpoints.",
     ]}
   />
 </div>
@@ -54,6 +56,7 @@ Core workflows — deploy a game server, console, files, backups/restore, module
       "User theme customization — preset and custom color themes with WCAG AA validation and per-user persistence.",
       "Network capture sidecar — admin-only, on-demand packet capture from running GameServer pods (PCAPNG format).",
       "Easy module building toolkit (gp-module CLI) — scaffold, validate, preview, and package custom game modules.",
+      "Owner-or-admin-only server operations — transferring ownership, editing collaborators, wiping data, and deleting a server will require the owner or an admin; the Operator role keeps its other permissions but loses these four on servers it doesn't own.",
     ]}
   />
   <IconList

@@ -37,22 +37,20 @@ The operator exports **controller-runtime** standard metrics plus fleet gauges. 
 | `gameplane_gameservers` | `phase` | GameServers per lifecycle phase: Pending, Starting, Running, Stopping, Stopped, Suspended, Failed |
 | `gameplane_backups` | `phase` | Backups per phase: Pending, Running, Succeeded, Failed |
 | `gameplane_gameservers_idle` | `state` | Wake-on-connect sleeping vs. awake server count |
-| `controller_runtime_reconcile_duration_seconds` | `controller` | Reconcile latency histogram (Operator, Cluster, Backup, Module) |
+| `controller_runtime_reconcile_time_seconds` | `controller` | Reconcile latency histogram (Operator, Cluster, Backup, Module) |
 | `controller_runtime_reconcile_errors_total` | `controller` | Reconcile error rate counter |
 | `workqueue_depth` | `name` | Items waiting in each reconciliation queue |
 | `workqueue_longest_running_processor_seconds` | `name` | Longest-running reconcile (detects stuck controllers) |
 
 ## API metrics
 
-The API server exposes standard HTTP server metrics via Prometheus' default instrumentation:
+The API server exposes custom application metrics via Prometheus:
 
 | Metric | Labels | Purpose |
 |---|---|---|
-| `http_requests_total` | `method`, `path`, `code` | Total HTTP request counter |
-| `http_request_duration_seconds` | `method`, `path` | Request latency histogram |
-| `http_requests_in_flight` | — | Current in-flight requests gauge |
-
-For custom application metrics, the API exposes REST and WebSocket event counters (documented in [API & Realtime Development](./api-realtime-development/)).
+| `gameplane_audit_webhook_events_total` | `result` | Audit webhook delivery outcomes |
+| `gameplane_audit_s3_events_total` | `result` | Audit S3 mirror delivery outcomes |
+| `gameplane_notify_deliveries_total` | `kind`, `result` | Notification sink delivery outcomes |
 
 ## Agent metrics
 

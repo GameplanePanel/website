@@ -14,6 +14,9 @@ next: "general-server-settings"
 import DocsCallout from "../../components/docs/DocsCallout.astro";
 import DocsSectionList from "../../components/docs/DocsSectionList.astro";
 import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
+
+<DocsArticleMeta groupId="servers-config" readTime="10 MIN" />
 
 Read desired state, health, capacity, connection endpoint, and live game context before taking an action.
 
@@ -34,7 +37,7 @@ Confirm identity and current reconciliation state before opening an action or co
     },
     {
       icon: "check",
-      label: "Distinguish Running, Starting, Suspended, Stopped, and Failed phases",
+      label: "Distinguish Pending, Starting, Running, Stopping, Stopped, Suspended, and Failed phases",
       text: "The phase reflects the desired state of the reconciliation loop. Starting and Stopping are transient; check active events to see what the operator is waiting for.",
     },
     {

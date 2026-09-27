@@ -8,6 +8,7 @@ icon: life-buoy
 eyebrow: RECOVERY
 readTime: 22 MIN
 covers: ["Platform state", "Worlds", "RPO/RTO"]
+next: "credential-rotation"
 ---
 
 import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
@@ -79,7 +80,7 @@ A platform-wide rebuild must follow this sequence:
 - **Install the exact version** that was running when the backup was taken. Use the backup manifest's recorded Helm values:
 
   ```bash
-  helm upgrade --install gameplane oci://ghcr.io/valgulnecron/gameplane/charts/gameplane \
+  helm upgrade --install gameplane oci://ghcr.io/valgulnecron/charts/gameplane \
     --version 0.2.0-beta.8 \
     --namespace gameplane-system \
     --create-namespace \
@@ -179,7 +180,7 @@ A platform-wide rebuild must follow this sequence:
     -H "Content-Type: application/json" \
     -d '{
       "backupRef": {"name": "world-backup-1"},
-      "targetRef": {"name": "test-server"}
+      "serverRef": {"name": "test-server"}
     }'
   ```
 
@@ -212,7 +213,7 @@ A platform-wide rebuild must follow this sequence:
     -H "Content-Type: application/json" \
     -d '{
       "backupRef": {"name": "world-backup-1"},
-      "targetRef": {"name": "server-1"}
+      "serverRef": {"name": "server-1"}
     }'
   ```
 
@@ -239,9 +240,9 @@ Compare the rebuilt environment to the recovery manifest and run scheduled isola
 <DocsQuickReference
   label="RECOVERY ORDER"
   items={[
-    "01  Release + values + DB + CRDs + Secrets + repositories + DNS/TLS",
-    "02  Rebuild dependencies → matching release → platform state → worlds",
-    "03  Rehearse on schedule; record achieved RPO/RTO and gaps",
+    "Release + values + DB + CRDs + Secrets + repositories + DNS/TLS",
+    "Rebuild dependencies → matching release → platform state → worlds",
+    "Rehearse on schedule; record achieved RPO/RTO and gaps",
   ]}
 />
 

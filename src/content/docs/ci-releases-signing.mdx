@@ -13,8 +13,11 @@ covers: ["CI", "OCI", "Cosign"]
 import DocsCallout from "../../components/docs/DocsCallout.astro";
 import DocsSectionList from "../../components/docs/DocsSectionList.astro";
 import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
 
 Understand the gates from pull request through edge images, tagged releases, Helm publication, and Cosign verification.
+
+<DocsArticleMeta groupId="testing-release" readTime="17 MIN" />
 
 <DocsCallout icon="info" title="Edge channel is beta software">
   The rolling `:edge` channel is test software; production installs should pin a tagged chart and immutable image digests.
@@ -81,7 +84,7 @@ A `v` tag builds and signs images, packages the OCI chart, creates release notes
   ]}
 />
 
-Release images carry Cosign signatures recorded in the public Sigstore Rekor transparency log. Verify any released or edge image with the `cosign.pub` key at the repo root. Pre-rotation releases (v0.2.0-beta.7 and earlier) used the retired Ed25519 key and require `cosign-legacy.pub` with the `--insecure-ignore-tlog=true` flag (see [Key Rotation](../credential-rotation/) for trust continuity).
+Release images carry Cosign signatures recorded in the public Sigstore Rekor transparency log. Verify any released or edge image with the `cosign.pub` key at the repo root. Pre-rotation releases (v0.2.0-beta.7 and earlier) used the retired Ed25519 key and require `cosign-legacy.pub` with the `--insecure-ignore-tlog=true` flag (see [Key Rotation](./credential-rotation/) for trust continuity).
 
 ---
 

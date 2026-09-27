@@ -8,6 +8,7 @@ icon: info
 eyebrow: LIFECYCLE
 readTime: 17 MIN
 covers: ["Retention", "Finalizers", "Cleanup"]
+next: platform-disaster-recovery
 ---
 
 import DocsCallout from "../../components/docs/DocsCallout.astro";
@@ -53,7 +54,7 @@ Before removing anything, export or back up irreplaceable state:
 
 - **Game server worlds and data:** Trigger a final backup for every active GameServer via the Backup CRD or dashboard. Export `spec.storage.data` volumes to external storage if they contain user-created content or mods.
 - **Database:** Export audit logs and user credentials. For SQLite, the PVC `gameplane-api-data` contains `gameplane.db`; for PostgreSQL, dump the database with `pg_dump`.
-- **Module sources and credentials:** Document all `ModuleSource` custom registries and their pull-secret names (usually a `kubernetes.io/dockerconfigjson` Secret). Export the `uploadModuleSource` ConfigMap if it contains custom modules.
+- **Module sources and credentials:** Document all `ModuleSource` custom registries and their pull-secret names (usually a `kubernetes.io/dockerconfigjson` Secret). Note the `uploads` ModuleSource (created when `uploadModuleSource.enabled` is set) and, if it points at a mounted directory via `operator.localModules.{hostPath,existingClaim}`, back up that volume before uninstalling.
 - **OIDC and webhook credentials:** Export `Secret` objects in `gameplane-system` namespace (OIDC client secret, webhook signing keys, etc.). These will be deleted when the namespace is removed.
 - **Cluster registrations:** Document any registered remote `Cluster` CRDs and their kubeconfig Secrets for re-registration or archival.
 
@@ -74,7 +75,7 @@ Quiesce writes and remove controllers and dependencies in an order that allows f
     {
       icon: "info",
       label: "Resolve stuck resources",
-      text: "If any Backup, Restore, or GameServer is stuck with a status condition (e.g., `PVCProvisioningFailed`, `BackupFailed`), resolve via documented controller workflows (check operator logs, retry if transient, or force-delete if orphaned).",
+      text: "If any resource is stuck: a stuck GameServer shows a Ready condition with reason PVCProvisioningFailed; a stuck Backup shows status.phase: Failed (check operator logs, retry if transient, or force-delete if orphaned).",
     },
     {
       icon: "check",
@@ -84,7 +85,7 @@ Quiesce writes and remove controllers and dependencies in an order that allows f
     {
       icon: "info",
       label: "Remove infrastructure layers",
-      text: "Delete RBAC ClusterRoles and ClusterRoleBindings, any custom NetworkPolicy objects in `gameplane-games`, webhook ValidatingWebhookConfigurations / MutatingWebhookConfigurations in `gameplane-system`, Services and Ingress (especially the ingress.host entry and any associated TLS certificates), DNS records (remove CNAME or A records for gameplane.your-domain), and load-balancer Service type (if used) or equivalent.",
+      text: "Delete RBAC ClusterRoles and ClusterRoleBindings, any custom NetworkPolicy objects in `gameplane-games`, Services and Ingress (especially the ingress.host entry and any associated TLS certificates), DNS records (remove CNAME or A records for gameplane.your-domain), and load-balancer Service type (if used) or equivalent.",
     },
   ]}
 />
@@ -111,17 +112,17 @@ Follow this order to allow finalizers to complete:
 
    Quiesce any running GameServers and wait for pods to stop (or delete them forcefully).
 
-3. **Delete GameServers and Backups:** These have finalizers that must complete before removal.
+3. **Delete GameServers and Backups:** GameServers delete immediately (no finalizer); a quiesced Backup (`spec.quiesce: true`) has a finalizer that blocks deletion until the operator sends the matching unquiesce — wait for that to clear before assuming it's stuck.
 
    ```bash
    kubectl delete gameservers -A
    kubectl delete backups -A
    ```
 
-   If a resource is stuck with `DeletionTimestamp` set, check the operator logs for the finalizer handler's error, fix the underlying issue (e.g., orphaned cloud resource), and remove the finalizer manually only as a last resort:
+   If a resource is stuck with `DeletionTimestamp` set, check the operator logs for the finalizer handler's error, fix the underlying issue (e.g., orphaned cloud resource), and remove the finalizer manually only as a last resort (only for Backups with `spec.quiesce: true`):
 
    ```bash
-   kubectl patch gameserver <name> -p '{"metadata":{"finalizers":[]}}' --type merge
+   kubectl patch backup <name> -p '{"metadata":{"finalizers":[]}}' --type merge
    ```
 
 4. **Delete Helm release:** Uninstall the chart. CRDs are **not** deleted automatically (see "CRD retention" below).

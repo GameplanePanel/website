@@ -54,7 +54,7 @@ Label every signal with cluster, namespace, resource UID, and synchronized time 
 
 Configure your cluster's log aggregation system (Kubernetes logging architecture) to collect:
 - API, operator, and agent stdout/stderr from `kubectl logs`
-- Game server logs from the agent's tail stream (available at `/logs/tail` WebSocket endpoint in the dashboard)
+- Game server logs from the agent's tail stream (available via the `/ws/servers/<name>/logs` WebSocket endpoint used by the dashboard's Logs tab)
 
 **Audit trail:**
 
@@ -115,9 +115,9 @@ Bound cardinality, access, redaction, encryption, and cost; preserve evidence be
 <DocsQuickReference
   label="OBSERVABILITY CHECK"
   items={[
-    "01  Metrics + events + component logs + audit with shared identity/time",
-    "02  Every alert → threshold/duration + severity + owner + route + runbook",
-    "03  Test alert delivery, cert expiry, backup/DB failure, evidence export",
+    "Metrics + events + component logs + audit with shared identity/time",
+    "Every alert → threshold/duration + severity + owner + route + runbook",
+    "Test alert delivery, cert expiry, backup/DB failure, evidence export",
   ]}
 />
 

@@ -19,7 +19,7 @@ import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
 
 Build a pinned, reviewable release with explicit security, storage, database, access, backup, and telemetry choices.
 
-<DocsCallout icon="archive" title="Archive the exact chart, image digests, values, and rendered manifests">
+<DocsCallout icon="archive" title="Archive your accepted release">
   Archive the exact chart, image digests, values, and rendered manifests accepted for each environment.
 </DocsCallout>
 
@@ -30,7 +30,7 @@ Pin every artifact and make environment ownership explicit before the first work
 Gameplane's Helm chart is distributed as an OCI artifact on GitHub Container Registry (GHCR). Every release includes pinned component image versions, so locking the chart version locks the software stack:
 
 - **Chart version** pins the operator, API, and web dashboard images.
-- **Optional component images** (audit sidecar, telemetry receiver, sentinel, tunnel clients, MCP server, network capture) are pulled only when enabled.
+- **Optional component images** (audit sidecar, telemetry receiver, sentinel, tunnel clients, MCP server) are pulled only when enabled.
 - **GameServer agent images** are pulled per-server, on-demand, so pre-staging is not required.
 
 Before your first production install, document and approve the release you intend to deploy: the specific chart version (e.g., `0.2.0-beta.8`) and any image tag or pull secret overrides in your values file.

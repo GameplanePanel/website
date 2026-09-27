@@ -11,7 +11,6 @@ covers: ["WebSocket", "Real-time streams", "SSE", "Reconnection", "Permissions"]
 ---
 
 import DocsCallout from "../../components/docs/DocsCallout.astro";
-import DocsSectionList from "../../components/docs/DocsSectionList.astro";
 
 Connect to console, logs, and invalidation events with the correct transport, framing, permission, and reconnect behavior.
 
@@ -42,7 +41,7 @@ The `/events` stream (Server-Sent Events) broadcasts Kubernetes watch notificati
 Sessions, origin rules, namespace, and cluster scope match the REST API; see [REST API Reference](./rest-api-reference/) for session validation and CSRF token requirements.
 
 <DocsCallout icon="info" title="Sessions and CSRF still apply">
-  WebSocket upgrades require a valid session, and adjacent REST mutations (e.g., sending commands while monitoring the console) still require CSRF tokens in the `X-CSRF-Token` header.
+  WebSocket upgrades require a valid session, and adjacent REST mutations (e.g., sending commands while monitoring the console) still require CSRF tokens in the `X-Gameplane-CSRF` header.
 </DocsCallout>
 
 ## Reconnection strategy

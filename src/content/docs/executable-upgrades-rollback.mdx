@@ -20,7 +20,7 @@ Turn release notes into a staged change plan with compatibility gates, migration
 
 <DocsArticleMeta groupId="upgrades" readTime="20 MIN" />
 
-<DocsCallout icon="shield-alert" title="Never assume schema or CRD downgrade is safe.">
+<DocsCallout icon="refresh-cw" title="Never assume schema or CRD downgrade is safe.">
 Use only the release-specific rollback window.
 </DocsCallout>
 
@@ -40,7 +40,7 @@ Capture the entire current state before starting the upgrade:
 
 - **Kubernetes version:** `kubectl version --short`
 - **Helm chart version:** `helm list -n gameplane-system`
-- **Database version:** Check your database schema version (documented in release notes for each version)
+- **Database version:** Query the migration ledger directly: `sqlite3 <db-path> "SELECT version, applied_at FROM schema_migrations ORDER BY version;"` (or the equivalent `psql` query when running with `--db-driver=postgres`)
 - **CRD versions:** `kubectl get crd -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.spec.names.kind}{"\n"}{end}'`
 - **Helm values:** `helm get values gameplane -n gameplane-system > current-values.yaml`
 - **Rendered manifest diff:** `helm diff upgrade gameplane oci://ghcr.io/valgulnecron/charts/gameplane --version <target-version> -n gameplane-system` (requires `helm-diff` plugin)
@@ -70,11 +70,11 @@ Test every core workflow after the upgrade completes:
 - Check audit logs are being recorded.
 - Run at least one complete login → server create → player join → graceful stop cycle.
 
-Roll back only if validation fails and the release-specific downgrade window permits it. Each release notes section (under "Upgrade Notes" in the CHANGELOG) documents the rollback window — typically one or two minor versions backward. If you must rollback:
+Roll back only if validation fails and the release-specific downgrade window permits it. CHANGELOG.md currently documents upgrade-impacting changes only under the "Upgrade Notes" section of `[Unreleased]`; released versions do not yet carry a per-release rollback-window annotation. If you must rollback:
 
 1. Note the last-known-good version before the upgrade.
-2. Check the target release's CHANGELOG for explicit `[Rollback Note]` entries covering schema and CRD compatibility in your source → target → rollback path.
-3. If the path is not explicitly documented, do not attempt rollback; instead, open a GitHub issue or contact the maintainers.
+2. Until a per-release rollback-window convention exists, treat any CRD field removal or required-field addition as rollback-unsafe by default. Confirm compatibility by diffing `operator/api/v1alpha1/*_types.go` between your source and target tags before attempting a downgrade.
+3. If the path is not explicitly safe, do not attempt rollback; instead, open a GitHub issue or contact the maintainers.
 
 <DocsQuickReference
   label="UPGRADE GATE"
@@ -96,7 +96,7 @@ Every release's CHANGELOG includes an "Upgrade Notes" section that documents:
 - **Operator behavior:** Whether the operator has breaking changes (e.g., new required fields, behavior changes on certain CRD values).
 - **Chart-only changes:** Helm value renames or restructures that require manifest diffing.
 
-If the upgrade adds a CRD or modifies CRD schema in a backward-incompatible way (e.g., removing a field), the downgrade window is explicitly noted. For example, if a field is removed in v0.3.0 but the v0.2 operator still reads it, you can safely rollback v0.3.0 → v0.2; if the field is required in v0.3.0 and v0.2 will fail on its absence, the rollback window is closed — you are committed to v0.3.0 and must forward-fix any issues instead.
+If the upgrade adds a CRD or modifies CRD schema in a backward-incompatible way (e.g., removing a field), assess rollback safety by examining the CRD field changes. For example, if a field is removed in v0.3.0 but the v0.2 operator still reads it, you can safely rollback v0.3.0 → v0.2; if the field is required in v0.3.0 and v0.2 will fail on its absence, the rollback window is closed — you are committed to v0.3.0 and must forward-fix any issues instead.
 
 ---
 

@@ -10,7 +10,6 @@ covers: ["REST API", "Routes", "Methods", "Permissions"]
 ---
 
 import DocsCallout from "../../components/docs/DocsCallout.astro";
-import DocsSectionList from "../../components/docs/DocsSectionList.astro";
 
 The Gameplane API is a same-origin HTTP surface that mirrors Kubernetes API semantics. Every request requires a valid session token and CSRF token, respects namespace and cluster scope rules, and enforces fine-grained RBAC permissions.
 
@@ -22,8 +21,8 @@ List or create namespaced GameServer, Backup, and related resources.
 |---|---|---|---|
 | `/servers` | GET · POST | `servers:read/write` | List or create namespaced GameServer resources. |
 | `/backups` | GET · POST | `backups:read/write` | List and start one-shot world backups. |
-| `/restores` | GET · POST | `backups:read/write` | List and initiate restore operations. |
-| `/schedules` | GET · POST | `backups:read/write` | List and manage backup schedules. |
+| `/restores` | GET · POST | `backups:read/restore` | List and initiate restore operations. |
+| `/schedules` | GET · POST | `schedules:read/write` | List and manage backup schedules. |
 | `/modules` | GET | `modules:read` | Browse installed and available module resources. |
 | `/users` | GET · POST | `users:read/manage` | List or invite platform users. |
 
@@ -39,8 +38,8 @@ Trigger server lifecycle operations, manage platform configuration, and audit ac
 | `/servers/{name}:wake` | POST | `servers:write` | Wake a sleeping server (requires wake-on-connect enabled). |
 | `/servers/{name}:clone` | POST | `servers:write` | Create a copy of a server's template and config. |
 | `/servers/{name}:wipe-data` | POST | `servers:write` | Erase a server's game data (requires name confirmation). |
-| `/servers/{name}/files/*` | GET · POST · PUT · DELETE | `servers:write` | Agent-backed file browse and mutation proxy. |
-| `/admin/config` | GET · PATCH | `config:read/manage` | Read or update platform configuration. |
+| `/servers/{name}/files/*` | GET · POST · DELETE | `servers:write` | Agent-backed file browse and mutation proxy. |
+| `/admin/config` | GET · PUT | `config:read/manage` | Read or update platform configuration. |
 | `/admin/audit` | GET | `audit:read` | Paginate the audit log with optional filters. |
 | `/admin/audit/export` | GET | `audit:read` | Export filtered audit evidence as CSV or JSON. |
 
@@ -48,9 +47,9 @@ Trigger server lifecycle operations, manage platform configuration, and audit ac
 
 Every request must include:
 
-1. **Session Token** — obtained via `/auth/login` (local) or `/auth/oidc/{provider}/callback` (SSO). Passed as the `gameplane-session` HttpOnly cookie or the `Authorization: Bearer <token>` header.
+1. **Session Token** — obtained via `/auth/login` (local) or `/auth/oidc/{provider}/callback` (SSO). Passed as the `gameplane_session` HttpOnly cookie.
 
-2. **CSRF Token** — required for mutations (POST, PUT, PATCH, DELETE). Pass via the `X-Gameplane-CSRF` header. The CSRF token is returned on successful login and must be refreshed for every mutating request.
+2. **CSRF Token** — required for mutations (POST, PUT, PATCH, DELETE). Pass via the `X-Gameplane-CSRF` header. The same token must be sent as the X-Gameplane-CSRF header on every mutating request for the life of the session.
 
 3. **Namespace Selector** — passed as `?namespace=<name>` for scoped resources (GameServers, Backups, etc.). Defaults to the user's default namespace if absent. Users can only access namespaces they have been granted permission to.
 
@@ -62,7 +61,7 @@ Every request must include:
 
 ## Error Responses
 
-The API returns standard HTTP status codes and Kubernetes-style error bodies:
+The API returns standard HTTP status codes and plain-text error messages:
 
 - **2xx** — Success
 - **400 Bad Request** — Invalid input, missing required fields, or malformed query parameters
@@ -73,18 +72,7 @@ The API returns standard HTTP status codes and Kubernetes-style error bodies:
 - **429 Too Many Requests** — Rate limit exceeded (per-user and per-IP buckets apply to mutations)
 - **5xx Server Error** — Internal server error or Kubernetes API failure
 
-Error bodies are JSON with `kind: "Status"`, `status: "Failure"`, `reason`, and `message` fields:
-
-```json
-{
-  "apiVersion": "v1",
-  "kind": "Status",
-  "status": "Failure",
-  "reason": "Forbidden",
-  "message": "servers:write on local/default forbidden",
-  "code": 403
-}
-```
+Error responses use `Content-Type: text/plain; charset=utf-8` with a plain-text message body. The HTTP status code carries the semantics.
 
 ## Query Parameters and Filters
 
@@ -119,8 +107,8 @@ curl -H "X-Gameplane-CSRF: $CSRF" \
 ## Rate Limiting
 
 - **Reads** — Unlimited per authenticated session
-- **Writes** — Per-user burst of 6 requests per minute, per-IP burst of 10 requests per minute
-- **Special endpoints** — `/auth/login` is capped at 3 attempts per 5 minutes per IP (Argon2id CPU cost)
+- **Writes** — Per-IP burst of 60 requests, refilling at 60/min (no separate per-user write limit)
+- **Special endpoints** — `/auth/login` applies a per-IP burst of 10 (5/min refill) layered with a per-username burst of 6 (3/min refill); both apply only to login, tuned for Argon2id cost
 
 Hitting the rate limit returns `429 Too Many Requests` with a `Retry-After` header.
 
@@ -129,7 +117,7 @@ Hitting the rate limit returns `429 Too Many Requests` with a `Retry-After` head
 ### List GameServers in a namespace
 
 ```bash
-curl -H "Authorization: Bearer $TOKEN" \
+curl -b "gameplane_session=$SESSION" \
   "https://gameplane.example.com/servers?namespace=production&cluster=local"
 ```
 
@@ -137,7 +125,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 ```bash
 curl -X POST \
-  -H "Authorization: Bearer $TOKEN" \
+  -b "gameplane_session=$SESSION" \
   -H "X-Gameplane-CSRF: $CSRF" \
   -H "Content-Type: application/json" \
   -d @server-manifest.json \
@@ -148,7 +136,7 @@ curl -X POST \
 
 ```bash
 curl -X POST \
-  -H "Authorization: Bearer $TOKEN" \
+  -b "gameplane_session=$SESSION" \
   -H "X-Gameplane-CSRF: $CSRF" \
   "https://gameplane.example.com/servers/my-server:restart?namespace=production"
 ```
@@ -156,7 +144,7 @@ curl -X POST \
 ### Export audit logs filtered by failed requests
 
 ```bash
-curl -H "Authorization: Bearer $TOKEN" \
+curl -b "gameplane_session=$SESSION" \
   "https://gameplane.example.com/admin/audit/export?format=json&status=4xx&status=5xx" \
   -o audit-failures.json
 ```

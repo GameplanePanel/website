@@ -16,15 +16,7 @@ import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
 
 Turn a game image into a validated, installable bundle with metadata, a GameTemplate, documentation, and reproducible OCI content.
 
-<DocsSectionList
-  items={[
-    { icon: "folder", label: "Source layout", text: "Create a stable, DNS-safe module identity and the source files required for humans, validation, and distribution." },
-    { icon: "puzzle", label: "First template", text: "Start with one tested version and only capabilities the game actually supports." },
-    { icon: "package", label: "Build and install", text: "Validate, push to the local registry, wait for source synchronization, install, and prove Module and generated template readiness." },
-  ]}
-/>
-
-<DocsCallout icon="info" title="Mutable source, immutable distribution">
+<DocsCallout icon="package-plus" title="Mutable source, immutable distribution">
   The source directory is editable; the versioned OCI artifact is the immutable distribution unit.
 </DocsCallout>
 
@@ -42,11 +34,13 @@ modules/<name>/
 └── icon.png         # Optional (256×256 recommended)
 ```
 
-Start by declaring your module's identity and display name, game family, version (semver), and minimum Gameplane version. Then create the other required files:
-
-- **Create `module.yaml`, `template.yaml`, and `README.md`.** Use the `gp-module init` scaffolding tool (see below) to generate a compliant skeleton, or copy an existing module and adapt it.
-- **Add a sample GameServer when it improves acceptance testing.** Include a minimal server YAML in `README.md` or as a separate example to show operators how to install your module.
-- **Declare display name, game, summary, version, and minimum Gameplane.** These fields help users find your module in the catalog and understand compatibility.
+<DocsSectionList
+  items={[
+    { icon: "check", label: "Create module.yaml, template.yaml, and README.md", text: "Use the gp-module init scaffolding tool (see below) to generate a compliant skeleton, or copy an existing module and adapt it." },
+    { icon: "check", label: "Add a sample GameServer when it improves acceptance testing", text: "Include a minimal server YAML in `README.md` or as a separate example to show operators how to install your module." },
+    { icon: "check", label: "Declare display name, game, summary, version, and minimum Gameplane", text: "These fields help users find your module in the catalog and understand compatibility." },
+  ]}
+/>
 
 <DocsCallout icon="check" title="Coming in v0.3.0">
   The `gp-module init` CLI scaffolds modules with archetype templates (`steamcmd`, `java`, `generic`) and live DNS-1123 validation. For beta.8, create files manually or adapt an existing module from the submodule's `modules/` directory.
@@ -72,9 +66,13 @@ Start with one tested version and only capabilities the game actually supports.
 
 The `template.yaml` file contains the `GameTemplate` spec that defines how servers are created from your module. Begin minimal and add complexity only after complete lifecycle testing:
 
-- **Declare image, ports, resources, storage, config inputs, and defaults.** Pin your container image to a specific digest (e.g. `ghcr.io/user/game:v1.2@sha256:…`) so updates are intentional, not accidental.
-- **Keep runtime paths under /data aligned with agent behavior.** The in-pod sidecar agent expects game data at a predictable, stable location (e.g., `/data`, `/root/gamedata`, etc.). Document where your game stores worlds, configs, and logs, and mount persistent storage at that path so the agent's file, log, and backup APIs work reliably.
-- **Add versions and capabilities only after complete lifecycle tests.** Test server creation, console access, file uploads, player listing, and graceful shutdown before marking your module as production-ready.
+<DocsSectionList
+  items={[
+    { icon: "check", label: "Declare image, ports, resources, storage, config inputs, and defaults", text: "Pin your container image to a specific digest (e.g. `ghcr.io/user/game:v1.2@sha256:…`) so updates are intentional, not accidental." },
+    { icon: "check", label: "Keep runtime paths under /data aligned with agent behavior", text: "The in-pod sidecar agent expects game data at a predictable, stable location (e.g., `/data`, `/root/gamedata`, etc.). Document where your game stores worlds, configs, and logs, and mount persistent storage at that path so the agent's file, log, and backup APIs work reliably." },
+    { icon: "check", label: "Add versions and capabilities only after complete lifecycle tests", text: "Test server creation, console access, file uploads, player listing, and graceful shutdown before marking your module as production-ready." },
+  ]}
+/>
 
 ### Example template.yaml (minimal)
 
@@ -186,13 +184,13 @@ gametemplate.gameplane.local/minecraft-java-1.20 Ready
 Create a GameServer from your new template:
 
 ```yaml
-apiVersion: gameplane.local/gameserver/v1alpha1
+apiVersion: gameplane.local/v1alpha1
 kind: GameServer
 metadata:
   name: test-server
 spec:
-  template: minecraft-java-1.20
-  replicas: 1
+  templateRef:
+    name: minecraft-java-1.20
 ```
 
 ### 5. Prove readiness

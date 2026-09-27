@@ -5,6 +5,7 @@ section: develop
 group: api-reference
 order: 11
 icon: list
+eyebrow: REFERENCE
 covers: ["Helm chart configuration", "Installation settings", "Production values"]
 ---
 
@@ -63,10 +64,17 @@ Configure local accounts and OIDC single sign-on. Local password-based accounts 
 | `api.oidc.clientID` | string | *(required if enabled)* | OAuth 2.0 Client ID issued by your OIDC provider. |
 | `api.oidc.clientSecretRef` | object | `{name: gameplane-oidc, key: clientSecret}` | Reference to a Kubernetes Secret holding the OAuth client secret. Create the Secret first: `kubectl create secret generic gameplane-oidc --from-literal=clientSecret=<your-secret>`. |
 | `api.oidc.redirectURL` | string | *(empty)* | Explicit OAuth redirect URL. When empty, derived from `ingress.host` (e.g., `https://gameplane.local/auth/oidc/callback`). Override only if your ingress URL differs from the redirect URL your OIDC provider expects. |
+
+<DocsCallout icon="info" title="Coming in v0.3.0">
+The following OIDC fields enable install-time role mapping and customization of the login UI. They are not available in v0.2.0-beta.8 — upgrade to v0.3.0 to use them.
+
+| Key | Type | Default | Description |
+|---|---|---|---|
 | `api.oidc.displayName` | string | `"Single sign-on"` | Label for the OIDC login button shown on the login screen (before authentication). |
 | `api.oidc.groupsClaim` | string | *(empty — defaults to "groups")* | OIDC claim name containing group or role memberships. Examples: `groups`, `roles`, `membership`, `department`. When empty, uses the default claim "groups". |
 | `api.oidc.defaultRole` | string | *(empty — defaults to "viewer")* | Default dashboard role for new OIDC users when no group matches a configured mapping. Accepted: `viewer`, `operator`, `admin`, `deny` (deny = reject login). When empty, defaults to "viewer". |
 | `api.oidc.roleMappings` | object | `{admin: [], operator: [], viewer: []}` | Map OIDC groups to dashboard roles at install/upgrade time. Example: `admin: ["gameplane-admins", "ops-team"]`. DB-managed role overrides (set via dashboard) take precedence and survive Helm upgrades. |
+</DocsCallout>
 
 ## API database and persistence
 
@@ -78,7 +86,7 @@ Configure data persistence, audit logging, and telemetry.
 | `api.db.dsn` | string | `file:/data/gameplane.db?_pragma=journal_mode(WAL)` | Database connection string. SQLite path (only when `driver: sqlite`). For PostgreSQL, use a connection string like `postgres://gameplane:***@postgres/gameplane?sslmode=require`. |
 | `api.storage.size` | string | `2Gi` | Size of the SQLite PersistentVolumeClaim (only when `db.driver: sqlite`). Adjust based on audit log retention and historical data. |
 | `api.storage.storageClassName` | string | *(empty)* | Storage class for the SQLite PVC. When empty, uses the cluster's default storage class. |
-| `api.storage.existingClaim` | string | *(empty)* | Use an existing PersistentVolumeClaim instead of creating one. Leave empty to create a new PVC. When migrating, ensure the existing claim has the `helm.sh/resource-policy: keep` annotation. |
+| `api.storage.existingClaim` | string | *(empty)* | **Coming in v0.3.0** — Use an existing PersistentVolumeClaim instead of creating one. Leave empty to create a new PVC. When migrating, ensure the existing claim has the `helm.sh/resource-policy: keep` annotation. |
 | `api.audit.retentionDays` | integer | `0` | Audit event retention in days. `0` keeps all events indefinitely; set a positive number to prune older records daily. |
 | `api.audit.webhook.url` | string | *(empty)* | Outbound webhook URL for audit events. The API POSTs each event as JSON (best-effort, non-blocking). Point it at a log aggregator, SIEM, or the bundled `audit-syslog-bridge`. |
 
@@ -157,10 +165,6 @@ api:
     clientSecretRef:
       name: gameplane-oidc
       key: clientSecret
-    roleMappings:
-      admin: ["gameplane-admins"]
-      operator: ["gameplane-operators"]
-      viewer: ["gameplane-users"]
 
 networkPolicies:
   enabled: true

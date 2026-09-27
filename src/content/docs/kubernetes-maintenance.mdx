@@ -16,7 +16,7 @@ import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
 
 Cluster maintenance involves draining nodes for patches, version upgrades, or hardware replacement. This page covers the safe sequence: inventory your workload, cordon the node, migrate or stop servers, drain gracefully, upgrade the node, then return to service.
 
-<DocsCallout icon="info" title="Portability depends on storage topology.">
+<DocsCallout icon="info" title="Portability isn't automatic">
 Portability depends on storage topology, GPU and port constraints, affinity, and real spare capacity—not just a Ready destination node.
 </DocsCallout>
 
@@ -87,9 +87,8 @@ kubectl cordon <node-name>
 
 Next, handle the GameServers running on that node. The strategy depends on your storage:
 
-- **Servers with remote storage (NFS, EBS, cloud-managed PVC):** The Pod can restart on another node. Trigger a graceful restart by scaling down the GameServer (`spec.replicas: 0`), or let the drain process evict it.
+- **Servers with remote storage (NFS, EBS, cloud-managed PVC):** The Pod can restart on another node. Trigger a graceful stop by setting `spec.suspend: true` on the GameServer (scales its StatefulSet to zero while preserving data), or let the drain process evict it.
 - **Servers with local storage:** Stop the Pod before draining, save its world/data to remote backup, and plan to restart it after the node returns.
-- **Multi-replica StatefulSets or Deployments:** Delete Pods from the node (via `kubectl delete pod`); Kubernetes will re-schedule survivors on other Ready nodes.
 
 ### Drain the node
 

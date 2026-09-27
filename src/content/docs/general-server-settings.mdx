@@ -13,13 +13,10 @@ covers: ["Identity", "Description", "Image"]
 import DocsCallout from "../../components/docs/DocsCallout.astro";
 import DocsSectionList from "../../components/docs/DocsSectionList.astro";
 import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
-import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
-
-<DocsArticleMeta groupId="servers-config" readTime="9 MIN" />
 
 Manage stable identity, useful operator metadata, and image selection while understanding which values require replacement.
 
-<DocsCallout icon="info" title="Image overrides are explicit exceptions">
+<DocsCallout icon="package" title="Image overrides are explicit exceptions">
   An image override bypasses the template default. Pin it only for a tested exception with a rollback path.
 </DocsCallout>
 
@@ -85,9 +82,3 @@ When you leave the image field blank, the server inherits the image selected by 
     "03  Watch pull events, then verify game, files, ports, and backups",
   ]}
 />
-
----
-
-## Next guide
-
-[File manager](./file-manager/)

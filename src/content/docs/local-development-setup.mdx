@@ -20,7 +20,7 @@ import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
 
 Build Gameplane on a host or devcontainer, then run the full stack against kind or a selected remote cluster.
 
-<DocsCallout icon="info" title="Desired state vs. observed state">
+<DocsCallout icon="blocks" title="Desired state vs. observed state">
 Desired state belongs in CRD spec; observed state and conditions belong to controllers.
 </DocsCallout>
 
@@ -67,7 +67,7 @@ The Make targets create local infrastructure, build and load images, push module
     {
       icon: "check",
       label: "make dev-down",
-      text: "Removes kind; CLUSTER=remote uses a reachable registry.",
+      text: "Removes kind; CLUSTER=remote runs `helm uninstall` instead.",
     },
   ]}
 />
