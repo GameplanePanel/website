@@ -1,0 +1,93 @@
+---
+title: "Cluster and storage operations"
+description: "Read Kubernetes health in Gameplane, plan capacity, and choose storage behavior that supports expansion, placement, and disaster recovery."
+section: platform
+group: cluster-storage
+order: 1
+icon: boxeses
+eyebrow: PLATFORM
+readTime: 13 MIN
+covers: ["Nodes", "Storage", "Capacity"]
+next: users-auth-rbac
+---
+
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+
+<DocsArticleMeta groupId="cluster-storage" readTime="13 MIN" />
+
+Read Kubernetes health in Gameplane, plan capacity, and choose storage behavior that supports expansion, placement, and disaster recovery.
+
+<DocsCallout icon="shield-alert" title="Gameplane reports cluster health; Kubernetes remains the source of truth.">
+  Node status, StorageClass capabilities, and capacity metrics come from the Kubernetes API. Gameplane surfaces observability; your cluster configuration, hardware, and storage drivers determine what is possible.
+</DocsCallout>
+
+<DocsSectionList
+  items={[
+    { icon: "activity", label: "Cluster preflight", text: "Verify Kubernetes and Helm versions, ready nodes, and required controllers." },
+    { icon: "hard-drive", label: "Persistent storage", text: "Match StorageClass capabilities to game world data durability and expansion needs." },
+    { icon: "network", label: "Placement & multi-node", text: "Plan pod scheduling with affinity rules, tolerations, and resource requests." },
+  ]}
+/>
+
+## Cluster preflight and health
+
+Confirm supported Kubernetes versions, ready nodes, allocatable capacity, required controllers, and namespace access.
+
+- **Check node readiness and pressure before blaming a server workload.** Gameplane surfaces node conditions (`NotReady`, `MemoryPressure`, `DiskPressure`, `PIDPressure`) in the Cluster Operations dashboard; resolve node-level issues first. If a GameServer pod fails to schedule, check node allocatable resources (CPU, memory, ephemeral storage) via `kubectl describe node`.
+- **Reserve headroom for the operator, agents, ingress, and backup jobs.** The operator and API each request 100m CPU and 64Mi memory (with limits of 500m CPU and 256Mi memory). Agent sidecars in game pods also require CPU and memory; consult the agent image documentation for current resource requests. Backup and restore jobs are bursty; reserve a node or memory ceiling for their temporary pods. A single underprovisioned node can stall the entire cluster.
+- **Enable cluster operations only for administrators who need them.** The Cluster Operations screen (node details, health checks, remediation hints) is gated to `admin` and `operator` roles. Restrict cluster access to users who troubleshoot infrastructure, not those who only manage game servers.
+
+**Kubernetes and Helm versions:** Gameplane requires Kubernetes 1.28+ and Helm 3.13+. Check your cluster's version:
+
+```bash
+kubectl version --short
+helm version --short
+```
+
+If your cluster is older, upgrade it before installing or upgrading Gameplane. Consult your Kubernetes distribution's documentation (k3s, EKS, GKE, AKS) for upgrade steps.
+
+## Persistent storage
+
+Match access modes, reclaim policy, expansion, topology, and backup strategy to the game's world data.
+
+- **Use a default StorageClass or select one explicitly during creation.** Gameplane can apply an install-time default (Helm value `operator.gameDataStorage.storageClassName`) that applies to all GameServers where neither the GameTemplate nor GameServer-level config overrides it. If no default is set, the cluster's default StorageClass is used. Verify one exists and matches your needs (e.g., SSD for high-IOPS games, networked storage for multi-pod backups).
+- **Confirm `allowVolumeExpansion` before increasing a server PVC.** Game worlds grow; if you plan to increase PVC size later, ensure the StorageClass allows expansion. Check with `kubectl get storageclass -o wide` — the `ALLOWVOLUMEEXPANSION` column should be `true`. You can edit a GameServer's `spec.storage.capacity` to trigger a resize (the Kubernetes CSI driver and underlying storage backend must support it).
+- **Understand whether deletion retains or removes the underlying volume.** StorageClass `reclaimPolicy` is `Delete` (volume deleted on PVC deletion) or `Retain` (volume kept for manual recovery). For production game servers, consider `Retain` to preserve world data even if a GameServer CRD is deleted. Consult your storage provider's documentation on reclaim semantics.
+
+**Backup and storage lifecycle:** Backups are created on-demand or via schedule; they are stored in a backup destination (S3, Azure Blob, local restic repository, etc.), not on the PVC. Restoration creates a new GameServer with a new PVC and restores world data from the backup; the original PVC remains untouched until explicitly deleted.
+
+## Placement and multi-node fleets
+
+Use scheduler defaults first, then add affinity, tolerations, GPU selectors, or pinning only for a clear constraint.
+
+Start with Kubernetes' built-in scheduler — it balances pods across nodes, respects resource requests, and schedules based on node selectors and tolerations. Only add affinity rules if you have a hard constraint (e.g., "all game pods for server X must run on the same node" or "high-memory servers must use nodes with NVMe").
+
+**Affinity:** Define pod affinity to co-locate servers on the same node (cheaper networking, lower latency) or spread them across different zones (redundancy). Affinity is a soft preference (`preferredDuringSchedulingIgnoredDuringExecution`) or hard requirement (`requiredDuringSchedulingIgnoredDuringExecution`). Hard affinity can starve other workloads if not carefully scoped.
+
+**Tolerations and taints:** If a node has a taint (e.g., `dedicated=game-servers:NoSchedule`), game pods need a matching toleration to schedule on it. Taints are useful for reserving nodes for a specific workload type.
+
+**GPU and resource selectors:** If a game template uses GPU (e.g., for rendering or simulation), add a node selector or request the GPU resource in the template's `spec.resources.limits` and `spec.resources.requests`. Gameplane will schedule the pod on a node with available GPU capacity.
+
+**Affinity best practice:** In a multi-node fleet, avoid hard affinity requirements on individual servers — let the scheduler spread pods to maximize cluster resilience. Use soft affinity (preferred) for co-location where latency matters.
+
+<DocsQuickReference
+  label="CLUSTER PREFLIGHT"
+  items={[
+    "01  Kubernetes and Helm supported; nodes Ready; DNS healthy",
+    "02  StorageClass present; expansion and reclaim policy understood",
+    "03  Ingress, certificates, load balancer, and backup destination tested",
+  ]}
+/>
+
+---
+
+## Related guides
+
+- [Multi-cluster Topology](./multi-cluster/) — register remote Kubernetes clusters and distribute workloads across them
+- [High Availability](./high-availability/) — replicate the control plane and database for production resilience
+- [Kubernetes Maintenance](./kubernetes-maintenance/) — plan node upgrades and cluster patches
+- [Database Configuration & Lifecycle](./database-configuration/) — configure SQLite or PostgreSQL for the API
+- [Backups & Recovery](./backups-recovery/) — create and restore game world snapshots

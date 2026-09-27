@@ -1,0 +1,317 @@
+---
+title: Air-gapped and private-registry installation
+description: Mirror every required artifact and trust root, then install and upgrade without hidden public-network dependencies.
+section: platform
+group: cluster-storage
+order: 9
+icon: shield-off
+eyebrow: INSTALL
+readTime: 20 MIN
+covers: ["Mirrors", "Signatures", "Offline"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
+
+<DocsArticleMeta groupId="cluster-storage" readTime="20 MIN" />
+
+Mirror every required artifact and trust root, then install and upgrade without hidden public-network dependencies.
+
+<DocsCallout icon="shield-alert" title="Offline install acceptance criteria">
+An offline install is accepted only when rendered manifests contain no public endpoint or mutable tag. Render once and validate before disconnecting from the public internet.
+</DocsCallout>
+
+<DocsSectionList
+  items={[
+    {
+      icon: "archive",
+      label: "Release bundle",
+      text: "Inventory, verify, and mirror all artifacts by digest before entering the restricted environment.",
+    },
+    {
+      icon: "hard-drive",
+      label: "Restricted cluster",
+      text: "Provide registry trust, pull credentials, DNS, proxy rules, storage, edge, identity, database, backup, and observability locally.",
+    },
+    {
+      icon: "shield-check",
+      label: "Isolation test",
+      text: "Render and scan offline, then test install, module sync, GameServer creation, backup, upgrade, and rollback with egress blocked.",
+    },
+  ]}
+/>
+
+## Release bundle
+
+Inventory, verify, and mirror all artifacts by digest before entering the restricted environment.
+
+### What to mirror
+
+Collect **all of the following by digest** (immutable hash references, not mutable tags):
+
+- **Helm chart** — `oci://ghcr.io/valgulnecron/charts/gameplane:<version>` and its SBOMs (Software Bill of Materials)
+- **Container images** — the four mandatory images:
+  - `ghcr.io/valgulnecron/gameplane/operator:<version>`
+  - `ghcr.io/valgulnecron/gameplane/api:<version>`
+  - `ghcr.io/valgulnecron/gameplane/web:<version>`
+  - `ghcr.io/valgulnecron/gameplane/agent:<version>`
+- **Optional images** (if enabled in values) — pulled per-feature:
+  - `busybox` (via `operator.configInitImage`, defaults to Docker Hub)
+  - `restic/restic` (via `operator.resticImage`, defaults to Docker Hub)
+  - `ghcr.io/valgulnecron/gameplane/sentinel` (wake-on-connect, optional)
+  - `ghcr.io/valgulnecron/gameplane/capture-sidecar` (packet capture, optional)
+  - `ghcr.io/valgulnecron/gameplane/audit-syslog-bridge` (audit relay, optional)
+  - `ghcr.io/valgulnecron/gameplane/telemetry-receiver` (usage metrics, optional)
+  - `ghcr.io/valgulnecron/gameplane/mcp-server` (AI integration, optional)
+- **Game modules** — all bundles from `ghcr.io/valgulnecron/gameplane-modules`, versioned per your module source config
+- **CRD manifests** — the nine CRD schemas (bundled in the chart)
+- **Cosign public keys** — `cosign.pub` (current key, ECDSA P-256) and `cosign-legacy.pub` (pre-rotation, Ed25519)
+- **Signatures** — Cosign signatures (recorded in Rekor for v0.2.0-beta.8 onward) and SBOMs, available as separate OCI artifacts in the same registry namespace
+
+### Verify by digest
+
+Every image and the chart are signed with cosign. Before mirroring, verify the signature with the current key:
+
+```sh
+# Verify operator image
+cosign verify --key cosign.pub \
+  ghcr.io/valgulnecron/gameplane/operator:0.2.0-beta.8
+
+# Verify chart
+cosign verify --key cosign.pub \
+  ghcr.io/valgulnecron/charts/gameplane:0.2.0-beta.8
+
+# Game modules are signed the same way
+cosign verify --key cosign.pub \
+  ghcr.io/valgulnecron/gameplane-modules/minecraft:1.20.4
+```
+
+Extract the digest from the verified signature and record it. On pre-rotation releases (v0.2.0-beta.7 and earlier), use `cosign-legacy.pub` with `--insecure-ignore-tlog=true` instead.
+
+### Mirror to internal registry
+
+Use `crane` (Google's OCI tool) or your registry vendor's mirror command to copy artifacts by digest to your approved internal registry. For example, with `crane`:
+
+```sh
+# Mirror operator image to private registry
+crane copy \
+  ghcr.io/valgulnecron/gameplane/operator:0.2.0-beta.8 \
+  registry.internal.corp/gameplane/operator:0.2.0-beta.8
+
+# Mirror Helm chart
+crane copy \
+  ghcr.io/valgulnecron/charts/gameplane:0.2.0-beta.8 \
+  registry.internal.corp/gameplane/charts-gameplane:0.2.0-beta.8
+```
+
+Mirrors must preserve the digest — verify the copied artifacts have the same digest as the source:
+
+```sh
+crane digest ghcr.io/valgulnecron/gameplane/operator:0.2.0-beta.8
+crane digest registry.internal.corp/gameplane/operator:0.2.0-beta.8
+# Both must print the same sha256:...
+```
+
+### Package the bundle
+
+Bundle everything in a single archive for transport to the air-gapped environment:
+
+- Verified Helm values file (with your customizations, e.g., ingress hostname, storage class)
+- Cosign public keys (plaintext, append to values)
+- Certificate files (CA cert, domain certs if using TLS)
+- Rollback bundle (previous release artifacts, if upgrading an existing install)
+- Offline-rendered manifests and notes (see **Prove isolation** below)
+
+## Prepare the restricted cluster
+
+Provide registry trust, pull credentials, DNS, proxy rules, storage, edge, identity, database, backup, and observability locally.
+
+### Configure registry mirrors and CA trust
+
+Kubernetes needs to:
+1. Reach your internal registry (DNS entry or /etc/hosts)
+2. Trust its TLS certificate (if self-signed or private CA)
+3. Authenticate to it (ImagePullSecret)
+
+#### Private CA (optional, if using self-signed certs)
+
+Add the CA certificate to every node's trusted store:
+
+```sh
+# On each node
+sudo cp ca-cert.pem /etc/pki/ca-trust/source/anchors/
+sudo update-ca-trust
+
+# Verify containerd/Docker sees it
+sudo crictl config get runtime
+
+# For containerd, also add to /etc/containerd/config.toml
+[plugins."io.containerd.grpc.v1.cri".registry.configs."registry.internal.corp".tls]
+  ca_file = "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem"
+```
+
+#### ImagePullSecret
+
+Create a Kubernetes secret with your registry credentials, then reference it in the Helm chart:
+
+```sh
+kubectl create secret docker-registry registry-creds \
+  -n gameplane-system \
+  --docker-server=registry.internal.corp \
+  --docker-username=<user> \
+  --docker-password=<password> \
+  --docker-email=ops@example.corp
+```
+
+Configure Helm to use it:
+
+```sh
+helm upgrade --install gameplane oci://registry.internal.corp/gameplane/charts-gameplane \
+  --version 0.2.0-beta.8 \
+  --namespace gameplane-system --create-namespace \
+  --set image.pullSecrets[0].name=registry-creds
+```
+
+### Rewrite image references (keep digests)
+
+For every image in the chart values, rewrite the registry hostname but **never change the digest**. For example:
+
+```yaml
+# Default
+image:
+  registry: ghcr.io/valgulnecron
+  tag: "0.2.0-beta.8"
+
+# Rewritten for internal registry (same tag, different registry)
+image:
+  registry: registry.internal.corp/gameplane
+  tag: "0.2.0-beta.8"
+
+# Override optional image pulls
+operator:
+  configInitImage: registry.internal.corp/busybox  # instead of busybox
+  resticImage: registry.internal.corp/restic:latest  # instead of restic/restic
+  sentinelImage: registry.internal.corp/gameplane/sentinel:0.2.0-beta.8
+```
+
+### Pre-provision dependencies
+
+Every service Gameplane uses must be available locally. If not already running, provide:
+
+- **Kubernetes 1.28+** with a default StorageClass
+- **Ingress controller** (nginx, ALB, etc.) and cert-manager (if using TLS)
+- **DNS** for `ingress.host` and your internal registry
+- **Database** (SQLite is bundled and runs in-cluster; PostgreSQL is experimental)
+- **Backup repository** (S3-compatible, NFS, or local Restic-backed storage)
+- **Observability** (Prometheus, Grafana, Loki if using `serviceMonitors.enabled`)
+- **OIDC provider** (Keycloak, Authentik, etc., if using identity federation)
+- **Network egress rules** (allow game pods to reach game-specific registries if modules need external pulls)
+
+## Prove isolation
+
+Render and scan offline, then test install, module sync, GameServer creation, backup, upgrade, and rollback with egress blocked.
+
+### Render offline
+
+Before disconnecting from the public internet, render the final manifest to confirm no hardcoded public endpoints remain:
+
+```sh
+helm template gameplane oci://registry.internal.corp/gameplane/charts-gameplane \
+  --version 0.2.0-beta.8 \
+  --namespace gameplane-system \
+  -f values-offline.yaml \
+  > manifests.yaml
+
+# Scan for public hosts (should find none)
+grep -E "ghcr\.io|docker\.io|gcr\.io|quay\.io" manifests.yaml && echo "FAIL: public registry found" || echo "PASS: no public registries"
+
+# Check for mutable tags (should find none)
+grep -E "latest|edge|main|master|:$" manifests.yaml && echo "FAIL: mutable tag found" || echo "PASS: no mutable tags"
+```
+
+### Install on the air-gapped cluster
+
+Apply the rendered manifest or use Helm with your internal registry:
+
+```sh
+helm upgrade --install gameplane oci://registry.internal.corp/gameplane/charts-gameplane \
+  --version 0.2.0-beta.8 \
+  --namespace gameplane-system --create-namespace \
+  -f values-offline.yaml
+```
+
+Wait for rollout:
+
+```sh
+kubectl rollout status -n gameplane-system deploy/gameplane-api
+kubectl rollout status -n gameplane-system deploy/gameplane-web
+```
+
+### Verify module sync
+
+Confirm the operator can reach your internal ModuleSource and sync game bundles:
+
+```sh
+# Check ModuleSource status
+kubectl get modulesources -A
+
+# Watch for Synced=True
+kubectl describe modulesource -n gameplane-system default
+
+# List modules available in the dashboard
+kubectl get modules -A
+```
+
+### Test GameServer creation and lifecycle
+
+From the dashboard:
+1. Create a GameServer (e.g., Minecraft vanilla)
+2. Wait for Running phase
+3. Open console and verify connectivity
+4. Test `players` and `save` commands via RCON
+5. Stop and restart the server
+6. Verify data persisted on the PVC
+
+### Test backup and restore
+
+Create a backup, verify it lands in your local repository, then restore it:
+
+```sh
+# Create a backup via the dashboard or API
+curl -X POST https://gameplane.example/api/gameservers/default/my-server/backups \
+  -H "X-Gameplane-CSRF: <token>" --cookie "session=<cookie>"
+
+# Check backup phase
+kubectl get backup -n default
+
+# Restore (via dashboard or API)
+curl -X POST https://gameplane.example/api/gameservers/default/my-server/restore \
+  -d '{"backupID":"<id>"}' -H "X-Gameplane-CSRF: <token>"
+```
+
+### Test upgrade
+
+Download the next release bundle (same process), mirror it, and upgrade:
+
+```sh
+helm upgrade gameplane oci://registry.internal.corp/gameplane/charts-gameplane \
+  --version 0.3.0 \
+  --namespace gameplane-system
+```
+
+Confirm the operator and API pods roll with the new image digest, and re-run GameServer tests above.
+
+### Test with egress fully blocked
+
+If possible, disconnect the cluster from the public internet (or block all egress via NetworkPolicy) and repeat the above tests to confirm every artifact is truly local. A 404 or timeout on any pull request confirms you missed an image.
+
+<DocsQuickReference
+  label="OFFLINE ACCEPTANCE"
+  items={[
+    "01  Mirror chart + images + modules + signatures + SBOMs by digest",
+    "02  Render offline; reject public hosts and mutable tags",
+    "03  Test install, server, backup, upgrade, rollback with egress blocked",
+  ]}
+/>

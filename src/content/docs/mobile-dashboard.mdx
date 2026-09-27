@@ -1,0 +1,81 @@
+---
+title: Using the Mobile Dashboard
+description: Triage the fleet from compact cards and navigation while recognizing when a detailed task requires desktop.
+section: start-here
+order: 6
+icon: gamepad-2
+eyebrow: MOBILE
+readTime: 7 MIN
+covers: ["Mobile", "Triage", "Navigation"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+
+Gameplane works on mobile devices. The mobile dashboard prioritizes triage and navigation over dense forms, raw logs, and destructive operations — use desktop for those tasks.
+
+<DocsCallout icon="gamepad-2" title="Mobile is for triage and navigation">
+  Use desktop for dense forms, raw logs, credentials, confirmations, restores, and irreversible actions.
+</DocsCallout>
+
+## Read and search the fleet
+
+Mobile cards summarize server identity, endpoint, game, state, players, and memory for quick triage.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "search",
+      label: "Search by name and confirm endpoint and game",
+      text: "The search box filters cards by server name.",
+    },
+    {
+      icon: "activity",
+      label: "Distinguish Running, Starting, and CrashLoop responses",
+      text: "Status pills show the current phase.",
+    },
+    {
+      icon: "terminal",
+      label: "Open desktop Events or logs for degraded state",
+      text: "Tap a card to open the server detail view.",
+    },
+  ]}
+/>
+
+## Use the navigation drawer
+
+Confirm instance, cluster, destination, signed-in user, and role before following a link or action.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "layout-dashboard",
+      label: "Navigate Dashboard, Servers, Modules, Backups, and admin areas",
+      text: "The drawer lists all primary sections.",
+    },
+    {
+      icon: "users",
+      label: "The profile footer confirms identity and role",
+      text: "User name and role are shown at the bottom of the drawer.",
+    },
+    {
+      icon: "chevron-left",
+      label: "Close the drawer and re-check cluster context after navigation",
+      text: "Swipe or tap the back area to dismiss the drawer.",
+    },
+  ]}
+/>
+
+## Know the boundary
+
+Current mobile is designed for triage and navigation, not console, files, configuration, restore, or danger-zone work. These workflows require the desktop dashboard to ensure safe operation.
+
+<DocsQuickReference
+  label="MOBILE USE"
+  items={[
+    "01  Search cards; confirm server, endpoint, game, state, players, memory",
+    "02  Drawer confirms instance, destination, user, and role",
+    "03  Mobile = triage; desktop = detailed, credentialed, destructive",
+  ]}
+/>

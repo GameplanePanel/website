@@ -1,0 +1,143 @@
+---
+title: Upload a Module
+description: Publish a local module bundle into an upload source, validate synchronization, and install the exact version safely.
+section: develop
+group: modules-sources
+order: 7
+icon: upload
+eyebrow: EXTEND
+readTime: 13 MIN
+covers: ["Upload source", "Digest", "Canary"]
+next: mod-registry-credentials
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
+
+<DocsArticleMeta groupId="modules-sources" readTime="13 MIN" />
+
+Publish a local module bundle into an upload source, validate synchronization, and install the exact version safely.
+
+<DocsCallout icon="shield-alert" title="Module bundles are executable infrastructure content">
+  Reject an unexpected digest or policy state. Verify provenance before canary installation.
+</DocsCallout>
+
+<DocsSectionList
+  items={[
+    { icon: "folder-archive", label: "Upload Source", text: "A ModuleSource of type 'upload' that accepts local archive files." },
+    { icon: "hash", label: "Digest Pinning", text: "Exact content hash to defeat tag movement and ensure reproducible installs." },
+    { icon: "check", label: "Canary Testing", text: "Install the exact version first, test every declared capability, before production." },
+  ]}
+/>
+
+## Prepare source and bundle
+
+Only an **Upload ModuleSource** accepts a local archive; validate the bundle before it leaves authoring.
+
+Before uploading, ensure:
+
+1. **Configure at least one source of type Upload.** An Upload ModuleSource of `type: upload` stores bundles as labeled ConfigMaps in the operator namespace. No external registry or git repository is required. Check with your cluster admin that an upload source exists; the default is named `uploads` if the cluster was installed with standard Helm defaults.
+
+2. **Package metadata, template, assets, schema, and version as `.tar.gz`.** The bundle must contain:
+   - `module.yaml` — module metadata (name, displayName, version semver, game family, categories)
+   - `template.yaml` — GameTemplate spec (no metadata.name required; the Module resource will name it)
+   - `README.md` — optional documentation rendered in the catalog detail view
+   - `icon.png` — optional, 256×256 recommended
+   
+   Use the [gp-module CLI](./module-authoring/) or the web dashboard Module Builder (Modules → Create module → Step 3) to generate the bundle. Both enforce:
+   - `version` is valid semver (e.g., `1.0.0`, not `1.0` or `latest`)
+   - `metadata.name` in template.yaml is DNS-1123 compliant
+   - icon is ≤512 KiB, bundle is ≤900 KiB (upload handler limit)
+
+3. **Validate identity, semver, capabilities, images, and supported versions.** Run offline validation (no cluster access required) before uploading:
+   ```sh
+   gp-module validate path/to/bundle --strict
+   ```
+   Fix any diagnostics; the bundle's identity and contents must match what the operator will load after sync.
+
+## Upload and synchronize
+
+Choose the upload source and archive, then verify catalog identity and provenance after synchronization.
+
+1. **Open Modules → Upload module and select the target source.** In the Gameplane web dashboard:
+   - Navigate to **Modules** in the main navigation.
+   - Click **"Upload module"** in the top-right header actions.
+   - Select the target Upload ModuleSource from the dropdown (e.g., `uploads`).
+   - Choose the validated `.tar.gz` bundle from your local filesystem.
+   - Click **Upload** to POST the bundle to the API.
+
+2. **Wait for sync and locate the exact name and version.** The operator's ModuleSource controller re-indexes uploaded bundles on a configurable interval (default 1 hour; set via Helm `uploadModuleSource.refreshInterval`). After sync:
+   - The bundle is stored as a labeled ConfigMap (`gameplane.local/module-upload=true`) in the operator namespace.
+   - The ModuleSource's catalog is refreshed to include the new module.
+   - The dashboard Modules list shows the new entry with name and version matching `module.yaml`.
+
+3. **Confirm source, digest, verification, policy, and capability summary.** After sync completes, click the module in the catalog to view its detail drawer:
+   - **Name & Version**: matches `module.yaml` exactly
+   - **Source**: the upload source name
+   - **Digest**: the exact SHA-256 hash of the bundle content (not an OCI tag digest, but a content-based hash)
+   - **Verification**: whether the bundle was signed and signature validation passed (optional; signing is done at publish time, not required for upload)
+   - **Policy**: any capability or runtime restrictions enforced by the operator
+   - **Capabilities**: list of features the template declares (console modes, ports, storage, env var schema, etc.)
+
+## Install, canary, and replace
+
+Install the exact version, test every declared capability, and publish a new version instead of mutating a released archive.
+
+Once sync is complete and you have verified the module details:
+
+1. **Install the exact version.** Create a Module resource (or use the dashboard "Install" button on the module detail) that explicitly pins:
+   ```yaml
+   apiVersion: gameplane.local/v1alpha1
+   kind: Module
+   metadata:
+     name: my-game-server
+     namespace: gameplane-servers
+   spec:
+     source:
+       name: uploads
+     name: my-module-name           # matches module.yaml
+     version: 1.0.0                 # exact semver to pin
+     digest: sha256:deadbeef...     # exact content hash to defeat tag movement
+   ```
+   The operator reconciles the Module resource by:
+   - Pulling the bundle from the upload source
+   - Verifying the digest matches the pinned value (fails if moved/mutated)
+   - Materializing a GameTemplate in the cluster with the pinned version
+   - Creating a game server using the template
+
+2. **Test every declared capability.** Before rolling out to production, run through:
+   - Console connect (RCON, PTY, WebSocket, telnet — whatever the template declares)
+   - Port mappings (ensure all advertised game ports are reachable)
+   - Environment variable injection and defaults
+   - Storage volume mount paths and size scaling
+   - Lifecycle probes (startup, readiness, liveness) if configured
+   
+   Document any failures; if found, roll back the server and investigate the template (not the bundle itself — the bundle was validated offline).
+
+3. **Publish a new version instead of mutating a released archive.** Upload sources store bundles immutably by digest. If you discover a bug or need to iterate:
+   - Do **not** re-upload the same version with different content (the digest will change and the pinned Module will fail)
+   - Increment the version in `module.yaml` (e.g., `1.0.0` → `1.0.1`)
+   - Revalidate the updated bundle offline
+   - Upload the new bundle as a separate `.tar.gz`
+   - Create a new Module resource with the new version and digest
+   - Canary the new version in parallel with the old (use different `metadata.name` values to create both servers side-by-side)
+   - Once canary passes, shift traffic to the new version and retire old servers
+
+<DocsQuickReference
+  label="UPLOAD FLOW"
+  items={[
+    "01  Upload ModuleSource + validated .tar.gz bundle",
+    "02  Verify name, version, source, digest, policy, capabilities after sync",
+    "03  Install exact version → canary all capabilities → keep rollback release",
+  ]}
+/>
+
+---
+
+## See also
+
+- [Module Authoring](./module-authoring/) — author, scaffold, and validate modules end-to-end
+- [Test, Publish & Sign Modules](./test-publish-sign-modules/) — publish to OCI registries and sign with cosign
+- [Mod Registry Credentials](./mod-registry-credentials/) — configure external module sources (OCI, git, http, local)

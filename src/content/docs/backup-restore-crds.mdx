@@ -1,0 +1,269 @@
+---
+title: Backup & Restore CRDs
+description: Model recoverable snapshots, recurring policy, destinations, retention, and restore targets through declarative resources.
+section: develop
+group: api-reference
+order: 5
+icon: archive-restore
+eyebrow: REFERENCE
+readTime: 12 MIN
+covers: ["Backup CRD", "BackupSchedule CRD", "Restore CRD", "Retention policies", "Status conditions"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+
+The Backup, BackupSchedule, and Restore CRDs automate server data protection. Backup captures a one-shot snapshot; BackupSchedule runs recurring backups with retention policy; Restore recovers data into new or existing servers.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "download",
+      label: "Backup",
+      text: "One-shot snapshot of a GameServer's data volume (restic or CSI volume-snapshot).",
+    },
+    {
+      icon: "history",
+      label: "BackupSchedule",
+      text: "Cron policy, repository credentials, and retention rule that creates Backups over time.",
+    },
+    {
+      icon: "refresh-cw",
+      label: "Restore",
+      text: "Recovers a completed Backup's snapshot into a new or existing GameServer.",
+    },
+  ]}
+/>
+
+## Backup and schedule intent
+
+Backup specifies the source server and repository; BackupSchedule adds a cron schedule and retention pruning policy.
+
+| Field / Kind | Type | Default | Description |
+|---|---|---|---|
+| `Backup.spec.serverRef` | string | required | Source GameServer name in the same namespace. |
+| `Backup.spec.repoRef` | object | required (restic only) | Secret reference to repository URL and credentials. Required for restic-snapshot strategy; omit for volume-snapshot (CSI) backups. |
+| `Backup.spec.strategy` | enum | restic-snapshot | `"restic-snapshot"` (default) captures via restic CLI; `"volume-snapshot"` uses CSI VolumeSnapshot instead. |
+| `Backup.spec.quiesce` | bool | true | Pause game writes before snapshot (via RCON or game-specific hook). Requires agent support. |
+| `Backup.spec.volumeSnapshotClassName` | string | — | CSI VolumeSnapshotClass name when strategy is `volume-snapshot`. Empty selects the cluster default. |
+| `Backup.spec.tags` | []string | — | Optional labels attached to restic snapshots for filtering (restic-snapshot only). |
+| `BackupSchedule.spec.schedule` | string | required | Cron expression (5 fields, optional 6th for seconds). Cluster timezone applies. |
+| `BackupSchedule.spec.retention` | object | — | Retention policy: `keepLast`, `keepHourly`, `keepDaily`, `keepWeekly`, `keepMonthly`, `keepYearly`. All optional; if unset, all snapshots are kept. |
+| `BackupSchedule.spec.suspend` | bool | false | Pause the schedule without deleting it. |
+| `BackupSchedule.spec.concurrencyPolicy` | enum | Forbid | `"Allow"`, `"Forbid"` (default), or `"Replace"` when a backup is due but the previous one is still running. |
+| `BackupSchedule.spec.startingDeadlineSeconds` | int64 | — | Max seconds a missed schedule can start late (matches CronJob semantics). |
+
+## Restore and status
+
+Restore specifies the source Backup and target GameServer. Status fields track progress, snapshot references, and readiness.
+
+| Field / Kind | Type | Default | Description |
+|---|---|---|---|
+| `Restore.spec.backupRef` | string | required | Completed Backup to restore from (must have `status.phase=Succeeded`). |
+| `Restore.spec.serverRef` | string | required | Target GameServer name. For restic-snapshot backups, server must already exist (data is overwritten in place). For volume-snapshot backups, server must NOT exist (a new server is provisioned). |
+| `status.snapshotID` | string | — | Restic snapshot ID or CSI VolumeSnapshot name resolved from the Backup at start. |
+| `status.observedGeneration` | int64 | — | Generation of the spec this status was observed at. Wait for it to match `metadata.generation` before acting on status. |
+| `status.phase` | string | — | One of `Pending`, `Suspending`, `Running`, `Resuming`, `Succeeded`, `Failed` (Restore phases). |
+| `status.conditions` | []Condition | [] | Detailed state transitions: generation bump, suspend/unsuspend, restore job progress, readiness. Gate automation on `Succeeded` condition type + `status=True` instead of phase text alone. |
+
+<DocsCallout icon="info" title="Automation should gate on conditions, not phase">
+  Automation must wait for `observedGeneration` to match current spec and check the `Succeeded` or `Ready` condition (`status.condition[type=="Succeeded"].status=="True"`) instead of relying on phase text alone. Phase is high-level and may not capture mid-flight state accurately.
+</DocsCallout>
+
+## Backup strategies
+
+Choose restic-snapshot or volume-snapshot based on your infrastructure and restore use case.
+
+### Restic-snapshot (default)
+
+Restic runs inside the backup pod and incrementally uploads encrypted snapshots to a repository (S3, Azure, SFTP, etc.). Data is deduplicated and compressed by restic. Requires a Kubernetes Secret (referenced via `spec.repoRef`) containing the repository URL and credentials.
+
+**Use when:**
+- You have a restic-compatible repository (any cloud storage or network backend).
+- You need incremental, deduplicated backups with retention policies managed by restic.
+- You're restoring into an existing server (data overwritten in place).
+
+**Limitations:**
+- The target server must already exist at restore time.
+- Restore is slower (downloads and re-writes data via restic).
+- Requires agent support for quiesce (game save-all before snapshot).
+
+### Volume-snapshot (CSI)
+
+Uses the cluster's CSI storage provider to create native snapshots at the hypervisor/storage layer. Much faster than restic and no external repository needed, but limited to cluster-scoped infrastructure.
+
+**Use when:**
+- Your storage provider supports CSI VolumeSnapshot (vSAN, NetApp, Pure Storage, AWS EBS, etc.).
+- You need fast snapshots and restores.
+- You're provisioning brand-new servers from snapshots (no existing server to restore into).
+
+**Limitations:**
+- Snapshots are cluster-scoped; cannot restore to a different cluster.
+- Retention is not automatic (you must manually delete old VolumeSnapshots).
+- Snapshot availability depends on storage provisioner support.
+
+## Repository credentials and references
+
+Restic-snapshot backups require a Kubernetes Secret in the operator namespace (`gameplane-system` by default) containing the repository URL and credentials.
+
+```yaml
+# Secret in gameplane-system namespace
+apiVersion: v1
+kind: Secret
+metadata:
+  name: my-backup-repo
+  labels:
+    gameplane.local/backup-destination: "true"
+type: Opaque
+stringData:
+  repo: "s3:s3.amazonaws.com/my-backup-bucket"
+  password: "secure-password-here"
+  aws-access-key-id: "YOUR_KEY_ID"
+  aws-secret-access-key: "YOUR_SECRET_KEY"
+```
+
+Reference it in Backup or BackupSchedule via `repoRef`:
+
+```yaml
+spec:
+  serverRef:
+    name: my-server
+  repoRef:
+    name: my-backup-repo
+    key: repo          # References the "repo" key in the Secret
+  strategy: restic-snapshot
+  quiesce: true
+```
+
+## Retention policies
+
+BackupSchedule's `spec.retention` controls which past snapshots are kept. Unset means keep everything (not recommended in production).
+
+```yaml
+spec:
+  schedule: "0 2 * * *"  # Daily at 02:00
+  retention:
+    keepLast: 10         # Keep 10 most recent backups
+    keepDaily: 30        # Keep one per day for 30 days
+    keepWeekly: 12       # Keep one per week for 12 weeks
+    keepMonthly: 12      # Keep one per month for 12 months
+    keepYearly: 3        # Keep one per year for 3 years
+```
+
+The operator prunes snapshots after each successful backup according to this policy. All retention fields are optional; omit any that don't apply.
+
+## Complete examples
+
+### One-shot restic-snapshot backup
+
+```yaml
+apiVersion: gameplane.local/v1alpha1
+kind: Backup
+metadata:
+  name: my-server-backup-manual-1
+  namespace: gameplane-games
+spec:
+  serverRef:
+    name: my-server
+  repoRef:
+    name: my-backup-repo
+    key: repo
+  strategy: restic-snapshot
+  quiesce: true
+  tags:
+    - manual
+    - critical
+```
+
+### Automated daily backups with retention
+
+```yaml
+apiVersion: gameplane.local/v1alpha1
+kind: BackupSchedule
+metadata:
+  name: my-server-daily
+  namespace: gameplane-games
+spec:
+  serverRef:
+    name: my-server
+  schedule: "0 2 * * *"           # Daily at 02:00 UTC
+  repoRef:
+    name: my-backup-repo
+    key: repo
+  strategy: restic-snapshot
+  quiesce: true
+  retention:
+    keepLast: 10
+    keepDaily: 30
+    keepWeekly: 12
+    keepMonthly: 12
+  concurrencyPolicy: Forbid
+```
+
+### Restore into a new server from volume-snapshot
+
+```yaml
+apiVersion: gameplane.local/v1alpha1
+kind: Restore
+metadata:
+  name: my-server-restored
+  namespace: gameplane-games
+spec:
+  backupRef:
+    name: my-server-backup-manual-1    # Must be Succeeded
+  serverRef:
+    name: my-server-new                # New server (must not exist)
+```
+
+### Restore into an existing server (restic-snapshot)
+
+```yaml
+apiVersion: gameplane.local/v1alpha1
+kind: Restore
+metadata:
+  name: my-server-restore-in-place
+  namespace: gameplane-games
+spec:
+  backupRef:
+    name: my-server-backup-manual-1    # Restic snapshot
+  serverRef:
+    name: my-server                    # Existing server (will be suspended and restored)
+```
+
+## Observing backups and restores
+
+### Watch a backup
+
+```bash
+kubectl get backups -n gameplane-games -w
+kubectl describe backup my-server-backup-manual-1 -n gameplane-games
+```
+
+### Watch a schedule
+
+```bash
+kubectl get backupschedule my-server-daily -n gameplane-games -o yaml
+# status.lastSuccessfulTime, status.nextScheduleTime, status.conditions
+```
+
+### Watch a restore
+
+```bash
+kubectl get restore my-server-restored -n gameplane-games -w
+kubectl logs -f restore-job-logs  # Sidecar tails restore process
+```
+
+## Reference links
+
+- **[Backup Destinations](./backup-destinations/)** — Set up restic repositories and Kubernetes Secrets.
+- **[Backup Repository Operations](./backup-repository-operations/)** — Prune, check, and recover snapshots.
+- **[Backups & Recovery](./backups-recovery/)** — Dashboard backup and restore workflows.
+- **[Status, Phases & Conditions](./status-phases-conditions/)** — Reconciliation state semantics and condition types.
+- **[CRD Catalog](./crd-catalog/)** — Overview of all Gameplane CRDs.
+
+---
+
+## Next guide
+
+[Status, Phases & Conditions](./status-phases-conditions/) — Understand how conditions, phases, and observedGeneration work together to signal reconciliation state.

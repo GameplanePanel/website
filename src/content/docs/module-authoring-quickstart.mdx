@@ -1,0 +1,224 @@
+---
+title: "Module Authoring Quickstart"
+description: "Turn a game image into a validated, installable bundle with metadata, a GameTemplate, documentation, and reproducible OCI content."
+section: develop
+group: modules-sources
+order: 3
+icon: check
+eyebrow: "AUTHOR MODULES"
+readTime: "16 MIN"
+covers: ["Bundle", "Template", "Local registry"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+
+Turn a game image into a validated, installable bundle with metadata, a GameTemplate, documentation, and reproducible OCI content.
+
+<DocsSectionList
+  items={[
+    { icon: "folder", label: "Source layout", text: "Create a stable, DNS-safe module identity and the source files required for humans, validation, and distribution." },
+    { icon: "puzzle", label: "First template", text: "Start with one tested version and only capabilities the game actually supports." },
+    { icon: "package", label: "Build and install", text: "Validate, push to the local registry, wait for source synchronization, install, and prove Module and generated template readiness." },
+  ]}
+/>
+
+<DocsCallout icon="info" title="Mutable source, immutable distribution">
+  The source directory is editable; the versioned OCI artifact is the immutable distribution unit.
+</DocsCallout>
+
+## Source layout
+
+Create a stable, DNS-safe module identity and the source files required for humans, validation, and distribution.
+
+Every module lives on disk as a directory under `modules/<name>/`:
+
+```yaml
+modules/<name>/
+├── module.yaml      # Module metadata (name, display name, game, version, categories)
+├── template.yaml    # GameTemplate spec (pod config, ports, volumes, env)
+├── README.md        # Rendered in the catalog detail drawer
+└── icon.png         # Optional (256×256 recommended)
+```
+
+Start by declaring your module's identity and display name, game family, version (semver), and minimum Gameplane version. Then create the other required files:
+
+- **Create `module.yaml`, `template.yaml`, and `README.md`.** Use the `gp-module init` scaffolding tool (see below) to generate a compliant skeleton, or copy an existing module and adapt it.
+- **Add a sample GameServer when it improves acceptance testing.** Include a minimal server YAML in `README.md` or as a separate example to show operators how to install your module.
+- **Declare display name, game, summary, version, and minimum Gameplane.** These fields help users find your module in the catalog and understand compatibility.
+
+<DocsCallout icon="check" title="Coming in v0.3.0">
+  The `gp-module init` CLI scaffolds modules with archetype templates (`steamcmd`, `java`, `generic`) and live DNS-1123 validation. For beta.8, create files manually or adapt an existing module from the submodule's `modules/` directory.
+</DocsCallout>
+
+### Example module.yaml
+
+```yaml
+apiVersion: gameplane.local/module/v1
+name: minecraft-java
+displayName: Minecraft (Java Edition)
+version: 1.0.0
+game: minecraft-java
+categories: [Sandbox, Survival]
+summary: "Vanilla, Paper, Forge, or Fabric server"
+gameplaneMinVersion: 0.2.0
+icon: icon.png
+```
+
+## First template
+
+Start with one tested version and only capabilities the game actually supports.
+
+The `template.yaml` file contains the `GameTemplate` spec that defines how servers are created from your module. Begin minimal and add complexity only after complete lifecycle testing:
+
+- **Declare image, ports, resources, storage, config inputs, and defaults.** Pin your container image to a specific digest (e.g. `ghcr.io/user/game:v1.2@sha256:…`) so updates are intentional, not accidental.
+- **Keep runtime paths under /data aligned with agent behavior.** The in-pod sidecar agent expects game data at a predictable, stable location (e.g., `/data`, `/root/gamedata`, etc.). Document where your game stores worlds, configs, and logs, and mount persistent storage at that path so the agent's file, log, and backup APIs work reliably.
+- **Add versions and capabilities only after complete lifecycle tests.** Test server creation, console access, file uploads, player listing, and graceful shutdown before marking your module as production-ready.
+
+### Example template.yaml (minimal)
+
+```yaml
+apiVersion: gameplane.local/v1alpha1
+kind: GameTemplate
+metadata:
+  name: minecraft-java-latest
+spec:
+  displayName: Minecraft (Java)
+  game: minecraft-java
+  version: 1.0.0
+  categories: [Sandbox, Survival, Creative]
+  image: itzg/minecraft-server:latest@sha256:abc123…
+
+  ports:
+    - name: game
+      containerPort: 25565
+      protocol: TCP
+      advertise: true
+
+  storage:
+    size: 10Gi
+    mountPath: /data
+
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: "2"
+      memory: 4Gi
+
+  consoleMode: rcon
+  rcon:
+    protocol: source
+    port: 25575
+    passwordEnv: RCON_PASSWORD
+
+  configSchema:
+    - name: EULA
+      displayName: Accept Minecraft EULA
+      type: string
+      default: "false"
+    - name: MOTD
+      displayName: Server MOTD
+      type: string
+      default: "A Gameplane Minecraft Server"
+```
+
+## Build and install
+
+Validate, push to the local registry, wait for source synchronization, install, and prove Module and generated template readiness.
+
+Once your source files are complete, use the authoring toolkit to validate your work, package it as an OCI artifact, and test it in your cluster:
+
+### 1. Validate offline
+
+Run static validation without network or cluster access:
+
+```sh
+# Using make target (requires gp-module binary, v0.3.0+)
+make module-validate MODULE=minecraft-java
+
+# Or manually
+bin/gp-module validate modules/minecraft-java --strict
+```
+
+This checks metadata syntax, CRD schema compliance, image digests, port ranges, and configuration types.
+
+<DocsCallout icon="check" title="Coming in v0.3.0">
+  The `gp-module validate` tool provides instant offline linting with source-line diagnostics. For beta.8, review your YAML files against the [GameTemplate schema](./gametemplate-schema/) and [module.yaml spec](./module-authoring/) manually.
+</DocsCallout>
+
+### 2. Push to local registry
+
+Package your module as an OCI artifact and push it to the in-cluster registry:
+
+```sh
+make modules-push MODULE_REGISTRY=localhost:5001
+```
+
+This builds a versioned OCI artifact containing your `module.yaml`, `template.yaml`, `README.md`, and icon, then pushes it to the registry specified by `MODULE_REGISTRY`.
+
+<DocsCallout icon="info" title="Localhost:5001 is for local development only">
+  When deploying to a shared cluster, replace `localhost:5001` with your registry's external hostname and use appropriate credentials. See [Modules & Sources](./modules-sources/) for registry configuration.
+</DocsCallout>
+
+### 3. Wait for synchronization
+
+After the push, a `ModuleSource` pointing to your registry syncs the artifact into the cluster as a `Module` resource. Check that the Module and its generated GameTemplate appear:
+
+```sh
+kubectl get modules,gametemplates
+```
+
+A ready Module should show:
+
+```
+NAME                                        STATUS
+module.gameplane.local/minecraft-java-1.0.0 Installed
+
+NAME                                              READINESS
+gametemplate.gameplane.local/minecraft-java-1.20 Ready
+```
+
+### 4. Install a test server
+
+Create a GameServer from your new template:
+
+```yaml
+apiVersion: gameplane.local/gameserver/v1alpha1
+kind: GameServer
+metadata:
+  name: test-server
+spec:
+  template: minecraft-java-1.20
+  replicas: 1
+```
+
+### 5. Prove readiness
+
+Verify the server pod starts, the console is reachable, files can be uploaded/downloaded, and the server shuts down gracefully:
+
+```sh
+# Watch the pod come up
+kubectl get pods -w
+
+# Verify console access (via WebSocket or RCON)
+kubectl port-forward svc/test-server 25565:25565 &
+
+# Check agent heartbeat and file API
+kubectl logs deploy/test-server -c gameserver-agent
+```
+
+Once these checks pass, your module is ready for distribution and wider testing.
+
+---
+
+<DocsQuickReference
+  label="MODULE START"
+  items={[
+    "modules/<name>/{module.yaml,template.yaml,README.md}",
+    "make modules-push MODULE_REGISTRY=localhost:5001",
+    "kubectl get modules,gametemplates"
+  ]}
+/>

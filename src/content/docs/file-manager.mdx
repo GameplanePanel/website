@@ -1,0 +1,111 @@
+---
+title: "File manager"
+description: "Browse, create, upload, and edit exposed files without racing the game process or damaging recoverable world data."
+section: "operate"
+group: "files-backups"
+order: 2
+icon: "folder"
+eyebrow: "OPERATE"
+readTime: "12 MIN"
+covers: ["Browse", "Upload", "Edit"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
+
+<DocsArticleMeta groupId="files-backups" readTime="12 MIN" />
+
+Browse, create, upload, and edit exposed files without racing the game process or damaging recoverable world data.
+
+<DocsCallout icon="shield-alert" title="Save or stop the game before editing files">
+  Save or stop the game and create a fresh backup before changing files it owns at runtime.
+</DocsCallout>
+
+## Navigate the exposed filesystem
+
+The breadcrumb starts at the exposed root, which is intentionally narrower than the entire container filesystem.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "Confirm breadcrumb and selected path",
+      text: "Always verify you are browsing the correct directory before making changes.",
+    },
+    {
+      icon: "check",
+      label: "Use the editor only for supported text content",
+      text: "The file editor is designed for safe text files; avoid binary or application-owned data.",
+    },
+    {
+      icon: "check",
+      label: "Treat hidden files and generated manifests as application-owned state",
+      text: "Gameplane manages internal metadata; changing these can break recovery and snapshot operations.",
+    },
+  ]}
+/>
+
+## Create and upload content
+
+New folders, new files, and uploads operate in the currently open directory.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "Use valid names and verify the breadcrumb before confirming",
+      text: "Ensure the path is correct and the name follows the game's file naming conventions.",
+    },
+    {
+      icon: "check",
+      label: "Include the correct extension and avoid accidental replacement",
+      text: "Always include the proper file extension to prevent overwriting or creating incompatible files.",
+    },
+    {
+      icon: "check",
+      label: "Verify upload size, type, provenance, and ownership after completion",
+      text: "Confirm the uploaded file has the expected size, format, and permissions.",
+    },
+  ]}
+/>
+
+## Edit safely and recover
+
+Apply one concern, restart only when required, and validate Events and game logs before continuing.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "Make one logical change at a time",
+      text: "Isolate each modification so you can identify which change caused a problem if needed.",
+    },
+    {
+      icon: "check",
+      label: "Restart the server only after verifying the change",
+      text: "Test and validate changes before restarting the game to minimize downtime.",
+    },
+    {
+      icon: "check",
+      label: "Review Events and logs immediately after changes",
+      text: "Check the console and system logs to confirm the change took effect and no errors occurred.",
+    },
+  ]}
+/>
+
+<DocsQuickReference
+  label="SAFE FILE CHANGE"
+  items={[
+    "01  Confirm breadcrumb and selected path",
+    "02  Save/stop and back up world or configuration data",
+    "03  Change one concern, restart if needed, validate logs, restore on failure",
+  ]}
+/>
+
+---
+
+## Next guide
+
+[Player administration](./player-administration/)

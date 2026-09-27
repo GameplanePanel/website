@@ -1,0 +1,173 @@
+---
+title: Kubernetes node maintenance and upgrades
+description: Drain nodes and upgrade Kubernetes without corrupting worlds, stranding volumes, or exceeding supported disruption limits.
+section: platform
+group: cluster-storage
+order: 5
+icon: check
+eyebrow: PLATFORM
+readTime: 18 MIN
+covers: ["Nodes", "Volumes", "Drains"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+
+Cluster maintenance involves draining nodes for patches, version upgrades, or hardware replacement. This page covers the safe sequence: inventory your workload, cordon the node, migrate or stop servers, drain gracefully, upgrade the node, then return to service.
+
+<DocsCallout icon="info" title="Portability depends on storage topology.">
+Portability depends on storage topology, GPU and port constraints, affinity, and real spare capacity—not just a Ready destination node.
+</DocsCallout>
+
+## Prepare the window
+
+Confirm compatibility, capacity, workload placement, storage mobility, maintenance communication, and recent backups.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "Check Kubernetes versions",
+      text: "Verify Kubernetes, CSI, ingress, cert-manager, and rollback support.",
+    },
+    {
+      icon: "check",
+      label: "Inventory affected servers",
+      text: "Announce, save worlds, and verify backups.",
+    },
+    {
+      icon: "check",
+      label: "Identify non-movable resources",
+      text: "Identify local volumes, GPUs, NodePorts, affinity, and non-movable pods.",
+    },
+  ]}
+/>
+
+Before cordoning any node, check whether your cluster can tolerate the loss:
+- List all GameServers and Pods scheduled on the target node using `kubectl get pod -n gameplane-games --field-selector=spec.nodeName=<node-name>`.
+- Check storage: identify PVCs mounted by those Pods (especially `local` storage or single-replica StatefulSets).
+- Document affinity, NodePorts, and any workload that cannot migrate (e.g., a singular StatefulSet without spread).
+- Ensure backups of affected servers are recent and healthy.
+- Announce the maintenance window to players and server operators.
+
+## Cordon, drain, and upgrade
+
+Move one failure domain at a time using deliberate eviction behavior and provider-supported ordering.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "Cordon the node",
+      text: "Cordon, then stop or migrate servers according to storage behavior.",
+    },
+    {
+      icon: "check",
+      label: "Drain gracefully",
+      text: "Drain with explicit flags/timeouts; never force-delete state blindly.",
+    },
+    {
+      icon: "check",
+      label: "Monitor health",
+      text: "Observe API, operator, agent, CSI, and ingress health during upgrade.",
+    },
+  ]}
+/>
+
+### Cordon the node
+
+A cordoned node will not accept new Pods but keeps running ones intact:
+
+```bash
+kubectl cordon <node-name>
+```
+
+### Migrate or stop servers
+
+Next, handle the GameServers running on that node. The strategy depends on your storage:
+
+- **Servers with remote storage (NFS, EBS, cloud-managed PVC):** The Pod can restart on another node. Trigger a graceful restart by scaling down the GameServer (`spec.replicas: 0`), or let the drain process evict it.
+- **Servers with local storage:** Stop the Pod before draining, save its world/data to remote backup, and plan to restart it after the node returns.
+- **Multi-replica StatefulSets or Deployments:** Delete Pods from the node (via `kubectl delete pod`); Kubernetes will re-schedule survivors on other Ready nodes.
+
+### Drain the node
+
+Drain evicts all Pods from the node, respecting Pod Disruption Budgets (PDBs) and graceful shutdown:
+
+```bash
+kubectl drain <node-name> \
+  --ignore-daemonsets \
+  --ignore-errors \
+  --delete-emptydir-data \
+  --grace-period=300
+```
+
+**Flags explained:**
+- `--ignore-daemonsets`: Keep DaemonSet Pods (e.g., CNI, kubelet agents) running; they auto-restart on the upgraded node anyway.
+- `--ignore-errors`: Skip non-evictable Pods (rare; usually means something is not a standard Kubernetes object). Continue draining other Pods.
+- `--delete-emptydir-data`: Permit eviction of Pods using `emptyDir` storage (safe if data is non-persistent).
+- `--grace-period=300`: Allow 5 minutes for Pods to shut down cleanly. Set higher for stateful servers that need time to save.
+
+### Upgrade the node
+
+Once drained, the node is safe to reboot or replace:
+
+```bash
+# Option A: in-place upgrade (e.g., apt/yum upgrade)
+sudo apt-get update && sudo apt-get upgrade && sudo reboot
+
+# Option B: node replacement (e.g., cloud provider instance replacement)
+kubectl delete node <node-name>  # Node will rejoin after replacement/restart
+```
+
+### Monitor health during upgrade
+
+Watch the cluster and Gameplane components:
+
+```bash
+# API server readiness
+kubectl get deployment -n gameplane-system gameplane-api
+
+# Operator health
+kubectl get deployment -n gameplane-system gameplane-operator
+
+# CSI health (if using external storage)
+kubectl get pod -n kube-system | grep csi
+
+# Ingress readiness
+kubectl get ingress -n gameplane-games
+```
+
+## Return to service
+
+Uncordon only after node, runtime, network, CSI, certs, and capacity are healthy, then validate every affected workflow.
+
+Verify the upgraded node is ready:
+
+```bash
+kubectl get node <node-name>
+```
+
+The node should show `Status: Ready` and all Pods in `Ready` phase. Then uncordon:
+
+```bash
+kubectl uncordon <node-name>
+```
+
+### Validate after uncordon
+
+- **Pod spreading:** Re-schedule Pods that were held during drain. The scheduler will now place new Pods on the uncordoned node.
+- **PVC attachment:** If using remote storage, verify all PVCs re-attached and are readable (check `kubectl get pvc` and pod logs).
+- **Endpoints:** For servers exposed via NodePort or LoadBalancer, ensure the node's IP is in the endpoint list (`kubectl get endpoints -n gameplane-games`).
+- **Backups:** Run a post-upgrade backup validation; ensure recent snapshots are healthy.
+- **Monitoring & alerts:** Check dashboards for pod restart rate, latency spikes, or any new alerts.
+
+<DocsQuickReference
+  label="MAINTENANCE LOOP"
+  items={[
+    "Compatibility + capacity + movable storage + backups gate",
+    "Cordon → save/stop/migrate → drain → upgrade → health check",
+    "Uncordon → validate pods, PVCs, endpoints, backups, alerts, audit",
+  ]}
+/>

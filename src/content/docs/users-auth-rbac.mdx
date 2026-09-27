@@ -1,0 +1,137 @@
+---
+title: Users, authentication, and RBAC
+description: Combine local accounts, service accounts, OIDC providers, custom roles, ownership, and per-server collaboration without creating a lockout path.
+section: platform
+group: users-access
+order: 1
+icon: userss
+eyebrow: ACCESS
+readTime: 16 MIN
+covers: ["Users", "RBAC", "OIDC"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
+
+<DocsArticleMeta groupId="users-access" readTime="16 MIN" />
+
+Gameplane's authentication and authorization system combines local user accounts, optional OIDC single sign-on, built-in and custom roles, per-server ownership, and per-namespace role bindings. The model prevents lockout by requiring at least one tested administrative recovery path before enabling OIDC-only mode.
+
+<DocsCallout icon="shield-alert" title="Keep one tested administrative recovery path">
+Keep a local admin session open while testing the identity provider, and verify redirect URIs, claims, groups, and mapped permissions in a private session before enforcing SSO-only behavior.
+</DocsCallout>
+
+## Users and service accounts
+
+Invite and edit local users, reset credentials deliberately, and use API tokens for automation rather than shared logins.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "Strong passwords and dormant account removal",
+      text: "Require strong passwords and remove dormant local accounts.",
+    },
+    {
+      icon: "check",
+      label: "Service account credential rotation",
+      text: "Scope service accounts to the minimum permissions and rotate API tokens.",
+    },
+    {
+      icon: "check",
+      label: "Audit user lifecycle",
+      text: "Audit invites, resets, disabled accounts, and ownership transfers.",
+    },
+  ]}
+/>
+
+Local users are invited via the dashboard (**Admin Settings → Users → Add user**). Set a temporary password and email a login link to the user. Users reset their own password on first login. To create service accounts for automation, create a local user without initial password access, grant them an appropriate custom role or built-in role (usually `viewer` or `operator` scoped to specific namespaces), and have them generate API tokens from their account settings.
+
+## Roles and permissions
+
+Built-in and custom roles group explicit permissions for servers, backups, templates, users, and platform operations.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "Start with read-only permissions",
+      text: "Start with read-only and add mutation permissions by workflow.",
+    },
+    {
+      icon: "check",
+      label: "Separate global and per-server",
+      text: "Separate global administration from per-server collaboration.",
+    },
+    {
+      icon: "check",
+      label: "Review new features",
+      text: "Review custom roles after new features introduce additional permissions.",
+    },
+  ]}
+/>
+
+### Built-in roles
+
+Gameplane defines three built-in roles that cannot be deleted:
+
+- **Admin**: Full access to all resources, including users, roles, and global settings.
+- **Operator**: Manage game servers, backups, templates, and backup schedules. Read access to modules, cluster info, and the permission catalog.
+- **Viewer**: Read-only access across the control panel (servers, backups, templates, modules, cluster info, permissions).
+
+### Custom roles
+
+Create custom roles under **Admin Settings → Roles** to combine specific permissions. Each permission is either cluster-wide (`Namespaced: false`) or server-namespace-scoped (`Namespaced: true`). Cluster-wide permissions grant access to all namespaces; namespace-scoped permissions can be granted per-server via role bindings.
+
+The permission catalog includes:
+
+- **Game servers:** View servers, create/edit/control servers, use the console (RCON / PTY).
+- **Backups:** View, create/delete, and restore backups; view and manage schedules.
+- **Game templates:** View, create/edit, delete.
+- **Modules:** View the catalog, install/upgrade/uninstall modules and sources.
+- **Backup destinations:** View and manage destinations.
+- **Cluster:** View nodes/version/storage, add nodes and mint kubeconfig.
+- **Users:** View users and their role bindings, create/edit/delete users.
+- **Roles:** View roles and the permission catalog, create/edit/delete custom roles.
+- **Audit log:** View audit events.
+- **Global settings:** View and manage global platform settings (authentication, notifications, telemetry, module upload limits).
+- **Network captures:** Enable, start, stop, download, and delete packet captures (cluster-wide only).
+
+Owner-only server operations (transferring ownership, editing collaborators, wiping data, deleting the server) require either the server's owner or an admin. Operator-role users keep their other server permissions but cannot perform these four operations on servers they don't own.
+
+## OIDC and SSO
+
+Configure identity providers through Helm install-time settings or the dashboard, validate claims and role mappings, and test the flow in a private session before enforcing SSO-only mode.
+
+### Runtime configuration (dashboard)
+
+Add OIDC providers under **Admin Settings → Authentication → Add provider**. Fill in the issuer URL, client ID, and client secret (stored securely in a Kubernetes Secret). The callback URL is automatically derived from your external URL setting.
+
+Supported providers include Keycloak, Authentik, Google, GitHub, and any RFC-7519 compliant OpenID Connect provider. Detailed setup guides for each provider are available in the [OIDC provider setup documentation](./oidc/).
+
+When a user logs in via OIDC for the first time, Gameplane creates a user row with the `viewer` role. Admins must promote new OIDC users manually via the dashboard or custom role bindings.
+
+### Install-time role mappings
+
+> **Coming in v0.3.0**
+> 
+> Install-time Helm role mappings eliminate the need for a bootstrap-admin account in OIDC-only deployments. Operators configure group mappings at install time, and the first user to log in receives the correct role immediately based on their IdP group membership.
+
+When deploying with Helm, set `api.oidc.groupsClaim` to the name of your IdP's groups claim (e.g., `"groups"`), and configure `api.oidc.roleMappings.{admin,operator,viewer}` with a comma-separated list of group names for each role. On first login, Gameplane matches the user's group membership against the mappings and assigns the highest-privilege matching role.
+
+After deployment, admins can override role mappings through the dashboard without restarting the API. Helm upgrades preserve dashboard customizations — they do not overwrite group mappings that have already been edited in the UI.
+
+<DocsQuickReference
+  label="LOCKOUT PREVENTION"
+  items={[
+    "01  Keep a local admin session open while testing the identity provider",
+    "02  Verify redirect URI, issuer, claims, groups, and mapped permissions",
+    "03  Test login and logout in a private session before enforcing SSO-only",
+  ]}
+/>
+
+---
+
+**Next guide:** [Audit, observability, and administration](./audit-observability-admin/)

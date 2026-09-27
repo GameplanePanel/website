@@ -1,0 +1,199 @@
+---
+title: "Database migrations"
+description: "Change the API store without breaking SQLite-first installs, optional PostgreSQL builds, startup ordering, or rollback safety."
+section: "develop"
+group: "local-development"
+order: 6
+icon: "database"
+eyebrow: "DEVELOP"
+readTime: "16 MIN"
+covers: ["SQLite", "PostgreSQL", "Schema"]
+next: "testing-coverage-e2e"
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
+
+<DocsArticleMeta groupId="local-development" readTime="16 MIN" />
+
+Change the API store without breaking SQLite-first installs, optional PostgreSQL builds, startup ordering, or rollback safety.
+
+<DocsCallout icon="info" title="Released migration files are immutable">
+  Every schema change gets the next ordered transactional file. Never rewrite an already released migration.
+</DocsCallout>
+
+## Storage model
+
+Platform identity and settings live in the database while desired infrastructure remains in CRDs.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "database",
+      label: "SQLite is default and single-connection",
+      text: "PostgreSQL uses a build tag.",
+    },
+    {
+      icon: "users",
+      label: "Users, sessions, roles, config, and audit data live here",
+      text: "Identity state is durable and queryable.",
+    },
+    {
+      icon: "code",
+      label: "Embedded migration SQL runs in filename order at startup",
+      text: "Each .sql file in api/internal/db/migrations/ executes once per database.",
+    },
+  ]}
+/>
+
+## Write a migration
+
+Add one portable, immutable, zero-padded SQL file and use a transaction that records success only at completion.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "shield-alert",
+      label: "Never rewrite an already released migration",
+      text: "If one must be corrected, write a new file that fixes the schema state.",
+    },
+    {
+      icon: "github",
+      label: "Keep SQL portable across SQLite and PostgreSQL",
+      text: "Avoid dialect-specific syntax; use only ANSI SQL or features both drivers support.",
+    },
+    {
+      icon: "check",
+      label: "Use SQLite-safe rebuilds where constraints cannot be altered",
+      text: "SQLite has limited ALTER TABLE support; recreate the table when needed.",
+    },
+  ]}
+/>
+
+### Migration file format
+
+Create a file named `api/internal/db/migrations/<NNN>_<description>.sql` where `<NNN>` is the next three-digit zero-padded number. For example, if the latest migration is `010_share_links_expiry_nullable.sql`, the next file is `011_your_change.sql`.
+
+Each migration is automatically wrapped in a database transaction by the framework (the `api/internal/db` package calls `BeginTx` before executing your migration and `Commit` when all statements succeed). Do not include explicit `BEGIN TRANSACTION;` or `COMMIT;` in your SQL file.
+
+Separate statements with a semicolon and newline (`;\n`). For example:
+
+```sql
+-- Describe the change
+CREATE TABLE example_table (
+  id TEXT PRIMARY KEY,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX idx_example_table_created_at ON example_table(created_at);
+```
+
+If the migration fails, the entire transaction automatically rolls back.
+
+### Portable SQL patterns
+
+**Create tables using standard DDL:**
+
+```sql
+CREATE TABLE users (
+  id TEXT PRIMARY KEY,
+  email TEXT UNIQUE NOT NULL,
+  created_at TEXT NOT NULL,
+  updated_at TEXT
+);
+```
+
+**Use only standard constraints:**
+- `PRIMARY KEY`, `UNIQUE`, `NOT NULL`, `DEFAULT`, `CHECK`
+- Both SQLite and PostgreSQL support these.
+
+**Avoid dialect-specific features:**
+- No `SERIAL` (SQLite), `BIGSERIAL` (PostgreSQL), or `GENERATED` columns — use TEXT + application logic.
+- No `JSON` or `JSONB` — use TEXT columns.
+- No database-specific functions in schemas — handle logic in application code.
+
+**If you must alter a table in SQLite (e.g., add a column):**
+
+SQLite supports `ALTER TABLE ... ADD COLUMN` with constraints, but not `DROP COLUMN` or constraint modifications without rebuilding. If your change requires dropping a column or modifying a constraint, create a new table, copy data, drop the old table, and rename:
+
+```sql
+-- Create new table with desired schema
+CREATE TABLE users_new (
+  id TEXT PRIMARY KEY,
+  email TEXT UNIQUE NOT NULL,
+  status TEXT DEFAULT 'active'
+);
+
+-- Copy data, transforming if needed
+INSERT INTO users_new (id, email, status)
+SELECT id, email, 'active' FROM users;
+
+-- Drop old table and rename
+DROP TABLE users;
+
+ALTER TABLE users_new RENAME TO users;
+
+-- Recreate indexes
+CREATE INDEX idx_users_email ON users(email);
+```
+
+The framework automatically wraps this entire sequence in a transaction, so if any statement fails, all changes roll back.
+
+## Validate and operate
+
+Test fresh schema, prior-version upgrade, reopen, transaction rollback, and both database build modes.
+
+### Testing migrations
+
+Run the following after every schema change:
+
+1. **Fresh schema test** — start with an empty database and run all migrations:
+   ```bash
+   rm -f gameplane.db  # Fresh SQLite
+   cd api && go test ./internal/db
+   ```
+
+2. **Prior-version upgrade** — ensure migrations from the previous release apply cleanly:
+   ```bash
+   cd test/e2e && go test -run TestMigration ./...
+   ```
+
+3. **PostgreSQL compatibility** — build and test with the PostgreSQL driver enabled:
+   ```bash
+   cd api && go test -tags postgres ./internal/db
+   ```
+
+4. **Reopen and idempotency** — verify the schema is correct after reopening the database:
+   ```bash
+   # Run tests twice to confirm idempotency (second run should skip already-applied migrations)
+   cd api && go test ./internal/db && go test ./internal/db
+   ```
+
+### Schema review checklist
+
+Before committing a migration file:
+
+- [ ] File is named with the next zero-padded number (e.g., `011_feature.sql`)
+- [ ] SQL is wrapped in `BEGIN TRANSACTION; ... COMMIT TRANSACTION;`
+- [ ] All SQL is portable across SQLite and PostgreSQL (no dialect-specific syntax)
+- [ ] New tables use only standard constraints and TEXT primary keys
+- [ ] No application logic is embedded in schema (stored procedures, triggers)
+- [ ] Tests pass: `go test ./internal/db` and `go test -tags postgres ./internal/db`
+- [ ] Migration is immutable — no edits after initial commit
+
+<DocsQuickReference
+  label="MIGRATION LOOP"
+  items={[
+    "01  api/internal/db/migrations/011_<description>.sql",
+    "02  cd api && go test ./internal/db",
+    "03  cd api && go test -tags postgres ./internal/db",
+  ]}
+/>
+
+## Related guides
+
+- [Database Configuration & Lifecycle](./database-configuration/) — connection pooling, disaster recovery, PostgreSQL setup
+- [Repository & Components](./repository-components/) — schema layout and where migrations live
+- [API & CRDs](./api-crds/) — REST endpoints that read/write to the database

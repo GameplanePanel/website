@@ -1,0 +1,122 @@
+---
+title: "Network & Automation"
+description: "Expose game ports intentionally, restrict source networks, and automate recurring maintenance with schedules and health-aware recovery."
+section: operate
+group: network-automation
+order: 1
+icon: workflow
+eyebrow: CONFIGURE
+readTime: "12 MIN"
+covers: ["Services", "CIDRs", "Schedules"]
+---
+
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+
+Expose game ports intentionally, restrict source networks, and automate recurring maintenance with schedules and health-aware recovery.
+
+<DocsArticleMeta groupId="network-automation" readTime="12 MIN" />
+
+<DocsCallout icon="info" title="Public exposure is a security boundary">
+  Review service type, ports, annotations, DNS, and CIDRs together.
+</DocsCallout>
+
+## Choose an exposure model
+
+Select ClusterIP, NodePort, or LoadBalancer based on where players connect and who controls the network edge.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "network",
+      label: "ClusterIP",
+      text: "Use ClusterIP for internal-only servers and proxies.",
+    },
+    {
+      icon: "server",
+      label: "NodePort",
+      text: "Use stable named ports and reserve NodePorts to avoid collisions.",
+    },
+    {
+      icon: "globe",
+      label: "LoadBalancer",
+      text: "Attach provider annotations and DNS only when the controller supports them.",
+    },
+  ]}
+/>
+
+### Service Types Overview
+
+- **ClusterIP**: Internal-only access within the cluster. Ideal for internal game servers, proxies, or testing.
+- **NodePort**: Exposes the service on a static port on every node. Suitable for on-premises clusters or when you manage your own load balancing.
+- **LoadBalancer**: Integrates with your cloud provider's load balancer (or on-premises equivalent like MetalLB/Cilium). Requests a public or routable address, optionally from a named address pool.
+
+## Restrict and verify connectivity
+
+Treat every port override and CIDR allow-list as part of the server's documented interface.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "lock",
+      label: "Ports",
+      text: "Expose only required TCP or UDP ports from the selected module.",
+    },
+    {
+      icon: "shield-check",
+      label: "Validate",
+      text: "Validate hostname, external address, and firewall path end to end.",
+    },
+    {
+      icon: "lock",
+      label: "Management",
+      text: "Keep management interfaces private even when game ports are public.",
+    },
+  ]}
+/>
+
+### Port and CIDR Configuration
+
+Game servers expose ports via the Kubernetes Service created for each GameServer. You control which ports to expose (and their protocols) through the GameTemplate:
+
+- **Port overrides**: specify TCP and UDP ports that should be publicly accessible.
+- **Source ranges (CIDRs)**: restrict access by IP allow-lists. When using LoadBalancer, set `spec.networking.sourceRanges` to CIDR blocks (e.g., `["203.0.113.0/24"]`). This maps to Kubernetes `service.spec.loadBalancerSourceRanges`.
+
+**Important**: sourceRanges only take effect when expose mode is LoadBalancer. ClusterIP and NodePort servers do not filter by source CIDR at the Kubernetes level (use firewall rules instead for those modes).
+
+### Address Pools (LoadBalancer Only)
+
+When expose mode is LoadBalancer, optionally request a specific address pool or IP address:
+
+- `spec.networking.addressPool`: name of a load-balancer address pool (e.g., `"public-servers"` for MetalLB or Cilium).
+- `spec.networking.address`: specific IP address (e.g., `"203.0.113.50"`).
+
+The operator translates these to your load-balancer flavor's annotations or labels. See the [Ingress, TLS & External Access](./ingress-tls-access/) guide for full details.
+
+## Automate routine operations
+
+Schedules can run backups and maintenance while probes and restart policy handle unexpected failures.
+
+A **BackupSchedule** CRD runs backups on a recurring cron schedule. Each scheduled backup job:
+
+1. Saves the server state (config, world data, player data).
+2. Stores it at the destination (S3, NAS, local cluster storage).
+3. Applies retention policy (delete old backups).
+4. Records the operation in the audit log.
+
+**Liveness probes and restart policy**: GameServers also support Kubernetes-native readiness and liveness probes defined in the template. If a server fails its liveness probe, Kubernetes restarts the pod (per `restartPolicy`). Combined with scheduled backups, this provides automatic recovery from transient failures.
+
+<DocsQuickReference
+  label="AUTOMATION CHECKLIST"
+  items={[
+    "01  Validate cron timezone, target server, destination, and retention",
+    "02  Announce maintenance and save before a planned restart",
+    "03  Confirm the job, resulting backup, and audit entry completed",
+  ]}
+/>
+
+---
+
+### Next guide: [Backups and recovery](./backups-recovery/)

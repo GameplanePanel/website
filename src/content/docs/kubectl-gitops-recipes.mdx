@@ -1,0 +1,100 @@
+---
+title: Kubectl & GitOps Recipes
+description: Repeatable commands and declarative patterns for inspecting, applying, reconciling, and rolling back Gameplane resources.
+section: develop
+group: api-reference
+order: 10
+icon: terminal
+eyebrow: OPERATIONS RECIPES
+readTime: 10 MIN
+covers: ["kubectl", "Argo CD", "Flux", "server-side apply", "drift", "rollback"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+
+Repeatable commands and declarative patterns for inspecting, applying, reconciling, and rolling back Gameplane resources.
+
+<DocsCallout icon="info" title="Treat status as controller output">
+  Commit desired state, then wait for observedGeneration before declaring a rollout complete.
+</DocsCallout>
+
+## Apply and inspect with kubectl
+
+Use server-side apply for CRDs, query conditions directly, and keep credentials in referenced Secrets rather than manifests.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "Apply",
+      text: "kubectl apply --server-side -f gameserver.yaml",
+    },
+    {
+      icon: "check",
+      label: "Watch",
+      text: "kubectl get gameservers -w",
+    },
+    {
+      icon: "check",
+      label: "Inspect",
+      text: "kubectl describe gameserver <name>",
+    },
+  ]}
+/>
+
+Server-side apply automatically resolves field ownership when multiple actors (Helm, Kustomize, controllers) modify the same resource, eliminating apply conflicts. Always use `--server-side` for Gameplane CRDs to avoid edge cases with operator-managed fields.
+
+## GitOps reconciliation patterns
+
+Separate platform resources from tenant workloads, pin modules by digest, and order Secrets before resources that reference them.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "Sync waves",
+      text: "Use sync waves for CRDs, controllers, Secrets, then custom resources",
+    },
+    {
+      icon: "check",
+      label: "Drift detection",
+      text: "Ignore controller-owned status fields in drift detection",
+    },
+    {
+      icon: "check",
+      label: "Module digests",
+      text: "Promote the same immutable module digest between environments",
+    },
+  ]}
+/>
+
+Apply infrastructure and CRDs first (`wave: 0`), then platform Secrets (`wave: 1`), then GameServers and Modules (`wave: 2`). This ordering prevents GameServers from blocking on missing ConfigMaps or credential Secrets. Status fields like `.status.phase` and `.status.conditions` are never desired state — configure your GitOps tool to exclude them from drift detection.
+
+## Safe rollout and rollback
+
+Preview diffs, reconcile one scope at a time, verify conditions, and revert the Git commit or chart version when health gates fail.
+
+Before applying a change to production:
+
+1. **Preview the diff:** Run `kubectl diff --server-side` to compare your manifests against the cluster.
+2. **Reconcile one scope at a time:** Apply to one namespace or region before the full cluster.
+3. **Verify conditions:** Use `kubectl get` with custom columns to check readiness before considering the rollout done.
+4. **Revert on health failures:** If conditions indicate failure, revert the Git commit (or Helm chart version) immediately; the controller will reconcile to the previous desired state.
+
+<DocsQuickReference
+  label="QUICK REFERENCE"
+  items={[
+    "kubectl wait --for=condition=Ready gameserver/<name> --timeout=5m",
+    "kubectl get backups -o custom-columns=NAME:.metadata.name,PHASE:.status.phase",
+    "kubectl diff --server-side -f ./environments/production",
+  ]}
+/>
+
+## See also
+
+- **[CRD Catalog](./crd-catalog/)** — full field descriptions and examples for every core CRD.
+- **[Status, Phases & Conditions](./status-phases-conditions/)** — reconciliation state tracking and observedGeneration semantics.
+- **[REST API Reference](./rest-api-reference/)** — HTTP endpoints for automation outside kubectl.
+- **[Helm Values Reference](./helm-values-reference/)** — operator and API configuration for GitOps workflows.

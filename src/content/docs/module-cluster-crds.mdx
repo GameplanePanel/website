@@ -1,0 +1,109 @@
+---
+title: Module & Cluster CRDs
+description: Field-level reference for distributing signed modules, syncing sources, and registering remote Kubernetes clusters.
+section: develop
+group: api-reference
+order: 4
+icon: boxeses
+eyebrow: API REFERENCE
+readTime: 12 MIN
+covers: ["Module CRD", "ModuleSource CRD", "Cluster CRD", "OCI signatures"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
+
+<DocsArticleMeta groupId="api-reference" readTime="12 MIN" />
+
+Field-level reference for distributing signed modules, syncing sources, and registering remote Kubernetes clusters.
+
+## Module & ModuleSource
+
+The Module CRD represents a module bundle installed into your cluster; the ModuleSource CRD defines where modules are pulled from (OCI registry, git repo, HTTP archive, local directory, or uploaded via API).
+
+### Module fields
+
+Module materializes a GameTemplate from a signed or pinned module bundle sourced from a ModuleSource. The reconciler pulls the referenced artifact and creates/updates an owned GameTemplate.
+
+| Field | Type | Required | Purpose |
+|---|---|---|---|
+| `spec.source` | LocalObjectReference | yes | Reference to a ModuleSource by name (namespaced within `gameplane-system`) |
+| `spec.name` | string | yes | Logical module name within the source (must match `modulesource.status.modules[].name`) |
+| `spec.version` | string | no | Specific semver to install; omit to track `modulesource.status.modules[].latestVersion` |
+| `spec.digest` | string | no | OCI manifest digest (`sha256:…`), git commit (`git:<sha>`), or content hash to pin exact bundle content and detect drift |
+| `status.phase` | enum | read-only | Pending / Pulling / Ready / Failed — see [Status, Phases & Conditions](./status-phases-conditions/) |
+| `status.appliedVersion` | string | read-only | Version currently materialized into the owned GameTemplate |
+| `status.appliedTemplate` | string | read-only | Name of the GameTemplate this Module owns (equals `metadata.name` on success) |
+
+### ModuleSource fields
+
+ModuleSource indexes a module catalog (OCI registry, git repo, HTTP archive, or local directory) and caches discovered modules and versions. The `spec.type` field selects which config block is active; all others must be omitted.
+
+| Field | Type | Required | Purpose |
+|---|---|---|---|
+| `spec.type` | enum | yes | oci / git / http / local / upload — selects which of spec.oci/git/http/local is active |
+| `spec.oci` | object | conditional | OCI registry config (required if `type=oci`) |
+| `spec.oci.url` | string | yes | Registry/repository prefix (e.g., `ghcr.io/valgulnecron/gameplane-modules`) |
+| `spec.oci.modules` | array | yes | Explicit list of `{name: string}` entries; registries cannot be enumerated, so the catalog is declarative |
+| `spec.oci.pullSecretRef` | LocalObjectReference | no | Secret in operator namespace holding `kubernetes.io/dockerconfigjson` credentials for private registries |
+| `spec.oci.insecure` | bool | no | Allow plain HTTP (no TLS) — for local kind/k3d registries only; never use on production |
+| `spec.git` | object | conditional | Git repository config (required if `type=git`) |
+| `spec.git.url` | string | yes | Clone URL (https or ssh) |
+| `spec.git.ref` | string | no | Branch or tag to index; defaults to `main` |
+| `spec.git.subPath` | string | no | Subdirectory relative to repository root (must not start with `/` or contain `..`) |
+| `spec.git.secretRef` | LocalObjectReference | no | Secret in operator namespace: https requires `token` or `username`+`password`; ssh requires `ssh-privatekey` + optional `known_hosts` |
+| `spec.http` | object | conditional | HTTP archive config (required if `type=http`) |
+| `spec.http.url` | string | yes | URL of tar.gz, .tgz, or .zip archive containing module directories |
+| `spec.http.secretRef` | LocalObjectReference | no | Secret: `token` (bearer) or `username`+`password` (basic auth) |
+| `spec.http.insecure` | bool | no | Allow plain http URLs; TLS verification is never skipped |
+| `spec.local` | object | conditional | Local directory config (required if `type=local`) |
+| `spec.local.path` | string | no | Relative path within operator's `--module-local-root` (defaults to root if empty; must not start with `/` or contain `..`) |
+| `spec.allow` | string array | no | Glob patterns to filter discovered modules (e.g., `["minecraft-*"]`); empty means allow all |
+| `spec.refreshInterval` | duration | no | How often to re-index the source; defaults to `1h`, minimum `1m` |
+| `spec.verify` | object | no | Cosign signature verification policy; only valid for `type=oci` |
+| `spec.verify.key` | LocalObjectReference | no | Secret in operator namespace holding PEM cosign public key under `cosign.pub` data key — exactly one of `key` or `keyless` must be set |
+| `spec.verify.keyless` | object | no | Fulcio keyless verification: `issuer` (OIDC URL, e.g., `https://token.actions.githubusercontent.com`) and `identity` (certificate SAN, e.g., GitHub Actions workflow URL) — exactly one of `key` or `keyless` must be set |
+| `spec.verify.requireTransparencyLog` | bool | no | Require Sigstore transparency-log (Rekor) inclusion evidence; defaults to false (log is mandatory for keyless, optional for keyed) |
+| `status.lastSync` | time | read-only | Timestamp of most recent successful index |
+| `status.modules` | array | read-only | Cached catalog: each module includes `name`, `displayName`, `summary`, `game`, `categories`, `icon`, `reference`, `versions`, `latestVersion`, `digest` |
+
+<DocsCallout icon="info" title="OCI signature verification in beta.8">
+  Module signature verification (cosign keyed and keyless) is available in beta.8. Set `spec.verify.key` or `spec.verify.keyless` to enforce signing on pull. Keyless verification requires connectivity to the Fulcio OIDC endpoint; keyed verification works offline.
+</DocsCallout>
+
+## Cluster registration
+
+The Cluster CRD registers a remote Kubernetes cluster for multi-cluster deployments. Each Cluster holds a kubeconfig Secret reference and reports health.
+
+| Field | Type | Required | Purpose |
+|---|---|---|---|
+| `spec.displayName` | string | no | Human-readable label for the cluster (appears in the dashboard) |
+| `spec.kubeconfigSecret.name` | string | yes | Name of a Secret in the operator namespace holding the kubeconfig |
+| `spec.kubeconfigSecret.key` | string | no | Secret data key where kubeconfig lives; defaults to `kubeconfig` |
+| `status.phase` | enum | read-only | Unknown / Healthy / Unhealthy — reflects latest connectivity check |
+| `status.lastCheckTime` | time | read-only | When health was last assessed |
+| `status.message` | string | read-only | Details about the current phase (error reason if Unhealthy) |
+| `status.serverVersion` | string | read-only | Remote cluster's Kubernetes version (e.g., `v1.28.0`), set on successful health check |
+| `status.conditions` | array | read-only | Tracks cluster health and observedGeneration |
+
+<DocsCallout icon="shield-alert" title="Kubeconfig Secret handling">
+  Secrets are referenced, never embedded in the CRD. The Secret must be created in the operator namespace (typically `gameplane-system`) and labeled `gameplane.local/cluster-kubeconfig: "true"`. The kubeconfig's embedded credentials (client cert, token, or service account) are kept at rest inside the Secret data. The operator reads this Secret only when health-checking the cluster; the remote kubeconfig is never synced to GameServer pods.
+</DocsCallout>
+
+## Quick reference
+
+| CRD | Scope | Purpose | Reconciler-owned fields |
+|---|---|---|---|
+| **Module** | Cluster | Install a module bundle; own a GameTemplate | `status.phase`, `status.appliedVersion`, `status.appliedTemplate`, `status.appliedDigest` |
+| **ModuleSource** | Cluster | Index a module catalog (OCI / git / http / local / upload) | `status.lastSync`, `status.modules`, `status.conditions` |
+| **Cluster** | Cluster | Register a remote Kubernetes cluster | `status.phase`, `status.lastCheckTime`, `status.message`, `status.serverVersion` |
+
+---
+
+## Related topics
+
+- **[Module Authoring](./module-authoring/)** — write a game module and publish it.
+- **[Test, Publish & Sign Modules](./test-publish-sign-modules/)** — build, sign with cosign, and push bundles.
+- **[CRD Catalog](./crd-catalog/)** — overview of all 9 Gameplane CRDs.
+- **[Status, Phases & Conditions](./status-phases-conditions/)** — how to interpret phase and condition values.
+- **[Multi-cluster Topology](./multi-cluster/)** — register and manage remote clusters.

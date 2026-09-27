@@ -1,0 +1,150 @@
+---
+title: Runtime capabilities and actions
+description: Expose only the controls Gameplane can execute and observe reliably through console, logs, status, players, and providers.
+section: develop
+group: modules-sources
+order: 5
+icon: check
+eyebrow: AUTHOR MODULES
+readTime: 19 MIN
+covers: ["RCON", "Actions", "Providers"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+
+Expose only the controls Gameplane can execute and observe reliably through console, logs, status, players, and providers.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "terminal",
+      label: "Console & Lifecycle",
+      text: "Choose RCON or PTY, authoritative game logs, safe credentials, and bounded stop/quiesce hooks.",
+    },
+    {
+      icon: "play",
+      label: "Actions & Status",
+      text: "Use strict templates and defensive parsers for user actions, live status, players, and moderation.",
+    },
+    {
+      icon: "package",
+      label: "Mods & Registries",
+      text: "Declare directories, install methods, IDs, compatibility, providers, restart behavior, and safe download/extraction rules.",
+    },
+  ]}
+/>
+
+<DocsCallout icon="check" title="Capability gates should hide unsupported controls instead of allowing an action that will predictably fail.">
+  When a capability is not available (e.g., RCON disabled, a player action not implemented), the dashboard hides the corresponding button or field rather than letting a user attempt an operation that will fail.
+</DocsCallout>
+
+## Console and lifecycle
+
+Choose RCON or PTY, authoritative game logs, safe credentials, and bounded stop/quiesce hooks.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "Never hard-code an RCON or console password.",
+      text: "Use spec.rcon.passwordSecretRef to reference a Secret, spec.rcon.passwordEnv to inject it as an env var, or spec.rcon.passwordFile for game-managed password files.",
+    },
+    {
+      icon: "check",
+      label: "Separate game log path from container stdout.",
+      text: "Set spec.logPath to the in-pod path of the game's primary log file (e.g. /data/logs/latest.log). The agent tails this file for the Logs tab; omit it only for stdout-only games.",
+    },
+    {
+      icon: "check",
+      label: "Provide graceful stop and backup quiesce/unquiesce with timeouts.",
+      text: "spec.capabilities.lifecycle.stop runs before pod termination; spec.capabilities.quiesce and unquiesce bracket backups. All three are command sequences that run over RCON.",
+    },
+  ]}
+/>
+
+## Actions and status
+
+Use strict templates and defensive parsers for user actions, live status, players, and moderation.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "Declare parameters, validation, labels, icons, and capability gates.",
+      text: "Each spec.capabilities.actions entry has an id, displayName, description, icon, command or commands template, parameter declarations with validation, and optional confirm/danger flags.",
+    },
+    {
+      icon: "check",
+      label: "Degrade stale or unsupported status instead of fabricating values.",
+      text: "spec.capabilities.status.metrics run RCON commands and extract values via named-group regex. If a metric is unavailable, omit it from the status tab instead of showing a fallback.",
+    },
+    {
+      icon: "check",
+      label: "Model kick, ban, whitelist, and other controls independently.",
+      text: "spec.capabilities.players declares kick, ban, unban, banList, whitelist, and list commands and parsing rules separately, so each is optional. Only declare the actions your game supports.",
+    },
+  ]}
+/>
+
+## Mods and registries
+
+Declare directories, install methods, IDs, compatibility, providers, restart behavior, and safe download/extraction rules.
+
+<DocsQuickReference
+  label="RUNTIME CONTRACT"
+  items={[
+    "spec.consoleMode + spec.rcon + spec.logPath",
+    "spec.capabilities.actions + spec.capabilities.status + spec.capabilities.players",
+    "spec.capabilities.mods + providers + loaders + install policy",
+  ]}
+/>
+
+### Mods directory and loaders
+
+Mods live in one of three ways:
+
+- **Single shared directory** (`spec.capabilities.mods.path`): all versions/loaders share one mods folder, e.g. "mods" or "plugins". Set `extensions` to filter by file type (e.g. `[".jar"]`).
+- **Per-loader volumes** (`spec.capabilities.mods.loaders`): each loader ID (e.g. "paper", "fabric") gets its own PVC mounted at its path. Picked by `spec.versions[].loader`. Supports per-loader `extensions` and extract behavior.
+- **Server-managed IDs** (`spec.capabilities.mods.idList`): the game downloads its own mods given a list of IDs. The operator projects `spec.mods.ids` into an env var the game consumes (e.g. Steam Workshop collections, ARK's CurseForge mods).
+
+### Registry providers and version filtering
+
+When `spec.capabilities.mods.registry` is set, the dashboard offers a mod browser for one or more providers:
+
+- **modrinth** (Minecraft, keyless)
+- **thunderstore** (BepInEx games, keyless, requires `community` slug)
+- **curseforge** (mods/modpacks, needs API key, requires `curseforgeGameID`)
+- **hangar** (PaperMC plugins, keyless)
+- **factorio** (official Factorio mod portal, keyless browse / credentials for download)
+- **steam** (Steam Workshop, needs API key, requires `steamAppID`)
+- **nexus** (Nexus Mods, needs API key, browse-only, requires `community` slug)
+- **spigot** (SpigotMC plugins via Spiget, keyless)
+- **github** (one repository's Releases, keyless, requires `github` object with owner/repo)
+- **umod** (Rust/Hurtworld/7DTD Oxide plugins, keyless)
+
+Version filtering uses `spec.versions[].gameVersion` (e.g. "1.21.4" for Minecraft) and the active version's `loader` ID. The registry provider matches these to its own version/loader facets — no mapping configuration needed.
+
+### Install policy and security
+
+`spec.capabilities.mods.install` gates mod downloads:
+
+- **AllowedHosts** (required): hostname allowlist (exact match "cdn.modrinth.com" or suffix ".modrinth.com"). SSRF guard: downloads to private/loopback/link-local addresses are refused.
+- **MaxSizeMB** (default 256): cap per-download size in mebibytes.
+- **Extract** (per-loader or global): when true, treat downloads as archives (.zip, .tar.gz) and unpack each into its own folder so recursive loaders (BepInEx, Bukkit) find the contents.
+
+### Modpacks
+
+When a registry provider has modpacks (e.g., Modrinth modpacks, Thunderstore collections), `spec.capabilities.mods.registry.providers[].modpacks` declares how installing one works:
+
+- **RefEnv**: the game-image environment variable that pins the modpack (e.g. "MODRINTH_MODPACK" for itzg/minecraft). Omit for collections-as-dependency-list games (e.g. Thunderstore BepInEx packs).
+- **Env**: additional fixed environment variables applied when the modpack is active (e.g. `{TYPE: MODRINTH}`).
+
+### Credentials for protected registries
+
+`spec.capabilities.mods.registry.providers[].credentialsSecretRef` references a Secret with "username" and "token" keys. Currently used by the Factorio provider for mod-portal downloads; the agent injects credentials transparently during installs.
+
+## Next guide
+
+[Test and publish modules](./test-publish-sign-modules/)

@@ -1,0 +1,271 @@
+---
+title: "API and realtime development"
+description: "Add REST, SSE, or WebSocket behavior while preserving authentication, scoping, audit, and agent-proxy invariants."
+section: develop
+group: api-reference
+order: 9
+icon: code
+readTime: "18 MIN"
+covers: ["REST", "SSE", "WebSockets"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+
+The API gateway (`api/`) exposes the Kubernetes control plane (CRDs, operator state) to the web dashboard and external integrations. New endpoints must preserve five invariants: authentication (who is the user?), session integrity (CSRF + rate limiting), cluster/namespace scoping (which resource?), safe error messages (never leak internal state), and audit trails (what changed?).
+
+<DocsCallout icon="info" title="Routes require upfront design">
+  A route is incomplete until permission, cluster and namespace scope, safe errors, audit, tests, and docs are defined.
+</DocsCallout>
+
+## REST gateway conventions
+
+Handlers stay close to Kubernetes resources while enforcing session, CSRF, permission, scope, and safe-error contracts. Every REST route follows these patterns:
+
+<DocsSectionList
+  items={[
+    {
+      icon: "shield-check",
+      label: "Declare auth/RBAC",
+      text: "Declare auth/RBAC, namespace, cluster, errors, and audit for every route.",
+    },
+    {
+      icon: "lock",
+      label: "Mutations need credentials",
+      text: "Mutations require session credentials and CSRF.",
+    },
+    {
+      icon: "lock",
+      label: "Document service accounts",
+      text: "Document external service-account behavior explicitly when available.",
+    },
+  ]}
+/>
+
+### Authentication and authorization
+
+The API supports two authentication flows: **local password** (argon2id hashing) and **OIDC** (via `coreos/go-oidc/v3`). Sessions are stored in the database with CSRF tokens and configurable expiry. Every API request runs through the `Session` middleware, which validates the session cookie and populates the request context.
+
+Authorization is role-based with three built-in roles (admin, operator, viewer) plus custom roles. The RBAC middleware (`internal/rbac/`) checks the user's permission against a rule table (method + path → permission), and falls back to per-GameServer owner/collaborator checks for fine-grained access.
+
+**Permission discovery:** The `GET /roles` endpoint lists all permissions and role assignments (read by the dashboard settings UI).
+
+### Cluster and namespace scope
+
+Every request has a logical cluster and namespace. The API resolves these via:
+
+- **Cluster:** extracted from `?cluster={name}` query param (defaults to `local` — the install cluster), validated against the Cluster CRD registry
+- **Namespace:** extracted from the URL path (`/servers/{name}` → namespace from server lookup) or defaulted to the user's home namespace
+
+Scope middleware (`internal/scope/`) extracts both before the handler runs. If a user tries to access a namespace they lack permission for, the handler returns `403 Forbidden` with a safe message (no namespace-existence leakage).
+
+### Safe error messages
+
+The `httperr` package classifies errors into safe HTTP responses. Internal errors (e.g., "database connection lost") are logged server-side but returned to the client as generic `500 Internal Server Error`. Permission errors return `403 Forbidden` without revealing whether the resource exists. Not-found errors return `404`, but the safe message never reveals whether the 404 is because the resource doesn't exist or the user lacks permission to see it.
+
+### Audit logging
+
+Every non-read request (POST, PATCH, DELETE) is logged to the audit table with:
+
+- User ID and IP address
+- Method, path, and request body (redacted for secrets)
+- Response status
+- Timestamp and hash-chain integrity ID
+
+The audit log is queryable via `GET /admin/audit` with filters (user, date, status). Hash-chain integrity allows offline detection of tampering.
+
+## Realtime and proxy paths
+
+Cluster events, console, logs, files, players, mods, status, and actions use different transports and upstreams:
+
+<DocsSectionList
+  items={[
+    {
+      icon: "activity",
+      label: "/events (SSE)",
+      text: "/events is authenticated SSE for invalidation.",
+    },
+    {
+      icon: "terminal",
+      label: "Console (WebSocket)",
+      text: "Console and game logs are WebSockets through the agent.",
+    },
+    {
+      icon: "server",
+      label: "Pod logs (Kubernetes)",
+      text: "Pod logs come from Kubernetes and fail differently from agent streams.",
+    },
+  ]}
+/>
+
+### Server-Sent Events (SSE) for status invalidation
+
+The `GET /events` endpoint is an authenticated SSE stream that emits Kubernetes events in real-time:
+
+```
+GET /events?cluster=local HTTP/1.1
+Accept: text/event-stream
+Authorization: Bearer <session-cookie>
+
+data: {"type":"GameServer","name":"my-server","action":"ADDED","timestamp":"2025-09-27T01:00:00Z"}
+data: {"type":"GameServer","name":"my-server","action":"MODIFIED","status":"Running"}
+```
+
+The stream multiplexes events across all servers the user has permission to see (role + collaborator fallback). Reconnects are automatic on the client side (browser EventSource API); the API accepts unlimited concurrent SSE clients.
+
+**Use cases:** status updates (server phase: Running → Stopped), quota changes, collaborator additions, backup completion.
+
+### WebSocket console and logs
+
+Console (RCON/PTY execution) and pod logs are bidirectional WebSocket streams (`/ws/servers/{name}/console`, `/ws/servers/{name}/console-pty`, `/ws/servers/{name}/logs`). The WebSocket handler:
+
+1. Validates session and permission (same middleware as REST)
+2. Dials the in-pod agent over mTLS
+3. Proxies client ↔ agent frames with heartbeat/keepalive
+4. Closes the connection when either end disconnects
+
+**Agent proxy:** Commands sent over the WebSocket are executed in the game pod via the agent sidecar. RCON goes to the game's remote console port; PTY goes to a shell session inside the pod.
+
+**Pod logs:** `GET /ws/servers/{name}/podlogs` streams live output from Kubernetes pod logs (stdout/stderr of the game container). Failure modes differ from agent logs (pod logs are captured by kubelet; agent logs come from the sidecar — if the agent crashes or the pod is evicted, pod logs may be incomplete or unavailable).
+
+**Heartbeat:** WebSocket connections are protected against idle timeouts with keepalive frames; the connection closes when either endpoint disconnects.
+
+### File proxy and artifact downloads
+
+File operations (`/servers/{name}/files/*`) are HTTP(S) requests that proxy to the agent's internal file server. The agent handles listing, reading, writing, and deleting files from the game's persistent volume. Uploads/downloads are streamed (no in-memory buffering).
+
+## Add an endpoint
+
+Adding a new API endpoint is a four-step workflow: mount the route, define the handler and permission, test the right layer, and document the change.
+
+### Step 1: Define the permission
+
+Open `api/internal/rbac/catalog.go` and add a constant for the new permission:
+
+```go
+const (
+  PermGameServerEdit = "gameserver:edit"
+  PermGameServerDelete = "gameserver:delete"
+  PermMyServerEdit = "gameserver:edit:my"  // new: example
+)
+```
+
+Update the permission-to-rule mapping in the same file or in `internal/rbac/rbac.go` if the permission applies only to certain paths or methods.
+
+### Step 2: Implement the handler
+
+Create or edit a file in `api/internal/handlers/` (e.g., `lifecycle.go`, `resources.go`, `audit.go`). Follow this pattern:
+
+```go
+func (h *handlers) serversEdit(w http.ResponseWriter, r *http.Request) {
+  // 1. Extract scope (cluster, namespace from context)
+  cluster := scope.ClusterFromContext(r.Context())
+  namespace := scope.NamespaceFromContext(r.Context())
+  
+  // 2. Parse input
+  var req UpdateServerRequest
+  if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+    httperr.BadRequest(w, "invalid request body")
+    return
+  }
+  
+  // 3. Validate input
+  if req.Memory < 512 {
+    httperr.BadRequest(w, "memory must be >= 512Mi")
+    return
+  }
+  
+  // 4. Fetch the resource (CRD)
+  server, err := h.kube.GetGameServer(r.Context(), cluster, namespace, chi.URLParam(r, "name"))
+  if err != nil {
+    if apierrors.IsNotFound(err) {
+      httperr.NotFound(w, "server not found")
+    } else {
+      httperr.InternalError(w, err)
+    }
+    return
+  }
+  
+  // 5. Check ownership/collaborator permission (RBAC fallback)
+  user := auth.UserFromContext(r.Context())
+  if !user.IsAdmin && server.Spec.Owner != user.ID && !slices.Contains(server.Spec.Collaborators, user.ID) {
+    httperr.Forbidden(w, "you do not have access to this server")
+    return
+  }
+  
+  // 6. Mutate and apply
+  server.Spec.Memory = req.Memory
+  _, err = h.kube.UpdateGameServer(r.Context(), server)
+  if err != nil {
+    httperr.InternalError(w, err)
+    return
+  }
+  
+  // 7. Emit audit log (automatic via middleware if audit tags are set)
+  w.Header().Set("Content-Type", "application/json")
+  json.NewEncoder(w).Encode(server)
+}
+```
+
+### Step 3: Mount the route
+
+Edit `api/cmd/main.go` and add the route to the chi router:
+
+```go
+r.Route("/servers/{name}", func(r chi.Router) {
+  r.With(rbac.Require(PermGameServerView)).Get("/", h.serversView)
+  r.With(rbac.Require(PermGameServerEdit)).Patch("/", h.serversEdit)
+  r.With(rbac.Require(PermGameServerDelete)).Delete("/", h.serversDelete)
+})
+```
+
+The `rbac.Require()` middleware validates permission before the handler runs. If the user lacks permission, the middleware returns `403 Forbidden`.
+
+### Step 4: Test the route
+
+Add an envtest (integration test) in `api/internal/handlers/<name>_envtest_test.go`:
+
+```go
+func TestGameServerEdit_NotFound(t *testing.T) {
+  ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+  defer cancel()
+  
+  // Create a test user, cluster, namespace
+  h := &harness{}
+  h.setUp(ctx, t)
+  defer h.tearDown()
+  
+  // Call the API
+  req := httptest.NewRequest("PATCH", "/servers/nonexistent", bytes.NewBufferString(`{"memory": 1024}`))
+  req.Header.Set("Content-Type", "application/json")
+  w := httptest.NewRecorder()
+  
+  h.handler.ServeHTTP(w, req)
+  
+  // Assert response
+  assert.Equal(t, http.StatusNotFound, w.Code)
+}
+```
+
+Run the test via `make test-integration`.
+
+<DocsQuickReference
+  label="API CHANGE"
+  items={[
+    "01  cd api && go test ./...",
+    "02  make test-integration",
+    "03  rg 'Mount|/ws/|/events' api/cmd api/internal",
+  ]}
+/>
+
+## Related reading
+
+- **[REST API Reference](./rest-api-reference/)** — full endpoint catalog, request/response schemas
+- **[WebSocket & Event Streams](./websocket-event-streams/)** — protocol details, reconnect behavior
+- **[API & CRDs](./api-crds/)** — CRD reference and schema validation
+- **[Local Development Setup](./local-development-setup/)** — running the API locally (`make dev-up`)
+
+---
+
+**Next guide:** [Operator and CRD development](./operator-crd-development/)

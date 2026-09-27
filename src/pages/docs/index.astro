@@ -5,56 +5,234 @@ import { docHref, getOrderedDocs, sidebarLabel } from "../../lib/docs-nav";
 
 const docs = await getOrderedDocs();
 
-const workflowCards = [
-  {
-    id: "getting-started",
+// Map docs to categories (16 desktop, 8 mobile) based on section + group
+const categoryMap: Record<string, { title: string; description: string; icon: string; groups: string[] }> = {
+  // START HERE & INSTALL
+  "install-deploy": {
     title: "Install & deploy",
-    description: "Helm, prerequisites, cluster setup, and your first admin user.",
+    description: "Helm, prerequisites, ingress, TLS, bootstrap, and upgrades.",
+    icon: "rocket",
+    groups: ["start-here:*"],
   },
-  {
-    id: "dashboard-tour",
+  // START HERE & UI
+  "dashboard-create": {
     title: "Dashboard & create",
-    description: "Tour the control surface and follow the first operating loop.",
+    description: "Tour the UI and create a server from template to review.",
+    icon: "layout-dashboard",
+    groups: ["start-here:dashboard-tour", "start-here:create-a-server"],
   },
-  {
-    id: "architecture",
-    title: "Core concepts",
-    description: "Understand the API, operator, agent, and Kubernetes control planes.",
+  // OPERATE - Servers
+  "server-operations": {
+    title: "Server operations",
+    description: "Fleet states, lifecycle, players, ownership, and safe actions.",
+    icon: "server",
+    groups: ["operate:servers-config"],
   },
-  {
-    id: "security",
-    title: "Security & access",
-    description: "Review authentication, RBAC, mTLS, network policies, and verification.",
+  // OPERATE - Console
+  "console-logs": {
+    title: "Console & logs",
+    description: "Events, RCON, live console, container logs, and failed starts.",
+    icon: "terminal",
+    groups: ["operate:console-logs"],
   },
-  {
-    id: "module-authoring",
+  // OPERATE - Files
+  "files-mods-worlds": {
+    title: "Files, mods & worlds",
+    description: "Browser editing, uploads, players, mods, modpacks, and safety.",
+    icon: "folder",
+    groups: ["operate:files-backups:!backup-recovery,backup-destinations,backup-repository"],
+  },
+  // OPERATE - Backups
+  "backups-recovery": {
+    title: "Backups & recovery",
+    description: "Snapshots, schedules, destinations, retention, and restores.",
+    icon: "archive",
+    groups: ["operate:files-backups:backup-recovery,backup-destinations,backup-repository"],
+  },
+  // PLATFORM - Cluster
+  "cluster-storage": {
+    title: "Cluster & storage",
+    description: "Nodes, capacity, placement, StorageClasses, PVCs, and scaling.",
+    icon: "boxes",
+    groups: ["platform:cluster-storage"],
+  },
+  // PLATFORM - Users
+  "users-access": {
+    title: "Users & access",
+    description: "Local users, service accounts, roles, permissions, OIDC, and SSO.",
+    icon: "users",
+    groups: ["platform:users-access"],
+  },
+  // PLATFORM - Audit
+  "audit-observability": {
+    title: "Audit & observability",
+    description: "Integrity, metrics, system logs, notifications, and admin settings.",
+    icon: "activity",
+    groups: ["platform:audit-observability"],
+  },
+  // DEVELOP - Modules
+  "modules-sources": {
     title: "Modules & sources",
-    description: "Package versioned OCI templates with metadata and runtime capabilities.",
+    description: "Catalog states, registries, signatures, OCI, authoring, and rollback.",
+    icon: "package",
+    groups: ["develop:modules-sources:!module-authoring"],
   },
-  {
-    id: "contributing",
+  // DEVELOP - API
+  "api-gitops": {
+    title: "API & GitOps",
+    description: "CRDs, status conditions, kubectl, service accounts, and automation.",
+    icon: "braces",
+    groups: ["develop:api-reference"],
+  },
+  // REFERENCE - Upgrades & Help
+  "upgrades-help": {
+    title: "Upgrades & help",
+    description: "Migrations, rollback gates, troubleshooting, FAQ, and community.",
+    icon: "life-buoy",
+    groups: ["reference:upgrades", "reference:troubleshooting", "reference:faq", "reference:community"],
+  },
+  // PLATFORM/DEVELOP - Production Ops (virtual category)
+  "production-operations": {
+    title: "Production operations",
+    description: "HA, TLS, databases, air-gap, upgrades, rotation, DR, and decommission.",
+    icon: "shield",
+    groups: ["platform:cluster-storage", "platform:audit-observability"],
+  },
+  // DEVELOP - Developer Setup
+  "developer-setup": {
     title: "Developer setup",
-    description: "Run the local development loop and follow the design-first contribution flow.",
+    description: "Repo map, web, API, operator, agent, migrations, tests, CI, and releases.",
+    icon: "code",
+    groups: ["develop:local-development", "develop:testing-release", "develop:component-guides"],
   },
-  {
-    id: "comparison",
-    title: "Compare approaches",
-    description: "See how Gameplane differs from single-host game server panels.",
+  // DEVELOP - Module Authoring
+  "module-authoring": {
+    title: "Module authoring",
+    description: "GameTemplate schema, capabilities, actions, testing, publishing, and signing.",
+    icon: "puzzle",
+    groups: ["develop:modules-sources:module-authoring"],
   },
-  {
-    id: "roadmap",
-    title: "Roadmap & releases",
-    description: "Track beta limitations, completed work, and planned hardening.",
+  // REFERENCE - Deep Reference
+  "deep-reference": {
+    title: "Deep reference",
+    description: "REST, realtime, Helm values, CRDs, permissions, statuses, metrics, and events.",
+    icon: "book-open",
+    groups: ["develop:api-reference", "reference:releases-roadmap"],
   },
-  {
-    id: "get-involved",
-    title: "Community",
-    description: "Report bugs, improve docs, publish modules, and contribute code.",
-  },
-].flatMap((card) => {
-  const doc = docs.find((entry) => entry.id === card.id);
-  return doc ? [{ ...card, href: docHref(doc), icon: doc.data.icon }] : [];
-});
+};
+
+// Desktop category order (16 cards)
+const desktopCategories = [
+  "install-deploy",
+  "dashboard-create",
+  "server-operations",
+  "console-logs",
+  "files-mods-worlds",
+  "backups-recovery",
+  "cluster-storage",
+  "users-access",
+  "audit-observability",
+  "modules-sources",
+  "api-gitops",
+  "upgrades-help",
+  "production-operations",
+  "developer-setup",
+  "module-authoring",
+  "deep-reference",
+];
+
+// Mobile category order (8 cards) - curated subset
+const mobileCategories = [
+  "install-deploy",
+  "server-operations",
+  "files-mods-worlds",
+  "users-access",
+  "modules-sources",
+  "upgrades-help",
+  "developer-setup",
+  "deep-reference",
+];
+
+// Helper to check if doc matches a category filter
+function docMatchesGroup(doc: (typeof docs)[0], groupFilter: string): boolean {
+  const [section, groupPart] = groupFilter.split(":");
+
+  if (doc.data.section !== section) return false;
+
+  if (groupPart === "*") return true;
+
+  if (!groupPart) return !doc.data.group;
+
+  // Handle exclusions (!) and specific ids
+  if (groupPart.includes(",")) {
+    const parts = groupPart.split(",");
+    const exclude = parts.filter((p) => p.startsWith("!")).map((p) => p.slice(1));
+    const include = parts.filter((p) => !p.startsWith("!"));
+
+    if (exclude.length > 0) {
+      return (
+        doc.data.group === section && !exclude.some((ex) => doc.id.includes(ex))
+      );
+    }
+
+    return include.some((id) => doc.id.includes(id));
+  }
+
+  if (groupPart.startsWith("!")) {
+    const excludeId = groupPart.slice(1);
+    return doc.data.group === section && !doc.id.includes(excludeId);
+  }
+
+  return doc.data.group === groupPart;
+}
+
+// Count docs in each category
+function countDocsInCategory(categoryId: string): number {
+  const category = categoryMap[categoryId];
+  if (!category) return 0;
+
+  const matched = new Set<string>();
+  for (const groupFilter of category.groups) {
+    docs.forEach((doc) => {
+      if (docMatchesGroup(doc, groupFilter)) {
+        matched.add(doc.id);
+      }
+    });
+  }
+
+  return matched.size;
+}
+
+// Create category cards with counts
+const createCategoryCard = (categoryId: string) => {
+  const category = categoryMap[categoryId];
+  if (!category) return null;
+
+  const count = countDocsInCategory(categoryId);
+  const firstDoc = docs.find((doc) => {
+    for (const groupFilter of category.groups) {
+      if (docMatchesGroup(doc, groupFilter)) return true;
+    }
+    return false;
+  });
+
+  return {
+    id: categoryId,
+    title: category.title,
+    description: category.description,
+    icon: category.icon,
+    count,
+    href: firstDoc ? docHref(firstDoc) : "#",
+  };
+};
+
+const desktopCards = desktopCategories.map(createCategoryCard).filter((c) => c !== null);
+const mobileCards = mobileCategories.map(createCategoryCard).filter((c) => c !== null);
+
+// Calculate total count for the pill
+const totalCount = desktopCards.reduce((sum, card) => sum + (card?.count || 0), 0);
+const countLabel =
+  totalCount >= 80 ? "80+ GUIDES + REFERENCES" : `${totalCount} GUIDES + REFERENCES`;
 
 const searchIndex = docs.map((doc) => ({
   title: doc.data.title,
@@ -62,6 +240,7 @@ const searchIndex = docs.map((doc) => ({
   href: docHref(doc),
   label: sidebarLabel(doc),
 }));
+const cardHrefs = desktopCards.map((c) => c?.href).filter(Boolean);
 ---
 
 <DocsLayout
@@ -93,32 +272,70 @@ const searchIndex = docs.map((doc) => ({
 
     <div class="flex items-center justify-between gap-4">
       <h2 class="font-primary text-[15px] font-semibold text-foreground">Browse by workflow</h2>
-      <span class="font-primary text-[10px] font-semibold tracking-wide text-primary">
-        {docs.length} GUIDES + REFERENCES
+      <span
+        class="font-primary text-[10px] font-semibold tracking-wide rounded-full bg-accent/10 px-3 py-1.5 border border-accent/50 text-accent"
+      >
+        {countLabel}
       </span>
     </div>
 
-    <div id="docs-cards" class="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+    <!-- Desktop: 16-column grid (4 per row) -->
+    <div id="docs-cards" class="hidden md:grid gap-3 grid-cols-2 lg:grid-cols-4">
       {
-        workflowCards.map((card) => (
+        desktopCards.map((card) => (
           <a
-            class="group flex min-h-36 flex-col gap-2 rounded-m border border-border bg-card p-4 hover:border-muted-foreground"
+            class="group flex flex-col gap-2 rounded-m border border-border bg-card p-3 hover:border-muted-foreground min-h-28"
             href={card.href}
           >
-            <div class="flex items-center justify-between gap-3">
-              <div class="flex h-9 w-9 items-center justify-center rounded-[10px] bg-secondary">
-                <Icon name={card.icon} class="h-[18px] w-[18px] text-primary" />
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex h-6 w-6 items-center justify-center rounded-[7px] bg-accent/10">
+                <Icon name={card.icon} class="h-4 w-4 text-accent" />
               </div>
-              <Icon
-                name="arrow-right"
-                class="h-4 w-4 text-muted-foreground group-hover:text-primary"
-              />
+              <span class="font-primary text-[7.5px] font-semibold text-muted-foreground">
+                {card.count} {card.count === 1 ? "guide" : "guides"}
+              </span>
             </div>
-            <span class="font-primary text-sm font-semibold text-foreground">{card.title}</span>
-            <span class="text-[13px] leading-snug text-muted-foreground">{card.description}</span>
+            <span class="font-primary text-xs font-semibold text-foreground line-clamp-2">
+              {card.title}
+            </span>
+            <span class="text-[11px] leading-tight text-muted-foreground line-clamp-2">
+              {card.description}
+            </span>
           </a>
         ))
       }
+    </div>
+
+    <!-- Mobile: 8-column grid (2 per row) + View all button -->
+    <div id="docs-cards-mobile" class="md:hidden flex flex-col gap-3">
+      <div class="grid grid-cols-2 gap-3">
+        {
+          mobileCards.map((card) => (
+            <a
+              class="group flex flex-col gap-2 rounded-m border border-border bg-card p-3 hover:border-muted-foreground min-h-24"
+              href={card.href}
+            >
+              <div class="flex items-center justify-between gap-2">
+                <Icon name={card.icon} class="h-4 w-4 text-accent" />
+                <Icon name="arrow-up-right" class="h-3 w-3 text-muted-foreground" />
+              </div>
+              <span class="font-primary text-xs font-semibold text-foreground line-clamp-1">
+                {card.title}
+              </span>
+              <span class="text-[10px] text-muted-foreground">
+                {card.count} {card.count === 1 ? "guide" : "guides"}
+              </span>
+            </a>
+          ))
+        }
+      </div>
+      <a
+        href={import.meta.env.BASE_URL + "/docs/"}
+        class="flex items-center justify-center gap-2 rounded-m border border-border bg-card px-4 py-2.5 hover:border-muted-foreground font-primary text-sm font-medium text-foreground"
+      >
+        View all guides and references
+        <Icon name="arrow-right" class="h-3.5 w-3.5 text-accent" />
+      </a>
     </div>
   </div>
 </DocsLayout>

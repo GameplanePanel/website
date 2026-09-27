@@ -1,0 +1,107 @@
+---
+title: Executable upgrades and rollback
+description: Turn release notes into a staged change plan with compatibility gates, migration ownership, verification evidence, and a safe recovery boundary.
+section: reference
+group: upgrades
+order: 2
+icon: refresh-cw
+eyebrow: LIFECYCLE
+readTime: 20 MIN
+covers: ["Migrations", "Canary", "Rollback"]
+next: uninstall-decommission
+---
+
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+
+Turn release notes into a staged change plan with compatibility gates, migration ownership, verification evidence, and a safe recovery boundary.
+
+<DocsArticleMeta groupId="upgrades" readTime="20 MIN" />
+
+<DocsCallout icon="shield-alert" title="Never assume schema or CRD downgrade is safe.">
+Use only the release-specific rollback window.
+</DocsCallout>
+
+## Preflight compatibility
+
+Define the supported source/target path and capture the complete current environment before changing it.
+
+<DocsSectionList
+  items={[
+    { icon: "check", label: "Environment snapshot", text: "Check Kubernetes, Helm, database, CRDs, values, and downtime." },
+    { icon: "check", label: "Recovery set", text: "Export values and rendered manifests; verify the recovery set." },
+    { icon: "check", label: "Success criteria", text: "Define success, abort, rollback, and forward-fix criteria." },
+  ]}
+/>
+
+Capture the entire current state before starting the upgrade:
+
+- **Kubernetes version:** `kubectl version --short`
+- **Helm chart version:** `helm list -n gameplane-system`
+- **Database version:** Check your database schema version (documented in release notes for each version)
+- **CRD versions:** `kubectl get crd -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.spec.names.kind}{"\n"}{end}'`
+- **Helm values:** `helm get values gameplane -n gameplane-system > current-values.yaml`
+- **Rendered manifest diff:** `helm diff upgrade gameplane oci://ghcr.io/valgulnecron/charts/gameplane --version <target-version> -n gameplane-system` (requires `helm-diff` plugin)
+
+## Execute in release order
+
+Follow release-specific CRD, migration, chart, and workload ordering through canary and production.
+
+<DocsSectionList
+  items={[
+    { icon: "check", label: "Canary first", text: "Diff manifests and run a non-production canary first." },
+    { icon: "check", label: "Observe migration", text: "Observe migration jobs, rollouts, leaders, conditions, events, and logs." },
+    { icon: "check", label: "No cross-domain changes", text: "Do not combine unrelated server, storage, auth, or network changes." },
+  ]}
+/>
+
+Verify the manifest diff reflects only the version change you intend. Run a non-production canary cluster through the same sequence: `helm upgrade --install` the target chart version, wait for the pre-upgrade CRD hook to complete (check the Job logs in `gameplane-system`), then observe all migration Jobs, operator rollout, API rollout, and game server reconciliations. Check `kubectl get events -n gameplane-system` and operator logs (`kubectl logs -l app=gameplane-operator -n gameplane-system -f`).
+
+## Validate or recover
+
+Test every core workflow and roll back only when data and CRD compatibility explicitly permit it.
+
+Test every core workflow after the upgrade completes:
+- Create a test GameServer and verify it starts.
+- Verify console connectivity, file manager access, and player list population.
+- Trigger a backup and verify it completes.
+- Check audit logs are being recorded.
+- Run at least one complete login → server create → player join → graceful stop cycle.
+
+Roll back only if validation fails and the release-specific downgrade window permits it. Each release notes section (under "Upgrade Notes" in the CHANGELOG) documents the rollback window — typically one or two minor versions backward. If you must rollback:
+
+1. Note the last-known-good version before the upgrade.
+2. Check the target release's CHANGELOG for explicit `[Rollback Note]` entries covering schema and CRD compatibility in your source → target → rollback path.
+3. If the path is not explicitly documented, do not attempt rollback; instead, open a GitHub issue or contact the maintainers.
+
+<DocsQuickReference
+  label="UPGRADE GATE"
+  items={[
+    "Supported path + recovery set + rendered diff + canary",
+    "Apply documented CRD/migration/chart order; observe every job",
+    "Validate core workflows; rollback only inside compatibility window",
+  ]}
+/>
+
+---
+
+## Release order details
+
+Every release's CHANGELOG includes an "Upgrade Notes" section that documents:
+
+- **CRD order:** Which CRDs must be applied first (if any are dropped or renamed, the order matters for downgrade safety).
+- **Migration jobs:** Sequencing for any database schema or data transformations (e.g., backfilling a new column before a `NOT NULL` constraint is added).
+- **Operator behavior:** Whether the operator has breaking changes (e.g., new required fields, behavior changes on certain CRD values).
+- **Chart-only changes:** Helm value renames or restructures that require manifest diffing.
+
+If the upgrade adds a CRD or modifies CRD schema in a backward-incompatible way (e.g., removing a field), the downgrade window is explicitly noted. For example, if a field is removed in v0.3.0 but the v0.2 operator still reads it, you can safely rollback v0.3.0 → v0.2; if the field is required in v0.3.0 and v0.2 will fail on its absence, the rollback window is closed — you are committed to v0.3.0 and must forward-fix any issues instead.
+
+---
+
+## Related guides
+
+- [Supported Versions Matrix](./supported-versions-matrix/) — compatibility grid for Kubernetes, Helm, and database versions.
+- [Uninstall & Decommission](./uninstall-decommission/) — retiring a Gameplane cluster.
+- [Database Configuration & Lifecycle](./database-configuration/) — managing the backing database during upgrades.

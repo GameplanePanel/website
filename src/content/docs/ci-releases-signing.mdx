@@ -1,0 +1,90 @@
+---
+title: "CI, releases, and signing"
+description: "Understand the gates from pull request through edge images, tagged releases, Helm publication, and Cosign verification."
+section: develop
+group: testing-release
+order: 2
+icon: github
+eyebrow: DEVELOP
+readTime: "17 MIN"
+covers: ["CI", "OCI", "Cosign"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+
+Understand the gates from pull request through edge images, tagged releases, Helm publication, and Cosign verification.
+
+<DocsCallout icon="info" title="Edge channel is beta software">
+  The rolling `:edge` channel is test software; production installs should pin a tagged chart and immutable image digests.
+</DocsCallout>
+
+## Continuous integration
+
+CI covers Go modules, envtest, web build/coverage, browser tests, Helm rendering, and disjoint Kind E2E buckets.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "Matrix tests",
+      text: "Every Go module and required build tag is tested.",
+    },
+    {
+      icon: "arrow-up-right",
+      label: "Coverage gates",
+      text: "Coverage is merged and enforced per component.",
+    },
+    {
+      icon: "boxes",
+      label: "E2E completeness",
+      text: "Helm and bucket-coverage checks protect generated and E2E completeness.",
+    },
+  ]}
+/>
+
+## Edge channel
+
+Changes on main publish rolling `:edge` images and immutable `sha-<short>` tags for all released components.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "layers",
+      label: "Multi-architecture",
+      text: "Images are multi-architecture and optionally signed by digest.",
+    },
+    {
+      icon: "arrow-right",
+      label: "Immutable pinning",
+      text: "Commit-based sha tags provide immutable commit pinning.",
+    },
+    {
+      icon: "file-code",
+      label: "Docs/design-only",
+      text: "Docs and design-only changes require direct review because code CI may skip them.",
+    },
+  ]}
+/>
+
+## Tagged release
+
+A `v` tag builds and signs images, packages the OCI chart, creates release notes, and publishes official modules.
+
+<DocsQuickReference
+  label="RELEASE PATH"
+  items={[
+    "01  go build ./... && npx tsc --noEmit  # Lightweight local compile checks",
+    "02  git tag vX.Y.Z && git push origin vX.Y.Z",
+    "03  cosign verify --key cosign.pub ghcr.io/valgulnecron/gameplane/<image>@<digest>",
+  ]}
+/>
+
+Release images carry Cosign signatures recorded in the public Sigstore Rekor transparency log. Verify any released or edge image with the `cosign.pub` key at the repo root. Pre-rotation releases (v0.2.0-beta.7 and earlier) used the retired Ed25519 key and require `cosign-legacy.pub` with the `--insecure-ignore-tlog=true` flag (see [Key Rotation](../credential-rotation/) for trust continuity).
+
+---
+
+## Next guide
+
+[Extension services](./extension-services/)

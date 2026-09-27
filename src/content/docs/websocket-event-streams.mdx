@@ -1,0 +1,99 @@
+---
+title: WebSocket and event streams
+description: Connect to console, logs, and invalidation events with the correct transport, framing, permission, and reconnect behavior.
+section: develop
+group: api-reference
+order: 8
+icon: activity
+eyebrow: REFERENCE
+readTime: 7 MIN
+covers: ["WebSocket", "Real-time streams", "SSE", "Reconnection", "Permissions"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+
+Connect to console, logs, and invalidation events with the correct transport, framing, permission, and reconnect behavior.
+
+## Console and log sockets
+
+Game servers expose real-time console and log output via WebSocket. Both require a valid session (Bearer token in the `Authorization` header) and the appropriate permission on the target server.
+
+| Stream | Transport | Permission | Description |
+|--------|-----------|------------|-------------|
+| `/ws/servers/{name}/console` | WebSocket | `servers:console` | Proxy the module-configured agent console (RCON or raw line protocol). |
+| `/ws/servers/{name}/console-pty` | WebSocket | `servers:console` | Attach to PTY-capable game workloads; bridges stdin/stdout via the Kubernetes pod-attach API. |
+| `/ws/servers/{name}/logs` | WebSocket | `servers:read` | Tail the configured game log file through the agent. |
+| `/ws/servers/{name}/logs/pod?from=start\|end` | WebSocket | `servers:read` | Stream container stdout through Kubernetes; `from=start` stitches init containers and setup logs before the game container, `from=end` tails recent game output only. |
+
+## Events and lifecycle
+
+The `/events` stream (Server-Sent Events) broadcasts Kubernetes watch notifications for all resources in scope. File downloads use plain HTTP rather than WebSocket.
+
+| Stream | Transport | Permission | Description |
+|--------|-----------|------------|-------------|
+| `/events` | SSE | `servers:read` | Cluster-resource invalidation events (not durable history; clients must poll for any events they missed while disconnected). |
+| `[GET] /servers/{name}/logs/download` | HTTP | `servers:read` | Download a server's complete game log file without opening a socket. |
+| `cluster change` | client lifecycle | `scope-aware` | When switching clusters or workspaces, cancel old WebSocket connections and open new ones in the new scope to avoid stale state. |
+| `disconnect` | close + UI state | — | Use bounded exponential backoff on reconnect and display stale/disconnected state to the user instead of silently retrying forever. |
+
+## Authentication and scope
+
+Sessions, origin rules, namespace, and cluster scope match the REST API; see [REST API Reference](./rest-api-reference/) for session validation and CSRF token requirements.
+
+<DocsCallout icon="info" title="Sessions and CSRF still apply">
+  WebSocket upgrades require a valid session, and adjacent REST mutations (e.g., sending commands while monitoring the console) still require CSRF tokens in the `X-CSRF-Token` header.
+</DocsCallout>
+
+## Reconnection strategy
+
+The dashboard and SDK should implement bounded exponential backoff with a jitter on reconnect:
+
+1. **Initial backoff:** 1 second
+2. **Growth:** Multiply by 1.5 on each failure, cap at 30 seconds
+3. **Jitter:** Add ±20% random variance to prevent thundering herd
+4. **User feedback:** Show "Disconnected" or stale timestamps once backoff exceeds 5 seconds; do not retry silently forever
+
+Example timeline:
+- Disconnect at T+0 → retry at T+1s, T+2.5s, T+3.75s, T+5.6s (show "Disconnected"), T+8.4s, …, T+30s cap
+
+## Frame format
+
+### WebSocket console and logs
+
+Frames are newline-delimited UTF-8 text (same framing as the agent):
+
+```
+stdin / command line: {"kind":"stdin","body":"<base64-encoded bytes>"}
+stdout / log line: {"kind":"stdout","body":"<base64-encoded bytes>"}
+resize (PTY only): {"kind":"resize","cols":80,"rows":24}
+error: {"kind":"err","body":"<plain-text message>"}
+```
+
+### Server-Sent Events (/events)
+
+Standard `text/event-stream` format: each event has a JSON-encoded Kubernetes resource (GameServer, Backup, etc.) and a Kubernetes event type (`ADDED`, `MODIFIED`, `DELETED`, `ERROR`):
+
+```
+event: ADDED
+data: {"apiVersion":"gameplane.io/v1alpha1","kind":"GameServer",...}
+
+event: MODIFIED
+data: {"apiVersion":"gameplane.io/v1alpha1","kind":"Backup",...}
+```
+
+Clients should reset the SSE connection if they receive an ERROR event (usually means a permission change or token revocation).
+
+## WebSocket close codes
+
+Standard RFC 6455 close codes apply:
+
+| Code | Reason | Reconnect? |
+|------|--------|-----------|
+| 1000 | Normal closure | Yes, with backoff |
+| 1001 | Going away (server restart) | Yes, with backoff |
+| 1002 | Protocol error (invalid frame) | No; log and alert |
+| 1008 | Policy violation (permission revoked, token expired) | No; refresh session and re-authenticate |
+| 1011 | Server error | Yes, with backoff |
+
+Close code 1008 indicates the session or permission changed; clients must re-authenticate before reconnecting.

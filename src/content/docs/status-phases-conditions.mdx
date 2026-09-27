@@ -1,0 +1,201 @@
+---
+title: Status, Phases & Conditions
+description: Canonical lifecycle states and controller-owned conditions for servers, backups, restores, modules, sources, and clusters.
+section: develop
+group: api-reference
+order: 6
+icon: circle-dot
+eyebrow: API REFERENCE
+covers: ["Resource lifecycle", "CRD status", "Reconciliation"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+
+Gameplane CRDs report their operational state via standardized **phases** (coarse UI-friendly summaries) and **conditions** (detailed state transitions). This page catalogs the lifecycle of each resource type and explains how to observe them in the API.
+
+## GameServer lifecycle
+
+A GameServer's phase reflects its readiness for players and the operator's current action:
+
+| Phase | Meaning | Transition | Operator action |
+|-------|---------|-----------|-----------------|
+| **Pending** | Awaiting cluster capacity | → Starting | Schedules the underlying StatefulSet pod |
+| **Starting** | Pod is coming up | → Running | Waits for readiness probe + agent heartbeat |
+| **Running** | Ready for players | → Stopping | Maintains pod health and heartbeat monitoring |
+| **Stopping** | Graceful shutdown in progress | → Stopped | Runs template's stop sequence, waits for exit |
+| **Stopped** | Pod is terminated, data preserved | → Starting | (awaiting explicit resume) |
+| **Suspended** | Intentionally paused | → Starting | Preserves both pod and intent (vs. Stopped) |
+| **Failed** | Terminal error (no retry scheduled) | — | Surfaces detailed reason in conditions |
+
+Transitions are driven by reconciliation logic. A manual retry or wakeup (via dashboard or API) re-triggers the → Starting transition.
+
+### Standard Conditions
+
+GameServer conditions align with the Kubernetes Condition API (`metav1.Condition`):
+
+| Condition | Meaning | Typical values |
+|-----------|---------|-----------------|
+| **Ready** | Pod is running and agents are healthy | True / False |
+| **Progressing** | A spec change is being rolled out | True / False |
+| **Healthy** | Liveness/readiness probes pass | True / False |
+| **AddressAssignment** | External address allocated (LoadBalancer mode) | True / False / Unknown |
+| **DataWipe** | Wipe-data job succeeded | True / False / (absent) |
+
+## Backup & Restore
+
+### Backup phases
+
+| Phase | Meaning |
+|-------|---------|
+| **Pending** | Waiting to start (server may be quiescing) |
+| **Running** | Snapshot or restic pull in progress |
+| **Succeeded** | Backup is complete and durable |
+| **Failed** | Backup failed; see condition reason |
+
+Completed backups are immutable. A failed backup can be manually retried via `kubectl delete backup <name>` (re-creates immediately).
+
+### Restore phases
+
+| Phase | Meaning |
+|-------|---------|
+| **Pending** | Waiting to acquire the source backup |
+| **Suspending** | Target server being gracefully stopped |
+| **Running** | Data volume restore in progress |
+| **Resuming** | Target server coming back online |
+| **Succeeded** | Restore complete; server is running |
+| **Failed** | Restore failed; see conditions |
+
+## Modules & Module Sources
+
+### Module phases
+
+A Module represents a single installed game template (pulled from a ModuleSource):
+
+| Phase | Meaning |
+|-------|---------|
+| **Pending** | Source not yet indexed, or version unresolved |
+| **Pulling** | OCI artifact pull in progress |
+| **Ready** | GameTemplate is current with desired bundle |
+| **Failed** | Pull or reconciliation failed; see conditions |
+
+### Module Source conditions
+
+A ModuleSource indexes a catalog (Git, OCI registry, HTTP, or local) and caches its module list. It does not have phases — only conditions:
+
+| Condition | Meaning |
+|-----------|---------|
+| **Synced** | Most recent index pull succeeded |
+| **Ready** | Complete catalog is available |
+
+## Cluster health phases
+
+A remote Cluster's phase reflects the last health check:
+
+| Phase | Meaning |
+|-------|---------|
+| **Unknown** | Not yet checked, or check timed out |
+| **Healthy** | Last API connectivity check succeeded |
+| **Unhealthy** | Last check failed (unreachable, misconfigured, etc.) |
+
+The operator periodically runs health checks (configurable interval); see `status.lastCheckTime` for the check timestamp.
+
+---
+
+## Reconciliation and observedGeneration
+
+All Gameplane CRDs follow the Kubernetes pattern: `status.observedGeneration` records the `metadata.generation` of the spec that produced the current status. This lets you detect when a status is stale after editing the spec:
+
+1. Edit the GameServer spec → `metadata.generation` increments
+2. Controller observes the change and starts reconciliation
+3. Once reconciliation completes, controller updates `status.observedGeneration` to match
+4. **Do not treat a condition as current until `status.observedGeneration ≥ metadata.generation`**
+
+This is essential for automation (GitOps, operators): comparing generation values tells you whether the observed state reflects your latest spec change, or is still working toward it.
+
+### Example
+
+```yaml
+apiVersion: gameplane.local/v1alpha1
+kind: GameServer
+metadata:
+  name: survival-server
+  generation: 3  # spec has been edited 3 times
+spec:
+  suspend: false
+status:
+  phase: Running
+  observedGeneration: 3    # ✓ Status is current with spec
+  conditions:
+    - type: Ready
+      status: "True"
+```
+
+If you edit the spec and `observedGeneration` lags, the dashboard may show stale conditions. Reconciliation will catch up; you can check progress via `kubectl describe gameserver <name>`.
+
+---
+
+## Condition format
+
+All Gameplane conditions are Kubernetes-native `metav1.Condition` objects with standard fields:
+
+```json
+{
+  "type": "Ready",
+  "status": "True|False|Unknown",
+  "reason": "ServerReady|Pending|...",
+  "message": "Human-readable detail",
+  "observedGeneration": 5,
+  "lastTransitionTime": "2025-09-27T14:30:00Z"
+}
+```
+
+- **type**: condition identifier (e.g., `Ready`, `Progressing`)
+- **status**: `True`, `False`, or `Unknown`
+- **reason**: short code for the cause (e.g., `PodScheduled`, `ImagePullBackOff`)
+- **message**: human-friendly explanation
+- **observedGeneration**: which spec generation this condition reflects
+- **lastTransitionTime**: when the status last changed
+
+## Querying status in kubectl
+
+### Check a GameServer's overall state
+
+```sh
+kubectl describe gameserver my-server
+```
+
+Shows phase, recent events, and all conditions in a readable table.
+
+### List servers with their phases
+
+```sh
+kubectl get gameservers -o wide
+# NAME             TEMPLATE    PHASE     PLAYERS   AGE
+# survival-server  valheim     Running   3         2d
+# creative-world   minecraft   Pending   0         10m
+```
+
+### Watch status changes in real-time
+
+```sh
+kubectl get gameservers -w
+```
+
+### Extract a single condition
+
+```sh
+kubectl get gameserver my-server -o jsonpath='{.status.conditions[?(@.type=="Ready")]}'
+```
+
+### Check observed generation
+
+```sh
+kubectl get gameserver my-server -o jsonpath='{.metadata.generation},{.status.observedGeneration}'
+# 3,3  ← generation matches; status is current
+# 4,3  ← generation ahead; reconciliation in progress
+```
+
+---
+
+## Next: [CRD Catalog](./crd-catalog/)

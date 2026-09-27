@@ -1,0 +1,187 @@
+---
+title: "Backup backends and repository operations"
+description: "Configure destinations with correct credentials, encryption, retention, health checks, and recurring restore validation."
+section: operate
+group: files-backups
+order: 7
+icon: database
+eyebrow: RECOVERY
+readTime: "18 MIN"
+covers: ["Restic", "Retention", "Drills"]
+next: production-observability
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
+
+<DocsArticleMeta groupId="files-backups" readTime="18 MIN" />
+
+A Backup or BackupSchedule references a repository via a Kubernetes Secret containing the restic repository URI and password. This guide covers supported backends, credential management, operational monitoring, and restore validation drills.
+
+<DocsCallout icon="archive" title="A destination is not operational until a scheduled isolated restore succeeds with emergency-access credentials.">
+  Accepting a new backup repository requires proof that recovery is possible using only the documented procedure and credentials, tested under realistic constraints.
+</DocsCallout>
+
+## Choose and configure a backend
+
+Document supported repository type, endpoint, TLS, permissions, immutability, lifecycle, and environment separation.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "Publish limitations for S3-compatible and filesystem/PVC backends.",
+      text: "Restic supports S3-compatible (AWS S3, MinIO, Backblaze B2, etc.), REST-based, SFTP, local filesystem, and cloud-native backends. Document which your cluster uses, any bandwidth or transaction limits, and cost implications."
+    },
+    {
+      icon: "check",
+      label: "Record bucket/prefix, region, CA, path style, and required permissions.",
+      text: "For S3: note the bucket name, object prefix, region, TLS CA cert if custom, and whether path-style URLs are required. For REST/SFTP: record the endpoint, port, and TLS details. List the minimum IAM or OS permissions required for the restic user."
+    },
+    {
+      icon: "check",
+      label: "Keep credentials and encryption material in labelled Secrets.",
+      text: "Store the restic repository URI and password in a Kubernetes Secret with keys `repo` and `password`. Use labels (`app.kubernetes.io/component: backup-repo`, `backup-repo-name: <name>`) and annotations to track which backup schedules use which secrets."
+    },
+  ]}
+/>
+
+### Repository URI formats
+
+Restic repository URIs follow the pattern `<backend>:<backend-specific-config>`. Common examples:
+
+- **S3-compatible:** `s3:s3.amazonaws.com/bucket-name` (AWS S3), `s3:minio-host:9000/bucket-name` (MinIO), `s3:s3.backblazeb2.com/bucket-name` (B2)
+- **REST:** `rest:https://restic-server.example.com:8000/` (requires a `restic rest-server` instance)
+- **SFTP:** `sftp:user@sftp.example.com:22/path/to/repo`
+- **Filesystem:** `local:/mnt/backup-pvc` (for local filesystem or PVC-mounted backends)
+
+Restic also supports cloud-native backends (Azure Blob, Google Cloud Storage, Swift) via environment variables; see the [Restic documentation](https://restic.readthedocs.io/en/latest/030_preparing_a_new_repo.html) for backend-specific setup.
+
+For S3, the password field typically holds the access key, and additional environment variables (e.g., `AWS_SECRET_ACCESS_KEY`, `AWS_DEFAULT_REGION`) may be configured via the Secret or Job environment. Other backends may have their own credential schemes; consult your backend's restic documentation.
+
+## Operate the repository
+
+Define initialization, locks, checks, prune, retention, concurrency, bandwidth, and credential rotation.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "Monitor duration, bytes, count, growth, failures, missed runs, and locks.",
+      text: "Every Backup's Job logs its start, end, bytes written, file count, and any errors. Track how repository size grows over time and whether retention policies are keeping it bounded. Watch for stuck or blocked backups (Job not completing), and monitor any `backup.failed` alerts."
+    },
+    {
+      icon: "check",
+      label: "Coordinate object lifecycle rules with application retention.",
+      text: "If your backend (e.g., S3) supports object lifecycle rules, ensure they do not expire backups before your retention policy removes them. For example, if your policy keeps 7 daily snapshots, don't set S3 object expiry to 3 days."
+    },
+    {
+      icon: "check",
+      label: "Alert on check/prune errors and credential or certificate expiry.",
+      text: "Configure your monitoring to alert on: (1) failed restic check/prune operations (indicates repository corruption or permission issues), (2) Secret or TLS certificate expiry (credentials and certificates should be rotated before they expire), (3) quota or storage threshold breaches, (4) authentication failures when the restic Job attempts to access the backend."
+    },
+  ]}
+/>
+
+### Repository health checks
+
+Restic's `check` command verifies repository integrity. Gameplane does not automate this; add a separate CronJob or scheduled Restore+verification job to periodically run restic check against each repository:
+
+```yaml
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: backup-repo-health-check
+  namespace: gameplane-games
+spec:
+  schedule: "0 2 * * 0"  # Weekly at 2 AM UTC
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: backup-job
+          containers:
+          - name: restic-check
+            image: restic/restic:0.19.1
+            env:
+            - name: RESTIC_REPOSITORY
+              valueFrom:
+                secretKeyRef:
+                  name: backup-repo-secret
+                  key: repo
+            - name: RESTIC_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: backup-repo-secret
+                  key: password
+            command: ["restic", "check", "--read-data-subset=10%"]
+          restartPolicy: OnFailure
+```
+
+### Pruning and retention
+
+Restic's retention policies are defined in `BackupSchedule.spec.retention`. Gameplane supports restic's `keep-*` vocabulary:
+
+- `keepDaily: 7` — keep the latest snapshot from each day (7 daily snapshots)
+- `keepWeekly: 4` — keep the latest snapshot from each week (4 weekly snapshots)
+- `keepMonthly: 12` — keep the latest snapshot from each month (12 monthly snapshots)
+- `keepYearly: 3` — keep the latest snapshot from each year (3 yearly snapshots)
+
+The operator prunes old snapshots on the configured schedule (e.g., after each backup). Monitor prune job logs for completion time, bytes freed, and any corruption detected during the pruning process.
+
+### Credentials and certificate rotation
+
+Restic repository credentials (S3 access keys, SFTP passwords, API tokens) and TLS certificates should be rotated regularly (e.g., quarterly or per compliance policy). To rotate:
+
+1. **Create a new Secret** with updated credentials.
+2. **Update the Backup/BackupSchedule** to reference the new Secret's name in `spec.repoRef`.
+3. **Test a backup** with the new credentials to verify access works.
+4. **Delete the old Secret** only after confirming all dependent backups are using the new one.
+
+During rotation, the repository itself remains accessible to existing backups; the rotation is a Kubernetes Secret update, not a repository migration.
+
+## Prove restoreability
+
+Restore representative worlds on schedule using the exact key and access procedure available during an emergency.
+
+A backup repository is only considered "in service" after a restore drill has succeeded. Drills verify that:
+- The documented credentials actually work.
+- The restore process completes within your RTO target.
+- The restored data is usable (game world loads, player data is intact).
+
+### Restore drill procedure
+
+1. **Schedule a weekly or monthly restore test** (separate from production restores) targeting a test GameServer or throwaway instance.
+2. **Document the exact procedure** — which credentials, which backup schedule/snapshot, how to authenticate if multi-factor auth or network restrictions apply.
+3. **Simulate failure conditions:** use an expired certificate, a rotated access key, or network-isolated access to verify your documented emergency procedure is complete and accurate.
+4. **Record metrics:** restore start, completion time, bytes restored, and any warnings or errors.
+5. **Verify data integrity:** confirm the restored world loads, players can connect, and data consistency checks pass.
+
+### Emergency-access credentials
+
+Backups should be restorable using a separate, minimal set of credentials reserved for emergencies:
+
+- A read-only access key (for S3) or SSH key (for SFTP) that only grants access to the backup repository.
+- Credentials stored in a secure location (e.g., encrypted password vault, hardware security module) separate from day-to-day backup management.
+- Periodically test that emergency credentials actually work, even if the primary access key changes.
+
+This separation ensures that a compromised workload credential does not also compromise your recovery path.
+
+<DocsQuickReference
+  label="REPOSITORY ACCEPTANCE"
+  items={[
+    "01  Supported backend + least-privilege Secret + TLS/CA + key",
+    "02  Alert on failed/missed backup, locks, checks, prune, growth, expiry",
+    "03  Accept only after scheduled isolated restore meets RPO/RTO",
+  ]}
+/>
+
+---
+
+## Related guides
+
+- [Backup Destinations](./backup-destinations/) — configure and test backup targets
+- [Backups & Recovery](./backups-recovery/) — on-demand and scheduled backup overview
+- [Production Observability](./production-observability/) — monitoring backup metrics and alerts

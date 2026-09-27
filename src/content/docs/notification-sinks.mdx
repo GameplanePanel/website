@@ -1,0 +1,160 @@
+---
+title: Notification Sinks
+description: Route selected server and backup events to Discord, Slack, ntfy, email, or webhooks and prove delivery safely.
+section: platform
+group: audit-observability
+order: 5
+icon: info
+eyebrow: ALERTING
+readTime: 13 MIN
+covers: ["Alerts", "Secrets", "Delivery"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
+
+<DocsArticleMeta groupId="audit-observability" readTime="13 MIN" />
+
+Gameplane notifies you when servers become unhealthy, recover, or when backups and restores finish. Route these events to Discord, Slack, ntfy, email, or a custom webhook endpoint, then confirm delivery with a test that traverses the real path.
+
+<DocsCallout icon="info" title="Sinks in Needs secret state are broken">
+A sink configured but lacking a credential Secret is inoperative and must never be treated as an active alert route. Always link the sink to a labelled Secret before relying on delivery.
+</DocsCallout>
+
+## Add and secure a sink
+
+Choose a provider and give it a stable, memorable name, then store the credential in a labelled Kubernetes Secret.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "shield-check",
+      label: "Supported types",
+      text: "Discord, Slack, ntfy, email (SMTP), and generic webhook.",
+    },
+    {
+      icon: "lock",
+      label: "Credential storage",
+      text: "Keep credentials out of URLs, descriptions, Git, screenshots, and exports. Always store in a Secret.",
+    },
+    {
+      icon: "check",
+      label: "Minimal scope",
+      text: "Grant only the event and provider scope required; never overallocate permissions.",
+    },
+  ]}
+/>
+
+### Create a Secret
+
+The **Add sink** form in **Admin Settings → Notifications** accepts credential material directly (webhook URL, ntfy topic + token, or SMTP server details) and creates a Kubernetes Secret named `gameplane-notify-<sink>` in the control-plane namespace automatically. The Secret is labeled:
+
+- `gameplane.local/notification-sink: "true"` — allows the API to read and configure it
+- `gameplane.local/managed-by: gameplane-api` — marks it for deletion if removed from the dashboard
+
+Alternatively, pre-create a Secret with `kubectl`:
+
+```bash
+kubectl -n gameplane-system create secret generic team-alerts \
+  --from-literal=url='https://discord.com/api/webhooks/…'
+
+kubectl -n gameplane-system label secret team-alerts \
+  gameplane.local/notification-sink=true
+```
+
+Then create the sink row in **Admin Settings → Notifications** with `configRef: team-alerts`. Secrets created outside the dashboard are never deleted through the dashboard (only those with the `managed-by` label are).
+
+### Secret keys per provider
+
+| Provider | Required keys | Optional keys |
+|---|---|---|
+| **discord** | `url` — webhook URL | — |
+| **slack** | `url` — incoming-webhook URL | — |
+| **ntfy** | `url` — e.g. `https://ntfy.sh/my-topic` | `authorization` — Bearer token |
+| **webhook** | `url` — endpoint | `authorization` — sent as `Authorization` header |
+| **smtp** | `host`, `from`, `to` (comma-separated) | `port` (default `587`), `username`, `password`, `tls` (`starttls` \| `implicit` \| `none`) |
+
+For SMTP, `username` + `password` use AUTH PLAIN and require `tls: starttls` or `implicit`; `tls: none` works only for unauthenticated relays.
+
+## Select events and test delivery
+
+Choose which events trigger the sink, then send a test message to verify the real delivery path works end-to-end.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "activity",
+      label: "Actionable events",
+      text: "Use server unhealthy/recovered and backup/restore outcomes intentionally; skip redundant successes if you only care about failures.",
+    },
+    {
+      icon: "arrow-right",
+      label: "Test first",
+      text: "Send a test from the dashboard; it reaches the sink synchronously and shows the real delivery result.",
+    },
+    {
+      icon: "shield-alert",
+      label: "Fix Needs secret first",
+      text: "A sink with no credential Secret is inoperative. Repair the Secret link before relying on delivery.",
+    },
+  ]}
+/>
+
+### Available events
+
+| Event | Fires when | Enabled by default |
+|---|---|---|
+| `server.unhealthy` | A GameServer fails (bad image, crash-loop, non-zero exit) or loses its agent heartbeat | yes |
+| `server.recovered` | A previously-failed server becomes healthy again (ordinary starts do not fire this) | yes |
+| `backup.failed` | A Backup enters `Failed` phase | yes |
+| `backup.succeeded` | A Backup enters `Succeeded` phase | no |
+| `restore.failed` | A Restore enters `Failed` phase | yes |
+| `restore.succeeded` | A Restore enters `Succeeded` phase | no |
+
+Sinks with no explicit event filter receive the defaults above (failures + paired recoveries). User-intended transitions — stopping, suspending — never notify. Only transitions observed while the API pod is running are sent; a backup that fails entirely while the API is down is missed by sinks but still visible in the dashboard and Prometheus alerts.
+
+### Test a sink
+
+Use `POST /admin/notifications/sinks/{name}/test` (permission `config:manage`) to send a synthetic event to the *persisted* sink synchronously:
+
+- `200 {"delivered":true}` — success
+- `422` — no `configRef` (Needs secret state)
+- `502` — delivery error (bad token, revoked webhook, network unreachable, etc.)
+
+The endpoint is rate-limited (~12/min per IP).
+
+## Operate and troubleshoot
+
+Inspect delivery results, endpoint health, authentication, and permissions. Rotate credentials and retest.
+
+Watch the Prometheus metric `gameplane_notify_deliveries_total` to spot delivery gaps:
+
+```
+gameplane_notify_deliveries_total{
+  kind="discord|slack|smtp|webhook|ntfy|queue",
+  result="sent|failed|dropped|skipped_no_secret"
+}
+```
+
+A growing delta in `failed`, `dropped`, or `skipped_no_secret` means alerts you rely on aren't arriving.
+
+### Delivery retry and semantics
+
+Failed deliveries are retried twice (backoff: 2s, then 8s) on network errors and 5xx responses. A 4xx response (revoked webhook, bad token, endpoint not found) is not retried.
+
+Notification delivery is **best-effort and never blocking** — a slow or down sink never blocks reconciliation or API requests. Events are queued in-memory; a pod restart clears the queue.
+
+### Security
+
+Notification egress is guarded by the same SSRF dial-guard as module source fetches. See [Security](./security/) for details.
+
+<DocsQuickReference
+  label="SINK ACCEPTANCE CHECKLIST"
+  items={[
+    "Provider + stable name + credential-backed labelled Secret",
+    "Choose actionable events + Send test; Needs secret = broken",
+    "Diagnose dispatch/DNS/TLS/auth/quota; rotate, retest, audit",
+  ]}
+/>

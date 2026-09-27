@@ -1,0 +1,100 @@
+---
+title: "Web Dashboard Development"
+description: "Extend the strict TypeScript dashboard without breaking query, routing, API, cluster, or design contracts."
+section: "develop"
+group: "local-development"
+order: 5
+icon: "layout-dashboard"
+eyebrow: "DEVELOPER GUIDE"
+readTime: "17 MIN"
+covers: ["React", "Queries", "Playwright"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+
+Extend the strict TypeScript dashboard without breaking query, routing, API, cluster, or design contracts.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "layers",
+      label: "Application architecture",
+      text: "React and Vite use explicit routing, query caches, reusable components, Monaco, and terminal primitives.",
+    },
+    {
+      icon: "arrow-right",
+      label: "API and state contracts",
+      text: "The shared request layer owns credentials, CSRF, errors, cluster selection, and streaming reconnect behavior.",
+    },
+    {
+      icon: "check",
+      label: "Develop and verify",
+      text: "Use strict build, lint, Vitest/MSW, and the appropriate Playwright mode; UI changes cite Pencil node IDs.",
+    },
+  ]}
+/>
+
+<DocsCallout icon="info" title="Cluster scope in caches and requests">
+  Every cache and request that varies by cluster must include or clear cluster scope to prevent cross-cluster stale data.
+</DocsCallout>
+
+## Application architecture
+
+React and Vite use explicit routing, query caches, reusable components, Monaco, and terminal primitives.
+
+- **Routes live in `web/src/routes`** and are registered in the explicit router tree (`web/src/router/tree.tsx`).
+- **Shared request and domain types** live under `web/src/types.ts` (CRD mirrors and UI types) and `web/src/lib` (request/domain logic).
+- **TanStack Query** owns server state; Monaco and xterm handle dense tools (file editors, server console, log viewers).
+
+## API and state contracts
+
+The shared request layer owns credentials, CSRF, errors, cluster selection, and streaming reconnect behavior.
+
+- **`api<T>` injects credentials, CSRF on mutations, and uniform `APIError`** — all callers use a single function signature, no fetch-directly antipattern.
+- **Multipart and raw file requests add `csrfHeaders()` explicitly** — uploads and plain-text writes bypass the JSON wrapper but must still pass the CSRF token.
+- **SSE/WebSocket clients cancel and reconnect visibly on scope changes** — status callbacks surface "reconnecting…" to the UI; the scope listener cancels in-flight streams when the cluster changes, preventing cross-cluster stale data on reconnect.
+
+## Develop and verify
+
+Use strict build, lint, Vitest/MSW, and the appropriate Playwright mode; UI changes cite Pencil node IDs.
+
+<DocsQuickReference
+  label="WEB CHECK"
+  items={[
+    "01  cd web && npm ci && npm run dev",
+    "02  npm test && npm run lint && npm run build",
+    "03  npm run test:e2e:mock   # live: make test-web-e2e-live",
+  ]}
+/>
+
+### Build and type checking
+
+- **`npm run build`** — TypeScript strict compile (`tsc -b`) followed by Vite bundling. Fails on type errors; never bypass with `@ts-ignore` or `any` without explicit justification.
+- **`npm run lint`** — ESLint + Prettier checks; must pass before commit.
+- **`npm test`** — Vitest unit suite with MSW mocking of the API layer; runs in parallel by default.
+
+### E2E testing
+
+- **`npm run test:e2e:mock`** — Playwright against a local dev server and mocked API responses (fast, ~2 min).
+- **`npm run test:e2e:live`** — Playwright against a running Kind cluster (slower, ~10 min; requires `make dev-up`).
+- **`npm run screenshots`** — Capture UI screenshots for design comparison (mock mode).
+
+### Dev server
+
+Run **`make web-dev`** from the repo root to start the Vite dev server with a proxy to the in-cluster API (requires `make dev-up` first). The dev server hot-reloads on save; CSS changes apply instantly, component changes reload with state preserved.
+
+### Design and PRs
+
+UI changes must be designed first in `design.pen` (Pencil MCP, never edit directly) before writing React code. When submitting a PR with visual changes:
+
+- Export the touched design nodes to `design-export/json/<id>.json` and `design-export/screenshots/<id>.png` (automated during design export).
+- Cite the Pencil node ID in your PR description (e.g., "Implements design node `ZwM1N` (Web Dashboard Development…)").
+- Reference the screenshot in the PR for visual comparison.
+
+This ensures the design source remains canonical and reviewers can compare intent to implementation without re-opening the design tool.
+
+---
+
+**Next:** [API and Realtime Development](./api-realtime-development/)

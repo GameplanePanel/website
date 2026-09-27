@@ -1,0 +1,219 @@
+---
+title: "Ingress, TLS & External Access"
+description: "Publish the dashboard and API through a trusted HTTPS edge while separating game ports, management traffic, and identity redirects."
+section: "operate"
+group: "network-automation"
+order: 2
+icon: "globe"
+eyebrow: "NETWORK"
+readTime: "16 MIN"
+covers: ["Ingress", "TLS", "OIDC"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
+
+<DocsArticleMeta groupId="network-automation" readTime="16 MIN" />
+
+Publish the dashboard and API through a trusted HTTPS edge while separating game ports, management traffic, and identity redirects.
+
+<DocsCallout icon="shield-alert" title="Security boundary">
+  Dashboard HTTPS and game TCP/UDP exposure are separate interfaces with different owners and security controls.
+</DocsCallout>
+
+## Choose the edge topology
+
+Document every HTTP, TCP, and UDP listener from DNS through the owning controller.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "network",
+      label: "Separate dashboard/API traffic",
+      text: "Separate dashboard/API traffic from game Services.",
+    },
+    {
+      icon: "network",
+      label: "Select ingress class",
+      text: "Select Ingress class, load balancer, DNS, and source-IP behavior.",
+    },
+    {
+      icon: "arrow-right",
+      label: "Set canonical external URL",
+      text: "Set one canonical external URL and exact OIDC callback/logout URLs.",
+    },
+  ]}
+/>
+
+**Dashboard Ingress**: The API Service (`gameplane-api` in the `gameplane-system` namespace) is exposed via a Kubernetes Ingress resource. Install an ingress controller (nginx-ingress by default) and cert-manager for automated certificate renewal:
+
+```yaml
+# values.yaml (Helm install)
+ingress:
+  host: gameplane.your-domain.test
+  tls: true
+  issuer: "letsencrypt-prod"  # or your cert-manager issuer name
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "64m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+```
+
+**Game Exposure**: Each GameServer's `spec.networking.expose` field controls how the game is exposed:
+- **`ClusterIP`** (default): Reachable only from within the cluster.
+- **`NodePort`**: Exposed on a high port on every node. Players connect to `node-ip:node-port`.
+- **`LoadBalancer`**: Request an external load balancer (cloud, MetalLB, Cilium). Requires `operator.addressManager` configured.
+- **`Hostport`**: Advertise a specific host port via the pod's HostPort field. Suitable for single-node clusters (k3s/kind).
+
+```yaml
+# GameServer example
+apiVersion: gameplane.local/v1alpha1
+kind: GameServer
+metadata:
+  name: minecraft-prod
+spec:
+  networking:
+    expose: LoadBalancer
+    addressPool: "public-pool"  # MetalLB or Cilium pool
+    sourceRanges:
+      - "0.0.0.0/0"  # Restrict in production
+```
+
+**Address Manager**: Configure the load-balancer integration (`operator.addressManager` in values.yaml):
+- **`metallb`**: Operator requests addresses via Service annotations (`metallb.io/address-pool` and `metallb.io/loadBalancerIPs`). MetalLB IPAddressPool CRs live in `metallb-system` (or `metalLBNamespace` override).
+- **`cilium`**: Operator sets Service label `gameplane.local/lb-pool` (mirror it in your `CiliumLoadBalancerIPPool`'s `spec.serviceSelector`).
+- **`none`**: No external load balancer; LoadBalancer services stay in `Pending` state.
+
+## Configure TLS and proxy trust
+
+Make certificate renewal, forwarded headers, WebSockets, and backend trust explicit.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "lock",
+      label: "TLS certificate",
+      text: "Use cert-manager, a certificate Secret, or another supported issuer.",
+    },
+    {
+      icon: "layers",
+      label: "Proxy settings",
+      text: "Configure proxy hops, forwarded headers, timeouts, and upload limits.",
+    },
+    {
+      icon: "shield",
+      label: "Backend security",
+      text: "Keep agent, database, and management Services private behind the edge.",
+    },
+  ]}
+/>
+
+**Certificate Management**: The Ingress TLS termination point handles HTTPS:
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gameplane-api
+  annotations:
+    cert-manager.io/issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - gameplane.your-domain.test
+      secretName: gameplane-api-tls
+  rules:
+    - host: gameplane.your-domain.test
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: gameplane-api
+                port:
+                  number: 8080
+```
+
+**Proxy trust**: The dashboard web frontend (`gameplane-web`) sits behind the Ingress. Nginx annotations configure proxy behavior:
+
+```yaml
+nginx.ingress.kubernetes.io/proxy-body-size: "64m"          # File uploads
+nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"      # WebSocket long-lived
+nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"      # WebSocket long-lived
+nginx.ingress.kubernetes.io/use-forwarded-headers: "true"   # Trust X-Forwarded-* from reverse proxy
+nginx.ingress.kubernetes.io/proxy-set-headers: "gameplane-system/custom-headers"  # Custom headers
+```
+
+**Forwarded Headers**: The API inspects `X-Forwarded-For`, `X-Forwarded-Proto`, and `X-Real-IP` headers to determine the actual client IP and protocol. Misconfigured proxies lead to wrong client IPs in logs and OIDC callback mismatches.
+
+**Backend mTLS**: The API communicates with agents over mTLS:
+- **API → Agent**: Client certificate signed by the operator-managed CA, mounted into the API pod at `/etc/gameplane/agent-ca/`.
+- **API → Database**: Optional mTLS for PostgreSQL backends (set `db.tls=true` in values).
+- **API → Audit Syslog**: Plain HTTP-JSON webhook; the syslog bridge (`audit-syslog-bridge`) forwards to TLS syslog endpoints.
+
+## Harden and validate
+
+Verify certificate renewal, redirects, OIDC, console WebSockets, uploads, API requests, and real client IPs end to end.
+
+**Certificate Renewal**: Check cert-manager status:
+
+```sh
+kubectl -n gameplane-system get certificate
+kubectl -n gameplane-system describe certificate gameplane-api-tls
+kubectl -n gameplane-system logs -l app=cert-manager
+```
+
+Look for warnings about renewal windows or failed issuance.
+
+**OIDC Callback URLs**: Every OIDC provider (Okta, Keycloak, Azure AD) requires an exact callback URL. Mismatches cause `invalid_request` or redirect loop errors:
+
+```
+Correct:  https://gameplane.your-domain.test/auth/oidc/callback
+Wrong:    http://gameplane.your-domain.test/auth/oidc/callback  (no HTTPS)
+Wrong:    https://gameplane.your-domain.test:8080/auth/oidc/callback  (explicit port)
+```
+
+**Console WebSocket**: Test the in-browser console (uses `wss://` over the same TLS edge):
+
+```sh
+# From inside the cluster
+curl -i -N -H "Connection: Upgrade" -H "Upgrade: websocket" \
+  https://gameplane.your-domain.test/ws/servers/my-server/console \
+  -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)"
+```
+
+**File Uploads**: The Ingress `proxy-body-size` limit must exceed your largest world/mod file:
+
+```sh
+# Check the configured limit
+kubectl -n gameplane-system get ingress gameplane-api -o yaml | grep proxy-body-size
+```
+
+**Client IP Verification**: Check that real client IPs appear in audit logs, not proxy IPs:
+
+```sh
+# Tail API logs
+kubectl -n gameplane-system logs -l app=gameplane-api --tail=50
+
+# Look for "client_ip" field in JSON logs; it should be your actual IP, not the ingress node IP
+```
+
+**API Requests**: Test a simple API call with proper TLS and credentials:
+
+```sh
+curl -H "Authorization: Bearer $TOKEN" \
+  https://gameplane.your-domain.test/api/v1/clusters
+```
+
+<DocsQuickReference
+  label="EDGE CHECK"
+  items={[
+    "01  DNS → trusted HTTPS edge → Gameplane Service",
+    "02  Verify certificate, OIDC callback, console WS, upload, and API",
+    "03  Record host, Ingress class, issuer, proxy CIDRs, firewall, owner",
+  ]}
+/>

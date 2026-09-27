@@ -1,0 +1,72 @@
+---
+title: Player administration
+description: Read online capacity, maintain whitelist and ban state, and communicate moderation changes without surprising active players.
+section: operate
+group: files-backups
+order: 3
+icon: userss
+eyebrow: OPERATOR GUIDE
+readTime: 9 MIN
+covers: ["Players", "Whitelist", "Bans"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+
+The Players tab shows real-time online capacity and persistent access state (whitelist and bans). All moderation actions flow through RCON to the game, ensuring the server's authority is preserved and every action is auditable.
+
+<DocsSectionList
+  items={[
+    { icon: "users", label: "Online players", text: "Live capacity; updated every 5 seconds via RCON." },
+    { icon: "shield", label: "Whitelist and bans", text: "Persistent access state, managed per-game." },
+    { icon: "activity", label: "Moderation coordination", text: "Save and broadcast before disruptive actions." },
+  ]}
+/>
+
+## Read player status
+
+Online is live capacity; whitelist and ban totals are persistent access state.
+
+- Compare unusual counts with console and game logs. A disconnect flood (players vanishing between heartbeats) or a ban/kick in progress may explain mismatches.
+- Do not treat whitelist or ban totals as current connections. These are *access* flags, not *presence* — a banned player offline still shows in the count.
+- Resolve the exact identity before applying an access change. Display names may be ambiguous across games and identity modes (UUID, username, IP, SteamID, etc.).
+
+<DocsCallout icon="shield-alert" title="Confirm exact player identity before changing access.">
+Display names may be ambiguous across games and identity modes. Verify using console logs or the game's built-in `/list` output before moderation.
+</DocsCallout>
+
+## Manage whitelist and bans
+
+Each moderation action should be deliberate, auditable, and verified by the game.
+
+- Whitelist only when enforcement is enabled or intentionally staged. Removing whitelist access may not disconnect an online player — the game decides whether to eject them on next join.
+- Add or remove a ban, then verify the command succeeded. The dashboard shows the RCON response; consult game logs if the outcome is unclear.
+- Kick is immediate; ban is persistent. Use kick to remove a player now; use ban to prevent their return.
+
+## Coordinate disruptive actions
+
+Broadcast and save before maintenance, then verify player count, reconnect behavior, access totals, and audit history.
+
+- Before restarting or suspending the server, save the world (if the game allows) and broadcast a shutdown message via console or in-game chat.
+- Test the reconnect path: after resuming, watch for players returning and verify their access is honored (whitelist enforcement, ban rejection).
+- Audit all moderation changes in the Console & Events log. Cross-check against the game's own `/list` and `/banlist` to confirm sync.
+
+<DocsQuickReference
+  label="MODERATION LOOP"
+  items={[
+    "Confirm player identity and current connection/access state",
+    "Apply one whitelist or ban action and verify game acceptance",
+    "Broadcast + save before disruption; test reconnect and audit afterward",
+  ]}
+/>
+
+## Capabilities and game support
+
+Moderation endpoints (kick, ban, unban, whitelist) are available only if the template declares them via `capabilities.players`. Most Minecraft variants (vanilla, Paper, Spigot, Forge) and Source-engine servers support all four; some games support subsets or none.
+
+When a capability is unavailable, the dashboard reports it in the Capabilities row and returns HTTP 501 Not Implemented if you attempt to use it.
+
+---
+
+**Next:** [Mods and modpacks](./mods-modpacks/)

@@ -1,0 +1,145 @@
+---
+title: "Agent & Game Protocols"
+description: "Extend the per-game sidecar while keeping its authenticated contract, filesystem boundary, and capabilities explicit."
+section: develop
+group: component-guides
+order: 2
+icon: activity
+eyebrow: "DEVELOPER GUIDE"
+readTime: "18 MIN"
+covers: ["Agent", "RCON", "mTLS"]
+next: "database-migrations"
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+
+The agent is a per-pod HTTP/HTTPS sidecar running inside every game pod. It translates dashboard requests into game-protocol actions (RCON, file I/O, container logs, player queries) and reports liveness, resource usage, and player metrics back to the operator via Kubernetes API patches.
+
+<DocsCallout icon="shield-alert" title="Unsupported capabilities must degrade gracefully">
+Unsupported capabilities must disappear or degrade safely—not emit a request that cannot succeed.
+</DocsCallout>
+
+## Agent Surface
+
+The sidecar serves authenticated operational endpoints with health and metrics as narrow unauthenticated exceptions.
+
+<DocsSectionList
+  items={[
+    { icon: "folder", label: "Files", text: "List, read, download, upload, write, mkdir, delete operations rooted at /data with traversal-safe bounds." },
+    { icon: "check", label: "Logs", text: "Tail game container logs over WebSocket, streaming from start or end." },
+    { icon: "terminal", label: "Console", text: "Duplex WebSocket for RCON command execution and response streaming." },
+    { icon: "users", label: "Players", text: "Query online count, names, ban lists, and run moderation actions (kick, ban, unban)." },
+    { icon: "puzzle", label: "Mods", text: "List, install, and uninstall game mods from a registry with strict SSRF validation." },
+    { icon: "activity", label: "Status", text: "Query live game metrics (TPS, world time, etc.) via RCON and regex extraction." },
+    { icon: "check", label: "Actions", text: "Execute module-declared operator actions (templated RCON commands with user parameters)." },
+    { icon: "info", label: "Lifecycle", text: "Run module-declared stop sequences before the operator scales the server to zero." },
+  ]}
+/>
+
+### Authentication & mTLS
+
+Production uses operator-managed mTLS; bearer token is compatibility-only for development.
+
+- **mTLS (preferred):** Agent listens on TLS, requires client certificate signed by `--tls-client-ca`. All protected routes verify the certificate.
+- **Bearer token (fallback):** Shared-secret token mounted from a per-pod Secret. Used only when TLS is not configured.
+- **Unauthenticated exceptions:** `GET /healthz` (liveness probe) and `GET /metrics` (Prometheus, on a separate plain HTTP listener).
+
+### File Operations Boundary
+
+All file operations are confined to the `--data-root` (typically `/data` PVC):
+
+- No path traversal (`..` sequences rejected)
+- No symlink escape (symbolic links pointing outside the root are rejected)
+- Dotfile access restricted
+- Temp files used for atomic writes: write fails halfway → only temp file is removed, pre-existing file untouched
+
+## Game Protocols
+
+Adapters normalize RCON, PTY, log files, moderation, status, and graceful stop across games without agent code changes.
+
+<DocsSectionList
+  items={[
+    { icon: "activity", label: "RCON Protocols", text: "Source (Valve/Minecraft), Telnet (7DtD), WebSocket (Rust), BattlEye (DayZ/Arma), Satisfactory, Palworld, NuclearOption, REST (generic HTTP/JSON), CLI (container stdin/PTY)." },
+    { icon: "history", label: "Authoritative Logs", text: "Separate authoritative game logs from container stdout. Log streaming supports live-tail or full backlog replay." },
+    { icon: "shield", label: "Console Mode & Secrets", text: "Model console mode and credentials without hard-coding secrets. Each game declares its RCON protocol in the module's capabilities." },
+    { icon: "lock", label: "Capability Gates", text: "Hide unsupported status, players, actions, and mods. Every game-specific handler reads its config from the module's declared capabilities; new games require no agent code changes." },
+  ]}
+/>
+
+### Request/Response Contracts
+
+All game-facing operations follow strict contracts:
+
+- **RCON replies:** Bounded at 10–16394 bytes (packet header + 4096-character max Minecraft chunk at worst-case UTF-8 length). Over-limit or under-size packets rejected as malformed.
+- **Players query:** Returns `{ online, max, players[], asOf, capabilities }`. When unknown (RCON disabled or unrecognized format), `online`/`max` are `-1`, never `0`.
+- **Moderation (kick/ban/unban):** Template-driven; a single `commander` renders each action from the module's declared capabilities. Returns `{ ok, raw? }` or `501 Not Implemented` if unsupported.
+- **Quiesce/unquiesce:** Response is `{ quiesced: true/false, reason? }`. Unsupported games degrade gracefully with `quiesced: false` and a reason (e.g., "game does not support save sequences").
+
+## Extend Safely
+
+Update OpenAPI, handlers, API proxy, safety libraries, and protocol tests as one wire-contract change.
+
+### Adding a New Protocol Handler
+
+1. **Declare the new RCON protocol** in the wire-protocol factory (`agent/internal/rcon/`):
+   - Implement the `Exec(cmd) (string, error)` interface
+   - Handle connection lifecycle (dial, auth, command dispatch, response parsing)
+   - Include unit tests for edge cases (malformed packets, timeouts, connection drops)
+
+2. **Update the module schema** (`docs/gametemplate-schema.md`):
+   - Add the new protocol name to `spec.capabilities.console.protocol` enum
+   - Document default ports and expected configuration
+
+3. **Update the API proxy** (`api/internal/handlers/`):
+   - If the new protocol needs API-level handling (e.g., special auth token parsing), extend the agent request builder
+   - Add integration tests against a real agent instance
+
+4. **Update the OpenAPI contract** (`agent/openapi.yaml`):
+   - Document the new behavior in endpoint descriptions, if it differs from the standard RCON contract
+
+5. **Run the test suite** (`cd agent && go test ./...`):
+   - Unit tests exercise protocol parsing, edge cases, and error handling
+   - E2E tests (`test/e2e/`) verify the new protocol with a real game server on Kind
+
+### Capability-Driven Extension
+
+Module capabilities are the contract between the operator and the agent. To add support for a new game feature:
+
+1. **Extend `GameTemplate.spec.capabilities`** in the module's `template.yaml`:
+   - Add new fields under `players`, `status`, `actions`, `quiesce`, or `lifecycle`
+   - The agent unmarshals this JSON blob into `caps.Spec` at startup
+
+2. **Update the agent handler** if the new capability is a new *type* (e.g., a new game-status metric format):
+   - Handlers read from `caps.Spec` and adapt their behavior accordingly
+   - No agent deployment needed for new *instances* of existing capability types (e.g., a new RCON action command)
+
+3. **Test the module** (`gp-module validate` and `gp-module preview`):
+   - Dry-run the module against a test GameServer CRD
+   - Verify the agent's capability unmarshaling succeeds and the handler adapts correctly
+
+<DocsQuickReference
+  label="AGENT CONTRACT"
+  items={[
+    "01  cd agent && go test ./...",
+    "02  agent/openapi.yaml   # contract source",
+    "03  GET /healthz · GET /metrics · WSS /console",
+  ]}
+/>
+
+### Safety Invariants
+
+- **Every request is authenticated:** All protected routes gate on mTLS cert or bearer token.
+- **Path confinement is consolidated:** `ConfinePath(rootDir, untrustedName)` is the single validation point for all filesystem operations. It rejects `..`, `/`, symlink escape, and confines all operations within rootDir.
+- **Partial uploads never linger:** Write to temp file, rename to target only on success. Failed writes don't truncate pre-existing files.
+- **RCON connection errors are graceful:** Lost RCON → `502 Bad Gateway`, not a crash. Handlers catch and return appropriate status.
+- **Module capabilities drive behavior:** New games require no agent code change — they declare their capabilities in the module's template.
+- **Gameaction validation is independent:** Both the API (stdin pod-attach) and the agent (RCON) call `gameaction.Resolve()` independently to validate action inputs (no control characters, 512-char cap, required-ness checks).
+
+## References
+
+- **`agent/openapi.yaml`** — Partial machine-readable HTTP contract documenting the endpoints, security schemes, and request/response schemas.
+- **`agent/specs.md`** — Full specification of agent architecture, dependencies, and security model.
+- **`docs/architecture.md`** — System overview and the "operator is authoritative" design principle.
+- **`docs/security.md`** — Auth model, threat boundaries, and module-trust relationship.

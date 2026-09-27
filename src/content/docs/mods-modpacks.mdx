@@ -1,0 +1,103 @@
+---
+title: "Mods & Modpacks"
+description: "Install compatible content from registries, approved URLs, uploads, or IDs while keeping every change reproducible."
+section: operate
+group: files-backups
+order: 4
+icon: puzzle
+eyebrow: OPERATE
+readTime: "15 MIN"
+covers: ["Mods", "Modpacks", "Updates"]
+next: lifecycle-probes
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+
+Install compatible content from registries, approved URLs, uploads, or IDs while keeping every change reproducible.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "search",
+      label: "Browse compatible content",
+      text: "Scoped results to game version and loader; filter by provider, category, and popularity.",
+    },
+    {
+      icon: "arrow-right",
+      label: "Install from URL, upload, or ID",
+      text: "Different sources with distinct provenance, update, and manifest behavior.",
+    },
+    {
+      icon: "shield-check",
+      label: "Apply safely",
+      text: "Backup first, confirm the manifest, allow restart, and validate logs and joins.",
+    },
+  ]}
+/>
+
+<DocsCallout icon="shield-alert" title="Successful downloads aren't compatibility proof.">
+Validate loader, game version, dependencies, startup, and player joins after any mod install or update.
+</DocsCallout>
+
+## Browse compatible content
+
+The browser scopes results to game version and loader, then lets you filter provider, category, and popularity.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "Confirm game version and loader before searching",
+      text: "",
+    },
+    {
+      icon: "check",
+      label: "Review provider, author, dependencies, maintenance, and release metadata",
+      text: "",
+    },
+    {
+      icon: "check",
+      label: "Update checks require a provider and resolvable version",
+      text: "",
+    },
+  ]}
+/>
+
+## Install from URL, upload, or ID
+
+Each source has different provenance, update, allow-list, and manifest behavior.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "Use only approved URL hosts and verify the derived filename",
+      text: "",
+    },
+    {
+      icon: "check",
+      label: "Uploads record provider upload and are never update-checked",
+      text: "",
+    },
+    {
+      icon: "check",
+      label: "ID-driven games save selected, added, and removed registry identifiers",
+      text: "",
+    },
+  ]}
+/>
+
+## Apply safely
+
+Back up first, confirm the manifest, allow the required restart, and validate events, logs, and player joins.
+
+<DocsQuickReference
+  label="MOD CHANGE"
+  items={[
+    "01  Match game + loader + version; choose a trusted source",
+    "02  URL may update; upload never auto-updates; IDs persist in manifest",
+    "03  Backup → save manifest → restart → validate logs and joins",
+  ]}
+/>

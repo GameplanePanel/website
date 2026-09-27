@@ -1,0 +1,268 @@
+---
+title: GameServer and GameTemplate schema
+description: Map server intent to template compatibility, configuration, workload resources, storage, networking, lifecycle, and placement.
+section: develop
+group: api-reference
+order: 2
+icon: file-code
+eyebrow: REFERENCE
+covers: ["CRD fields", "Server configuration", "Template blueprints"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
+
+<DocsArticleMeta groupId="api-reference" />
+
+A **GameServer** is a single running game server instance. A **GameTemplate** is a cluster-scoped blueprint defining the container image, ports, console protocol, and configuration schema that servers instantiate.
+
+Every GameServer references exactly one GameTemplate by name (`spec.templateRef.name`). The template provides sensible defaults for compute resources, storage layout, networking, probes, and lifecycle. A server's spec then overrides or specializes those defaults for its own workload — pinning a version, setting config values, requesting specific CPU/memory, or tuning placement.
+
+## GameServer desired state
+
+The GameServer spec has two layers: **identity** (which template and version to run) and **overrides** (what to change from the template's defaults).
+
+| FIELD | TYPE | DEFAULT | DESCRIPTION |
+|---|---|---|---|
+| `spec.templateRef.name` | string | required | Template name this server instantiates. Immutable; delete and recreate to switch templates. |
+| `spec.version` | string | template default | Selects a GameTemplate.spec.versions[].id, pinning that version's image and env. Empty selects the template's default version. |
+| `spec.image` | string | template Image | Overrides GameTemplate.Spec.Image. Useful for pinning a specific build or running a fork. |
+| `spec.config` | map[string]string | {} | Validated values from the template's configSchema. Each key maps to a ConfigField.Name. |
+
+## Configuration and resources
+
+| FIELD | TYPE | DEFAULT | DESCRIPTION |
+|---|---|---|---|
+| `spec.resources` | object | template defaults | CPU and memory requests and limits (Kubernetes ResourceRequirements). |
+| `spec.storage` | object | template defaults | PVC class, size, volume mount path, and additional data volumes. |
+| `spec.env` | []EnvVar | (template env) | Appended to (and overrides) the template's env vars. |
+| `spec.probes` | object | template probes | Overrides the template's readiness/liveness/startup probes. |
+
+## Networking
+
+| FIELD | TYPE | DEFAULT | DESCRIPTION |
+|---|---|---|---|
+| `spec.networking.expose` | string | "ClusterIP" | Service type: ClusterIP, NodePort, LoadBalancer, or Hostport. |
+| `spec.networking.hostname` | string | — | Optional DNS name advertised via ingress / external-dns annotations. |
+| `spec.networking.serviceAnnotations` | map[string]string | {} | Merged into the Service's annotations (for LoadBalancer config, external-dns hooks, etc.). |
+| `spec.networking.portOverrides` | []PortOverride | (none) | Pins a specific NodePort or overrides the Service port for a named template port. |
+| `spec.networking.sourceRanges` | []string | (allow all) | IP allow-list (CIDRs) for the fronting Service (LoadBalancer only). |
+| `spec.networking.addressPool` | string | — | Load-balancer address pool to request this server's external address from (LoadBalancer only). |
+| `spec.networking.address` | string | — | One specific external address to request (LoadBalancer only). Overrides addressPool if both set. |
+| `spec.networking.tunnel` | object | disabled | Relay-based connectivity (frp, Tailscale, or playit) for installs with no public IP. |
+
+## Lifecycle and placement
+
+| FIELD | TYPE | DEFAULT | DESCRIPTION |
+|---|---|---|---|
+| `spec.suspend` | bool | false | When true, scales the underlying StatefulSet to zero. Data is preserved. Transitions to Suspended phase. |
+| `spec.stopGracePeriodSeconds` | int | 30 | Soft-stop timeout while the template's lifecycle.stop sequence runs over RCON. Range: 0–600. |
+| `spec.nodeSelector` | map[string]string | {} | Kubernetes node selection labels passed to the pod spec unchanged. |
+| `spec.tolerations` | []Toleration | (none) | Kubernetes pod tolerations for tainted nodes. |
+| `spec.affinity` | object | (none) | Kubernetes pod affinity/anti-affinity rules. |
+
+## Mods, backups, idle, and capture
+
+| FIELD | TYPE | DEFAULT | DESCRIPTION |
+|---|---|---|---|
+| `spec.mods` | object | (none) | For games that manage mods by ID (see GameTemplate capabilities.mods.idList). Maps to mod providers. |
+| `spec.backupPolicy` | object | (none) | Inline BackupSchedule for this server. When set, the operator creates a managed BackupSchedule owned by this server. |
+| `spec.idle` | object | disabled | Auto-sleep configuration: enabled flag, minutes until sleep, wake windows (cron), and wake-on-connect. |
+| `spec.capture` | object | disabled | Packet-capture configuration: opt-in enabled flag and retention window (seconds). |
+| `spec.serviceAccountName` | string | auto-created | Overrides the ServiceAccount the pod runs as. Default is per-server `<name>-agent` with minimal RBAC. |
+
+## GameTemplate blueprint
+
+A GameTemplate defines the reusable container image, ports, console protocol, and configuration schema that all servers instantiating it inherit.
+
+| FIELD | TYPE | DESCRIPTION |
+|---|---|---|
+| `spec.displayName` | string | Human-friendly label shown in the dashboard (e.g., "Minecraft Java Edition"). |
+| `spec.game` | string | Canonical game identifier (e.g., "minecraft-java", "valheim"). Grouping key in the UI catalog. |
+| `spec.categories` | []string | Marketing categories like "Survival", "Sandbox". The dashboard builds its filter from distinct values across installed templates. |
+| `spec.version` | string | Template revision (e.g., "1.0.0"). Bump when changing defaults existing servers should opt into. |
+| `spec.icon` | string | Optional URL or data URI shown in the catalog. |
+| `spec.accentColor` | string | Optional CSS hex color (e.g., "#3b82f6") the dashboard uses to tint the game's icon and accents. |
+| `spec.description` | string | Free-form markdown describing the template. |
+| `spec.image` | string | Default container image (e.g., "itzg/minecraft-server:2025.1.0"). Fallback when a server selects no version and sets no override. |
+| `spec.versions` | []GameVersion | Optional catalog of selectable game versions. Each maps a user choice to a concrete image and optional per-version env/loader. At most one entry should set default=true; otherwise the first entry is the default. |
+| `spec.command` / `spec.args` | []string | Override the container image entrypoint when set. |
+| `spec.env` | []EnvVar | Default environment for the game container. |
+| `spec.ports` | []GamePort | Exposed ports: name, container port, protocol (TCP/UDP), advertise flag, wake protocol. |
+| `spec.storage` | object | Default persistent storage layout: size, storage class, mount path, extra volumes. |
+| `spec.resources` | object | Default compute resources (requests and limits). |
+| `spec.rcon` | object | Remote-console protocol: "source" (Minecraft/Valve), "telnet", "websocket", "battleye", "satisfactory", "palworld", "nuclearoption", "rest", "cli", or "none". |
+| `spec.consoleMode` | string | How the Console tab attaches: "rcon" (line-based commands), "pty" (stdin/stdout), or "none". |
+| `spec.logPath` | string | File holding the game's primary log, as seen from inside the pod (e.g., "/data/logs/latest.log"). Must live under the data volume so the agent can tail it. |
+| `spec.probes` | object | Default readiness/liveness/startup probes for the game container. |
+| `spec.configSchema` | []ConfigField | User-tunable fields surfaced in the Create Server wizard. Resolved values are set as env vars or rendered into config files. |
+| `spec.configFiles` | []ConfigFile | Files the operator renders from resolved config values and places under storage.mountPath before the game starts. |
+| `spec.agent` | object | Tunes the sidecar deployed alongside the game: image override, resource limits. |
+| `spec.capabilities` | object | Game-specific console commands (player moderation, backup quiesce, lifecycle stop, custom actions, live metrics, mod management). |
+| `spec.security` | object | Pod/container security: runAsUser, runAsGroup, fsGroup. For games whose image refuses root or expects a specific uid. |
+
+## Status and conditions
+
+The operator populates `status` fields after reconciliation:
+
+| FIELD | TYPE | DESCRIPTION |
+|---|---|---|
+| `status.phase` | string | High-level state: Pending, Starting, Running, Stopping, Stopped, Suspended, or Failed. |
+| `status.observedGeneration` | int64 | The generation of spec that the operator last observed (for detecting stale status). |
+| `status.conditions` | []Condition | Detailed state transitions. Standard Ready, Progressing, and Healthy conditions are surfaced in the UI. |
+| `status.endpoints` | []GameServerEndpoint | Externally reachable addresses (host, port, protocol, pool) once the Service is reconciled. |
+| `status.agent` | AgentStatus | Runtime info from the in-pod sidecar: version, heartbeat time, players online, CPU/memory usage, disk usage. |
+| `status.startedAt` | timestamp | Wall-clock time the game container was last observed as Ready. |
+| `status.lastBackupTime` | timestamp | Completion time of the most recent successful backup. |
+| `status.idle` | object | Observed idle auto-sleep state: empty since when, asleep flag, sleep/wake times, reason. |
+| `status.capture` | object | Capture system state: ready flag, active capture name, last capture time, sidecar restart count. |
+
+<DocsCallout icon="info" title="Verification best practice">
+Use `status.observedGeneration` and `status.conditions` to confirm the operator has applied the latest spec generation. A condition's `status`, `reason`, and `message` fields explain blockers (e.g., image pull failure, insufficient resources, invalid config).
+</DocsCallout>
+
+## Configuration field schema
+
+Each entry in `configSchema` declares a single user-tunable field surfaced in the Create Server wizard:
+
+| FIELD | TYPE | DESCRIPTION |
+|---|---|---|
+| `name` | string | Field identifier (also used as env var when target is "env"). |
+| `displayName` | string | Shown in the UI. |
+| `description` | string | Explains the field to end users. |
+| `type` | string | Input widget: "string", "int", "bool", "enum", or "password". Passwords are stored in a per-server Secret. |
+| `default` | string | Default value rendered in the wizard. |
+| `enum` | []string | Valid values when type is "enum". |
+| `required` | bool | When true, blocks wizard submission if unset. |
+| `target` | string | "env" (default) sets an env var; "file" makes the value available to configFiles templates. |
+| `autoFromMemoryLimit` | object | Derives the value from the game container's memory limit (e.g., floor(limit × percent / 100)). |
+| `min` / `max` | int64 | Inclusive bounds for int-typed fields. |
+| `minLength` / `maxLength` | int32 | Inclusive bounds for string and password fields. |
+
+## Port definitions
+
+Each entry in `ports` declares an exposed port:
+
+| FIELD | TYPE | DEFAULT | DESCRIPTION |
+|---|---|---|---|
+| `name` | string | required | DNS-label port identifier (e.g., "game", "query", "rcon"). |
+| `containerPort` | int | required | Port the game listens on inside the pod (1–65535). |
+| `protocol` | string | TCP | TCP or UDP. |
+| `advertise` | bool | true | When true, exposed to users via GameServer.Spec.Networking. RCON/query ports typically set this to false. |
+| `wakeProtocol` | string | generic | Parser for the wake sentinel while the server sleeps: "minecraft" (real Minecraft join detection), "terraria", "generic" (plausible traffic), or "none" (never wake). |
+
+## Storage specification
+
+The storage spec (both template and server-level overrides) defines persistent volumes:
+
+| FIELD | TYPE | DEFAULT | DESCRIPTION |
+|---|---|---|---|
+| `size` | string | (none) | Default PVC size (e.g., "10Gi"). |
+| `storageClassName` | string | (none) | Pins the PVC to a specific StorageClass when set. |
+| `mountPath` | string | "/data" | Where the persistent volume mounts inside the game container. |
+| `dataSource` | object | (none) | Seeds the PVC from a CSI VolumeSnapshot (for restore-from-snapshot). |
+| `extra` | []ExtraVolume | (none) | Additional persistent volumes beyond the primary data volume (max 4). |
+
+## Tunnel configuration
+
+When `spec.networking.tunnel.enabled` is true, connectivity routes through a relay instead of relying on cluster ingress:
+
+| FIELD | TYPE | REQUIRED | DESCRIPTION |
+|---|---|---|---|
+| `enabled` | bool | true | Enables the tunnel for this server. |
+| `provider` | string | yes | Relay backend: "frp" (static public address), "tailscale" (private tailnet), or "playit" (dynamic public address). |
+| `credentialsSecretRef` | object | yes (if enabled) | Secret in the GameServer's namespace with provider-specific credentials. |
+| `frp` | object | yes (if provider is "frp") | frp config: serverAddr, serverPort, remotePorts. |
+| `tailscale` | object | no | Tailscale config: MagicDNS hostname, ACL tags. |
+| `playit` | object | no | Playit config: optional tunnel name. |
+
+## Idle auto-sleep configuration
+
+When `spec.idle.enabled` is true, the operator scales the server down once it reports no players for a threshold:
+
+| FIELD | TYPE | DEFAULT | DESCRIPTION |
+|---|---|---|---|
+| `enabled` | bool | false | Turns idle auto-sleep on for this server. |
+| `afterMinutes` | int | 30 | Minutes of continuous zero players before sleep (5–1440). |
+| `wakeWindows` | []string | (none) | Cron expressions (cluster timezone) at which a sleeping server wakes up. Max 8 entries. |
+| `wakeOnConnect` | bool | false | Arms the wake sentinel: while asleep, a small pod holds the advertised ports and wakes the server on a genuine join attempt. |
+
+## Capture configuration
+
+When `spec.capture.enabled` is true, the operator injects a packet-capture ephemeral container into the pod:
+
+| FIELD | TYPE | DEFAULT | DESCRIPTION |
+|---|---|---|---|
+| `enabled` | bool | false | Opts into packet-capture capability for this server. |
+| `retentionSeconds` | int | cluster default | Per-server override of the cluster-wide retention window (60–604800 seconds). |
+
+---
+
+## Real-world example
+
+```yaml
+apiVersion: gameplane.local/v1alpha1
+kind: GameServer
+metadata:
+  name: survival-world
+  namespace: game-servers
+spec:
+  templateRef:
+    name: minecraft-java
+  
+  version: "1.21.4-paper"
+  config:
+    eula: "true"
+    difficulty: "3"
+    pvp: "true"
+    max-players: "20"
+  
+  resources:
+    requests:
+      cpu: "1000m"
+      memory: "3Gi"
+    limits:
+      cpu: "4000m"
+      memory: "6Gi"
+  
+  storage:
+    size: "50Gi"
+    storageClassName: "fast-ssd"
+  
+  networking:
+    expose: LoadBalancer
+    addressPool: us-west-2
+    sourceRanges:
+      - "203.0.113.0/24"
+      - "198.51.100.0/24"
+  
+  nodeSelector:
+    disktype: ssd
+  
+  tolerations:
+    - key: game-servers
+      operator: Equal
+      value: "true"
+      effect: NoSchedule
+  
+  backupPolicy:
+    schedule: "0 2 * * *"  # Daily at 2 AM
+    repoRef:
+      name: primary-backup-repo
+      key: credentials
+    retention:
+      daily: 7
+      weekly: 4
+  
+  idle:
+    enabled: true
+    afterMinutes: 60
+    wakeWindows:
+      - "0 8 * * *"      # Daily at 8 AM
+      - "0 18 * * *"     # Daily at 6 PM
+    wakeOnConnect: true
+```
+
+---
+
+For detailed CRD field validation rules, Kubernetes defaults, and immutability constraints, see the `operator/api/v1alpha1/gameserver_types.go` and `operator/api/v1alpha1/gametemplate_types.go` source files in the main repository.

@@ -1,0 +1,104 @@
+---
+title: Permission Catalog
+description: The closed permission vocabulary used by API middleware, scoped roles, ownership checks, and administrative surfaces.
+section: platform
+group: users-access
+order: 3
+icon: check
+eyebrow: ACCESS
+readTime: 6 MIN
+covers: ["RBAC", "Permissions", "Role-based access control"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+
+The closed permission vocabulary used by API middleware, scoped roles, ownership checks, and administrative surfaces.
+
+## Server & backup permissions
+
+These permissions govern individual game servers and their backups. They are namespaced, meaning they can be scoped to a specific namespace or cluster-wide (`*`).
+
+| Permission | Scope | Grants | Notes |
+|---|---|---|---|
+| `servers:read` | server / cluster | View state | Ownership-filtered |
+| `servers:write` | server / cluster | Mutate config | Excludes console |
+| `servers:console` | server | Interactive I/O | Audited session |
+| `backups:restore` | server | Execute restore | High-impact action |
+
+**servers:read** — View server state, logs, active player lists, and files. Ownership-filtered means the caller sees only servers they own or collaborate on, or all servers if they have a cluster-wide `servers:read` permission binding.
+
+**servers:write** — Create, edit, and delete servers; scale; trigger restarts; manage game modules and mods. Does not include the `servers:console` permission (those are independent).
+
+**servers:console** — Access the live console (RCON or PTY, depending on the game). All console sessions are audited and recorded with actor, timestamp, and transcript.
+
+**backups:restore** — Execute a restore operation from an existing backup. This is marked a high-impact action because a restore overwrites game data.
+
+## Backup schedules & destinations
+
+| Permission | Scope | Grants | Notes |
+|---|---|---|---|
+| `backups:read` | server / cluster | View backups and restores | — |
+| `backups:write` | server / cluster | Create and delete backups | Manual snapshots |
+| `schedules:read` | server / cluster | View backup schedules | — |
+| `schedules:write` | server / cluster | Create, edit, and delete schedules | Recurring snapshots |
+| `destinations:read` | server / cluster | View backup destinations | — |
+| `destinations:manage` | server / cluster | Create, edit, and delete destinations | S3, Restic, NFS |
+
+**backups:read** and **backups:write** — View and manage individual backup snapshots. `backups:write` covers both manual snapshot creation and explicit deletion.
+
+**schedules:read** and **schedules:write** — View and manage automated backup schedules. A schedule triggers recurring snapshots at a specified interval.
+
+**destinations:read** and **destinations:manage** — View and configure backup destinations (S3-compatible storage, Restic repositories, and networked storage).
+
+## Platform & administrative permissions
+
+These permissions govern cluster-wide resources: templates, modules, nodes, users, and audit configuration. They are cluster-scoped.
+
+| Permission family | Scope | Examples | Typical role |
+|---|---|---|---|
+| `templates` / `modules` | platform | read · write | Platform engineer |
+| `cluster` / `destinations` | platform | read · write | Operator |
+| `users` / `roles` | organization | read · write | Administrator |
+| `audit` / `config` | organization | read · write | Security admin |
+
+**templates:read** and **templates:write** — View and manage game templates (the blueprints for servers). Writing templates requires cluster-wide permission.
+
+**modules:read** and **modules:manage** — View available modules and sources; install, upgrade, and uninstall modules in the cluster. Only the **admin** role has `modules:manage`; operators have `modules:read` only.
+
+**cluster:read** and **cluster:manage** — View cluster nodes, Kubernetes version, and registered storage classes. Manage includes adding nodes, downloading kubeconfig, and configuring multi-cluster topology.
+
+**users:read** and **users:manage** — View users and role bindings; create, edit, and delete users; bind users to roles within namespaces or cluster-wide.
+
+**roles:read** and **roles:manage** — View roles and the permission catalog; create, edit, and delete custom roles and modify role permissions.
+
+**audit:read** — View the audit log of all state-changing operations (creates, edits, deletes, and sensitive operations like console access, ownership transfers, and wipes).
+
+**config:read** and **config:manage** — View and change global platform settings (OIDC providers, theme defaults, audit sinks, telemetry, and notification targets).
+
+## Scope & binding dimensions
+
+Permissions are bound to users through roles, and each binding is scoped across three dimensions:
+
+1. **Namespace** — a Kubernetes namespace (`default`, `game-world-1`, etc.) or `*` for cluster-wide. A `servers:read` binding in `default` namespace grants read access to servers in `default` only; a `*` binding grants access to all servers.
+
+2. **Cluster** — the home cluster or a registered remote cluster, or `*` for all clusters. A binding on the home cluster does not grant access to servers on a remote cluster (no cross-cluster privilege escalation).
+
+3. **Resource** — scoped permissions like `servers:read` apply within the namespace; cluster-scoped permissions like `templates:read` are never namespace-restricted.
+
+**Owner & collaborator fallback** — When a namespace permission check fails (e.g., the caller has `servers:read` in namespace A but requests access to a server in namespace B), the API checks if the caller is the server's owner or a collaborator. Owner-only operations (transferring ownership, managing collaborators, wiping data, and deleting a server) require the server's owner or an admin, even if the caller holds `servers:write` in that namespace. Servers without a recorded owner can only be managed by an admin.
+
+<DocsCallout icon="info" title="Unknown permission strings are rejected.">
+  The permission vocabulary is fixed on the server. Custom roles may combine any subset of the catalog permissions. Requests that reference an unknown permission (a typo or a permission from a future version) are rejected with a 400 Bad Request.
+</DocsCallout>
+
+## Built-in roles
+
+Gameplane ships with three built-in roles:
+
+| Role | Permissions |
+|---|---|
+| **admin** | `*` (wildcard: full access to all resources, settings, and operations) |
+| **operator** | Read/write servers, backups, schedules, templates; read modules, destinations, cluster, and roles |
+| **viewer** | Read-only access to servers, backups, schedules, templates, modules, destinations, cluster, and roles |
+
+Custom roles can be created with any combination of catalog permissions and bound to users per namespace and cluster.

@@ -1,0 +1,77 @@
+---
+title: "Testing, coverage, and E2E"
+description: "Choose the cheapest faithful tier, preserve coverage gates, and place every real-cluster test in exactly one CI bucket."
+section: develop
+group: testing-release
+order: 1
+icon: flask-conical-conical
+readTime: "18 MIN"
+covers: ["Unit", "Envtest", "E2E"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
+
+<DocsArticleMeta groupId="testing-release" readTime="18 MIN" />
+
+Gameplane's test suite spans three tiers: unit tests and Vitest (cheapest), envtest for Kubernetes integration (moderate cost), and kind E2E for full-cluster validation (most expensive). Every real-cluster test lives in exactly one CI bucket to prevent login rate-limiter starvation.
+
+<DocsSectionList
+  items={[
+    { icon: "flask-conical", label: "Unit & Integration", text: "Fast, isolated tests for individual components." },
+    { icon: "server", label: "Envtest", text: "Kubernetes API server tests for operators and APIs." },
+    { icon: "boxes", label: "E2E Buckets", text: "Real-cluster tests partitioned by login pressure, not feature area." },
+  ]}
+/>
+
+<DocsCallout icon="shield-alert" title="Port-forward bypasses NetworkPolicy">
+  `kubectl port-forward` tunnels through the kubelet, bypassing NetworkPolicy entirely. It cannot prove real in-cluster game connectivity. Use a live E2E run on a kind cluster instead.
+</DocsCallout>
+
+## Go test tiers
+
+Unit, envtest, and kind E2E cover progressively more infrastructure at progressively higher cost.
+
+- **`make test`** runs all unit suites and Vitest without envtest.
+- **`make test-integration`** runs operator/API envtest (Kubernetes API server tests).
+- **`make test-e2e`** builds images and exercises a real kind cluster (~10–20 min).
+
+## Web and coverage
+
+Vitest/MSW and Playwright mock/live modes cover browser behavior; merged profiles enforce component thresholds.
+
+- **Testing Library** covers routes/components with MSW fixtures. Unit tests run against mock API responses.
+- **Playwright mock** needs no cluster; live mode uses authenticated e2e state. Both share the same test files via a config flag (`GAMEPLANE_E2E_TARGET`).
+- **`make cover`** merges unit/envtest coverage profiles and enforces Go/web gates. Minimum thresholds: web (`92% L / 76% F / 82% B / 92% S`), operator (`72%`), api (`80%`), agent (`90%`), netguard/gameaction (`91%`).
+
+## E2E discipline
+
+Every test belongs to one disjoint CI bucket; real game probes run as in-cluster Jobs and failures retain diagnostics.
+
+The 11 buckets partition tests by **login pressure, not feature area**. The API rate limiter is per-IP (burst 10, 5/min) and per-username (burst 6, 3/min). Each bucket keeps within its login budget (~7 admin logins):
+
+- **`operator`** — zero logins; runs parallel and wide.
+- **`api-auth`**, **`api-roles`**, **`api-rbac`**, **`api-agent`**, **`api-mods`** — API-specific tests, carefully metered.
+- **`ratelimit`** — deliberately exhausts the shared limiter; runs last as a separate invocation.
+- **`bot-fast`**, **`bot-heavy`** — game bot harness tests.
+- **`multicluster`** — requires two kind clusters (one per node, set `GAMEPLANE_E2E_CLUSTER_B`).
+- **`upgrade`** — helm upgrade and state persistence.
+
+Use `BUCKET=<name> make test-e2e-bucket` to run a single bucket locally against a live cluster.
+
+<DocsQuickReference
+  label="TEST PYRAMID"
+  items={[
+    "make test && make test-integration",
+    "make cover",
+    "make test-e2e   # or BUCKET=api-agent make test-e2e-bucket",
+  ]}
+/>
+
+---
+
+## Next guide
+
+[Contribution and design workflow](./contribution-design-workflow/)

@@ -1,0 +1,86 @@
+---
+title: Public website development
+description: Extend the Astro marketing site and MDX documentation while preserving navigation, canonical URLs, accessibility, and the Pencil source.
+section: develop
+group: local-development
+order: 7
+icon: globe
+eyebrow: DEVELOP
+readTime: 14 MIN
+covers: ["Astro", "MDX", "Submodule"]
+next: module-authoring-quickstart
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
+
+The website is a separately versioned submodule; merge there first, then bump the gitlink in the main repository.
+
+<DocsArticleMeta groupId="local-development" readTime="14 MIN" />
+
+<DocsCallout icon="check" title="Submodule workflow">
+The website is a separately versioned submodule; merge there first, then bump the gitlink in the main repository.
+</DocsCallout>
+
+## Site architecture
+
+Astro pages, shared layouts/components, content collections, and the docs navigation module form the public-site contract.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "Marketing routes",
+      text: "Marketing routes live under website/src/pages.",
+    },
+    {
+      icon: "check",
+      label: "Docs MDX",
+      text: "Docs MDX lives in website/src/content/docs with a shared DocsLayout.",
+    },
+    {
+      icon: "check",
+      label: "Centralized config",
+      text: "Navigation, footer, canonical URLs, icons, and config are centralized.",
+    },
+  ]}
+/>
+
+## Develop and verify
+
+Run the submodule locally, validate every static route, and check responsive, keyboard, contrast, metadata, and link behavior.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "Install and start",
+      text: "Install with npm ci and run the Astro development server.",
+    },
+    {
+      icon: "check",
+      label: "Build validation",
+      text: "Build before review to catch collection and route errors.",
+    },
+    {
+      icon: "check",
+      label: "Test coverage",
+      text: "Test docs sidebar, previous/next, search states, mobile layouts, and 404.",
+    },
+  ]}
+/>
+
+## Publish a docs change
+
+Update Pencil first for visual changes, edit MDX and navigation together, merge the website repo, then bump and verify the submodule.
+
+<DocsQuickReference
+  label="WEBSITE LOOP"
+  items={[
+    "01  cd website && npm ci && npm run dev",
+    "02  npm run build   # validate static routes and content",
+    "03  Merge website PR → bump submodule pointer → verify public links",
+  ]}
+/>

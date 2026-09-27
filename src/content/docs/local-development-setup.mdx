@@ -1,0 +1,86 @@
+---
+title: "Local development setup"
+description: "Build Gameplane on a host or devcontainer, then run the full stack against kind or a selected remote cluster."
+section: "develop"
+group: "local-development"
+order: 2
+icon: "laptop"
+eyebrow: "DEVELOP"
+readTime: "14 MIN"
+covers: ["Toolchain", "kind", "Submodules"]
+next: "repository-components"
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
+
+<DocsArticleMeta groupId="local-development" readTime="14 MIN" />
+
+Build Gameplane on a host or devcontainer, then run the full stack against kind or a selected remote cluster.
+
+<DocsCallout icon="info" title="Desired state vs. observed state">
+Desired state belongs in CRD spec; observed state and conditions belong to controllers.
+</DocsCallout>
+
+## Workspace map
+
+The workspace joins runtime components, shared libraries, optional services, packaging, e2e infrastructure, and two submodules.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "package",
+      label: "Go modules",
+      text: "go.work joins operator, API, agent, shared Go modules, MCP, and tests.",
+    },
+    {
+      icon: "layout-dashboard",
+      label: "Web dashboard",
+      text: "web is React; charts and deploy own packaging and local orchestration.",
+    },
+    {
+      icon: "github",
+      label: "Submodules",
+      text: "modules and website are separately versioned gitlink repositories.",
+    },
+  ]}
+/>
+
+## Cluster development loop
+
+The Make targets create local infrastructure, build and load images, push modules, install the chart, and run the web UI.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "play",
+      label: "make dev-up",
+      text: "Creates kind and the local OCI registry.",
+    },
+    {
+      icon: "check",
+      label: "make web-dev",
+      text: "Runs Vite on 5173 with REST and WebSocket proxying.",
+    },
+    {
+      icon: "check",
+      label: "make dev-down",
+      text: "Removes kind; CLUSTER=remote uses a reachable registry.",
+    },
+  ]}
+/>
+
+## Debug the environment
+
+Keep host and cluster registry addresses, kube context, namespaces, image tags, and Helm values aligned.
+
+<DocsQuickReference
+  label="LOCAL LOOP"
+  items={[
+    "01  git submodule update --init --recursive",
+    "02  make dev-up && make web-dev",
+    "03  make dev-down   # or CLUSTER=remote make dev-up",
+  ]}
+/>

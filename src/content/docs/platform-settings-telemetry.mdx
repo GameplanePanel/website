@@ -1,0 +1,97 @@
+---
+title: "Platform settings, telemetry, and build info"
+description: "Maintain instance identity and defaults, make an explicit telemetry choice, and capture exact build data for support."
+section: "platform"
+group: "audit-observability"
+order: 7
+icon: "info"
+eyebrow: "ADMINISTRATION"
+readTime: "12 MIN"
+covers: ["Settings", "Privacy", "Versions"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+
+Maintain instance identity and defaults, make an explicit telemetry choice, and capture exact build data for support.
+
+<DocsCallout icon="info" title="External URL changes affect OIDC and integrations">
+  Changing the canonical external URL updates OIDC redirect URIs, bookmark links, and API webhooks. Coordinate with dependent systems and your identity provider before saving changes.
+</DocsCallout>
+
+## General instance settings
+
+Keep instance name, canonical external URL, and default namespace stable and environment-specific.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "hash",
+      label: "Use a name that distinguishes environments and clusters",
+      text: "The instance name appears in logs, audit records, and the browser tab, helping you identify which Gameplane instance you're operating.",
+    },
+    {
+      icon: "arrow-right",
+      label: "Coordinate redirect URLs before changing the canonical external URL",
+      text: "OIDC and webhook integrations depend on exact URL matching. Update your identity provider, integrations, and browser bookmarks before saving a new external URL.",
+    },
+    {
+      icon: "shield-check",
+      label: "Verify RBAC, quota, storage, and network policy in the default namespace",
+      text: "The default namespace holds the control plane and game server resources. Ensure it has correct access policies, resource limits, and networking configuration before production.",
+    },
+  ]}
+/>
+
+## Telemetry and privacy
+
+Usage telemetry is an explicit choice and is not a substitute for operational metrics and logs.
+
+When enabled, the API sends a daily anonymous report containing only the cluster version, count of active GameServers, and count of GameTemplates. The current implementation excludes server names, player counts, and identifying data.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "The current promise excludes server names, players, and identifying data",
+      text: "Only version, server count, and template count are transmitted. No names, IDs, or private configuration is collected.",
+    },
+    {
+      icon: "check",
+      label: "Document any required organizational privacy review",
+      text: "If your organization requires a Data Processing Agreement or privacy assessment, collect the details from the telemetry-receiver configuration and CHANGELOG before enabling.",
+    },
+    {
+      icon: "check",
+      label: "Recheck the saved choice after upgrades",
+      text: "Telemetry state persists across upgrades. After updating Gameplane, verify that your chosen setting (enabled or disabled) matches your policy.",
+    },
+  ]}
+/>
+
+## Updates and About
+
+Update channel comes from Helm; record build hash, Kubernetes version, and license before troubleshooting or upgrading.
+
+The Dashboard displays the current Gameplane version (from the container image tag, set via Helm `image.tag`), the Kubernetes cluster version, and internal build hash. This information is essential for support diagnostics and version-specific feature eligibility.
+
+- **Version**: The image tag set at install time or on upgrade. Leave empty in Helm values to use the chart's `appVersion`.
+- **Build hash**: The Git commit SHA from which the container images were built. Appears in logs and diagnostics.
+- **Kubernetes version**: Your cluster's API server version, visible in Dashboard Settings → About and via `kubectl version`.
+
+Before opening a support ticket or upgrading:
+
+1. Record your Helm chart version, `image.tag`, and any custom `values.yaml` overrides
+2. Confirm the Kubernetes version your cluster is running
+3. Save the current Gameplane build hash from the Dashboard
+4. If filing an issue, include these details to help narrow down version-specific bugs
+
+<DocsQuickReference
+  label="PLATFORM RECORD"
+  items={[
+    "01  Stable instance name + canonical URL + intentional namespace",
+    "02  Explicit telemetry choice; operational monitoring remains separate",
+    "03  Record chart/build/Kubernetes/values before support or upgrade",
+  ]}
+/>

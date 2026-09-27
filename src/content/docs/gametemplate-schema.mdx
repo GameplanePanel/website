@@ -1,0 +1,178 @@
+---
+title: "GameTemplate schema"
+description: "Model versions, configuration, storage, networking, probes, and files so the operator renders a safe server deterministically."
+section: develop
+group: modules-sources
+order: 4
+icon: braces
+eyebrow: AUTHOR MODULES
+readTime: "20 MIN"
+covers: ["Versions", "Schema", "Storage"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+
+Every generated file needs a deterministic path, format, owner, validation rule, and restart expectation.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "hash",
+      label: "Versions",
+      text: "Pin image and version transforms explicitly; never make latest the only reproducible option.",
+    },
+    {
+      icon: "layers",
+      label: "Configuration",
+      text: "Declare defaults, validation, secrets, advanced flags, and auto-computation for each field.",
+    },
+    {
+      icon: "database",
+      label: "Storage",
+      text: "Align ports, resources, security, probes, volumes, backups, files, and mods around the same paths.",
+    },
+  ]}
+/>
+
+## Identity and versions
+
+Define branding, category, architecture support, image mapping, and compatible version/loader choices without mutable ambiguity.
+
+- Pin image and version transforms explicitly.
+- Never make latest the only reproducible option.
+- Describe compatibility so the UI filters impossible combinations.
+
+Every GameTemplate declares a `spec.versions[]` catalog (optional — when empty, a single image applies to all servers). Each version entry maps a user choice to a concrete container image, a loader identity (for per-version-loader mod volumes), and optional per-version environment variables.
+
+**Key fields:**
+
+- `displayName` — Human-friendly label shown in the Create Server picker, e.g., "1.21.4 (Paper)".
+- `id` — Stable selector stored in `GameServer.spec.version`, also folded into per-version mod volume names. Keep it short and DNS-like (e.g., `"1.21.4-paper"`, `"tmodloader-latest"`).
+- `image` — Full container reference for this version. For environment-versioned games (e.g., itzg/minecraft-server), this is usually one pinned image shared across entries, differentiated only by `loader` and `env`. For tag-versioned games (e.g., Terraria), each entry pins a distinct tag.
+- `loader` — Optional mod-loader or server-type identifier (e.g., `"paper"`, `"forge"`, `"vanilla"`). Keys into `spec.capabilities.mods.loaders` to select a per-(version+loader) mod volume. When empty, mods live on the shared data volume.
+- `env` — Optional environment variables appended when this version is selected. Applied after the template's `spec.env` and before `GameServer.spec.env`, so explicit user overrides still win.
+- `default` — Marks the wizard's pre-selected entry. At most one entry should set it; if none or several do, the first entry is the default.
+- `gameVersion` — Optional upstream game-version token (e.g., `"1.21.4"`) the dashboard passes to external mod registries. Distinct from `id` — `id` is a Gameplane selector, `gameVersion` is the registry's own version facet. Leave empty when unset or when the template declares no mod registries.
+
+## Configuration and files
+
+Map typed inputs to environment, args, or rendered files without exposing secrets in status.
+
+Every GameTemplate defines a `spec.configSchema[]` — a list of user-tunable fields surfaced in the Create Server wizard. The operator validates each field against its schema, applies defaults, and makes the resolved value available to the game container either as an environment variable or as a template variable for rendered config files.
+
+### Configuration schema fields
+
+Each entry in `spec.configSchema[]` declares:
+
+- `name` — Field identifier; used as an env var when `target` is `"env"`.
+- `displayName` — Label shown in the UI (optional; defaults to `name`).
+- `description` — Explanation for end users (optional).
+- `type` — Input widget type: `"string"`, `"int"`, `"bool"`, `"enum"`, or `"password"` (defaults to `"string"`).
+- `default` — Default value rendered in the wizard (optional; as a string).
+- `enum` — Restrict valid values when `type: enum` (optional list of strings).
+- `required` — Block wizard submission if unset (optional; defaults to false).
+- `target` — Where the resolved value is applied: `"env"` (default) sets an env var on the game container; `"file"` makes the value available to `spec.configFiles[]` templates instead.
+- `autoFromMemoryLimit` — Auto-compute the field's value from the game container's effective memory limit. Lets templates size JVM heaps or similar to whatever resources the server was given. An explicit user value or a template without a memory limit overrides it.
+- `min` / `max` — Bounds for int-typed fields (inclusive; ignored for non-int).
+- `minLength` / `maxLength` — String length bounds for string and password-typed fields (inclusive; ignored for non-string).
+
+### Config files
+
+`spec.configFiles[]` declares files the operator renders from resolved config values and places under `spec.storage.mountPath` before the game starts. The rendered contents are stored in an owned `<server>-files` Secret (they may embed password values) and copied onto the data volume by an init container on every pod start.
+
+Each entry declares:
+
+- `path` — Where the rendered file lands, relative to `storage.mountPath` (e.g., `"serverconfig.txt"`, `"cfg/server.cfg"`). Absolute paths and `..` segments are rejected.
+- `template` — Go text/template rendered with `.Values` (every `configSchema` field name mapped to its resolved value, empty string when optional fields are unset) and `.Server` (`.Name`, `.Namespace`). Rendering uses `missingkey=error`: referencing a field outside the schema fails the GameServer.
+
+**Important:** Manual edits to config-file paths via the Files tab are overwritten on every restart, since the operator re-renders them from the Secret on each pod start.
+
+<DocsCallout icon="info" title="Password fields are always secret-backed.">
+  Fields with `type: password` are stored in a per-GameServer Secret and never exposed in the pod spec or status.
+</DocsCallout>
+
+## Runtime and storage
+
+Align ports, resources, security, probes, volumes, backups, files, mods, logs, RCON, and graceful stop around the same paths.
+
+### Ports and networking
+
+`spec.ports[]` declares exposed ports on the game container. Each port entry specifies:
+
+- `name` — DNS-label port identifier (e.g., `"game"`, `"query"`, `"rcon"`).
+- `containerPort` — Port the game listens on inside the pod (1–65535).
+- `protocol` — `"TCP"` or `"UDP"` (defaults to `"TCP"`).
+- `advertise` — Whether this port is exposed to users via `GameServer.spec.networking` and firewall/NetworkPolicy. RCON and query ports are typically `false`; defaults to `true`.
+- `wakeProtocol` — Which parser the wake-on-connect sentinel applies while the server is asleep. `"minecraft"` and `"terraria"` parse real handshakes (only genuine joins wake; server-list pings are answered without waking). `"generic"` wakes on any plausible traffic (for UDP-only games with no connection to hold). `"none"` never wakes. Defaults to `"generic"`.
+
+### Storage and volumes
+
+`spec.storage` describes persistent storage layout:
+
+- `size` — Default PVC size (e.g., `"10Gi"`); optional.
+- `storageClassName` — Pin the PVC to a specific StorageClass (optional; the cluster's default applies otherwise).
+- `mountPath` — Where the game data volume is mounted inside the container (e.g., `"/data"`). Defaults to `"/data"`.
+- `dataSource` — Seed a PVC from an existing CSI VolumeSnapshot on first creation (used by Restore operations; immutable once the PVC binds; not applicable to templates, only to per-server GameServers).
+- `extra[]` — Additional persistent volumes beyond the primary data volume. Use when a game's state lives in several directories with no safe common parent. Each entry declares a `name` (forms part of the PVC name), `mountPath` (absolute in-container path), and `size`.
+
+### Resources and probes
+
+`spec.resources` — Default compute resources for the game container (requests and limits). When set on a GameServer, these override the template's defaults.
+
+`spec.probes` — Default readiness, liveness, and startup probes for the game container. The operator supplies sensible defaults when unset. Each probe uses the standard Kubernetes probe configuration (exec, httpGet, or tcpSocket).
+
+### Security
+
+`spec.security` — Override the uid/gid the game container runs as and the gid the kubelet chowns the mounted data volume to. Use this when the game's image refuses to run as root or expects a specific uid (e.g., ARK's image requires uid 25000 and cannot initialize Proton as root).
+
+- `runAsUser` — UID the game container runs as (0–4294967295; optional).
+- `runAsGroup` — GID the game container runs as (optional).
+- `fsGroup` — GID the kubelet chowns mounted volumes to on start (optional). Lets a non-root game user write to its PVC without a separate chown init container.
+
+### RCON and console modes
+
+`spec.rcon` — Declares the remote-console protocol used by the game, if any:
+
+- `protocol` — Wire protocol: `"source"` (Valve/Minecraft RCON), `"telnet"` (raw line-based TCP), `"websocket"` (Rust WebRcon), `"battleye"` (DayZ/Arma UDP), `"satisfactory"` (HTTPS API), `"palworld"` (REST API), `"nuclearoption"` (JSON-RPC 2.0), `"rest"` (generic HTTP/JSON), `"cli"` (stdin/PTY), `"none"` (no console). Defaults to `"source"`.
+- `port` — TCP/UDP port the RCON protocol listens on (optional; varies by protocol).
+- `passwordSecretRef` / `passwordEnv` / `passwordFile` — How the operator sources and injects the RCON password for the agent.
+
+`spec.consoleMode` — Controls how the dashboard's Console tab attaches to the running game:
+
+- `"rcon"` — Send line-based RCON commands (default when `rcon.protocol` is set and not `"none"`).
+- `"pty"` — Attach to the container's stdin/stdout via pod-attach API. Requires the container started with `tty: true` and `stdin: true`.
+- `"none"` — Disable the Console tab.
+
+### Logs
+
+`spec.logPath` — File holding the game's primary log, as seen from inside the pod (e.g., `"/data/logs/latest.log"`). Must live under the shared data volume (`spec.storage.mountPath`) so the agent sidecar can tail it for the dashboard's Logs tab. Leave empty for games that only log to stdout; the Logs tab is then unavailable.
+
+### Capabilities (actions, quiesce, lifecycle, mods, players)
+
+`spec.capabilities` — Declares the per-game command surface the agent interprets. This is how modules add full feature support without agent code changes. All commands run over the template's RCON connection (so they require `rcon.protocol != "none"`), except for mods and player listing, which use file or RCON operations respectively.
+
+Key sub-specs:
+
+- `players` — Moderation actions (`kick`, `ban`, `unban`, `banList`, `whitelist`, `list`). Each is a Go text/template rendered with `.Player` and `.Reason`.
+- `quiesce` — Pause and resume game writes around a backup: `quiesce[]` runs before snapshot, `unquiesce[]` runs after.
+- `lifecycle.stop` — Graceful shutdown sequence (e.g., `["save-off", "save-all flush"]` for Minecraft). The operator runs this before scaling the server down, so the world is saved cleanly instead of relying on container SIGTERM.
+- `actions[]` — Named operator actions surfaced as buttons on the server detail page. Each runs a templated console command.
+- `status` — Game-specific live metrics shown on the Overview tab, read via RCON command and parsed by named-group regex.
+- `mods` — Declares the mod/plugin directory and install policy. Supports a single shared path, per-(version+loader) mod volumes, or ID-based mods (where the server downloads its own).
+
+<DocsQuickReference
+  label="TEMPLATE MODEL"
+  items={[
+    "01  spec.versions[] → image/tag + loader compatibility",
+    "02  spec.configSchema[] → env/args/config files",
+    "03  spec.storage + probes + ports → rendered workload",
+  ]}
+/>
+
+---
+
+## Next guide
+
+[Runtime capabilities & actions](./runtime-capabilities-actions/) — Define game-specific commands the operator interprets to drive console actions, player moderation, and backup quiesce.

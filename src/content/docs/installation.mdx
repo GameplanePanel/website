@@ -1,0 +1,314 @@
+---
+title: "Install with Helm"
+description: "Prepare a Kubernetes cluster, choose secure chart values, deploy Gameplane, bootstrap access, and verify the control plane before hosting servers."
+section: "start-here"
+order: 2
+icon: "download"
+eyebrow: "INSTALL"
+readTime: "16 MIN"
+covers: ["Helm", "Ingress", "Bootstrap"]
+next: "dashboard-tour"
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
+
+<DocsArticleMeta readTime="16 MIN" />
+
+Gameplane runs on Kubernetes and deploys via Helm. This guide walks through preparing a cluster, configuring the Helm chart, installing Gameplane, and verifying a working control plane.
+
+## Prerequisites and topology
+
+Start with a supported Kubernetes and Helm version, ready nodes, DNS, and a default or explicitly selected StorageClass.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "cpu",
+      label: "Kubernetes 1.28+",
+      text: "Gameplane requires Kubernetes 1.28 or later. Confirm your version with kubectl.",
+    },
+    {
+      icon: "package",
+      label: "Helm 3.13+",
+      text: "Helm 3.13 or later is required to pull OCI-packaged charts from the registry.",
+    },
+    {
+      icon: "database",
+      label: "StorageClass",
+      text: "A default StorageClass (any RWO CSI driver). Used for the API database and game server state.",
+    },
+    {
+      icon: "globe",
+      label: "Ingress (optional)",
+      text: "An ingress controller (nginx-ingress by default) and cert-manager for TLS termination.",
+    },
+  ]}
+/>
+
+<DocsCallout icon="download" title="Save your exact Helm values">
+  Save the exact chart version and rendered values used for every environment. They are part of your recovery plan—needed for disaster recovery, upgrades, and audits.
+</DocsCallout>
+
+### Network and DNS
+
+Plan namespaces, ingress topology, and DNS before install:
+
+- **Gameplane namespace**: the control plane runs in `gameplane-system` (configurable via Helm)
+- **Games namespace**: game servers run in `gameplane-games` (configurable via `gamesNamespace`)
+- **Ingress hostname**: reserve a DNS name for the dashboard (e.g., `gameplane.your-domain.test`)
+- **External API address** (optional): if you plan cluster operations (joining nodes, downloading kubeconfig) from outside the cluster, provide the external Kubernetes API address (e.g., `1.2.3.4:6443` or `https://k8s.example.com:6443`)
+
+### Node and pod capacity
+
+Reserve capacity for the control plane:
+
+- **Operator**: 100m CPU / 64 MiB memory request; 500m / 256 MiB limit
+- **API**: 100m CPU / 64 MiB memory request; 500m / 256 MiB limit
+- **Web dashboard**: typically 10–20m CPU / 32 MiB memory when idle
+
+Game server pods request/limit independently via GameTemplate configuration.
+
+## Configure chart values
+
+Before installing, decide on external URL, ingress, TLS, storage, authentication, cluster operations, telemetry, and update policy. These cannot be easily changed post-install without re-rendering values.
+
+### Essential values
+
+```yaml
+# Helm chart values (e.g., in values.override.yaml)
+ingress:
+  host: gameplane.your-domain.test  # Dashboard hostname
+  tls:
+    enabled: true
+    issuerName: letsencrypt-prod    # cert-manager ClusterIssuer for TLS
+
+operator:
+  gameDataStorage:
+    storageClassName: "standard"    # StorageClass for game server PVCs (empty = cluster default)
+
+api:
+  db:
+    driver: sqlite                  # sqlite (default) | postgres (experimental)
+    # SQLite is production-tested and recommended for clusters up to ~100 servers
+```
+
+### Optional: OIDC authentication at install time
+
+If you use OIDC (OpenID Connect) for single sign-on, seed the role mappings at install time:
+
+```yaml
+api:
+  oidc:
+    enabled: true
+    issuer: "https://your-idp.example.com"
+    clientID: "gameplane-app"
+    clientSecretRef:
+      name: "oidc-client-secret"    # k8s Secret with 'clientSecret' key
+    displayName: "My SSO Provider"
+    groupsClaim: "groups"           # OIDC claim containing group memberships
+    defaultRole: "viewer"           # Default role when group mapping doesn't match
+    roleMappings:
+      admin:
+        - "gameplane-admins"        # OIDC group(s) that get admin role
+      operator:
+        - "gameplane-operators"
+      viewer:
+        - "gameplane-viewers"
+```
+
+No `bootstrap-admin` run is needed if OIDC is configured; new users inherit their mapped role on first login.
+
+### Network policies and egress control
+
+Enable default-deny policies in the games namespace to prevent pod-to-pod and outbound access by default:
+
+```yaml
+networkPolicies:
+  enabled: true
+  # Allow kubelet liveness/readiness probes
+  kubeletCIDRs: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,169.254.0.0/16"
+  # Allow player ingress (TCP/UDP for game traffic)
+  gameIngress:
+    enabled: true
+    fromCIDRs: ["0.0.0.0/0"]        # Players from anywhere (restrict to your network)
+  # Allow public-internet egress (downloads, mod registries)
+  gameEgress:
+    enabled: true
+    ports: [80, 443]
+```
+
+### Module sources and catalog
+
+By default, Gameplane ships with the official game catalog (16 modules in v0.2.0, 30 in v0.3.0):
+
+```yaml
+defaultModuleSource:
+  enabled: true
+  type: oci                         # Pull pre-built modules from OCI registry
+  oci:
+    url: ghcr.io/valgulnecron/gameplane-modules
+    verify:
+      enabled: true                 # Verify cosign signatures on official modules
+```
+
+To manage sources via GitOps instead of letting Helm create the default, set `enabled: false` and apply `ModuleSource` resources manually.
+
+### Full reference
+
+See [`./helm-values-reference`](./) for a complete walkthrough of all Helm values, defaults, and advanced options.
+
+## Install and verify
+
+Deploy the pinned OCI chart, bootstrap the first administrator, then validate pods, CRDs, dashboard access, and a test reconciliation.
+
+### Step 1: Install the Helm chart
+
+Install a tagged release straight from the GitHub Container Registry (GHCR). Replace `<version>` with a release, e.g., `0.2.0-beta.8`:
+
+```bash
+helm upgrade --install gameplane oci://ghcr.io/valgulnecron/charts/gameplane \
+  --version 0.2.0-beta.8 \
+  --namespace gameplane-system --create-namespace \
+  --values values.override.yaml
+```
+
+The chart is OCI-packaged — no `helm repo add` is needed. The `appVersion` field pins matching component images, so no image overrides are required for a released version.
+
+**Edge channel (latest development):** To track rolling `:edge` images from the `main` branch instead of a released version:
+
+```bash
+helm upgrade --install gameplane oci://ghcr.io/valgulnecron/charts/gameplane \
+  --version <version> --set image.tag=edge \
+  --namespace gameplane-system --create-namespace
+```
+
+### Step 2: Bootstrap the first administrator
+
+Create an initial admin account. Passwords must be at least 12 characters.
+
+```bash
+kubectl -n gameplane-system exec deploy/gameplane-api -- \
+  /api bootstrap-admin --username admin --password "<choose>"
+```
+
+To avoid the password landing in your shell history, pipe it on stdin:
+
+```bash
+printf '%s' "$ADMIN_PASSWORD" | kubectl -n gameplane-system exec -i deploy/gameplane-api -- \
+  /api bootstrap-admin --username admin --password-stdin
+```
+
+If a user already exists, pass `--force` to rotate the password and promote them to `admin`.
+
+### Step 3: Verify the installation
+
+Check that all pods are running and CRDs are installed:
+
+```bash
+kubectl -n gameplane-system get pods
+kubectl get crds | grep gameplane
+```
+
+Expected output:
+
+```
+backup.gameplane.local
+backupschedule.gameplane.local
+cluster.gameplane.local
+gameserver.gameplane.local
+gametemplate.gameplane.local
+module.gameplane.local
+modulesource.gameplane.local
+restore.gameplane.local
+```
+
+<DocsCallout icon="info" title="Coming in v0.3.0">
+  NetworkCapture (packet capture for protocol debugging) will be the 9th CRD, arriving in v0.3.0-rc.1.
+</DocsCallout>
+
+### Step 4: Access the dashboard
+
+Open `https://<ingress.host>` (or the hostname you configured in `ingress.host`) and log in with your admin credentials.
+
+### Step 5: Test reconciliation with a sample server
+
+Create a simple test GameServer to verify the operator is reconciling correctly:
+
+1. From the dashboard, **Servers** → **Create a server**
+2. Choose a module (e.g., Minecraft)
+3. Name it `test-server` and click **Create**
+4. Watch the pod spin up in `kubectl get pods -n gameplane-games`; the server should reach the `Ready` state within 1–2 minutes
+
+<DocsQuickReference
+  label="INSTALL CHECK"
+  items={[
+    "helm upgrade --install gameplane oci://ghcr.io/valgulnecron/charts/gameplane --version 0.2.0-beta.8 --namespace gameplane-system --create-namespace --values values.override.yaml",
+    "kubectl -n gameplane-system get pods && kubectl get crds | grep gameplane",
+    "Log in, select the cluster, and create a test server to verify the operator reconciles",
+  ]}
+/>
+
+## Verifying image signatures
+
+Every published image (tagged releases and `:edge`), the Helm chart, and official module bundles are signed with the project's cosign key, [`cosign.pub`](https://github.com/ValgulNecron/Gameplane/blob/master/cosign.pub), and recorded in the public Sigstore Rekor transparency log:
+
+```bash
+cosign verify --key cosign.pub \
+  ghcr.io/valgulnecron/gameplane/operator:0.2.0-beta.8
+```
+
+Pre-rotation releases (v0.2.0-beta.7 and earlier) used the retired Ed25519 key and lack transparency log entries — verify those with `cosign-legacy.pub` and `--insecure-ignore-tlog=true`.
+
+## Troubleshooting
+
+### Pod fails to start ("ImagePullBackOff", "ErrImageNeverPull")
+
+The Helm chart defaults to pulling images from GitHub Container Registry (`ghcr.io`). For air-gapped clusters where Docker Hub or GHCR is unreachable, retag the images to a private registry mirror and set `image.registry`:
+
+```bash
+helm upgrade --install gameplane oci://ghcr.io/valgulnecron/charts/gameplane \
+  --version 0.2.0-beta.8 \
+  --set image.registry=your-private-registry.com
+```
+
+GHCR packages are private on first publish. The maintainer makes the core packages (`gameplane/operator`, `gameplane/api`, `gameplane/agent`, `gameplane/web`, and `charts/gameplane`) public so anonymous pulls work. For a private install, create a `kubernetes.io/dockerconfigjson` pull secret and set `image.pullSecrets`.
+
+### API pod crashes or keeps restarting
+
+Check the API logs:
+
+```bash
+kubectl -n gameplane-system logs deploy/gameplane-api
+```
+
+Common issues:
+
+- **SQLite database locked**: If using SQLite with multiple API replicas (not supported), only one can write at a time. Use a single `api.replicas: 1` or switch to PostgreSQL.
+- **Missing default StorageClass**: The API needs a PVC for the SQLite database. Verify with `kubectl get sc`.
+
+### Ingress / TLS not working
+
+Ensure cert-manager is installed and a valid ClusterIssuer (`letsencrypt-prod`) exists:
+
+```bash
+kubectl get clusterissuer
+kubectl describe clusterissuer letsencrypt-prod
+```
+
+Check the ingress status:
+
+```bash
+kubectl -n gameplane-system get ingress gameplane
+```
+
+## Next steps
+
+After a successful install:
+
+- **[Dashboard tour](./dashboard-tour)** — explore the web UI and server management
+- **[Create a server](./create-a-server)** — deploy your first game server
+- **[Production installation](./production-installation)** — HA, TLS, external auth, and monitoring for production clusters
+- **[Upgrades and migrations](./upgrades-migrations)** — plan version upgrades and strategy

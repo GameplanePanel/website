@@ -1,0 +1,169 @@
+---
+title: "REST API Reference"
+description: "Use the same-origin HTTP surface with the correct session, CSRF, cluster, namespace, permission, and object semantics."
+section: "develop"
+group: "api-reference"
+order: 7
+icon: "braces"
+eyebrow: "REFERENCE"
+covers: ["REST API", "Routes", "Methods", "Permissions"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+
+The Gameplane API is a same-origin HTTP surface that mirrors Kubernetes API semantics. Every request requires a valid session token and CSRF token, respects namespace and cluster scope rules, and enforces fine-grained RBAC permissions.
+
+## Resource Collections
+
+List or create namespaced GameServer, Backup, and related resources.
+
+| Route | Method | Permission | Description |
+|---|---|---|---|
+| `/servers` | GET · POST | `servers:read/write` | List or create namespaced GameServer resources. |
+| `/backups` | GET · POST | `backups:read/write` | List and start one-shot world backups. |
+| `/restores` | GET · POST | `backups:read/write` | List and initiate restore operations. |
+| `/schedules` | GET · POST | `backups:read/write` | List and manage backup schedules. |
+| `/modules` | GET | `modules:read` | Browse installed and available module resources. |
+| `/users` | GET · POST | `users:read/manage` | List or invite platform users. |
+
+## Actions and Administration
+
+Trigger server lifecycle operations, manage platform configuration, and audit access logs.
+
+| Route | Method | Permission | Description |
+|---|---|---|---|
+| `/servers/{name}:restart` | POST | `servers:write` | Request an audited graceful restart. |
+| `/servers/{name}:start` | POST | `servers:write` | Resume a suspended server. |
+| `/servers/{name}:stop` | POST | `servers:write` | Suspend a running server. |
+| `/servers/{name}:wake` | POST | `servers:write` | Wake a sleeping server (requires wake-on-connect enabled). |
+| `/servers/{name}:clone` | POST | `servers:write` | Create a copy of a server's template and config. |
+| `/servers/{name}:wipe-data` | POST | `servers:write` | Erase a server's game data (requires name confirmation). |
+| `/servers/{name}/files/*` | GET · POST · PUT · DELETE | `servers:write` | Agent-backed file browse and mutation proxy. |
+| `/admin/config` | GET · PATCH | `config:read/manage` | Read or update platform configuration. |
+| `/admin/audit` | GET | `audit:read` | Paginate the audit log with optional filters. |
+| `/admin/audit/export` | GET | `audit:read` | Export filtered audit evidence as CSV or JSON. |
+
+## Authentication and Session Requirements
+
+Every request must include:
+
+1. **Session Token** — obtained via `/auth/login` (local) or `/auth/oidc/{provider}/callback` (SSO). Passed as the `gameplane-session` HttpOnly cookie or the `Authorization: Bearer <token>` header.
+
+2. **CSRF Token** — required for mutations (POST, PUT, PATCH, DELETE). Pass via the `X-Gameplane-CSRF` header. The CSRF token is returned on successful login and must be refreshed for every mutating request.
+
+3. **Namespace Selector** — passed as `?namespace=<name>` for scoped resources (GameServers, Backups, etc.). Defaults to the user's default namespace if absent. Users can only access namespaces they have been granted permission to.
+
+4. **Cluster Selector** — passed as `?cluster=<id>` for multi-cluster installs. Defaults to the local (home) cluster. Users can only access clusters they have been granted permission to.
+
+<DocsCallout icon="shield-alert" title="Browser mutations require session credentials and X-Gameplane-CSRF">
+  Cluster and namespace selectors follow the same scope rules as the dashboard UI. A user bound to a specific namespace or remote cluster cannot bypass that scope by changing query parameters.
+</DocsCallout>
+
+## Error Responses
+
+The API returns standard HTTP status codes and Kubernetes-style error bodies:
+
+- **2xx** — Success
+- **400 Bad Request** — Invalid input, missing required fields, or malformed query parameters
+- **401 Unauthorized** — Missing or expired session token
+- **403 Forbidden** — Insufficient permissions, namespace/cluster out of scope, or CSRF token invalid
+- **404 Not Found** — Resource does not exist
+- **409 Conflict** — Resource conflict (e.g., server name already in use, restore target mismatch)
+- **429 Too Many Requests** — Rate limit exceeded (per-user and per-IP buckets apply to mutations)
+- **5xx Server Error** — Internal server error or Kubernetes API failure
+
+Error bodies are JSON with `kind: "Status"`, `status: "Failure"`, `reason`, and `message` fields:
+
+```json
+{
+  "apiVersion": "v1",
+  "kind": "Status",
+  "status": "Failure",
+  "reason": "Forbidden",
+  "message": "servers:write on local/default forbidden",
+  "code": 403
+}
+```
+
+## Query Parameters and Filters
+
+### Common Parameters
+
+- `namespace` — Target namespace for scoped resources (defaults to user's default)
+- `cluster` — Target cluster ID for multi-cluster requests (defaults to `local`)
+
+### Audit Export (`GET /admin/audit/export`)
+
+- `format` — Output format: `csv` (default) or `json`
+- `since` — RFC3339 start timestamp (inclusive)
+- `until` — RFC3339 end timestamp (inclusive)
+- `actor` — Filter by username (substring match)
+- `method` — Filter by HTTP verb: GET, POST, PUT, PATCH, DELETE
+- `status` — Filter by HTTP status class: 2xx, 4xx, 5xx
+
+Example:
+
+```bash
+curl -H "X-Gameplane-CSRF: $CSRF" \
+  "https://gameplane.example.com/admin/audit/export?format=csv&actor=alice&status=4xx" \
+  -b "gameplane-session=$SESSION"
+```
+
+## Request/Response Format
+
+- **Content-Type** — `application/json` for all bodies
+- **Request Bodies** — POST and PATCH requests expect a JSON object. Refer to the [CRD Catalog](./crd-catalog/) for the schema of each resource type.
+- **Response Format** — Responses are either Kubernetes unstructured objects (for resource CRUD) or custom JSON structures (for actions, audit, config). List responses include a `items` array.
+
+## Rate Limiting
+
+- **Reads** — Unlimited per authenticated session
+- **Writes** — Per-user burst of 6 requests per minute, per-IP burst of 10 requests per minute
+- **Special endpoints** — `/auth/login` is capped at 3 attempts per 5 minutes per IP (Argon2id CPU cost)
+
+Hitting the rate limit returns `429 Too Many Requests` with a `Retry-After` header.
+
+## Examples
+
+### List GameServers in a namespace
+
+```bash
+curl -H "Authorization: Bearer $TOKEN" \
+  "https://gameplane.example.com/servers?namespace=production&cluster=local"
+```
+
+### Create a GameServer
+
+```bash
+curl -X POST \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "X-Gameplane-CSRF: $CSRF" \
+  -H "Content-Type: application/json" \
+  -d @server-manifest.json \
+  "https://gameplane.example.com/servers?namespace=production"
+```
+
+### Request a graceful restart
+
+```bash
+curl -X POST \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "X-Gameplane-CSRF: $CSRF" \
+  "https://gameplane.example.com/servers/my-server:restart?namespace=production"
+```
+
+### Export audit logs filtered by failed requests
+
+```bash
+curl -H "Authorization: Bearer $TOKEN" \
+  "https://gameplane.example.com/admin/audit/export?format=json&status=4xx&status=5xx" \
+  -o audit-failures.json
+```
+
+## See Also
+
+- [WebSocket & Event Streams](./websocket-event-streams/) — Real-time server health, player counts, and console output
+- [CRD Catalog](./crd-catalog/) — Full schema reference for GameServer, Backup, and other resources
+- [API & Realtime Development](./api-realtime-development/) — Writing agent-backed WebSocket handlers
+- [Kubectl & GitOps Recipes](./kubectl-gitops-recipes/) — Using kubectl and git workflows alongside the API
