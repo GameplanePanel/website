@@ -1,1 +1,943 @@
-{"type": "frame", "id": "Nnd3Y", "x": 0, "y": 56848, "name": "Screen/Docs — Production Installation", "theme": {"semantic": "dark"}, "clip": true, "width": 1440, "height": 900, "fill": "$background/background", "children": [{"id": "N6LdI", "type": "ref", "ref": "K2Rt4H", "height": "fill_container", "name": "DocsSidebar/Expanded", "width": 280}, {"type": "frame", "id": "kbvJe", "name": "Docs Main", "width": "fill_container", "height": "fill_container", "fill": "$background/background", "layout": "vertical", "children": [{"id": "SxPeS", "type": "ref", "ref": "SOdlr", "name": "Docs Top Bar", "width": "fill_container", "descendants": {"NImey": {"content": "Install"}, "ikbi6": {"content": "Production Install"}}}, {"type": "frame", "id": "u2m75d", "name": "Docs Article Body", "clip": true, "width": "fill_container", "height": "fill_container", "gap": 32, "padding": 32, "children": [{"type": "frame", "id": "Bdc6l", "name": "Docs Article", "width": 780, "layout": "vertical", "gap": 14, "children": [{"type": "text", "id": "PCa6r", "name": "Article Eyebrow", "fill": "$accent/accent", "content": "INSTALL", "fontFamily": "JetBrains Mono", "fontSize": 11, "fontWeight": "600", "letterSpacing": 0.8}, {"type": "text", "id": "S8VkVY", "name": "Article Title", "fill": "$foreground/foreground", "textGrowth": "fixed-width", "width": "fill_container", "content": "Production Helm installation", "lineHeight": 1.1, "fontFamily": "JetBrains Mono", "fontSize": 30, "fontWeight": "700"}, {"type": "text", "id": "ak3rI", "name": "Article Lead", "fill": "$muted", "textGrowth": "fixed-width", "width": "fill_container", "content": "Build a pinned, reviewable release with explicit security, storage, database, access, backup, and telemetry choices.", "lineHeight": 1.45, "fontFamily": "Geist", "fontSize": 15, "fontWeight": "normal"}, {"type": "frame", "id": "QZs8G", "name": "Article Metadata", "gap": 8, "alignItems": "center", "children": [{"id": "FIwIy", "type": "ref", "ref": "NZPtq", "name": "Meta Chip 0", "descendants": {"NLG8t": {"content": "PRODUCTION GUIDE"}}}, {"id": "R84Gm", "type": "ref", "ref": "EbSsA", "name": "Meta Chip 1", "descendants": {"yb6zz": {"content": "v0.2"}}}, {"id": "R3yXS", "type": "ref", "ref": "EbSsA", "name": "Meta Chip 2", "descendants": {"yb6zz": {"content": "18 MIN"}}}]}, {"type": "frame", "id": "qyHB6", "name": "Article Callout", "width": "fill_container", "fill": "$accent/soft", "cornerRadius": "$radius/xl", "stroke": "$border/border", "strokeWidth": 1, "strokeAlignment": "inner", "gap": 10, "padding": [10, 12], "alignItems": "center", "children": [{"type": "icon", "id": "uLtQ0", "name": "Article Callout Icon", "width": 16, "height": 16, "icon": "ship-wheel", "library": "lucide", "fill": "$accent/soft-foreground"}, {"type": "text", "id": "bKMhM", "name": "Article Callout Text", "fill": "$accent/soft-foreground", "textGrowth": "fixed-width", "width": "fill_container", "content": "Archive the exact chart, image digests, values, and rendered manifests accepted for each environment.", "fontFamily": "Geist", "fontSize": 12.5, "fontWeight": "normal"}]}, {"type": "frame", "id": "Mr5tz", "name": "Guide Section 1", "width": "fill_container", "layout": "vertical", "gap": 6, "children": [{"type": "text", "id": "QsvDj", "name": "Section Title 1", "fill": "$foreground/foreground", "content": "Establish a production baseline", "fontFamily": "JetBrains Mono", "fontSize": 17, "fontWeight": "600"}, {"type": "text", "id": "vaGen", "name": "Section Body 1", "fill": "$muted", "textGrowth": "fixed-width", "width": "fill_container", "content": "Pin every artifact and make environment ownership explicit before the first workload reaches the cluster.", "lineHeight": 1.45, "fontFamily": "Geist", "fontSize": 13, "fontWeight": "normal"}, {"type": "frame", "id": "idc1d", "name": "Section List 1", "width": "fill_container", "fill": "$surface/surface", "cornerRadius": "$radius/2xl", "stroke": "$border/border", "strokeWidth": 1, "strokeAlignment": "inner", "layout": "vertical", "gap": 5, "padding": [8, 10], "children": [{"type": "frame", "id": "OU43p", "name": "Section 1 Item 0", "width": "fill_container", "gap": 8, "alignItems": "center", "children": [{"type": "icon", "id": "s6G1jc", "name": "Section 1 Item Icon 0", "width": 13, "height": 13, "icon": "check", "library": "lucide", "fill": "$accent/accent"}, {"type": "text", "id": "wtcWR", "name": "Section 1 Item Text 0", "fill": "$default/foreground", "textGrowth": "fixed-width", "width": "fill_container", "content": "Pin the OCI chart and images to an approved version or digest.", "fontFamily": "Geist", "fontSize": 12.5, "fontWeight": "normal"}]}, {"type": "frame", "id": "Wrxhb", "name": "Section 1 Item 1", "width": "fill_container", "gap": 8, "alignItems": "center", "children": [{"type": "icon", "id": "i62Gr8", "name": "Section 1 Item Icon 1", "width": 13, "height": 13, "icon": "check", "library": "lucide", "fill": "$accent/accent"}, {"type": "text", "id": "xmtmE", "name": "Section 1 Item Text 1", "fill": "$default/foreground", "textGrowth": "fixed-width", "width": "fill_container", "content": "Define namespace, RBAC, security contexts, networks, resources, and placement.", "fontFamily": "Geist", "fontSize": 12.5, "fontWeight": "normal"}]}, {"type": "frame", "id": "CZWA7", "name": "Section 1 Item 2", "width": "fill_container", "gap": 8, "alignItems": "center", "children": [{"type": "icon", "id": "RWFVj", "name": "Section 1 Item Icon 2", "width": 13, "height": 13, "icon": "check", "library": "lucide", "fill": "$accent/accent"}, {"type": "text", "id": "TjtCU", "name": "Section 1 Item Text 2", "fill": "$default/foreground", "textGrowth": "fixed-width", "width": "fill_container", "content": "Set external URL, auth, database, storage, backups, telemetry, and updates.", "fontFamily": "Geist", "fontSize": 12.5, "fontWeight": "normal"}]}]}]}, {"type": "frame", "id": "v84DM", "name": "Guide Section 2", "width": "fill_container", "layout": "vertical", "gap": 6, "children": [{"type": "text", "id": "xjEGa", "name": "Section Title 2", "fill": "$foreground/foreground", "content": "Render and review", "fontFamily": "JetBrains Mono", "fontSize": 17, "fontWeight": "600"}, {"type": "text", "id": "usbB2", "name": "Section Body 2", "fill": "$muted", "textGrowth": "fixed-width", "width": "fill_container", "content": "Treat rendered manifests as the production change set, with Secrets kept outside committed values.", "lineHeight": 1.45, "fontFamily": "Geist", "fontSize": 13, "fontWeight": "normal"}, {"type": "frame", "id": "jvFCl", "name": "Section List 2", "width": "fill_container", "fill": "$surface/surface", "cornerRadius": "$radius/2xl", "stroke": "$border/border", "strokeWidth": 1, "strokeAlignment": "inner", "layout": "vertical", "gap": 5, "padding": [8, 10], "children": [{"type": "frame", "id": "ypXeS", "name": "Section 2 Item 0", "width": "fill_container", "gap": 8, "alignItems": "center", "children": [{"type": "icon", "id": "SSkBE", "name": "Section 2 Item Icon 0", "width": 13, "height": 13, "icon": "check", "library": "lucide", "fill": "$accent/accent"}, {"type": "text", "id": "U5hcA", "name": "Section 2 Item Text 0", "fill": "$default/foreground", "textGrowth": "fixed-width", "width": "fill_container", "content": "Start from chart defaults and schema; maintain an environment values file.", "fontFamily": "Geist", "fontSize": 12.5, "fontWeight": "normal"}]}, {"type": "frame", "id": "a5vlgJ", "name": "Section 2 Item 1", "width": "fill_container", "gap": 8, "alignItems": "center", "children": [{"type": "icon", "id": "Avjq0", "name": "Section 2 Item Icon 1", "width": 13, "height": 13, "icon": "check", "library": "lucide", "fill": "$accent/accent"}, {"type": "text", "id": "dnbBu", "name": "Section 2 Item Text 1", "fill": "$default/foreground", "textGrowth": "fixed-width", "width": "fill_container", "content": "Run lint and template against the target Kubernetes version.", "fontFamily": "Geist", "fontSize": 12.5, "fontWeight": "normal"}]}, {"type": "frame", "id": "NNMBg", "name": "Section 2 Item 2", "width": "fill_container", "gap": 8, "alignItems": "center", "children": [{"type": "icon", "id": "dN5AH", "name": "Section 2 Item Icon 2", "width": 13, "height": 13, "icon": "check", "library": "lucide", "fill": "$accent/accent"}, {"type": "text", "id": "jfBMb", "name": "Section 2 Item Text 2", "fill": "$default/foreground", "textGrowth": "fixed-width", "width": "fill_container", "content": "Review CRDs, RBAC, Services, Ingress, PVCs, jobs, and outbound access.", "fontFamily": "Geist", "fontSize": 12.5, "fontWeight": "normal"}]}]}]}, {"type": "frame", "id": "o0TIp", "name": "Guide Section 3", "width": "fill_container", "layout": "vertical", "gap": 6, "children": [{"type": "text", "id": "QkPI3", "name": "Section Title 3", "fill": "$foreground/foreground", "content": "Install and accept", "fontFamily": "JetBrains Mono", "fontSize": 17, "fontWeight": "600"}, {"type": "text", "id": "K9odXr", "name": "Section Body 3", "fill": "$muted", "textGrowth": "fixed-width", "width": "fill_container", "content": "Use an atomic, waited install, then accept the release only after control-plane and workload smoke tests.", "lineHeight": 1.45, "fontFamily": "Geist", "fontSize": 13, "fontWeight": "normal"}, {"type": "frame", "id": "k8AFOC", "name": "Quick Reference", "width": "fill_container", "fill": "$surface/tertiary", "cornerRadius": "$radius/xl", "stroke": "$border/border", "strokeWidth": 1, "strokeAlignment": "inner", "layout": "vertical", "gap": 3, "padding": 12, "children": [{"type": "text", "id": "XeDEY", "name": "Quick Reference Label", "fill": "$accent/accent", "content": "PRODUCTION INSTALL", "fontFamily": "JetBrains Mono", "fontSize": 9, "fontWeight": "600", "letterSpacing": 0.6}, {"type": "text", "id": "V6078", "name": "Quick Reference Line 1", "fill": "$foreground/foreground", "content": "01  helm show values … --version <version> > values-reference.yaml", "fontFamily": "JetBrains Mono", "fontSize": 11.5, "fontWeight": "normal"}, {"type": "text", "id": "W8DUZ", "name": "Quick Reference Line 2", "fill": "$foreground/foreground", "content": "02  helm template … -f values-prod.yaml > rendered.yaml", "fontFamily": "JetBrains Mono", "fontSize": 11.5, "fontWeight": "normal"}, {"type": "text", "id": "TKg1u", "name": "Quick Reference Line 3", "fill": "$foreground/foreground", "content": "03  helm upgrade --install … -f values-prod.yaml --atomic --wait", "fontFamily": "JetBrains Mono", "fontSize": 11.5, "fontWeight": "normal"}]}]}, {"type": "frame", "id": "aUpFv", "name": "Article Next Link", "width": "fill_container", "stroke": "$border/border", "strokeWidth": {"top": 1}, "strokeAlignment": "inner", "strokeLinejoin": "round", "padding": [10, 0, 0, 0], "justifyContent": "space_between", "alignItems": "center", "children": [{"type": "frame", "id": "XH5YO", "name": "Next Link Text", "layout": "vertical", "gap": 2, "children": [{"type": "text", "id": "Z9LDFO", "name": "Next Link Eyebrow", "fill": "$field/placeholder", "content": "NEXT GUIDE", "fontFamily": "Geist", "fontSize": 10, "fontWeight": "normal"}, {"type": "text", "id": "Y5Qg0", "name": "Next Link Title", "fill": "$foreground/foreground", "content": "Ingress, TLS, and external access", "fontFamily": "JetBrains Mono", "fontSize": 13, "fontWeight": "500"}]}, {"type": "icon", "id": "cber0", "name": "Next Link Icon", "width": 15, "height": 15, "icon": "arrow-right", "library": "lucide", "fill": "$muted"}]}]}, {"type": "frame", "id": "Z0mt0t", "name": "Docs Page Aside", "width": 250, "layout": "vertical", "gap": 16, "children": [{"type": "frame", "id": "Q5Gjq", "name": "Docs Table of Contents", "width": "fill_container", "fill": "$surface/secondary", "cornerRadius": "$radius/2xl", "stroke": "$border/border", "strokeWidth": 1, "strokeAlignment": "inner", "layout": "vertical", "gap": 10, "padding": 16, "children": [{"type": "text", "id": "xg1e7", "name": "TOC Label", "fill": "$field/placeholder", "content": "ON THIS PAGE", "fontFamily": "JetBrains Mono", "fontSize": 9, "fontWeight": "600", "letterSpacing": 0.7}, {"type": "frame", "id": "BgrrW", "name": "TOC Row 0", "width": "fill_container", "gap": 8, "alignItems": "center", "children": [{"type": "icon", "id": "ecID5", "name": "TOC Icon 0", "width": 12, "height": 12, "icon": "hash", "library": "lucide", "fill": "$accent/accent"}, {"type": "text", "id": "zXMbf", "name": "TOC Text 0", "fill": "$foreground/foreground", "content": "Baseline", "fontFamily": "Geist", "fontSize": 12.5, "fontWeight": "500"}]}, {"type": "frame", "id": "Or29N", "name": "TOC Row 1", "width": "fill_container", "gap": 8, "alignItems": "center", "children": [{"type": "icon", "id": "pf3iO", "name": "TOC Icon 1", "width": 12, "height": 12, "icon": "hash", "library": "lucide", "fill": "$field/placeholder"}, {"type": "text", "id": "DBtD2", "name": "TOC Text 1", "fill": "$muted", "content": "Render and review", "fontFamily": "Geist", "fontSize": 12.5, "fontWeight": "normal"}]}, {"type": "frame", "id": "OV30M", "name": "TOC Row 2", "width": "fill_container", "gap": 8, "alignItems": "center", "children": [{"type": "icon", "id": "QHzc7", "name": "TOC Icon 2", "width": 12, "height": 12, "icon": "hash", "library": "lucide", "fill": "$field/placeholder"}, {"type": "text", "id": "lwQYC", "name": "TOC Text 2", "fill": "$muted", "content": "Install and accept", "fontFamily": "Geist", "fontSize": 12.5, "fontWeight": "normal"}]}, {"type": "rectangle", "id": "D4XAX", "name": "TOC Divider", "fill": "$border/border", "width": "fill_container", "height": 1}, {"type": "text", "id": "Pi1gM", "name": "Coverage Label", "fill": "$field/placeholder", "content": "COVERS", "fontFamily": "JetBrains Mono", "fontSize": 9, "fontWeight": "600", "letterSpacing": 0.7}, {"type": "frame", "id": "LHlfh", "name": "Coverage Row 0", "width": "fill_container", "gap": 7, "alignItems": "center", "children": [{"type": "icon", "id": "XT3Lk", "name": "Coverage Icon 0", "width": 12, "height": 12, "icon": "book-open", "library": "lucide", "fill": "$field/placeholder"}, {"type": "text", "id": "k7cUf", "name": "Coverage Text 0", "fill": "$muted", "content": "Helm", "fontFamily": "Geist", "fontSize": 12, "fontWeight": "normal"}]}, {"type": "frame", "id": "OWQzT", "name": "Coverage Row 1", "width": "fill_container", "gap": 7, "alignItems": "center", "children": [{"type": "icon", "id": "bfF99", "name": "Coverage Icon 1", "width": 12, "height": 12, "icon": "book-open", "library": "lucide", "fill": "$field/placeholder"}, {"type": "text", "id": "Ygt5l", "name": "Coverage Text 1", "fill": "$muted", "content": "Security", "fontFamily": "Geist", "fontSize": 12, "fontWeight": "normal"}]}, {"type": "frame", "id": "j3XbA", "name": "Coverage Row 2", "width": "fill_container", "gap": 7, "alignItems": "center", "children": [{"type": "icon", "id": "ZeMkc", "name": "Coverage Icon 2", "width": 12, "height": 12, "icon": "book-open", "library": "lucide", "fill": "$field/placeholder"}, {"type": "text", "id": "x6dyY", "name": "Coverage Text 2", "fill": "$muted", "content": "Acceptance", "fontFamily": "Geist", "fontSize": 12, "fontWeight": "normal"}]}]}, {"type": "frame", "id": "h5dQ7", "name": "Edit Page Card", "width": "fill_container", "fill": "$background/background", "cornerRadius": "$radius/3xl", "stroke": "$border/border", "strokeWidth": 1, "strokeAlignment": "inner", "layout": "vertical", "gap": 6, "padding": 14, "children": [{"type": "text", "id": "z74bx", "name": "Edit Page Title", "fill": "$foreground/foreground", "content": "Improve this page", "fontFamily": "JetBrains Mono", "fontSize": 12, "fontWeight": "600"}, {"type": "text", "id": "Ae57c", "name": "Edit Page Body", "fill": "$muted", "textGrowth": "fixed-width", "width": "fill_container", "content": "Found a gap? Open a docs issue or suggest an edit on GitHub.", "lineHeight": 1.4, "fontFamily": "Geist", "fontSize": 11.5, "fontWeight": "normal"}, {"type": "frame", "id": "W8hCFm", "name": "Edit Page Link", "gap": 6, "alignItems": "center", "children": [{"type": "text", "id": "kAPAm", "name": "Edit Page Link Text", "fill": "$accent/soft-foreground", "content": "Edit this page", "fontFamily": "Geist", "fontSize": 12, "fontWeight": "500"}, {"type": "icon", "id": "ZZW8c", "name": "Edit Page Link Icon", "width": 12, "height": 12, "icon": "external-link", "library": "lucide", "fill": "$accent/accent"}]}]}]}]}]}]}
+{
+  "type": "frame",
+  "id": "Nnd3Y",
+  "x": 0,
+  "y": 56848,
+  "name": "Screen/Docs — Production Installation",
+  "theme": {
+    "semantic": "dark"
+  },
+  "clip": true,
+  "width": 1440,
+  "height": 900,
+  "fill": "$background/background",
+  "children": [
+    {
+      "id": "N6LdI",
+      "type": "ref",
+      "ref": "K2Rt4H",
+      "height": "fill_container",
+      "name": "DocsSidebar/Expanded",
+      "width": 280
+    },
+    {
+      "type": "frame",
+      "id": "kbvJe",
+      "name": "Docs Main",
+      "width": "fill_container",
+      "height": "fill_container",
+      "fill": "$background/background",
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "SxPeS",
+          "type": "ref",
+          "ref": "SOdlr",
+          "name": "Docs Top Bar",
+          "width": "fill_container",
+          "descendants": {
+            "NImey": {
+              "content": "Install"
+            },
+            "ikbi6": {
+              "content": "Production Install"
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "u2m75d",
+          "name": "Docs Article Body",
+          "clip": true,
+          "width": "fill_container",
+          "height": "fill_container",
+          "gap": 32,
+          "padding": 32,
+          "children": [
+            {
+              "type": "frame",
+              "id": "Bdc6l",
+              "name": "Docs Article",
+              "width": 780,
+              "layout": "vertical",
+              "gap": 14,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "PCa6r",
+                  "name": "Article Eyebrow",
+                  "fill": "$accent/accent",
+                  "content": "INSTALL",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 11,
+                  "fontWeight": "600",
+                  "letterSpacing": 0.8
+                },
+                {
+                  "type": "text",
+                  "id": "S8VkVY",
+                  "name": "Article Title",
+                  "fill": "$foreground/foreground",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Production Helm installation",
+                  "lineHeight": 1.1,
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 30,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "ak3rI",
+                  "name": "Article Lead",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Build a pinned, reviewable release with explicit security, storage, database, access, backup, and telemetry choices.",
+                  "lineHeight": 1.45,
+                  "fontFamily": "Geist",
+                  "fontSize": 15,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "QZs8G",
+                  "name": "Article Metadata",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "id": "FIwIy",
+                      "type": "ref",
+                      "ref": "NZPtq",
+                      "name": "Meta Chip 0",
+                      "descendants": {
+                        "NLG8t": {
+                          "content": "PRODUCTION GUIDE"
+                        }
+                      }
+                    },
+                    {
+                      "id": "R84Gm",
+                      "type": "ref",
+                      "ref": "EbSsA",
+                      "name": "Meta Chip 1",
+                      "descendants": {
+                        "yb6zz": {
+                          "content": "v0.2"
+                        }
+                      }
+                    },
+                    {
+                      "id": "R3yXS",
+                      "type": "ref",
+                      "ref": "EbSsA",
+                      "name": "Meta Chip 2",
+                      "descendants": {
+                        "yb6zz": {
+                          "content": "18 MIN"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "qyHB6",
+                  "name": "Article Callout",
+                  "width": "fill_container",
+                  "fill": "$accent/soft",
+                  "cornerRadius": "$radius/xl",
+                  "stroke": "$border/border",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "gap": 10,
+                  "padding": [
+                    10,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "uLtQ0",
+                      "name": "Article Callout Icon",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "ship-wheel",
+                      "library": "lucide",
+                      "fill": "$accent/soft-foreground"
+                    },
+                    {
+                      "type": "text",
+                      "id": "bKMhM",
+                      "name": "Article Callout Text",
+                      "fill": "$accent/soft-foreground",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Archive the exact chart, image digests, values, and rendered manifests accepted for each environment.",
+                      "fontFamily": "Geist",
+                      "fontSize": 12.5,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Mr5tz",
+                  "name": "Guide Section 1",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "QsvDj",
+                      "name": "Section Title 1",
+                      "fill": "$foreground/foreground",
+                      "content": "Establish a production baseline",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 17,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "vaGen",
+                      "name": "Section Body 1",
+                      "fill": "$muted",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Pin every artifact and make environment ownership explicit before the first workload reaches the cluster.",
+                      "lineHeight": 1.45,
+                      "fontFamily": "Geist",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "idc1d",
+                      "name": "Section List 1",
+                      "width": "fill_container",
+                      "fill": "$surface/surface",
+                      "cornerRadius": "$radius/2xl",
+                      "stroke": "$border/border",
+                      "strokeWidth": 1,
+                      "strokeAlignment": "inner",
+                      "layout": "vertical",
+                      "gap": 5,
+                      "padding": [
+                        8,
+                        10
+                      ],
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "OU43p",
+                          "name": "Section 1 Item 0",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "s6G1jc",
+                              "name": "Section 1 Item Icon 0",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "check",
+                              "library": "lucide",
+                              "fill": "$accent/accent"
+                            },
+                            {
+                              "type": "text",
+                              "id": "wtcWR",
+                              "name": "Section 1 Item Text 0",
+                              "fill": "$default/foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Pin the OCI chart and images to an approved version or digest.",
+                              "fontFamily": "Geist",
+                              "fontSize": 12.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Wrxhb",
+                          "name": "Section 1 Item 1",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "i62Gr8",
+                              "name": "Section 1 Item Icon 1",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "check",
+                              "library": "lucide",
+                              "fill": "$accent/accent"
+                            },
+                            {
+                              "type": "text",
+                              "id": "xmtmE",
+                              "name": "Section 1 Item Text 1",
+                              "fill": "$default/foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Define namespace, RBAC, security contexts, networks, resources, and placement.",
+                              "fontFamily": "Geist",
+                              "fontSize": 12.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "CZWA7",
+                          "name": "Section 1 Item 2",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "RWFVj",
+                              "name": "Section 1 Item Icon 2",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "check",
+                              "library": "lucide",
+                              "fill": "$accent/accent"
+                            },
+                            {
+                              "type": "text",
+                              "id": "TjtCU",
+                              "name": "Section 1 Item Text 2",
+                              "fill": "$default/foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Set external URL, auth, database, storage, backups, telemetry, and updates.",
+                              "fontFamily": "Geist",
+                              "fontSize": 12.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "v84DM",
+                  "name": "Guide Section 2",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "xjEGa",
+                      "name": "Section Title 2",
+                      "fill": "$foreground/foreground",
+                      "content": "Render and review",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 17,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "usbB2",
+                      "name": "Section Body 2",
+                      "fill": "$muted",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Treat rendered manifests as the production change set, with Secrets kept outside committed values.",
+                      "lineHeight": 1.45,
+                      "fontFamily": "Geist",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "jvFCl",
+                      "name": "Section List 2",
+                      "width": "fill_container",
+                      "fill": "$surface/surface",
+                      "cornerRadius": "$radius/2xl",
+                      "stroke": "$border/border",
+                      "strokeWidth": 1,
+                      "strokeAlignment": "inner",
+                      "layout": "vertical",
+                      "gap": 5,
+                      "padding": [
+                        8,
+                        10
+                      ],
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "ypXeS",
+                          "name": "Section 2 Item 0",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "SSkBE",
+                              "name": "Section 2 Item Icon 0",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "check",
+                              "library": "lucide",
+                              "fill": "$accent/accent"
+                            },
+                            {
+                              "type": "text",
+                              "id": "U5hcA",
+                              "name": "Section 2 Item Text 0",
+                              "fill": "$default/foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Start from chart defaults and schema; maintain an environment values file.",
+                              "fontFamily": "Geist",
+                              "fontSize": 12.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "a5vlgJ",
+                          "name": "Section 2 Item 1",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "Avjq0",
+                              "name": "Section 2 Item Icon 1",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "check",
+                              "library": "lucide",
+                              "fill": "$accent/accent"
+                            },
+                            {
+                              "type": "text",
+                              "id": "dnbBu",
+                              "name": "Section 2 Item Text 1",
+                              "fill": "$default/foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Run lint and template against the target Kubernetes version.",
+                              "fontFamily": "Geist",
+                              "fontSize": 12.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "NNMBg",
+                          "name": "Section 2 Item 2",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "dN5AH",
+                              "name": "Section 2 Item Icon 2",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "check",
+                              "library": "lucide",
+                              "fill": "$accent/accent"
+                            },
+                            {
+                              "type": "text",
+                              "id": "jfBMb",
+                              "name": "Section 2 Item Text 2",
+                              "fill": "$default/foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Review CRDs, RBAC, Services, Ingress, PVCs, jobs, and outbound access.",
+                              "fontFamily": "Geist",
+                              "fontSize": 12.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "o0TIp",
+                  "name": "Guide Section 3",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "QkPI3",
+                      "name": "Section Title 3",
+                      "fill": "$foreground/foreground",
+                      "content": "Install and accept",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 17,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "K9odXr",
+                      "name": "Section Body 3",
+                      "fill": "$muted",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Use an atomic, waited install, then accept the release only after control-plane and workload smoke tests.",
+                      "lineHeight": 1.45,
+                      "fontFamily": "Geist",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "k8AFOC",
+                      "name": "Quick Reference",
+                      "width": "fill_container",
+                      "fill": "$surface/tertiary",
+                      "cornerRadius": "$radius/xl",
+                      "stroke": "$border/border",
+                      "strokeWidth": 1,
+                      "strokeAlignment": "inner",
+                      "layout": "vertical",
+                      "gap": 3,
+                      "padding": 12,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "XeDEY",
+                          "name": "Quick Reference Label",
+                          "fill": "$accent/accent",
+                          "content": "PRODUCTION INSTALL",
+                          "fontFamily": "JetBrains Mono",
+                          "fontSize": 9,
+                          "fontWeight": "600",
+                          "letterSpacing": 0.6
+                        },
+                        {
+                          "type": "text",
+                          "id": "V6078",
+                          "name": "Quick Reference Line 1",
+                          "fill": "$foreground/foreground",
+                          "content": "01  helm show values … --version <version> > values-reference.yaml",
+                          "fontFamily": "JetBrains Mono",
+                          "fontSize": 11.5,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "W8DUZ",
+                          "name": "Quick Reference Line 2",
+                          "fill": "$foreground/foreground",
+                          "content": "02  helm template … -f values-prod.yaml > rendered.yaml",
+                          "fontFamily": "JetBrains Mono",
+                          "fontSize": 11.5,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "TKg1u",
+                          "name": "Quick Reference Line 3",
+                          "fill": "$foreground/foreground",
+                          "content": "03  helm upgrade --install … -f values-prod.yaml --atomic --wait",
+                          "fontFamily": "JetBrains Mono",
+                          "fontSize": 11.5,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "aUpFv",
+                  "name": "Article Next Link",
+                  "width": "fill_container",
+                  "stroke": "$border/border",
+                  "strokeWidth": {
+                    "top": 1
+                  },
+                  "strokeAlignment": "inner",
+                  "strokeLinejoin": "round",
+                  "padding": [
+                    10,
+                    0,
+                    0,
+                    0
+                  ],
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "XH5YO",
+                      "name": "Next Link Text",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Z9LDFO",
+                          "name": "Next Link Eyebrow",
+                          "fill": "$field/placeholder",
+                          "content": "NEXT GUIDE",
+                          "fontFamily": "Geist",
+                          "fontSize": 10,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Y5Qg0",
+                          "name": "Next Link Title",
+                          "fill": "$foreground/foreground",
+                          "content": "Ingress, TLS, and external access",
+                          "fontFamily": "JetBrains Mono",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "icon",
+                      "id": "cber0",
+                      "name": "Next Link Icon",
+                      "width": 15,
+                      "height": 15,
+                      "icon": "arrow-right",
+                      "library": "lucide",
+                      "fill": "$muted"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Z0mt0t",
+              "name": "Docs Page Aside",
+              "width": 250,
+              "layout": "vertical",
+              "gap": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Q5Gjq",
+                  "name": "Docs Table of Contents",
+                  "width": "fill_container",
+                  "fill": "$surface/secondary",
+                  "cornerRadius": "$radius/2xl",
+                  "stroke": "$border/border",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": 16,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "xg1e7",
+                      "name": "TOC Label",
+                      "fill": "$field/placeholder",
+                      "content": "ON THIS PAGE",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 9,
+                      "fontWeight": "600",
+                      "letterSpacing": 0.7
+                    },
+                    {
+                      "type": "frame",
+                      "id": "BgrrW",
+                      "name": "TOC Row 0",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "ecID5",
+                          "name": "TOC Icon 0",
+                          "width": 12,
+                          "height": 12,
+                          "icon": "hash",
+                          "library": "lucide",
+                          "fill": "$accent/accent"
+                        },
+                        {
+                          "type": "text",
+                          "id": "zXMbf",
+                          "name": "TOC Text 0",
+                          "fill": "$foreground/foreground",
+                          "content": "Baseline",
+                          "fontFamily": "Geist",
+                          "fontSize": 12.5,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Or29N",
+                      "name": "TOC Row 1",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "pf3iO",
+                          "name": "TOC Icon 1",
+                          "width": 12,
+                          "height": 12,
+                          "icon": "hash",
+                          "library": "lucide",
+                          "fill": "$field/placeholder"
+                        },
+                        {
+                          "type": "text",
+                          "id": "DBtD2",
+                          "name": "TOC Text 1",
+                          "fill": "$muted",
+                          "content": "Render and review",
+                          "fontFamily": "Geist",
+                          "fontSize": 12.5,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "OV30M",
+                      "name": "TOC Row 2",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "QHzc7",
+                          "name": "TOC Icon 2",
+                          "width": 12,
+                          "height": 12,
+                          "icon": "hash",
+                          "library": "lucide",
+                          "fill": "$field/placeholder"
+                        },
+                        {
+                          "type": "text",
+                          "id": "lwQYC",
+                          "name": "TOC Text 2",
+                          "fill": "$muted",
+                          "content": "Install and accept",
+                          "fontFamily": "Geist",
+                          "fontSize": 12.5,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "D4XAX",
+                      "name": "TOC Divider",
+                      "fill": "$border/border",
+                      "width": "fill_container",
+                      "height": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "Pi1gM",
+                      "name": "Coverage Label",
+                      "fill": "$field/placeholder",
+                      "content": "COVERS",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 9,
+                      "fontWeight": "600",
+                      "letterSpacing": 0.7
+                    },
+                    {
+                      "type": "frame",
+                      "id": "LHlfh",
+                      "name": "Coverage Row 0",
+                      "width": "fill_container",
+                      "gap": 7,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "XT3Lk",
+                          "name": "Coverage Icon 0",
+                          "width": 12,
+                          "height": 12,
+                          "icon": "book-open",
+                          "library": "lucide",
+                          "fill": "$field/placeholder"
+                        },
+                        {
+                          "type": "text",
+                          "id": "k7cUf",
+                          "name": "Coverage Text 0",
+                          "fill": "$muted",
+                          "content": "Helm",
+                          "fontFamily": "Geist",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "OWQzT",
+                      "name": "Coverage Row 1",
+                      "width": "fill_container",
+                      "gap": 7,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "bfF99",
+                          "name": "Coverage Icon 1",
+                          "width": 12,
+                          "height": 12,
+                          "icon": "book-open",
+                          "library": "lucide",
+                          "fill": "$field/placeholder"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Ygt5l",
+                          "name": "Coverage Text 1",
+                          "fill": "$muted",
+                          "content": "Security",
+                          "fontFamily": "Geist",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "j3XbA",
+                      "name": "Coverage Row 2",
+                      "width": "fill_container",
+                      "gap": 7,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "ZeMkc",
+                          "name": "Coverage Icon 2",
+                          "width": 12,
+                          "height": 12,
+                          "icon": "book-open",
+                          "library": "lucide",
+                          "fill": "$field/placeholder"
+                        },
+                        {
+                          "type": "text",
+                          "id": "x6dyY",
+                          "name": "Coverage Text 2",
+                          "fill": "$muted",
+                          "content": "Acceptance",
+                          "fontFamily": "Geist",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "h5dQ7",
+                  "name": "Edit Page Card",
+                  "width": "fill_container",
+                  "fill": "$background/background",
+                  "cornerRadius": "$radius/3xl",
+                  "stroke": "$border/border",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "padding": 14,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "z74bx",
+                      "name": "Edit Page Title",
+                      "fill": "$foreground/foreground",
+                      "content": "Improve this page",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Ae57c",
+                      "name": "Edit Page Body",
+                      "fill": "$muted",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Found a gap? Open a docs issue or suggest an edit on GitHub.",
+                      "lineHeight": 1.4,
+                      "fontFamily": "Geist",
+                      "fontSize": 11.5,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "W8hCFm",
+                      "name": "Edit Page Link",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "kAPAm",
+                          "name": "Edit Page Link Text",
+                          "fill": "$accent/soft-foreground",
+                          "content": "Edit this page",
+                          "fontFamily": "Geist",
+                          "fontSize": 12,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "icon",
+                          "id": "ZZW8c",
+                          "name": "Edit Page Link Icon",
+                          "width": 12,
+                          "height": 12,
+                          "icon": "external-link",
+                          "library": "lucide",
+                          "fill": "$accent/accent"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

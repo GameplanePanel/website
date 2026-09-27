@@ -1,1 +1,541 @@
-{"type": "frame", "id": "ei1qC", "x": 0, "y": 22443, "name": "Screen/Compare", "theme": {"semantic": "dark"}, "width": 1440, "fill": "$background/background", "layout": "vertical", "children": [{"id": "x7DNCy", "type": "ref", "ref": "Qczsa", "name": "Nav", "width": "fill_container"}, {"type": "frame", "id": "HawOd", "name": "CompareBody", "width": "fill_container", "fill": "$background/background", "layout": "vertical", "gap": 48, "padding": [80, 80, 96, 80], "alignItems": "center", "children": [{"type": "frame", "id": "HWPei", "name": "header", "width": "fill_container", "layout": "vertical", "gap": 12, "alignItems": "center", "children": [{"type": "text", "id": "pADPl", "fill": "$accent/accent", "content": "COMPARE", "textAlign": "center", "fontFamily": "$typography/font-mono", "fontSize": 12, "fontWeight": "600", "letterSpacing": 1}, {"type": "text", "id": "a5n0Z", "fill": "$foreground/foreground", "textGrowth": "fixed-width", "width": 700, "content": "How Gameplane compares", "textAlign": "center", "fontFamily": "$typography/font-mono", "fontSize": 34, "fontWeight": "700"}, {"type": "text", "id": "k1aeXA", "fill": "$muted", "textGrowth": "fixed-width", "width": 680, "content": "A quick look at how a Kubernetes-native control plane differs from single-host, Docker-based panels.", "textAlign": "center", "fontFamily": "$typography/font-sans", "fontSize": 16, "fontWeight": "normal"}]}, {"type": "frame", "id": "s2lIMU", "name": "compareTable", "clip": true, "width": 960, "cornerRadius": "$radius/2xl", "stroke": "$border/border", "strokeWidth": 1, "strokeAlignment": "inner", "layout": "vertical", "children": [{"type": "frame", "id": "Hs5HT", "name": "thead", "width": "fill_container", "fill": "$default/default", "padding": [16, 24], "children": [{"type": "text", "id": "F22nc8", "fill": "$muted", "textGrowth": "fixed-width", "width": "fill_container", "content": "APPROACH", "fontFamily": "$typography/font-mono", "fontSize": 11, "fontWeight": "600", "letterSpacing": 1}, {"type": "text", "id": "y7SAS", "fill": "$muted", "textGrowth": "fixed-width", "width": "fill_container", "content": "DOCKER-BASED PANELS", "fontFamily": "$typography/font-mono", "fontSize": 11, "fontWeight": "600", "letterSpacing": 1}, {"type": "text", "id": "wFigX", "fill": "$accent/accent", "textGrowth": "fixed-width", "width": "fill_container", "content": "GAMEPLANE", "fontFamily": "$typography/font-mono", "fontSize": 11, "fontWeight": "600", "letterSpacing": 1}]}, {"type": "frame", "id": "NgOpJ", "name": "Hosting model", "width": "fill_container", "fill": "$surface/surface", "stroke": "$border/border", "strokeWidth": {"bottom": 1}, "strokeAlignment": "inner", "strokeLinejoin": "round", "padding": [20, 24], "children": [{"type": "text", "id": "ET059", "fill": "$foreground/foreground", "textGrowth": "fixed-width", "width": "fill_container", "content": "Hosting model", "fontFamily": "$typography/font-mono", "fontSize": 14, "fontWeight": "600"}, {"type": "text", "id": "JQkU4", "fill": "$muted", "textGrowth": "fixed-width", "width": "fill_container", "content": "Single host, Docker containers", "lineHeight": 1.5, "fontFamily": "$typography/font-sans", "fontSize": 13, "fontWeight": "normal"}, {"type": "text", "id": "gligV", "fill": "$foreground/foreground", "textGrowth": "fixed-width", "width": "fill_container", "content": "Kubernetes primitives — CRDs, an operator, StatefulSets, PVCs", "lineHeight": 1.5, "fontFamily": "$typography/font-sans", "fontSize": 13, "fontWeight": "normal"}]}, {"type": "frame", "id": "ZbDKz", "name": "Scaling", "width": "fill_container", "fill": "$surface/surface", "stroke": "$border/border", "strokeWidth": {"bottom": 1}, "strokeAlignment": "inner", "strokeLinejoin": "round", "padding": [20, 24], "children": [{"type": "text", "id": "a2smMX", "fill": "$foreground/foreground", "textGrowth": "fixed-width", "width": "fill_container", "content": "Scaling", "fontFamily": "$typography/font-mono", "fontSize": 14, "fontWeight": "600"}, {"type": "text", "id": "bxH7S", "fill": "$muted", "textGrowth": "fixed-width", "width": "fill_container", "content": "One host per install", "lineHeight": 1.5, "fontFamily": "$typography/font-sans", "fontSize": 13, "fontWeight": "normal"}, {"type": "text", "id": "F8g72", "fill": "$foreground/foreground", "textGrowth": "fixed-width", "width": "fill_container", "content": "Same control plane, from a k3s homelab to a multi-node production cluster", "lineHeight": 1.5, "fontFamily": "$typography/font-sans", "fontSize": 13, "fontWeight": "normal"}]}, {"type": "frame", "id": "FD6T3", "name": "Operational model", "width": "fill_container", "fill": "$surface/surface", "stroke": "$border/border", "strokeWidth": {"bottom": 1}, "strokeAlignment": "inner", "strokeLinejoin": "round", "padding": [20, 24], "children": [{"type": "text", "id": "KLGFp", "fill": "$foreground/foreground", "textGrowth": "fixed-width", "width": "fill_container", "content": "Operational model", "fontFamily": "$typography/font-mono", "fontSize": 14, "fontWeight": "600"}, {"type": "text", "id": "qH8rl", "fill": "$muted", "textGrowth": "fixed-width", "width": "fill_container", "content": "Tooling differs by install size", "lineHeight": 1.5, "fontFamily": "$typography/font-sans", "fontSize": 13, "fontWeight": "normal"}, {"type": "text", "id": "fLdTD", "fill": "$foreground/foreground", "textGrowth": "fixed-width", "width": "fill_container", "content": "Same tooling at every scale", "lineHeight": 1.5, "fontFamily": "$typography/font-sans", "fontSize": 13, "fontWeight": "normal"}]}, {"type": "frame", "id": "ixHhO", "name": "Automation path", "width": "fill_container", "fill": "$surface/surface", "stroke": "#00000000", "strokeWidth": {"bottom": 1}, "strokeAlignment": "inner", "strokeLinejoin": "round", "padding": [20, 24], "children": [{"type": "text", "id": "C8gr1i", "fill": "$foreground/foreground", "textGrowth": "fixed-width", "width": "fill_container", "content": "Automation path", "fontFamily": "$typography/font-mono", "fontSize": 14, "fontWeight": "600"}, {"type": "text", "id": "EFyQo", "fill": "$muted", "textGrowth": "fixed-width", "width": "fill_container", "content": "Dashboard-driven", "lineHeight": 1.5, "fontFamily": "$typography/font-sans", "fontSize": 13, "fontWeight": "normal"}, {"type": "text", "id": "kvI3a", "fill": "$foreground/foreground", "textGrowth": "fixed-width", "width": "fill_container", "content": "Dashboard or kubectl apply — both stay in sync via the operator", "lineHeight": 1.5, "fontFamily": "$typography/font-sans", "fontSize": 13, "fontWeight": "normal"}]}]}, {"type": "text", "id": "aut7X", "fill": "$muted", "textGrowth": "fixed-width", "width": 700, "content": "This is a high-level snapshot, not a feature-by-feature audit. For a fuller comparison against AMP, Pterodactyl, and PufferPanel, see the docs.", "textAlign": "center", "fontFamily": "$typography/font-sans", "fontSize": 13, "fontWeight": "normal"}, {"type": "frame", "id": "FClwO", "name": "callout", "width": 840, "fill": "$surface/surface", "cornerRadius": "$radius/2xl", "stroke": "$border/border", "strokeWidth": 1, "strokeAlignment": "inner", "gap": 24, "padding": 32, "children": [{"type": "frame", "id": "bHISk", "width": 56, "height": 56, "fill": "$default/default", "cornerRadius": "$radius/2xl", "justifyContent": "center", "alignItems": "center", "children": [{"type": "icon", "id": "R7kROo", "width": 26, "height": 26, "icon": "boxes", "library": "lucide", "fill": "$accent/accent"}]}, {"type": "frame", "id": "wVJRJ", "width": "fill_container", "layout": "vertical", "gap": 8, "children": [{"type": "text", "id": "YkfFT", "fill": "$foreground/foreground", "content": "Why Kubernetes-native matters", "fontFamily": "$typography/font-mono", "fontSize": 18, "fontWeight": "600"}, {"type": "text", "id": "V3kZgg", "fill": "$muted", "textGrowth": "fixed-width", "width": "fill_container", "content": "The operator handles everything a cluster admin expects from a K8s controller — declarative reconciliation, owner references, leader election. Advanced users can bypass the dashboard entirely and manage Gameplane with kubectl apply.", "lineHeight": 1.6, "fontFamily": "$typography/font-sans", "fontSize": 14, "fontWeight": "normal"}]}]}, {"type": "text", "id": "GGgUI", "fill": "$muted", "content": "Gameplane itself is open-source, licensed AGPL-3.0-or-later — see the license on GitHub.", "textAlign": "center", "fontFamily": "$typography/font-sans", "fontSize": 13, "fontWeight": "normal"}, {"type": "frame", "id": "Mv1E2", "name": "cta", "width": "fill_container", "layout": "vertical", "gap": 20, "padding": [8, 0, 0, 0], "alignItems": "center", "children": [{"type": "text", "id": "J90gzv", "fill": "$foreground/foreground", "content": "Ready to try it in your own cluster?", "textAlign": "center", "fontFamily": "$typography/font-mono", "fontSize": 22, "fontWeight": "700"}, {"type": "frame", "id": "v2uDSl", "name": "ctaRow", "gap": 16, "alignItems": "center", "children": [{"id": "C1Iv2V", "type": "ref", "ref": "kVpWj", "fill": "$accent/accent", "descendants": {"KeEQj": {"type": "icon", "id": "uExXh", "width": 24, "height": 24, "icon": "github", "library": "lucide", "fill": "$accent/foreground"}, "ubO3k": {"content": "GitHub", "fill": "$accent/foreground", "fontFamily": "$typography/font-mono"}}}, {"id": "S2cQHh", "type": "ref", "ref": "VzPOH", "fill": "$background/background", "stroke": "$border/border", "descendants": {"vjsch": {"type": "icon", "id": "koD4c", "width": 24, "height": 24, "icon": "play", "library": "lucide", "fill": "$foreground/foreground"}, "F2L1qp": {"content": "Demo", "fill": "$foreground/foreground", "fontFamily": "$typography/font-mono"}}}]}]}]}, {"id": "rLAEi", "type": "ref", "ref": "gnZrl", "name": "Footer", "width": "fill_container"}]}
+{
+  "type": "frame",
+  "id": "ei1qC",
+  "x": 0,
+  "y": 22443,
+  "name": "Screen/Compare",
+  "theme": {
+    "semantic": "dark"
+  },
+  "width": 1440,
+  "fill": "$background/background",
+  "layout": "vertical",
+  "children": [
+    {
+      "id": "x7DNCy",
+      "type": "ref",
+      "ref": "Qczsa",
+      "name": "Nav",
+      "width": "fill_container"
+    },
+    {
+      "type": "frame",
+      "id": "HawOd",
+      "name": "CompareBody",
+      "width": "fill_container",
+      "fill": "$background/background",
+      "layout": "vertical",
+      "gap": 48,
+      "padding": [
+        80,
+        80,
+        96,
+        80
+      ],
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "frame",
+          "id": "HWPei",
+          "name": "header",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 12,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "pADPl",
+              "fill": "$accent/accent",
+              "content": "COMPARE",
+              "textAlign": "center",
+              "fontFamily": "$typography/font-mono",
+              "fontSize": 12,
+              "fontWeight": "600",
+              "letterSpacing": 1
+            },
+            {
+              "type": "text",
+              "id": "a5n0Z",
+              "fill": "$foreground/foreground",
+              "textGrowth": "fixed-width",
+              "width": 700,
+              "content": "How Gameplane compares",
+              "textAlign": "center",
+              "fontFamily": "$typography/font-mono",
+              "fontSize": 34,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "k1aeXA",
+              "fill": "$muted",
+              "textGrowth": "fixed-width",
+              "width": 680,
+              "content": "A quick look at how a Kubernetes-native control plane differs from single-host, Docker-based panels.",
+              "textAlign": "center",
+              "fontFamily": "$typography/font-sans",
+              "fontSize": 16,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "s2lIMU",
+          "name": "compareTable",
+          "clip": true,
+          "width": 960,
+          "cornerRadius": "$radius/2xl",
+          "stroke": "$border/border",
+          "strokeWidth": 1,
+          "strokeAlignment": "inner",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "frame",
+              "id": "Hs5HT",
+              "name": "thead",
+              "width": "fill_container",
+              "fill": "$default/default",
+              "padding": [
+                16,
+                24
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "F22nc8",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "APPROACH",
+                  "fontFamily": "$typography/font-mono",
+                  "fontSize": 11,
+                  "fontWeight": "600",
+                  "letterSpacing": 1
+                },
+                {
+                  "type": "text",
+                  "id": "y7SAS",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "DOCKER-BASED PANELS",
+                  "fontFamily": "$typography/font-mono",
+                  "fontSize": 11,
+                  "fontWeight": "600",
+                  "letterSpacing": 1
+                },
+                {
+                  "type": "text",
+                  "id": "wFigX",
+                  "fill": "$accent/accent",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "GAMEPLANE",
+                  "fontFamily": "$typography/font-mono",
+                  "fontSize": 11,
+                  "fontWeight": "600",
+                  "letterSpacing": 1
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "NgOpJ",
+              "name": "Hosting model",
+              "width": "fill_container",
+              "fill": "$surface/surface",
+              "stroke": "$border/border",
+              "strokeWidth": {
+                "bottom": 1
+              },
+              "strokeAlignment": "inner",
+              "strokeLinejoin": "round",
+              "padding": [
+                20,
+                24
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "ET059",
+                  "fill": "$foreground/foreground",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Hosting model",
+                  "fontFamily": "$typography/font-mono",
+                  "fontSize": 14,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "JQkU4",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Single host, Docker containers",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "gligV",
+                  "fill": "$foreground/foreground",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Kubernetes primitives — CRDs, an operator, StatefulSets, PVCs",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "ZbDKz",
+              "name": "Scaling",
+              "width": "fill_container",
+              "fill": "$surface/surface",
+              "stroke": "$border/border",
+              "strokeWidth": {
+                "bottom": 1
+              },
+              "strokeAlignment": "inner",
+              "strokeLinejoin": "round",
+              "padding": [
+                20,
+                24
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "a2smMX",
+                  "fill": "$foreground/foreground",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Scaling",
+                  "fontFamily": "$typography/font-mono",
+                  "fontSize": 14,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "bxH7S",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "One host per install",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "F8g72",
+                  "fill": "$foreground/foreground",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Same control plane, from a k3s homelab to a multi-node production cluster",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "FD6T3",
+              "name": "Operational model",
+              "width": "fill_container",
+              "fill": "$surface/surface",
+              "stroke": "$border/border",
+              "strokeWidth": {
+                "bottom": 1
+              },
+              "strokeAlignment": "inner",
+              "strokeLinejoin": "round",
+              "padding": [
+                20,
+                24
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "KLGFp",
+                  "fill": "$foreground/foreground",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Operational model",
+                  "fontFamily": "$typography/font-mono",
+                  "fontSize": 14,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "qH8rl",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Tooling differs by install size",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "fLdTD",
+                  "fill": "$foreground/foreground",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Same tooling at every scale",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "ixHhO",
+              "name": "Automation path",
+              "width": "fill_container",
+              "fill": "$surface/surface",
+              "stroke": "#00000000",
+              "strokeWidth": {
+                "bottom": 1
+              },
+              "strokeAlignment": "inner",
+              "strokeLinejoin": "round",
+              "padding": [
+                20,
+                24
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "C8gr1i",
+                  "fill": "$foreground/foreground",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Automation path",
+                  "fontFamily": "$typography/font-mono",
+                  "fontSize": 14,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "EFyQo",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Dashboard-driven",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "kvI3a",
+                  "fill": "$foreground/foreground",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Dashboard or kubectl apply — both stay in sync via the operator",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "aut7X",
+          "fill": "$muted",
+          "textGrowth": "fixed-width",
+          "width": 700,
+          "content": "This is a high-level snapshot, not a feature-by-feature audit. For a fuller comparison against AMP, Pterodactyl, and PufferPanel, see the docs.",
+          "textAlign": "center",
+          "fontFamily": "$typography/font-sans",
+          "fontSize": 13,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "FClwO",
+          "name": "callout",
+          "width": 840,
+          "fill": "$surface/surface",
+          "cornerRadius": "$radius/2xl",
+          "stroke": "$border/border",
+          "strokeWidth": 1,
+          "strokeAlignment": "inner",
+          "gap": 24,
+          "padding": 32,
+          "children": [
+            {
+              "type": "frame",
+              "id": "bHISk",
+              "width": 56,
+              "height": 56,
+              "fill": "$default/default",
+              "cornerRadius": "$radius/2xl",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "R7kROo",
+                  "width": 26,
+                  "height": 26,
+                  "icon": "boxes",
+                  "library": "lucide",
+                  "fill": "$accent/accent"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "wVJRJ",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "YkfFT",
+                  "fill": "$foreground/foreground",
+                  "content": "Why Kubernetes-native matters",
+                  "fontFamily": "$typography/font-mono",
+                  "fontSize": 18,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "V3kZgg",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "The operator handles everything a cluster admin expects from a K8s controller — declarative reconciliation, owner references, leader election. Advanced users can bypass the dashboard entirely and manage Gameplane with kubectl apply.",
+                  "lineHeight": 1.6,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "GGgUI",
+          "fill": "$muted",
+          "content": "Gameplane itself is open-source, licensed AGPL-3.0-or-later — see the license on GitHub.",
+          "textAlign": "center",
+          "fontFamily": "$typography/font-sans",
+          "fontSize": 13,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "Mv1E2",
+          "name": "cta",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            0,
+            0,
+            0
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "J90gzv",
+              "fill": "$foreground/foreground",
+              "content": "Ready to try it in your own cluster?",
+              "textAlign": "center",
+              "fontFamily": "$typography/font-mono",
+              "fontSize": 22,
+              "fontWeight": "700"
+            },
+            {
+              "type": "frame",
+              "id": "v2uDSl",
+              "name": "ctaRow",
+              "gap": 16,
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "C1Iv2V",
+                  "type": "ref",
+                  "ref": "kVpWj",
+                  "fill": "$accent/accent",
+                  "descendants": {
+                    "KeEQj": {
+                      "type": "icon",
+                      "id": "uExXh",
+                      "width": 24,
+                      "height": 24,
+                      "icon": "github",
+                      "library": "lucide",
+                      "fill": "$accent/foreground"
+                    },
+                    "ubO3k": {
+                      "content": "GitHub",
+                      "fill": "$accent/foreground",
+                      "fontFamily": "$typography/font-mono"
+                    }
+                  }
+                },
+                {
+                  "id": "S2cQHh",
+                  "type": "ref",
+                  "ref": "VzPOH",
+                  "fill": "$background/background",
+                  "stroke": "$border/border",
+                  "descendants": {
+                    "vjsch": {
+                      "type": "icon",
+                      "id": "koD4c",
+                      "width": 24,
+                      "height": 24,
+                      "icon": "play",
+                      "library": "lucide",
+                      "fill": "$foreground/foreground"
+                    },
+                    "F2L1qp": {
+                      "content": "Demo",
+                      "fill": "$foreground/foreground",
+                      "fontFamily": "$typography/font-mono"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rLAEi",
+      "type": "ref",
+      "ref": "gnZrl",
+      "name": "Footer",
+      "width": "fill_container"
+    }
+  ]
+}

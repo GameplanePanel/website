@@ -15,7 +15,8 @@ The lunaris library (`H:`-prefixed ids and variables) was removed from the desig
 ## Method
 
 - JSON: `Get(id, {depth: 40, includePathGeometry: true})` printed one node per line from batched `execute` calls, split
-  into files by script. All 279 parse; no `"..."` elisions (the one `"..."` in `U7t37` is pagination text content).
+  into files by script, written like the dashboard's `design-export/` (2-space indent, UTF-8, trailing newline).
+  All 279 parse; no `"..."` elisions (the one `"..."` in `U7t37` is pagination text content).
 - PNG: `export_nodes` at 2×; 279 files, none empty.
 - Content checks: `gnZrl` has "v0.2.0-beta.8 · AGPL", `B39hL` "Fourteen more arrive in v0.3.0", `Znh8i` "no paid
   tiers", `P5qsD` a v0.2.0-beta.8 entry; no `H:` refs or `$H:--` variables anywhere.

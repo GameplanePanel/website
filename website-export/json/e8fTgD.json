@@ -1,1 +1,943 @@
-{"type": "frame", "id": "e8fTgD", "x": 0, "y": 44308, "name": "Screen/Docs — API & CRDs", "theme": {"semantic": "dark"}, "clip": true, "width": 1440, "height": 900, "fill": "$background/background", "children": [{"id": "oWw6d", "type": "ref", "ref": "K2Rt4H", "height": "fill_container", "name": "DocsSidebar/Expanded", "width": 280}, {"type": "frame", "id": "GVRtd", "name": "Docs Main", "width": "fill_container", "height": "fill_container", "fill": "$background/background", "layout": "vertical", "children": [{"id": "W78sN", "type": "ref", "ref": "SOdlr", "name": "Docs Top Bar", "width": "fill_container", "descendants": {"NImey": {"content": "Extend"}, "ikbi6": {"content": "API & CRDs"}}}, {"type": "frame", "id": "Y0etIh", "name": "Docs Article Body", "clip": true, "width": "fill_container", "height": "fill_container", "gap": 32, "padding": 32, "children": [{"type": "frame", "id": "N5qdg", "name": "Docs Article", "width": 780, "layout": "vertical", "gap": 14, "children": [{"type": "text", "id": "s3zZN", "name": "Article Eyebrow", "fill": "$accent/accent", "content": "REFERENCE", "fontFamily": "JetBrains Mono", "fontSize": 11, "fontWeight": "600", "letterSpacing": 0.8}, {"type": "text", "id": "SwRdE", "name": "Article Title", "fill": "$foreground/foreground", "textGrowth": "fixed-width", "width": "fill_container", "content": "API and CRD reference", "lineHeight": 1.1, "fontFamily": "JetBrains Mono", "fontSize": 30, "fontWeight": "700"}, {"type": "text", "id": "I3xBq", "name": "Article Lead", "fill": "$muted", "textGrowth": "fixed-width", "width": "fill_container", "content": "Automate Gameplane through Kubernetes resources and scoped identities while keeping desired state, observed status, and audit history aligned.", "lineHeight": 1.45, "fontFamily": "Geist", "fontSize": 15, "fontWeight": "normal"}, {"type": "frame", "id": "MFYlH", "name": "Article Metadata", "gap": 8, "alignItems": "center", "children": [{"id": "wxZ3t", "type": "ref", "ref": "NZPtq", "name": "Meta Chip 0", "descendants": {"NLG8t": {"content": "REFERENCE"}}}, {"id": "dzOmR", "type": "ref", "ref": "EbSsA", "name": "Meta Chip 1", "descendants": {"yb6zz": {"content": "v0.2"}}}, {"id": "ASrMO", "type": "ref", "ref": "EbSsA", "name": "Meta Chip 2", "descendants": {"yb6zz": {"content": "18 MIN"}}}]}, {"type": "frame", "id": "Q4MgPq", "name": "Article Callout", "width": "fill_container", "fill": "$accent/soft", "cornerRadius": "$radius/xl", "stroke": "$border/border", "strokeWidth": 1, "strokeAlignment": "inner", "gap": 10, "padding": [10, 12], "alignItems": "center", "children": [{"type": "icon", "id": "Hcg7B", "name": "Article Callout Icon", "width": 16, "height": 16, "icon": "braces", "library": "lucide", "fill": "$accent/soft-foreground"}, {"type": "text", "id": "krq5v", "name": "Article Callout Text", "fill": "$accent/soft-foreground", "textGrowth": "fixed-width", "width": "fill_container", "content": "Write spec, read status. Controllers own conditions and observed fields; automation should never patch them as desired state.", "fontFamily": "Geist", "fontSize": 12.5, "fontWeight": "normal"}]}, {"type": "frame", "id": "vnZxz", "name": "Guide Section 1", "width": "fill_container", "layout": "vertical", "gap": 6, "children": [{"type": "text", "id": "T6o7d6", "name": "Section Title 1", "fill": "$foreground/foreground", "content": "Core resources", "fontFamily": "JetBrains Mono", "fontSize": 17, "fontWeight": "600"}, {"type": "text", "id": "AVL0p", "name": "Section Body 1", "fill": "$muted", "textGrowth": "fixed-width", "width": "fill_container", "content": "GameServer, GameTemplate, ModuleSource, BackupSchedule, and related resources encode the platform’s declarative contracts.", "lineHeight": 1.45, "fontFamily": "Geist", "fontSize": 13, "fontWeight": "normal"}, {"type": "frame", "id": "PxyP4", "name": "Section List 1", "width": "fill_container", "fill": "$surface/surface", "cornerRadius": "$radius/2xl", "stroke": "$border/border", "strokeWidth": 1, "strokeAlignment": "inner", "layout": "vertical", "gap": 5, "padding": [8, 10], "children": [{"type": "frame", "id": "TTijF", "name": "Section 1 Item 0", "width": "fill_container", "gap": 8, "alignItems": "center", "children": [{"type": "icon", "id": "iEb0J", "name": "Section 1 Item Icon 0", "width": 13, "height": 13, "icon": "check", "library": "lucide", "fill": "$accent/accent"}, {"type": "text", "id": "eXUHW", "name": "Section 1 Item Text 0", "fill": "$default/foreground", "textGrowth": "fixed-width", "width": "fill_container", "content": "Use apiVersion and kind from the installed CRDs, not copied stale examples.", "fontFamily": "Geist", "fontSize": 12.5, "fontWeight": "normal"}]}, {"type": "frame", "id": "hA6ya", "name": "Section 1 Item 1", "width": "fill_container", "gap": 8, "alignItems": "center", "children": [{"type": "icon", "id": "qknL0", "name": "Section 1 Item Icon 1", "width": 13, "height": 13, "icon": "check", "library": "lucide", "fill": "$accent/accent"}, {"type": "text", "id": "I0Z49Z", "name": "Section 1 Item Text 1", "fill": "$default/foreground", "textGrowth": "fixed-width", "width": "fill_container", "content": "Treat names and UIDs separately when correlating resources across restores.", "fontFamily": "Geist", "fontSize": 12.5, "fontWeight": "normal"}]}, {"type": "frame", "id": "W3Sksr", "name": "Section 1 Item 2", "width": "fill_container", "gap": 8, "alignItems": "center", "children": [{"type": "icon", "id": "Cdme0", "name": "Section 1 Item Icon 2", "width": 13, "height": 13, "icon": "check", "library": "lucide", "fill": "$accent/accent"}, {"type": "text", "id": "WpgOF", "name": "Section 1 Item Text 2", "fill": "$default/foreground", "textGrowth": "fixed-width", "width": "fill_container", "content": "Use labels and owner references for automation and cleanup.", "fontFamily": "Geist", "fontSize": 12.5, "fontWeight": "normal"}]}]}]}, {"type": "frame", "id": "UpqBS", "name": "Guide Section 2", "width": "fill_container", "layout": "vertical", "gap": 6, "children": [{"type": "text", "id": "vfE3t", "name": "Section Title 2", "fill": "$foreground/foreground", "content": "Status, phases, and conditions", "fontFamily": "JetBrains Mono", "fontSize": 17, "fontWeight": "600"}, {"type": "text", "id": "Dy1jc", "name": "Section Body 2", "fill": "$muted", "textGrowth": "fixed-width", "width": "fill_container", "content": "Observed generation, phase, reason, message, and conditions explain whether the controller has applied the latest intent.", "lineHeight": 1.45, "fontFamily": "Geist", "fontSize": 13, "fontWeight": "normal"}, {"type": "frame", "id": "RHkbr", "name": "Section List 2", "width": "fill_container", "fill": "$surface/surface", "cornerRadius": "$radius/2xl", "stroke": "$border/border", "strokeWidth": 1, "strokeAlignment": "inner", "layout": "vertical", "gap": 5, "padding": [8, 10], "children": [{"type": "frame", "id": "HtVzH", "name": "Section 2 Item 0", "width": "fill_container", "gap": 8, "alignItems": "center", "children": [{"type": "icon", "id": "OtnpV", "name": "Section 2 Item Icon 0", "width": 13, "height": 13, "icon": "check", "library": "lucide", "fill": "$accent/accent"}, {"type": "text", "id": "VSefZ", "name": "Section 2 Item Text 0", "fill": "$default/foreground", "textGrowth": "fixed-width", "width": "fill_container", "content": "Wait for observedGeneration before treating status as current.", "fontFamily": "Geist", "fontSize": 12.5, "fontWeight": "normal"}]}, {"type": "frame", "id": "h1wzgx", "name": "Section 2 Item 1", "width": "fill_container", "gap": 8, "alignItems": "center", "children": [{"type": "icon", "id": "HLG51", "name": "Section 2 Item Icon 1", "width": 13, "height": 13, "icon": "check", "library": "lucide", "fill": "$accent/accent"}, {"type": "text", "id": "b6lQ9", "name": "Section 2 Item Text 1", "fill": "$default/foreground", "textGrowth": "fixed-width", "width": "fill_container", "content": "Use condition type, status, reason, and timestamp in runbooks.", "fontFamily": "Geist", "fontSize": 12.5, "fontWeight": "normal"}]}, {"type": "frame", "id": "M2qZJ", "name": "Section 2 Item 2", "width": "fill_container", "gap": 8, "alignItems": "center", "children": [{"type": "icon", "id": "OZeti", "name": "Section 2 Item Icon 2", "width": 13, "height": 13, "icon": "check", "library": "lucide", "fill": "$accent/accent"}, {"type": "text", "id": "Tznyc", "name": "Section 2 Item Text 2", "fill": "$default/foreground", "textGrowth": "fixed-width", "width": "fill_container", "content": "Watch events when a phase alone cannot explain a blocked reconciliation.", "fontFamily": "Geist", "fontSize": 12.5, "fontWeight": "normal"}]}]}]}, {"type": "frame", "id": "czdCH", "name": "Guide Section 3", "width": "fill_container", "layout": "vertical", "gap": 6, "children": [{"type": "text", "id": "kqgJb", "name": "Section Title 3", "fill": "$foreground/foreground", "content": "kubectl and API access", "fontFamily": "JetBrains Mono", "fontSize": 17, "fontWeight": "600"}, {"type": "text", "id": "yEFS2", "name": "Section Body 3", "fill": "$muted", "textGrowth": "fixed-width", "width": "fill_container", "content": "Use Kubernetes RBAC for CRD workflows and scoped Gameplane service accounts for product APIs and integrations.", "lineHeight": 1.45, "fontFamily": "Geist", "fontSize": 13, "fontWeight": "normal"}, {"type": "frame", "id": "ufLTX", "name": "Quick Reference", "width": "fill_container", "fill": "$surface/tertiary", "cornerRadius": "$radius/xl", "stroke": "$border/border", "strokeWidth": 1, "strokeAlignment": "inner", "layout": "vertical", "gap": 3, "padding": 12, "children": [{"type": "text", "id": "VFnwC", "name": "Quick Reference Label", "fill": "$accent/accent", "content": "DECLARATIVE LOOP", "fontFamily": "JetBrains Mono", "fontSize": 9, "fontWeight": "600", "letterSpacing": 0.6}, {"type": "text", "id": "IFxeh", "name": "Quick Reference Line 1", "fill": "$foreground/foreground", "content": "01  kubectl apply -f gameserver.yaml", "fontFamily": "JetBrains Mono", "fontSize": 11.5, "fontWeight": "normal"}, {"type": "text", "id": "LUy45", "name": "Quick Reference Line 2", "fill": "$foreground/foreground", "content": "02  kubectl get gameserver <name> -o yaml", "fontFamily": "JetBrains Mono", "fontSize": 11.5, "fontWeight": "normal"}, {"type": "text", "id": "k44RMB", "name": "Quick Reference Line 3", "fill": "$foreground/foreground", "content": "03  kubectl describe gameserver <name>  # conditions + events", "fontFamily": "JetBrains Mono", "fontSize": 11.5, "fontWeight": "normal"}]}]}, {"type": "frame", "id": "uYl5v", "name": "Article Next Link", "width": "fill_container", "stroke": "$border/border", "strokeWidth": {"top": 1}, "strokeAlignment": "inner", "strokeLinejoin": "round", "padding": [10, 0, 0, 0], "justifyContent": "space_between", "alignItems": "center", "children": [{"type": "frame", "id": "kQBoH", "name": "Next Link Text", "layout": "vertical", "gap": 2, "children": [{"type": "text", "id": "DLmsJ", "name": "Next Link Eyebrow", "fill": "$field/placeholder", "content": "NEXT GUIDE", "fontFamily": "Geist", "fontSize": 10, "fontWeight": "normal"}, {"type": "text", "id": "AbiWh", "name": "Next Link Title", "fill": "$foreground/foreground", "content": "Install and configure Gameplane", "fontFamily": "JetBrains Mono", "fontSize": 13, "fontWeight": "500"}]}, {"type": "icon", "id": "Vv2BK", "name": "Next Link Icon", "width": 15, "height": 15, "icon": "arrow-right", "library": "lucide", "fill": "$muted"}]}]}, {"type": "frame", "id": "l5g0as", "name": "Docs Page Aside", "width": 250, "layout": "vertical", "gap": 16, "children": [{"type": "frame", "id": "NsQAl", "name": "Docs Table of Contents", "width": "fill_container", "fill": "$surface/secondary", "cornerRadius": "$radius/2xl", "stroke": "$border/border", "strokeWidth": 1, "strokeAlignment": "inner", "layout": "vertical", "gap": 10, "padding": 16, "children": [{"type": "text", "id": "q7s1RZ", "name": "TOC Label", "fill": "$field/placeholder", "content": "ON THIS PAGE", "fontFamily": "JetBrains Mono", "fontSize": 9, "fontWeight": "600", "letterSpacing": 0.7}, {"type": "frame", "id": "HUObr", "name": "TOC Row 0", "width": "fill_container", "gap": 8, "alignItems": "center", "children": [{"type": "icon", "id": "QQlar", "name": "TOC Icon 0", "width": 12, "height": 12, "icon": "hash", "library": "lucide", "fill": "$accent/accent"}, {"type": "text", "id": "Rn6Jg", "name": "TOC Text 0", "fill": "$foreground/foreground", "content": "Core resources", "fontFamily": "Geist", "fontSize": 12.5, "fontWeight": "500"}]}, {"type": "frame", "id": "b9W3wS", "name": "TOC Row 1", "width": "fill_container", "gap": 8, "alignItems": "center", "children": [{"type": "icon", "id": "jVY3R", "name": "TOC Icon 1", "width": 12, "height": 12, "icon": "hash", "library": "lucide", "fill": "$field/placeholder"}, {"type": "text", "id": "KQnBe", "name": "TOC Text 1", "fill": "$muted", "content": "Status and conditions", "fontFamily": "Geist", "fontSize": 12.5, "fontWeight": "normal"}]}, {"type": "frame", "id": "PWW2k", "name": "TOC Row 2", "width": "fill_container", "gap": 8, "alignItems": "center", "children": [{"type": "icon", "id": "HLzFt", "name": "TOC Icon 2", "width": 12, "height": 12, "icon": "hash", "library": "lucide", "fill": "$field/placeholder"}, {"type": "text", "id": "MX8cZ", "name": "TOC Text 2", "fill": "$muted", "content": "Automation access", "fontFamily": "Geist", "fontSize": 12.5, "fontWeight": "normal"}]}, {"type": "rectangle", "id": "uYq75", "name": "TOC Divider", "fill": "$border/border", "width": "fill_container", "height": 1}, {"type": "text", "id": "BtuU8", "name": "Coverage Label", "fill": "$field/placeholder", "content": "COVERS", "fontFamily": "JetBrains Mono", "fontSize": 9, "fontWeight": "600", "letterSpacing": 0.7}, {"type": "frame", "id": "k5x0e", "name": "Coverage Row 0", "width": "fill_container", "gap": 7, "alignItems": "center", "children": [{"type": "icon", "id": "l3cvTv", "name": "Coverage Icon 0", "width": 12, "height": 12, "icon": "book-open", "library": "lucide", "fill": "$field/placeholder"}, {"type": "text", "id": "dRpDX", "name": "Coverage Text 0", "fill": "$muted", "content": "CRDs", "fontFamily": "Geist", "fontSize": 12, "fontWeight": "normal"}]}, {"type": "frame", "id": "m5bkIR", "name": "Coverage Row 1", "width": "fill_container", "gap": 7, "alignItems": "center", "children": [{"type": "icon", "id": "gdwFr", "name": "Coverage Icon 1", "width": 12, "height": 12, "icon": "book-open", "library": "lucide", "fill": "$field/placeholder"}, {"type": "text", "id": "ygwEL", "name": "Coverage Text 1", "fill": "$muted", "content": "Status", "fontFamily": "Geist", "fontSize": 12, "fontWeight": "normal"}]}, {"type": "frame", "id": "az84i", "name": "Coverage Row 2", "width": "fill_container", "gap": 7, "alignItems": "center", "children": [{"type": "icon", "id": "A2Eg2F", "name": "Coverage Icon 2", "width": 12, "height": 12, "icon": "book-open", "library": "lucide", "fill": "$field/placeholder"}, {"type": "text", "id": "SbODv", "name": "Coverage Text 2", "fill": "$muted", "content": "GitOps", "fontFamily": "Geist", "fontSize": 12, "fontWeight": "normal"}]}]}, {"type": "frame", "id": "D9qLg", "name": "Edit Page Card", "width": "fill_container", "fill": "$background/background", "cornerRadius": "$radius/3xl", "stroke": "$border/border", "strokeWidth": 1, "strokeAlignment": "inner", "layout": "vertical", "gap": 6, "padding": 14, "children": [{"type": "text", "id": "YZTwd", "name": "Edit Page Title", "fill": "$foreground/foreground", "content": "Improve this page", "fontFamily": "JetBrains Mono", "fontSize": 12, "fontWeight": "600"}, {"type": "text", "id": "rz7AU", "name": "Edit Page Body", "fill": "$muted", "textGrowth": "fixed-width", "width": "fill_container", "content": "Found a gap? Open a docs issue or suggest an edit on GitHub.", "lineHeight": 1.4, "fontFamily": "Geist", "fontSize": 11.5, "fontWeight": "normal"}, {"type": "frame", "id": "mApNb", "name": "Edit Page Link", "gap": 6, "alignItems": "center", "children": [{"type": "text", "id": "a7Uzk", "name": "Edit Page Link Text", "fill": "$accent/soft-foreground", "content": "Edit this page", "fontFamily": "Geist", "fontSize": 12, "fontWeight": "500"}, {"type": "icon", "id": "TI3If", "name": "Edit Page Link Icon", "width": 12, "height": 12, "icon": "external-link", "library": "lucide", "fill": "$accent/accent"}]}]}]}]}]}]}
+{
+  "type": "frame",
+  "id": "e8fTgD",
+  "x": 0,
+  "y": 44308,
+  "name": "Screen/Docs — API & CRDs",
+  "theme": {
+    "semantic": "dark"
+  },
+  "clip": true,
+  "width": 1440,
+  "height": 900,
+  "fill": "$background/background",
+  "children": [
+    {
+      "id": "oWw6d",
+      "type": "ref",
+      "ref": "K2Rt4H",
+      "height": "fill_container",
+      "name": "DocsSidebar/Expanded",
+      "width": 280
+    },
+    {
+      "type": "frame",
+      "id": "GVRtd",
+      "name": "Docs Main",
+      "width": "fill_container",
+      "height": "fill_container",
+      "fill": "$background/background",
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "W78sN",
+          "type": "ref",
+          "ref": "SOdlr",
+          "name": "Docs Top Bar",
+          "width": "fill_container",
+          "descendants": {
+            "NImey": {
+              "content": "Extend"
+            },
+            "ikbi6": {
+              "content": "API & CRDs"
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "Y0etIh",
+          "name": "Docs Article Body",
+          "clip": true,
+          "width": "fill_container",
+          "height": "fill_container",
+          "gap": 32,
+          "padding": 32,
+          "children": [
+            {
+              "type": "frame",
+              "id": "N5qdg",
+              "name": "Docs Article",
+              "width": 780,
+              "layout": "vertical",
+              "gap": 14,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "s3zZN",
+                  "name": "Article Eyebrow",
+                  "fill": "$accent/accent",
+                  "content": "REFERENCE",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 11,
+                  "fontWeight": "600",
+                  "letterSpacing": 0.8
+                },
+                {
+                  "type": "text",
+                  "id": "SwRdE",
+                  "name": "Article Title",
+                  "fill": "$foreground/foreground",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "API and CRD reference",
+                  "lineHeight": 1.1,
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 30,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "I3xBq",
+                  "name": "Article Lead",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Automate Gameplane through Kubernetes resources and scoped identities while keeping desired state, observed status, and audit history aligned.",
+                  "lineHeight": 1.45,
+                  "fontFamily": "Geist",
+                  "fontSize": 15,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "MFYlH",
+                  "name": "Article Metadata",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "id": "wxZ3t",
+                      "type": "ref",
+                      "ref": "NZPtq",
+                      "name": "Meta Chip 0",
+                      "descendants": {
+                        "NLG8t": {
+                          "content": "REFERENCE"
+                        }
+                      }
+                    },
+                    {
+                      "id": "dzOmR",
+                      "type": "ref",
+                      "ref": "EbSsA",
+                      "name": "Meta Chip 1",
+                      "descendants": {
+                        "yb6zz": {
+                          "content": "v0.2"
+                        }
+                      }
+                    },
+                    {
+                      "id": "ASrMO",
+                      "type": "ref",
+                      "ref": "EbSsA",
+                      "name": "Meta Chip 2",
+                      "descendants": {
+                        "yb6zz": {
+                          "content": "18 MIN"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Q4MgPq",
+                  "name": "Article Callout",
+                  "width": "fill_container",
+                  "fill": "$accent/soft",
+                  "cornerRadius": "$radius/xl",
+                  "stroke": "$border/border",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "gap": 10,
+                  "padding": [
+                    10,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "Hcg7B",
+                      "name": "Article Callout Icon",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "braces",
+                      "library": "lucide",
+                      "fill": "$accent/soft-foreground"
+                    },
+                    {
+                      "type": "text",
+                      "id": "krq5v",
+                      "name": "Article Callout Text",
+                      "fill": "$accent/soft-foreground",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Write spec, read status. Controllers own conditions and observed fields; automation should never patch them as desired state.",
+                      "fontFamily": "Geist",
+                      "fontSize": 12.5,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "vnZxz",
+                  "name": "Guide Section 1",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "T6o7d6",
+                      "name": "Section Title 1",
+                      "fill": "$foreground/foreground",
+                      "content": "Core resources",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 17,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "AVL0p",
+                      "name": "Section Body 1",
+                      "fill": "$muted",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "GameServer, GameTemplate, ModuleSource, BackupSchedule, and related resources encode the platform’s declarative contracts.",
+                      "lineHeight": 1.45,
+                      "fontFamily": "Geist",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "PxyP4",
+                      "name": "Section List 1",
+                      "width": "fill_container",
+                      "fill": "$surface/surface",
+                      "cornerRadius": "$radius/2xl",
+                      "stroke": "$border/border",
+                      "strokeWidth": 1,
+                      "strokeAlignment": "inner",
+                      "layout": "vertical",
+                      "gap": 5,
+                      "padding": [
+                        8,
+                        10
+                      ],
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "TTijF",
+                          "name": "Section 1 Item 0",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "iEb0J",
+                              "name": "Section 1 Item Icon 0",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "check",
+                              "library": "lucide",
+                              "fill": "$accent/accent"
+                            },
+                            {
+                              "type": "text",
+                              "id": "eXUHW",
+                              "name": "Section 1 Item Text 0",
+                              "fill": "$default/foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Use apiVersion and kind from the installed CRDs, not copied stale examples.",
+                              "fontFamily": "Geist",
+                              "fontSize": 12.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "hA6ya",
+                          "name": "Section 1 Item 1",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "qknL0",
+                              "name": "Section 1 Item Icon 1",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "check",
+                              "library": "lucide",
+                              "fill": "$accent/accent"
+                            },
+                            {
+                              "type": "text",
+                              "id": "I0Z49Z",
+                              "name": "Section 1 Item Text 1",
+                              "fill": "$default/foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Treat names and UIDs separately when correlating resources across restores.",
+                              "fontFamily": "Geist",
+                              "fontSize": 12.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "W3Sksr",
+                          "name": "Section 1 Item 2",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "Cdme0",
+                              "name": "Section 1 Item Icon 2",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "check",
+                              "library": "lucide",
+                              "fill": "$accent/accent"
+                            },
+                            {
+                              "type": "text",
+                              "id": "WpgOF",
+                              "name": "Section 1 Item Text 2",
+                              "fill": "$default/foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Use labels and owner references for automation and cleanup.",
+                              "fontFamily": "Geist",
+                              "fontSize": 12.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "UpqBS",
+                  "name": "Guide Section 2",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "vfE3t",
+                      "name": "Section Title 2",
+                      "fill": "$foreground/foreground",
+                      "content": "Status, phases, and conditions",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 17,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Dy1jc",
+                      "name": "Section Body 2",
+                      "fill": "$muted",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Observed generation, phase, reason, message, and conditions explain whether the controller has applied the latest intent.",
+                      "lineHeight": 1.45,
+                      "fontFamily": "Geist",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "RHkbr",
+                      "name": "Section List 2",
+                      "width": "fill_container",
+                      "fill": "$surface/surface",
+                      "cornerRadius": "$radius/2xl",
+                      "stroke": "$border/border",
+                      "strokeWidth": 1,
+                      "strokeAlignment": "inner",
+                      "layout": "vertical",
+                      "gap": 5,
+                      "padding": [
+                        8,
+                        10
+                      ],
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "HtVzH",
+                          "name": "Section 2 Item 0",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "OtnpV",
+                              "name": "Section 2 Item Icon 0",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "check",
+                              "library": "lucide",
+                              "fill": "$accent/accent"
+                            },
+                            {
+                              "type": "text",
+                              "id": "VSefZ",
+                              "name": "Section 2 Item Text 0",
+                              "fill": "$default/foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Wait for observedGeneration before treating status as current.",
+                              "fontFamily": "Geist",
+                              "fontSize": 12.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "h1wzgx",
+                          "name": "Section 2 Item 1",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "HLG51",
+                              "name": "Section 2 Item Icon 1",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "check",
+                              "library": "lucide",
+                              "fill": "$accent/accent"
+                            },
+                            {
+                              "type": "text",
+                              "id": "b6lQ9",
+                              "name": "Section 2 Item Text 1",
+                              "fill": "$default/foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Use condition type, status, reason, and timestamp in runbooks.",
+                              "fontFamily": "Geist",
+                              "fontSize": 12.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "M2qZJ",
+                          "name": "Section 2 Item 2",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "OZeti",
+                              "name": "Section 2 Item Icon 2",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "check",
+                              "library": "lucide",
+                              "fill": "$accent/accent"
+                            },
+                            {
+                              "type": "text",
+                              "id": "Tznyc",
+                              "name": "Section 2 Item Text 2",
+                              "fill": "$default/foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Watch events when a phase alone cannot explain a blocked reconciliation.",
+                              "fontFamily": "Geist",
+                              "fontSize": 12.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "czdCH",
+                  "name": "Guide Section 3",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "kqgJb",
+                      "name": "Section Title 3",
+                      "fill": "$foreground/foreground",
+                      "content": "kubectl and API access",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 17,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "yEFS2",
+                      "name": "Section Body 3",
+                      "fill": "$muted",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Use Kubernetes RBAC for CRD workflows and scoped Gameplane service accounts for product APIs and integrations.",
+                      "lineHeight": 1.45,
+                      "fontFamily": "Geist",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ufLTX",
+                      "name": "Quick Reference",
+                      "width": "fill_container",
+                      "fill": "$surface/tertiary",
+                      "cornerRadius": "$radius/xl",
+                      "stroke": "$border/border",
+                      "strokeWidth": 1,
+                      "strokeAlignment": "inner",
+                      "layout": "vertical",
+                      "gap": 3,
+                      "padding": 12,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "VFnwC",
+                          "name": "Quick Reference Label",
+                          "fill": "$accent/accent",
+                          "content": "DECLARATIVE LOOP",
+                          "fontFamily": "JetBrains Mono",
+                          "fontSize": 9,
+                          "fontWeight": "600",
+                          "letterSpacing": 0.6
+                        },
+                        {
+                          "type": "text",
+                          "id": "IFxeh",
+                          "name": "Quick Reference Line 1",
+                          "fill": "$foreground/foreground",
+                          "content": "01  kubectl apply -f gameserver.yaml",
+                          "fontFamily": "JetBrains Mono",
+                          "fontSize": 11.5,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "LUy45",
+                          "name": "Quick Reference Line 2",
+                          "fill": "$foreground/foreground",
+                          "content": "02  kubectl get gameserver <name> -o yaml",
+                          "fontFamily": "JetBrains Mono",
+                          "fontSize": 11.5,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "k44RMB",
+                          "name": "Quick Reference Line 3",
+                          "fill": "$foreground/foreground",
+                          "content": "03  kubectl describe gameserver <name>  # conditions + events",
+                          "fontFamily": "JetBrains Mono",
+                          "fontSize": 11.5,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "uYl5v",
+                  "name": "Article Next Link",
+                  "width": "fill_container",
+                  "stroke": "$border/border",
+                  "strokeWidth": {
+                    "top": 1
+                  },
+                  "strokeAlignment": "inner",
+                  "strokeLinejoin": "round",
+                  "padding": [
+                    10,
+                    0,
+                    0,
+                    0
+                  ],
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "kQBoH",
+                      "name": "Next Link Text",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "DLmsJ",
+                          "name": "Next Link Eyebrow",
+                          "fill": "$field/placeholder",
+                          "content": "NEXT GUIDE",
+                          "fontFamily": "Geist",
+                          "fontSize": 10,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "AbiWh",
+                          "name": "Next Link Title",
+                          "fill": "$foreground/foreground",
+                          "content": "Install and configure Gameplane",
+                          "fontFamily": "JetBrains Mono",
+                          "fontSize": 13,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "icon",
+                      "id": "Vv2BK",
+                      "name": "Next Link Icon",
+                      "width": 15,
+                      "height": 15,
+                      "icon": "arrow-right",
+                      "library": "lucide",
+                      "fill": "$muted"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "l5g0as",
+              "name": "Docs Page Aside",
+              "width": 250,
+              "layout": "vertical",
+              "gap": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "NsQAl",
+                  "name": "Docs Table of Contents",
+                  "width": "fill_container",
+                  "fill": "$surface/secondary",
+                  "cornerRadius": "$radius/2xl",
+                  "stroke": "$border/border",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": 16,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "q7s1RZ",
+                      "name": "TOC Label",
+                      "fill": "$field/placeholder",
+                      "content": "ON THIS PAGE",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 9,
+                      "fontWeight": "600",
+                      "letterSpacing": 0.7
+                    },
+                    {
+                      "type": "frame",
+                      "id": "HUObr",
+                      "name": "TOC Row 0",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "QQlar",
+                          "name": "TOC Icon 0",
+                          "width": 12,
+                          "height": 12,
+                          "icon": "hash",
+                          "library": "lucide",
+                          "fill": "$accent/accent"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Rn6Jg",
+                          "name": "TOC Text 0",
+                          "fill": "$foreground/foreground",
+                          "content": "Core resources",
+                          "fontFamily": "Geist",
+                          "fontSize": 12.5,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "b9W3wS",
+                      "name": "TOC Row 1",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "jVY3R",
+                          "name": "TOC Icon 1",
+                          "width": 12,
+                          "height": 12,
+                          "icon": "hash",
+                          "library": "lucide",
+                          "fill": "$field/placeholder"
+                        },
+                        {
+                          "type": "text",
+                          "id": "KQnBe",
+                          "name": "TOC Text 1",
+                          "fill": "$muted",
+                          "content": "Status and conditions",
+                          "fontFamily": "Geist",
+                          "fontSize": 12.5,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "PWW2k",
+                      "name": "TOC Row 2",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "HLzFt",
+                          "name": "TOC Icon 2",
+                          "width": 12,
+                          "height": 12,
+                          "icon": "hash",
+                          "library": "lucide",
+                          "fill": "$field/placeholder"
+                        },
+                        {
+                          "type": "text",
+                          "id": "MX8cZ",
+                          "name": "TOC Text 2",
+                          "fill": "$muted",
+                          "content": "Automation access",
+                          "fontFamily": "Geist",
+                          "fontSize": 12.5,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "uYq75",
+                      "name": "TOC Divider",
+                      "fill": "$border/border",
+                      "width": "fill_container",
+                      "height": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "BtuU8",
+                      "name": "Coverage Label",
+                      "fill": "$field/placeholder",
+                      "content": "COVERS",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 9,
+                      "fontWeight": "600",
+                      "letterSpacing": 0.7
+                    },
+                    {
+                      "type": "frame",
+                      "id": "k5x0e",
+                      "name": "Coverage Row 0",
+                      "width": "fill_container",
+                      "gap": 7,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "l3cvTv",
+                          "name": "Coverage Icon 0",
+                          "width": 12,
+                          "height": 12,
+                          "icon": "book-open",
+                          "library": "lucide",
+                          "fill": "$field/placeholder"
+                        },
+                        {
+                          "type": "text",
+                          "id": "dRpDX",
+                          "name": "Coverage Text 0",
+                          "fill": "$muted",
+                          "content": "CRDs",
+                          "fontFamily": "Geist",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "m5bkIR",
+                      "name": "Coverage Row 1",
+                      "width": "fill_container",
+                      "gap": 7,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "gdwFr",
+                          "name": "Coverage Icon 1",
+                          "width": 12,
+                          "height": 12,
+                          "icon": "book-open",
+                          "library": "lucide",
+                          "fill": "$field/placeholder"
+                        },
+                        {
+                          "type": "text",
+                          "id": "ygwEL",
+                          "name": "Coverage Text 1",
+                          "fill": "$muted",
+                          "content": "Status",
+                          "fontFamily": "Geist",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "az84i",
+                      "name": "Coverage Row 2",
+                      "width": "fill_container",
+                      "gap": 7,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "A2Eg2F",
+                          "name": "Coverage Icon 2",
+                          "width": 12,
+                          "height": 12,
+                          "icon": "book-open",
+                          "library": "lucide",
+                          "fill": "$field/placeholder"
+                        },
+                        {
+                          "type": "text",
+                          "id": "SbODv",
+                          "name": "Coverage Text 2",
+                          "fill": "$muted",
+                          "content": "GitOps",
+                          "fontFamily": "Geist",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "D9qLg",
+                  "name": "Edit Page Card",
+                  "width": "fill_container",
+                  "fill": "$background/background",
+                  "cornerRadius": "$radius/3xl",
+                  "stroke": "$border/border",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "padding": 14,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "YZTwd",
+                      "name": "Edit Page Title",
+                      "fill": "$foreground/foreground",
+                      "content": "Improve this page",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "rz7AU",
+                      "name": "Edit Page Body",
+                      "fill": "$muted",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Found a gap? Open a docs issue or suggest an edit on GitHub.",
+                      "lineHeight": 1.4,
+                      "fontFamily": "Geist",
+                      "fontSize": 11.5,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "mApNb",
+                      "name": "Edit Page Link",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "a7Uzk",
+                          "name": "Edit Page Link Text",
+                          "fill": "$accent/soft-foreground",
+                          "content": "Edit this page",
+                          "fontFamily": "Geist",
+                          "fontSize": 12,
+                          "fontWeight": "500"
+                        },
+                        {
+                          "type": "icon",
+                          "id": "TI3If",
+                          "name": "Edit Page Link Icon",
+                          "width": 12,
+                          "height": 12,
+                          "icon": "external-link",
+                          "library": "lucide",
+                          "fill": "$accent/accent"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
