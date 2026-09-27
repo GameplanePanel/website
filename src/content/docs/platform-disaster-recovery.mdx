@@ -71,7 +71,7 @@ A platform-wide rebuild must follow this sequence:
 ### 1. Prepare the target Kubernetes cluster
 
 - **Ensure the target cluster meets the same specifications as the original:** Kubernetes 1.28+, nodes with sufficient capacity for the operator, API, and game workloads, storage backend provisioned, and network connectivity to backup destinations.
-- **Provision storage:** Set up the default StorageClass, persistent volumes for API state (if using SQLite), and test access to backup repositories (S3, SFTP, local restic backend).
+- **Provision storage:** Persistent volumes for API state (if using SQLite), and test access to backup repositories (S3, SFTP, local restic backend).
 - **Set up edge infrastructure:** DNS, TLS certificates, load balancer pools, and any relay services (if using frp/Tailscale for NAT traversal).
 - **Configure monitoring and audit sinks:** Provision the destination for syslog, webhook, or S3 audit events and Prometheus scrape targets.
 

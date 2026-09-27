@@ -36,6 +36,36 @@ Only an **Upload ModuleSource** accepts a local archive; validate the bundle bef
   ]}
 />
 
+### Validate before uploading
+
+Offline validation ensures the module is complete, signed correctly, and ready for publication:
+
+```sh
+gp-module validate path/to/bundle --strict
+```
+
+The validator checks:
+- icon is ≤512 KiB (gp-module validate warns above this; non-blocking unless run with --strict)
+- gp-module validate additionally warns if the total bundle exceeds 1 MiB (also non-blocking unless --strict)
+- the upload API itself hard-rejects any bundle over 900 KiB regardless of validator warnings — this is the limit that actually blocks an upload, so keep bundles well under it even though the CLI's own warning threshold is higher.
+
+### Create a Module resource
+
+After uploading and syncing, reference the exact digest in your Module manifest:
+
+```yaml
+apiVersion: gameplane.local/v1alpha1
+kind: Module
+metadata:
+  name: minecraft-java-main
+spec:
+  name: minecraft-java
+  version: 1.20.4
+  digest: sha256:abcdef1234567890...
+  source:
+    name: upload-source
+```
+
 ## Upload and synchronize
 
 Choose the upload source and archive, then verify catalog identity and provenance after synchronization.
@@ -59,6 +89,30 @@ Install the exact version, test every declared capability, and publish a new ver
     { icon: "refresh-cw", label: "Publish a new version instead of mutating", text: "Increment version in module.yaml, revalidate offline, upload as separate .tar.gz, and create new Module with new digest. Canary the new version in parallel." },
   ]}
 />
+
+### Test every declared capability
+
+After installing the Module, verify each capability that the module advertises:
+
+- **Console connect:** Can you open a console session and send commands?
+- **Port mappings:** Are declared ports accessible from the network?
+- **Environment variables:** Do env vars inject correctly into the game process?
+- **Storage:** Are volume mounts readable and writable?
+- **Lifecycle probes:** Do startup, liveness, and readiness probes respond correctly?
+
+Document any failures; if critical capabilities fail, roll back to the previous release immediately.
+
+### Version bumps and canary workflow
+
+Never mutate a released module archive. Instead, version-bump and canary in parallel:
+
+1. Increment `version` in `module.yaml`
+2. Run `gp-module validate path/to/bundle --strict` offline
+3. Upload the new `.tar.gz` as a separate bundle
+4. Create a new Module resource with the new digest
+5. Install the new Module on a test server and run through the capability test again
+6. Keep the previous stable Module installed on production servers until the new version proves stable
+7. Graduate the new version to production only after successful parallel testing
 
 <DocsQuickReference
   label="UPLOAD FLOW"

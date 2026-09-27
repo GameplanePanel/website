@@ -18,7 +18,7 @@ import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
 
 Gameplane's test suite spans three tiers: unit tests and Vitest (cheapest), envtest for Kubernetes integration (moderate cost), and kind E2E for full-cluster validation (most expensive). Every real-cluster test lives in exactly one CI bucket to prevent login rate-limiter starvation.
 
-<DocsCallout icon="shield-alert" title="Port-forward bypasses NetworkPolicy">
+<DocsCallout icon="flask-conical" title="Port-forward bypasses NetworkPolicy">
   `kubectl port-forward` tunnels through the kubelet, bypassing NetworkPolicy entirely. It cannot prove real in-cluster game connectivity. Use a live E2E run on a kind cluster instead.
 </DocsCallout>
 
