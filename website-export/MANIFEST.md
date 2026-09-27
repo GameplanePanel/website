@@ -1,30 +1,32 @@
-# website.pen Export Manifest
+# website.pen export manifest
 
-## Enumeration method + confidence
+Snapshot of `website.pen` (Pencil, MCP-only) for review in git. Full re-export 2026-09-27 after the HeroUI redesign.
 
-High confidence the frames list is complete. The bare root-walk visitor bug described in the task was reproduced exactly: `ctx.depth` was systematically off by one relative to true tree depth (`ctx.depth===1` returned grandchildren, e.g. Badge/Outline's internal "dot"/"label" nodes and Landing Page's Hero/Features/Install/Footer sections; `ctx.depth===2` returned great-grandchildren and eventually crashed with the documented "cannot read property of undefined"). Filtering on `ctx.depth===0` instead (with `ctx.skipChildren()` to avoid descending, wrapped in try/catch) ran with NO crash and returned a flat, non-recursive list of exactly the document's true top-level children: 103 total, of which 6 are reusable component frames (Badge/Outline, Docs/Expanded Sidebar, Nav, Footer, Docs Top Bar, Reference Top Bar — all six already present in `get_app_state`'s "Reusable components" list, confirming consistency), 96 are non-reusable Screen/... page frames, and 1 is a non-screen, non-reusable organizational container ("lunaris: design system components", id `H:frame-1761929672442`) that holds all the `H:`-prefixed design-system components as its children rather than being a screen or component itself — it is deliberately excluded from both lists below. This 103 total closely matches `get_app_state`'s stated "10 shown + 92 others = 102" (off by one, likely a boundary/counting quirk in that summary, not a sign of missing data). The reusable-components list is taken directly from `get_app_state`'s "Reusable components" field, which the task states is normally complete in one call and was not observed truncated (no "+N others" marker on that list, and it already includes all 6 top-level component frames found independently via the depth-0 walk, cross-validating both sources). Internal structure of each of the ~96 doc screens was not further verified — only their existence and names/ids as direct document children.
+## Contents
 
-## Verification performed (this pass)
+| Set | Count | Notes |
+|---|---|---|
+| Screens + local website components (Nav `Qczsa`, Footer `gnZrl`, Docs Top Bar `SOdlr`, Reference Top Bar `egO9x`, Badge/Outline `X4Xyl`, Docs/Expanded Sidebar `K2Rt4H`) | 102 | 96 `Screen/…` frames + 6 components |
+| HeroUI components (children of container `hYJwr`, "HeroUI: Design System Components") | 177 | copied from the dashboard's `design.pen` |
+| **Total** | **279** | `json/<id>.json` + `screenshots/<id>.png` each |
 
-1. **JSON parse check** — every file in `json/*.json` (202 files) was parsed with Python's `json.load`. All 202 parsed successfully; none were truncated or malformed. No re-export via `Get("<ID>",{depth:6})` was needed.
-2. **Screenshot coverage check** — `screenshots/` contains exactly 202 PNG files. Every id in the expected 202-id list (allowing for `:` being sanitized to `_`/`-` in filenames) has a matching screenshot, and every screenshot file matches an id in the list — no missing, no extras.
-3. **JSON filename coverage check** — same cross-check applied to `json/*.json` filenames against the id list: no missing, no extras.
+The lunaris library (`H:`-prefixed ids and variables) was removed from the design; its 100 exports were deleted.
 
-## IDs that failed export
+## Method
 
-None. The provided failed-export list was empty (`[]`), and independent verification in this pass found zero broken or missing files among the 202 JSON exports and 202 screenshots.
+- JSON: `Get(id, {depth: 40, includePathGeometry: true})` printed one node per line from batched `execute` calls, split
+  into files by script. All 279 parse; no `"..."` elisions (the one `"..."` in `U7t37` is pagination text content).
+- PNG: `export_nodes` at 2×; 279 files, none empty.
+- Content checks: `gnZrl` has "v0.2.0-beta.8 · AGPL", `B39hL` "Fourteen more arrive in v0.3.0", `Znh8i` "no paid
+  tiers", `P5qsD` a v0.2.0-beta.8 entry; no `H:` refs or `$H:--` variables anywhere.
 
-## Final validated counts
+## 2026-09-27 redesign (what changed)
 
-| Category | Count |
-|---|---|
-| Screen/page frames (non-reusable) | 96 |
-| Reusable component frames (Nav, Footer, Docs Top Bar, Reference Top Bar, Badge/Outline, Docs/Expanded Sidebar) | 6 |
-| `H:`-prefixed design-system components | 100 |
-| **Total components** (6 reusable frames + 100 `H:` components) | **106** |
-| **Total objects exported** (96 frames + 106 components) | **202** |
-| JSON files present / parse-clean | 202 / 202 |
-| Screenshots present / matched to ids | 202 / 202 |
-| Excluded (non-screen, non-reusable organizational container) | `H:frame-1761929672442` ("lunaris: design system components") — 1, not counted in either total above |
-
-**Result: export is complete and valid.** 202/202 objects have both a parse-clean JSON file and a matching screenshot; 0 files required repair.
+- Palette: local variables named after `design.pen`'s HeroUI tokens (`accent/accent`, `surface/surface`, `muted`,
+  `border/border`, …; theme axis `semantic` light/dark), values from the dashboard's `web/src/styles/globals.css`.
+  ~6,000 hardcoded colors re-pointed to tokens.
+- Components: lunaris buttons → HeroUI Button refs; docs meta chips → Chip/Soft; reference tab rows → Tab refs;
+  security disclosure → Alert/Warning; FAQ → Accordion/Open; docs search action → Button/Outline/Icon; callouts,
+  search fields and Badge/Outline restyled with Alert/Chip tokens; radii → `radius/{md,xl,2xl,3xl}`.
+- Content: v0.2.0-beta.8 everywhere; Changelog entries beta.4–beta.8; Games gains a "Coming in v0.3.0" section with
+  the 14 new modules; table overflow fixes on Compare and Comparison.
