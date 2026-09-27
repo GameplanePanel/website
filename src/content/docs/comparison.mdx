@@ -1,21 +1,24 @@
 ---
 title: Comparison
-description: How Gameplane's architecture differs from CubeCoders AMP, Pterodactyl, and PufferPanel.
+description: How Gameplane compares to Pterodactyl, CubeCoders AMP and Agones — deployment model, auto-sleep, relays, backups, access control, templates, multi-cluster and licensing.
 section: start-here
 order: 4
 icon: arrow-right-left
 eyebrow: DOCUMENTATION
 ---
 
-How Gameplane's architecture differs from CubeCoders AMP, Pterodactyl, and PufferPanel.
+Pterodactyl and CubeCoders AMP are control panels; Agones is a Kubernetes operator library — not a direct competitor, but a reference point for teams building on Kubernetes primitives.
 
-| | GAMEPLANE | AMP | PTERODACTYL | PUFFERPANEL |
+| Dimension | Gameplane | Pterodactyl | CubeCoders AMP | Agones |
 | --- | --- | --- | --- | --- |
-| License | Open source (AGPL-3.0) | Commercial — per-instance tiers, no free tier | Open source (MIT) | Open source (Apache-2.0) |
-| Hosting model | Kubernetes — CRDs + operator | Native processes; optional container isolation | Docker containers (Wings daemon) | Native or Docker (daemon) |
-| Multi-host coordination | Declarative — same control plane at any scale | Controller/Target — manual, Professional+ only | Panel + per-node Wings — manual assignment | Panel + per-node daemon — manual assignment |
-| Game catalog | 16 official modules; open template format | Dozens of templates, community-extensible | Community "Eggs" — large, decentralized catalog | ~40-50 community templates |
-| OS support | Any Kubernetes 1.28+ cluster | Windows and Linux | Linux only (Wings) | Linux native; Docker mode cross-platform |
-| Auto-scaling / self-healing | Yes — Kubernetes-native reconciliation | No | No | No |
+| Deployment/runtime model | Kubernetes-native CRDs and controller-runtime operator; scales from k3s homelab to multi-node clusters. [BETA] | Self-hosted Panel with PHP/MySQL/Redis dependencies; Wings backend manages Docker containers. | Web-based control panel supporting Windows (native) and Linux (Debian 10+). | Kubernetes-native library extending K8s with GameServer/Fleet CRDs. |
+| Scaling & auto-sleep | Opt-in idle auto-sleep with configurable wake windows, manual wake button, or wake-on-connect. Minecraft/Terraria full protocol support; others use packet heuristics. [optional] | Multi-node support with cron-based power scheduling; no dedicated idle/auto-sleep feature. | Instance Automatic Sleep feature; multi-server architecture with controller managing instances. | Fleet autoscaling via buffer/webhook strategies; no idle/sleep state. |
+| Inbound connectivity (NAT traversal, relay) | Integrated frp, Tailscale, playit relay sidecars; playit mappings user-managed via playit.gg account. [optional; disabled by default] | No integrated relay sidecars; manual proxy/port forwarding configuration required. | not publicly documented (checked 2026-09-02) | No relay or NAT traversal features documented. |
+| Backup and restore | Restic snapshots to S3-compatible storage; on-demand or cron-scheduled via BackupSchedule; one-click restore. | Wings (local, default) or S3-compatible backup drivers; cron scheduling and on-demand backups. | not publicly documented (checked 2026-09-02) | not applicable (Agones is a Kubernetes operator library) |
+| Access control & authentication | Local argon2id + OIDC (Keycloak/Google/GitHub); three built-in roles (admin/operator/viewer); custom roles supported. | 2FA configurable per account or admin-only; subuser management via Artisan CLI. | Role-based access control; OIDC single-sign-on in Advanced Edition. | not applicable (Agones is a Kubernetes operator library) |
+| Game template distribution | OCI bundles via ModuleSource (git/http/oci/local/upload); optional cosign signature verification per source. 16 ready-to-use templates shipped. | Community eggs repository (eggs.pterodactyl.io) with nests and custom egg creation support. | Customizable templates framework; community-contributed templates available via external repositories. | not applicable (Agones is a Kubernetes operator library) |
+| Multi-tenancy & multi-cluster | Cluster CRD for remote registration/monitoring; console/log streaming local-cluster only. [local cluster only for streaming] | Single Panel managing multiple nodes; no documented remote cluster or cross-cluster streaming. | Multi-server management via controller architecture; multi-tenancy not supported in AMP 2 (planned for AMP 3). | Multi-cluster allocation via GameServerAllocationPolicy; allocator service with mTLS authentication. |
+| Licensing | GNU Affero General Public License v3.0 or later (AGPL-3.0-or-later). | MIT License (Panel and Wings). | Proprietary; per-instance tiers (Standard/Professional/Advanced/Enterprise). | Apache License 2.0. |
+| Target operator scope (self-hosted vs. managed SaaS) | Self-hosted only; runs on Kubernetes (k3s, kubeadm, managed services); no managed SaaS offering. | Self-hosted only; requires Linux system capable of running Docker containers. | Self-installed on user hardware (Windows or Linux); no managed SaaS version. | Self-hosted operator software; runs anywhere Kubernetes can run. |
 
-Figures reflect each project's public documentation as of mid-2026 and may change — verify current specifics on each project's own site before deciding.
+Sources for every cell: [docs/comparison-sources.md](https://github.com/ValgulNecron/Gameplane/blob/master/docs/comparison-sources.md) — Checked 2026-09-02.
