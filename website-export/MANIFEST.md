@@ -31,3 +31,12 @@ The lunaris library (`H:`-prefixed ids and variables) was removed from the desig
   search fields and Badge/Outline restyled with Alert/Chip tokens; radii → `radius/{md,xl,2xl,3xl}`.
 - Content: v0.2.0-beta.8 everywhere; Changelog entries beta.4–beta.8; Games gains a "Coming in v0.3.0" section with
   the 14 new modules; table overflow fixes on Compare and Comparison.
+
+## 2026-09-27 incremental: comparison + logos
+
+- `ei1qC` (Compare) and `HpLFh` (Docs — Comparison): four-way table (Gameplane, Pterodactyl, CubeCoders AMP, Agones;
+  9 dimensions) from the main repo README, plus sources line on `ei1qC`.
+- Logo mark in Nav `Qczsa`, Footer `gnZrl`, Docs sidebar `K2Rt4H` and the mobile screens `JjbY2`/`Bnjed` is an image fill
+  of `design-assets/gameplane-icon.png`; Not Found `vh8hz` shows `design-assets/gameplane-mark.png` (PNGs rendered from
+  the SVG logos, since Pencil does not render SVG image fills).
+- Re-exported: JSON for the 102 screens/components (8 changed), screenshots for all 102 (component instances changed).
