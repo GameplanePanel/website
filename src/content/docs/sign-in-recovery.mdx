@@ -49,7 +49,7 @@ Local accounts use a Gameplane credential; provider buttons delegate password an
 **OIDC** (OpenID Connect) delegates authentication to a third-party identity provider (Keycloak, Authentik, Google Workspace, Okta, etc.). The provider handles password storage and MFA; Gameplane stores only the OIDC subject ID (issuer + subject claim). Each provider can map IdP groups to dashboard roles (a groups claim, per-role group lists and a default role); a user with no matching group gets the default role, `viewer` unless you change it. Seeding these mappings from Helm values arrives in v0.3.0. Providers are configured under **Admin Settings → Authentication** and take effect on the next user login (no API restart required).
 
 <DocsCallout icon="info" title="Coming in v0.3.0">
-  OIDC group-claim role mapping will allow you to derive user roles from your identity provider's group claims, enabling zero-trust RBAC on login without post-deployment configuration.
+  The Helm chart will be able to seed each provider's group-to-role mappings from values (`api.oidc.groupsClaim`, `roleMappings`, `defaultRole`), so a fresh install derives roles on first login without post-deployment configuration.
 </DocsCallout>
 
 For provider-specific setup steps, see [Users, Auth & RBAC](../users-auth-rbac/).
@@ -106,7 +106,7 @@ An administrator with the `users:manage` role can reset any local user's passwor
 
 The user's effective role in Gameplane is determined by:
 - **Local account**: the role manually assigned in **Admin Settings → Users**
-- **OIDC account**: the role is the viewer role by default (coming in v0.3.0: the role derived from the provider's group claim if group mapping is configured in **Admin Settings → Authentication**) *or* the role manually assigned in **Admin Settings → Users** as an override
+- **OIDC account**: the role derived from the provider's group claim when group mapping is configured in **Admin Settings → Authentication** (otherwise the provider's default role, `viewer` unless changed) *or* the role manually assigned in **Admin Settings → Users** as an override
 
 To test your own recovery process, log out and use a private/incognito window to attempt re-login. If you are locked out of OIDC and cannot log in via a local backup account, use one of these break-glass paths:
 
