@@ -46,7 +46,7 @@ Local accounts use a Gameplane credential; provider buttons delegate password an
 
 **Local auth** requires the account to exist in Gameplane's local user list — created manually under **Admin Settings → Users** or automatically on first OIDC login (assigned the viewer role by default). Each local account stores an `argon2id`-hashed password; the API enforces a 12-character minimum.
 
-**OIDC** (OpenID Connect) delegates authentication to a third-party identity provider (Keycloak, Authentik, Google Workspace, Okta, etc.). The provider handles password storage and MFA; Gameplane stores only the OIDC subject ID (issuer + subject claim); group-claim role mapping is not available in beta.8 (coming in v0.3.0). Providers are configured under **Admin Settings → Authentication** and take effect on the next user login (no API restart required).
+**OIDC** (OpenID Connect) delegates authentication to a third-party identity provider (Keycloak, Authentik, Google Workspace, Okta, etc.). The provider handles password storage and MFA; Gameplane stores only the OIDC subject ID (issuer + subject claim). Each provider can map IdP groups to dashboard roles (a groups claim, per-role group lists and a default role); a user with no matching group gets the default role, `viewer` unless you change it. Seeding these mappings from Helm values arrives in v0.3.0. Providers are configured under **Admin Settings → Authentication** and take effect on the next user login (no API restart required).
 
 <DocsCallout icon="info" title="Coming in v0.3.0">
   OIDC group-claim role mapping will allow you to derive user roles from your identity provider's group claims, enabling zero-trust RBAC on login without post-deployment configuration.
