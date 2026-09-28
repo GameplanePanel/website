@@ -101,7 +101,7 @@ curl -H "X-Gameplane-CSRF: $CSRF" \
 ## Request/Response Format
 
 - **Content-Type** — `application/json` for all bodies
-- **Request Bodies** — POST and PATCH requests expect a JSON object. Refer to the [CRD Catalog](./crd-catalog/) for the schema of each resource type.
+- **Request Bodies** — POST and PATCH requests expect a JSON object. Refer to the [CRD Catalog](../crd-catalog/) for the schema of each resource type.
 - **Response Format** — Responses are either Kubernetes unstructured objects (for resource CRUD) or custom JSON structures (for actions, audit, config). List responses include a `items` array.
 
 ## Rate Limiting
@@ -151,7 +151,7 @@ curl -b "gameplane_session=$SESSION" \
 
 ## See Also
 
-- [WebSocket & Event Streams](./websocket-event-streams/) — Real-time server health, player counts, and console output
-- [CRD Catalog](./crd-catalog/) — Full schema reference for GameServer, Backup, and other resources
-- [API & Realtime Development](./api-realtime-development/) — Writing agent-backed WebSocket handlers
-- [Kubectl & GitOps Recipes](./kubectl-gitops-recipes/) — Using kubectl and git workflows alongside the API
+- [WebSocket & Event Streams](../websocket-event-streams/) — Real-time server health, player counts, and console output
+- [CRD Catalog](../crd-catalog/) — Full schema reference for GameServer, Backup, and other resources
+- [API & Realtime Development](../api-realtime-development/) — Writing agent-backed WebSocket handlers
+- [Kubectl & GitOps Recipes](../kubectl-gitops-recipes/) — Using kubectl and git workflows alongside the API

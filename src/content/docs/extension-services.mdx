@@ -122,7 +122,7 @@ Put cross-component invariants in small modules only when multiple callers requi
 - **Operator** (`ModuleSource` `git`/`http` fetches) — intentionally more permissive; self-hosted registries legitimately live on private/loopback addresses.
 - **Agent** (`capabilities.mods.install` downloads) — stricter; mod-download URLs are less trusted.
 
-Both dial through a `net.Dialer.Control` hook that blocks the destination at connect time, enforced late enough that DNS rebinding can't slip past a name-based allowlist. See [Security](./security/) for the full threat model.
+Both dial through a `net.Dialer.Control` hook that blocks the destination at connect time, enforced late enough that DNS rebinding can't slip past a name-based allowlist. See [Security](../security/) for the full threat model.
 
 ### gameaction
 
@@ -192,4 +192,4 @@ helm upgrade --install gameplane oci://... -f values.yaml -n gameplane-system
 
 ---
 
-See the [CRD catalog](./crd-catalog/) for how these services fit around the CRDs they read or forward, and [Security](./security/) for the RBAC and network boundaries each one runs inside.
+See the [CRD catalog](../crd-catalog/) for how these services fit around the CRDs they read or forward, and [Security](../security/) for the RBAC and network boundaries each one runs inside.

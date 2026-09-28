@@ -38,7 +38,7 @@ The `/events` stream (Server-Sent Events) broadcasts Kubernetes watch notificati
 
 ## Authentication and scope
 
-Sessions, origin rules, namespace, and cluster scope match the REST API; see [REST API Reference](./rest-api-reference/) for session validation and CSRF token requirements.
+Sessions, origin rules, namespace, and cluster scope match the REST API; see [REST API Reference](../rest-api-reference/) for session validation and CSRF token requirements.
 
 <DocsCallout icon="info" title="Sessions and CSRF still apply">
   WebSocket upgrades require a valid session, and adjacent REST mutations (e.g., sending commands while monitoring the console) still require CSRF tokens in the `X-Gameplane-CSRF` header.
