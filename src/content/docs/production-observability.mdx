@@ -58,7 +58,7 @@ Configure your cluster's log aggregation system (Kubernetes logging architecture
 
 **Audit trail:**
 
-Export audit events via webhook syslog (RFC 5424) using `api.audit.webhook.syslogBridge` or batch upload to S3 using `api.audit.s3.*` in `values.yaml`. See [Audit observability](./audit-observability-admin/) for full configuration.
+Export audit events via webhook syslog (RFC 5424) using `api.audit.webhook.syslogBridge` or batch upload to S3 using `api.audit.s3.*` in `values.yaml`. See [Audit observability](../audit-observability-admin/) for full configuration.
 
 ## Dashboards, SLOs, and alerts
 
@@ -90,7 +90,7 @@ Cover control-plane health, reconciliation, fleet states, capacity, storage, bac
 2. **Fleet health:** `GameplaneGameServerFailed` (phase=Failed), `GameplaneBackupFailed` (any failed backup)
 3. **Capacity:** API/operator memory, CPU throttling, PVC usage approaching limits
 4. **Infrastructure:** Certificate expiry, Database connectivity, Persistent volume mount failures
-5. **Sources & modules:** Module source sync failures, registry credential rotation expiry (see [Credential rotation](./credential-rotation/))
+5. **Sources & modules:** Module source sync failures, registry credential rotation expiry (see [Credential rotation](../credential-rotation/))
 
 **Built-in PrometheusRule:**
 
@@ -125,4 +125,4 @@ Bound cardinality, access, redaction, encryption, and cost; preserve evidence be
 
 ## Next guide
 
-[Metrics, alerts, and dashboards](./metrics-alerts-dashboards/)
+[Metrics, alerts, and dashboards](../metrics-alerts-dashboards/)

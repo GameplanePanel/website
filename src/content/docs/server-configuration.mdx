@@ -197,7 +197,7 @@ spec:
 
 ### Per-server access control
 
-The dashboard and API enforce role-based access control on a per-GameServer basis. Owners and admins can modify any setting; other users are blocked by the operator unless their role grants `servers:write`. See the [Permission Catalog](./permission-catalog/) for the full matrix of role capabilities.
+The dashboard and API enforce role-based access control on a per-GameServer basis. Owners and admins can modify any setting; other users are blocked by the operator unless their role grants `servers:write`. See the [Permission Catalog](../permission-catalog/) for the full matrix of role capabilities.
 
 ### Safety boundaries: Ownership and danger zone
 
@@ -208,7 +208,7 @@ Three destructive operations require explicit safeguards:
 3. **Delete:** Removes the GameServer, its StatefulSet, and all associated resources, including data. Deletion is immediate once confirmed; backups are your only recovery path.
 
 <DocsCallout icon="info" title="Establish a backup routine first.">
-Before a user or operator deletes a server, ensure a recent backup exists. Enable [Backups & Recovery](./backups-recovery/) and set up a backup destination (S3, Azure Blob, or on-cluster Restic) as part of your operational runbook.
+Before a user or operator deletes a server, ensure a recent backup exists. Enable [Backups & Recovery](../backups-recovery/) and set up a backup destination (S3, Azure Blob, or on-cluster Restic) as part of your operational runbook.
 </DocsCallout>
 
 <DocsQuickReference
@@ -222,8 +222,8 @@ Before a user or operator deletes a server, ensure a recent backup exists. Enabl
 
 ## See also
 
-- [General Server Settings](./general-server-settings/) — CPU, memory, environment variables in detail.
-- [Template-specific Configuration](./template-configuration/) — Game-specific config fields from the template's ConfigSchema.
-- [Lifecycle & Health Probes](./lifecycle-probes/) — Deep dive on startup, readiness, liveness, and graceful shutdown.
-- [Ownership & Danger Zone](./ownership-danger-zone/) — Transfer, wipe, and deletion workflows.
-- [Network & Automation](./network-automation/) — Service exposure and load-balancer configuration.
+- [General Server Settings](../general-server-settings/) — CPU, memory, environment variables in detail.
+- [Template-specific Configuration](../template-configuration/) — Game-specific config fields from the template's ConfigSchema.
+- [Lifecycle & Health Probes](../lifecycle-probes/) — Deep dive on startup, readiness, liveness, and graceful shutdown.
+- [Ownership & Danger Zone](../ownership-danger-zone/) — Transfer, wipe, and deletion workflows.
+- [Network & Automation](../network-automation/) — Service exposure and load-balancer configuration.

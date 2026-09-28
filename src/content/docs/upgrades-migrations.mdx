@@ -72,8 +72,8 @@ helm list -n gameplane-system
 
 Most releases are backward-compatible, but some introduce schema changes or require manual steps. Always check:
 
-- [CHANGELOG](./changelog/) — upgrade notes at the top of the release section
-- [Supported Versions Matrix](./supported-versions-matrix/) — which clusters/Kubernetes versions are compatible
+- [CHANGELOG](../changelog/) — upgrade notes at the top of the release section
+- [Supported Versions Matrix](../supported-versions-matrix/) — which clusters/Kubernetes versions are compatible
 - Network changes — if the release adds new `NetworkPolicy` or changes to `spec.networking`
 - CRD migrations — if any CRD fields were removed, renamed, or changed in meaning
 
@@ -212,7 +212,7 @@ Once 24 hours have passed without issues, backups of the pre-upgrade state becom
 
 If you encounter issues during upgrade:
 
-- Check the [Troubleshooting](./troubleshooting/) guide for common errors and recovery steps.
+- Check the [Troubleshooting](../troubleshooting/) guide for common errors and recovery steps.
 - Review operator logs: `kubectl logs -n gameplane-system deploy/gameplane-operator`
-- Review the [CHANGELOG](./changelog/) for known issues in your target version.
-- For help, reach out in the [community channels](./get-involved/).
+- Review the [CHANGELOG](../changelog/) for known issues in your target version.
+- For help, reach out in the [community channels](../get-involved/).

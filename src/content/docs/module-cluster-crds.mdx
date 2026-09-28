@@ -31,7 +31,7 @@ Module materializes a GameTemplate from a signed or pinned module bundle sourced
 | `spec.name` | string | yes | Logical module name within the source (must match `modulesource.status.modules[].name`) |
 | `spec.version` | string | no | Specific semver to install; omit to track `modulesource.status.modules[].latestVersion` |
 | `spec.digest` | string | no | OCI manifest digest (`sha256:…`), git commit (`git:<sha>`), or content hash to pin exact bundle content and detect drift |
-| `status.phase` | enum | read-only | Pending / Pulling / Ready / Failed — see [Status, Phases & Conditions](./status-phases-conditions/) |
+| `status.phase` | enum | read-only | Pending / Pulling / Ready / Failed — see [Status, Phases & Conditions](../status-phases-conditions/) |
 | `status.appliedVersion` | string | read-only | Version currently materialized into the owned GameTemplate |
 | `status.appliedTemplate` | string | read-only | Name of the GameTemplate this Module owns (equals `metadata.name` on success) |
 
@@ -102,8 +102,8 @@ The Cluster CRD registers a remote Kubernetes cluster for multi-cluster deployme
 
 ## Related topics
 
-- **[Module Authoring](./module-authoring/)** — write a game module and publish it.
-- **[Test, Publish & Sign Modules](./test-publish-sign-modules/)** — build, sign with cosign, and push bundles.
-- **[CRD Catalog](./crd-catalog/)** — overview of all 9 Gameplane CRDs.
-- **[Status, Phases & Conditions](./status-phases-conditions/)** — how to interpret phase and condition values.
-- **[Multi-cluster Topology](./multi-cluster/)** — register and manage remote clusters.
+- **[Module Authoring](../module-authoring/)** — write a game module and publish it.
+- **[Test, Publish & Sign Modules](../test-publish-sign-modules/)** — build, sign with cosign, and push bundles.
+- **[CRD Catalog](../crd-catalog/)** — overview of all 9 Gameplane CRDs.
+- **[Status, Phases & Conditions](../status-phases-conditions/)** — how to interpret phase and condition values.
+- **[Multi-cluster Topology](../multi-cluster/)** — register and manage remote clusters.

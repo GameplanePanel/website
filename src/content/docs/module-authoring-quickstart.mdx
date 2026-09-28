@@ -144,7 +144,7 @@ bin/gp-module validate modules/minecraft-java --strict
 This checks metadata syntax, CRD schema compliance, image digests, port ranges, and configuration types.
 
 <DocsCallout icon="check" title="Coming in v0.3.0">
-  The `gp-module validate` tool provides instant offline linting with source-line diagnostics. For beta.8, review your YAML files against the [GameTemplate schema](./gametemplate-schema/) and [module.yaml spec](./module-authoring/) manually.
+  The `gp-module validate` tool provides instant offline linting with source-line diagnostics. For beta.8, review your YAML files against the [GameTemplate schema](../gametemplate-schema/) and [module.yaml spec](../module-authoring/) manually.
 </DocsCallout>
 
 ### 2. Push to local registry
@@ -158,7 +158,7 @@ make modules-push MODULE_REGISTRY=localhost:5001
 This builds a versioned OCI artifact containing your `module.yaml`, `template.yaml`, `README.md`, and icon, then pushes it to the registry specified by `MODULE_REGISTRY`.
 
 <DocsCallout icon="info" title="Localhost:5001 is for local development only">
-  When deploying to a shared cluster, replace `localhost:5001` with your registry's external hostname and use appropriate credentials. See [Modules & Sources](./modules-sources/) for registry configuration.
+  When deploying to a shared cluster, replace `localhost:5001` with your registry's external hostname and use appropriate credentials. See [Modules & Sources](../modules-sources/) for registry configuration.
 </DocsCallout>
 
 ### 3. Wait for synchronization
