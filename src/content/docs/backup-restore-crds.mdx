@@ -106,14 +106,15 @@ Uses the cluster's CSI storage provider to create native snapshots at the hyperv
 
 ## Repository credentials and references
 
-Restic-snapshot backups require a Kubernetes Secret in the operator namespace (`gameplane-system` by default) containing the repository URL and credentials.
+Restic-snapshot backups require a Kubernetes Secret containing the repository URL and credentials, in the same namespace as the Backup or BackupSchedule that references it (`gameplane-games` by default). The operator looks the Secret up in the Backup's own namespace and fails the Backup if it isn't there.
 
 ```yaml
-# Secret in gameplane-system namespace
+# Secret in the Backup's namespace
 apiVersion: v1
 kind: Secret
 metadata:
   name: my-backup-repo
+  namespace: gameplane-games
   labels:
     gameplane.local/backup-destination: "true"
 type: Opaque

@@ -97,9 +97,10 @@ api:
 
 ### Optional: OIDC authentication at install time
 
-If you use OIDC (OpenID Connect) for single sign-on, seed the role mappings at install time:
+If you use OIDC (OpenID Connect) for single sign-on, the chart can configure the provider at install time. In v0.2.0-beta.8 the chart accepts only the connection settings; map IdP groups to roles per provider under **Admin Settings → Authentication** after install:
 
 ```yaml
+# v0.2.0-beta.8
 api:
   oidc:
     enabled: true
@@ -107,6 +108,15 @@ api:
     clientID: "gameplane-app"
     clientSecretRef:
       name: "oidc-client-secret"    # k8s Secret with 'clientSecret' key
+    redirectURL: "https://gameplane.your-domain.test/auth/oidc/callback"
+```
+
+From v0.3.0 the chart can also seed the provider's display name and role mappings. Add these keys only when installing a v0.3.0 or later chart:
+
+```yaml
+# v0.3.0 and later (in addition to the keys above)
+api:
+  oidc:
     displayName: "My SSO Provider"
     groupsClaim: "groups"           # OIDC claim containing group memberships
     defaultRole: "viewer"           # Default role when group mapping doesn't match
@@ -128,8 +138,13 @@ Enable default-deny policies in the games namespace to prevent pod-to-pod and ou
 ```yaml
 networkPolicies:
   enabled: true
-  # Allow kubelet liveness/readiness probes
-  kubeletCIDRs: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,169.254.0.0/16"
+  # Allow kubelet liveness/readiness probes (a list; empty falls back to
+  # RFC1918 + link-local)
+  kubeletCIDRs:
+    - 10.0.0.0/8
+    - 172.16.0.0/12
+    - 192.168.0.0/16
+    - 169.254.0.0/16
   # Allow player ingress (TCP/UDP for game traffic)
   gameIngress:
     enabled: true
@@ -137,7 +152,9 @@ networkPolicies:
   # Allow public-internet egress (downloads, mod registries)
   gameEgress:
     enabled: true
-    ports: [80, 443]
+    ports:
+      - { protocol: TCP, port: 443 }
+      - { protocol: TCP, port: 80 }
 ```
 
 ### Module sources and catalog
