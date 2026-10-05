@@ -25,6 +25,10 @@ Game servers expose real-time console and log output via WebSocket. Both require
 | `/ws/servers/{name}/logs` | WebSocket | `servers:read` | Tail the configured game log file through the agent. |
 | `/ws/servers/{name}/logs/pod?from=start\|end` | WebSocket | `servers:read` | Stream container stdout through Kubernetes; `from=start` stitches init containers and setup logs before the game container, `from=end` tails recent game output only. |
 
+<DocsCallout icon="info" title="Remote clusters (v0.3.0)">
+  Sockets target the cluster of the server you opened. Pod stdout/startup logs and PTY attach use that cluster's Kubernetes API. The RCON console, game log file tail and other agent-based streams go through the cluster's optional [agent gateway](../remote-agent-gateway/). A cluster without a compatible gateway fails these streams rather than reaching a same-named local server.
+</DocsCallout>
+
 ## Events and lifecycle
 
 The `/events` stream (Server-Sent Events) broadcasts Kubernetes watch notifications for all resources in scope. File downloads use plain HTTP rather than WebSocket.
@@ -33,7 +37,7 @@ The `/events` stream (Server-Sent Events) broadcasts Kubernetes watch notificati
 |--------|-----------|------------|-------------|
 | `/events` | SSE | `servers:read` | Cluster-resource invalidation events (not durable history; clients must poll for any events they missed while disconnected). |
 | `[GET] /servers/{name}/logs/download` | HTTP | `servers:read` | Download a server's complete game log file without opening a socket. |
-| `cluster change` | client lifecycle | `scope-aware` | When switching clusters or workspaces, cancel old WebSocket connections and open new ones in the new scope to avoid stale state. |
+| `cluster change` | client lifecycle | `scope-aware` | A socket stays bound to the cluster and namespace of the server that opened it, and reconnects retain that target. Leaving the server view closes its streams, so a new view opens fresh sockets in its own scope and never inherits stale state. |
 | `disconnect` | close + UI state | — | Use bounded exponential backoff on reconnect and display stale/disconnected state to the user instead of silently retrying forever. |
 
 ## Authentication and scope

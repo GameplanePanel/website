@@ -16,8 +16,8 @@ import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
 
 Invite and maintain local users, reset credentials, assign roles, and distinguish current capabilities from planned service accounts.
 
-<DocsCallout icon="info" title="Service accounts coming in v0.3.0">
-  Service-account creation is availability-dependent; do not document a token workflow until the shipped UI and API support it.
+<DocsCallout icon="info" title="Service accounts are planned">
+  Gameplane has no service accounts or API tokens yet; machine-to-machine tokens are planned for v1.1. Until then, give automation its own local user with the narrowest role that works, and never share a person's login.
 </DocsCallout>
 
 ## Invite a local user
@@ -65,9 +65,10 @@ Role changes affect global authorization; local and OIDC credentials have differ
 - MFA and account disablement are provider-controlled
 - The user's role and email in Gameplane mirror the provider's state
 
-<DocsCallout icon="info" title="Coming in v0.3.0">
-  Install-time OIDC role auto-mapping via `api.oidc.roleMappings` ships in v0.3.0. In beta.8, map OIDC roles manually after each login.
-</DocsCallout>
+Users who log in via OIDC have their role determined by:
+- **Per-provider group mappings** configured under **Admin Settings → Authentication**, re-evaluated against the user's IdP groups on each login
+- **Helm-seeded group mappings** (`api.oidc.groupsClaim`, `api.oidc.roleMappings`) for the Helm-configured provider, from v0.3.0; an admin can override them in the dashboard
+- **Manual assignment** when no group mapping is configured: new OIDC users get the default role (`viewer`) and an admin promotes them
 
 ## Review lifecycle and availability
 

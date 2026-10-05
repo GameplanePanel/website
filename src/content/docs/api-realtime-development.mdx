@@ -55,7 +55,7 @@ Authorization is role-based with three built-in roles (admin, operator, viewer) 
 
 Every request has a logical cluster and namespace. The API resolves these via:
 
-- **Cluster:** extracted from `?cluster={name}` query param (defaults to `local` — the install cluster), validated against the Cluster CRD registry
+- **Cluster:** extracted from `?cluster={name}` query param (defaults to `local` — the install cluster), validated against the Cluster CRD registry. Collection reads under `/fleet/*` (v0.3.0) instead combine every authorized scope, with optional cluster and namespace filters; each item carries an explicit `{cluster, namespace, name, uid}` target, and unavailable or truncated scopes are reported rather than silently dropped.
 - **Namespace:** extracted from the URL path (`/servers/{name}` → namespace from server lookup) or defaulted to the user's home namespace
 
 Scope middleware (`internal/scope/`) extracts both before the handler runs. If a user tries to access a namespace they lack permission for, the handler returns `403 Forbidden` with a safe message (no namespace-existence leakage).

@@ -73,7 +73,7 @@ Use strict templates and defensive parsers for user actions, live status, player
     {
       icon: "check",
       label: "Declare parameters, validation, labels, icons, and capability gates.",
-      text: "Each spec.capabilities.actions entry has an id, displayName, description, icon, command or commands template, parameter declarations with validation, and optional confirm/danger flags.",
+      text: "Each spec.capabilities.actions entry has an id, displayName, description, icon, command or commands template, parameter declarations with validation, and optional confirm/danger flags. A parameter can include currentFrom to pre-fill its value from a live status metric.",
     },
     {
       icon: "check",
@@ -87,6 +87,31 @@ Use strict templates and defensive parsers for user actions, live status, player
     },
   ]}
 />
+
+### Pre-fill parameters from status (v0.3.0)
+
+A parameter with `currentFrom: <metric-id>` names a `spec.capabilities.status.metrics[].id`. When the action dialog opens, the dashboard pre-fills the parameter with that metric's live value, so a "set" action starts on the current setting:
+
+- **Enum parameters:** the option matching case-insensitively (a reading of `Easy` selects `easy`)
+- **Boolean parameters:** `true` or `false`
+- **Integer parameters:** an integer parsed from the reading
+- **No reading or no valid match:** the parameter falls back to its `default`
+
+The user's own choice always wins; a reading that arrives later does not override it. Status metrics need RCON. Minecraft's `set-difficulty` action uses it like this:
+
+```yaml
+capabilities:
+  actions:
+    - id: set-difficulty
+      displayName: Set difficulty
+      command: "difficulty {{.Params.level}}"
+      params:
+        - name: level
+          type: enum
+          enum: ["peaceful", "easy", "normal", "hard"]
+          default: normal
+          currentFrom: difficulty  # pre-fill from status metric
+```
 
 ## Mods and registries
 

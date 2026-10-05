@@ -77,6 +77,10 @@ The live console is an operational channel, not a substitute for configuration o
 
 Both modes appear under the same **Console** tab in the dashboard. The template's `spec.consoleMode` field (or the default when `spec.rcon` is configured) determines which mode is available.
 
+### Command history
+
+The console input bar keeps the last 100 commands you sent (v0.3.0). Press ArrowUp to recall earlier commands and ArrowDown to move forward; pressing ArrowDown past the newest command restores the line you had not sent yet. History lasts only while the Console tab stays open and is never saved.
+
 ## Diagnose with logs
 
 Switch between container and game logs, follow live output, and export evidence before changing state.
@@ -88,6 +92,8 @@ Container startup logs (stdout/stderr from the game process) stream via the Kube
 ### Game logs
 
 The game's primary log file is configured in the template's `spec.logPath` (e.g., `/data/logs/latest.log` for Minecraft). The agent sidecar tails this file and streams it to the **Game log** source of the Logs tab via the `/logs/tail` WebSocket endpoint. Download the full log file without interrupting the stream using the **Download** button.
+
+**Log replay on tab open (v0.3.0):** When you open the Logs tab, the dashboard replays the last 500 lines of the game log before following new output, so the tab no longer opens empty. The agent caps any replay at 20,000 lines and 4 MiB, still delivers lines written while the history is sent, and does not replay again after a log rotation.
 
 ### Failed start triage
 

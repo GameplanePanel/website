@@ -25,7 +25,7 @@ Keep a local admin session open while testing the identity provider, and verify 
 
 ## Users and service accounts
 
-Invite and edit local users, reset credentials deliberately, and use API tokens for automation rather than shared logins.
+Invite and edit local users, reset credentials deliberately, and give automation its own account rather than a shared login.
 
 <DocsSectionList
   items={[
@@ -36,8 +36,8 @@ Invite and edit local users, reset credentials deliberately, and use API tokens 
     },
     {
       icon: "check",
-      label: "Service account credential rotation",
-      text: "Scope service accounts to the minimum permissions and rotate API tokens.",
+      label: "Automation accounts",
+      text: "Give each automation its own local user with the minimum role, and rotate its password. Service accounts with API tokens are planned for v1.1.",
     },
     {
       icon: "check",
@@ -47,7 +47,7 @@ Invite and edit local users, reset credentials deliberately, and use API tokens 
   ]}
 />
 
-Local users are invited via the dashboard (**Admin Settings → Users → Add user**). Set the user's initial password directly (or leave it blank for an OIDC-only account) and share it with them out of band; there is no built-in email invite flow. To create service accounts for automation, create a local user without initial password access, grant them an appropriate custom role or built-in role (usually `viewer` or `operator` scoped to specific namespaces), and have them generate API tokens from their account settings.
+Local users are invited via the dashboard (**Admin Settings → Users → Add user**). Set the user's initial password directly (or leave it blank for an OIDC-only account) and share it with them out of band; there is no built-in email invite flow. Gameplane has no API tokens yet. For automation, create a dedicated local user with an appropriate custom or built-in role (usually `viewer` or `operator` scoped to specific namespaces) and have scripts sign in as it, sending the session cookie and CSRF header as shown in the [REST API reference](../rest-api-reference/).
 
 ## Roles and permissions
 
@@ -115,13 +115,15 @@ When a user logs in via OIDC for the first time, Gameplane creates a user row wi
 
 ### Install-time role mappings
 
-> **Coming in v0.3.0**
-> 
-> Install-time Helm role mappings eliminate the need for a bootstrap-admin account in OIDC-only deployments. Operators configure group mappings at install time, and the first user to log in receives the correct role immediately based on their IdP group membership.
+<DocsCallout icon="milestone" title="Coming in v0.3.0">
+  Install-time role mappings are not available in v0.2.0-beta.8.
+</DocsCallout>
 
-When deploying with Helm, set `api.oidc.groupsClaim` to the name of your IdP's groups claim (e.g., `"groups"`), and configure `api.oidc.roleMappings.{admin,operator,viewer}` with a comma-separated list of group names for each role. On first login, Gameplane matches the user's group membership against the mappings and assigns the highest-privilege matching role.
+Helm role mappings eliminate the need for a `bootstrap-admin` account in OIDC-only deployments. Operators configure group mappings at install time, and the first user to log in receives the correct role immediately based on their IdP group membership.
 
-After deployment, admins can override role mappings through the dashboard without restarting the API. Helm upgrades preserve dashboard customizations — they do not overwrite group mappings that have already been edited in the UI.
+When deploying with Helm, set `api.oidc.enabled=true`, `api.oidc.groupsClaim` to the name of your IdP's groups claim (e.g., `"groups"`), and configure `api.oidc.roleMappings.{admin,operator,viewer}` with a list of group names for each role. On first login, Gameplane matches the user's group membership against the mappings and assigns the highest-privilege matching role.
+
+After deployment, admins can override role mappings through the dashboard without restarting the API. Helm upgrades preserve dashboard customizations — they do not overwrite group mappings that have already been edited in the UI. For detailed Helm value examples and troubleshooting, see the [OIDC provider setup documentation](https://github.com/ValgulNecron/Gameplane/blob/master/docs/oidc.md#role-mapping-at-install-time-no-bootstrap-admin-required) on GitHub.
 
 <DocsQuickReference
   label="LOCKOUT PREVENTION"

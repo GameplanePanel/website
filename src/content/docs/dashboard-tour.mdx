@@ -14,27 +14,27 @@ import DocsCallout from "../../components/docs/DocsCallout.astro";
 import DocsSectionList from "../../components/docs/DocsSectionList.astro";
 import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
 
-Start with one cluster selected. Every list, metric, and action inherits that scope.
+The dashboard brings every server you are authorized to see into one view. Start from the fleet overview, narrow it with filters, and open a server to work on it.
 
-<DocsCallout icon="info" title="Cluster scope applies everywhere">
-  Start with one cluster selected. Every list, metric, and action inherits that scope.
+<DocsCallout icon="milestone" title="Multi-cluster view in v0.3.0">
+  In v0.2.0-beta.8 a top-bar cluster selector scopes every list, metric, and action to one cluster. From v0.3.0 the dashboard, Servers, Backups and Search combine every registered cluster you can access, and an optional Location filter narrows them.
 </DocsCallout>
 
 ## Orientation
 
-The dashboard is a cluster-scoped control surface. Use the top bar to change context without losing your place.
+Opening a server pins it to its own cluster and namespace, so changing a list filter never retargets the server you are working on.
 
 <DocsSectionList
   items={[
     {
       icon: "boxes",
-      label: "Cluster selector",
-      text: "Scopes fleet metrics, lists, and creation flows.",
+      label: "Location filter",
+      text: "Narrows the dashboard, Servers and Backups to one registered cluster; the combined view is the default (v0.3.0).",
     },
     {
       icon: "search",
       label: "Global search",
-      text: "Jumps to any server by name.",
+      text: "Finds any server by name across the clusters you can access.",
     },
     {
       icon: "info",

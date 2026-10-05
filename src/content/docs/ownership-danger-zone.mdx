@@ -18,7 +18,7 @@ import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
 <DocsArticleMeta groupId="servers-config" readTime="13 MIN" />
 
 <DocsCallout icon="shield-alert" title="Coming in v0.3.0: owner-or-admin tightening">
-  Ownership, collaborators, transfer, wipe, and delete are already available in v0.2.0-beta.8. In beta.8, users with the operator role can still transfer ownership, wipe data, or delete servers they don't own; v0.3.0 restricts these four operations to the server's owner or a cluster admin only.
+  Ownership, collaborators, transfer, wipe, and delete are available in v0.2.0-beta.8, where operator-role users can also run them on servers they don't own. From v0.3.0, transferring ownership, editing collaborators, wiping data and deleting a server need the server's owner or an admin. Servers with no recorded owner (for example created with kubectl or GitOps) can then be transferred, wiped or deleted only by an admin.
 </DocsCallout>
 
 Ownership controls accountability and destructive authority; collaboration grants operator access to one server. Both require explicit owner decisions before irreversible actions like data wiping and server deletion.

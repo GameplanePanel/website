@@ -70,7 +70,8 @@ Collect **all of the following by digest** (immutable hash references, not mutab
   - `ghcr.io/valgulnecron/gameplane/tunnel-tailscale` (via `tunnelImages.tailscale`, relay tunnel components, optional)
   - `ghcr.io/valgulnecron/gameplane/tunnel-playit` (via `tunnelImages.playit`, relay tunnel components, optional)
 - **Game modules** — all bundles from `ghcr.io/valgulnecron/gameplane-modules`, versioned per your module source config
-- **CRD manifests** — the eight CRD schemas (bundled in the chart)
+- **CRD manifests** — the CRD schemas (bundled in the chart)
+- **CRD-apply hook image** — the `kubectl` image behind `crds.autoApply.image` (default `registry.k8s.io/kubectl:v1.36.3`). The hook runs on every `helm upgrade`, and also on a `helm install` over Gameplane CRDs that an earlier, uninstalled release left behind. A genuinely fresh first install does not run it. Any image with `kubectl` on its `PATH` works.
 - **Cosign public keys** — `cosign.pub` (current key, ECDSA P-256) and `cosign-legacy.pub` (pre-rotation, Ed25519)
 - **Signatures** — Cosign signatures (recorded in Rekor for v0.2.0-beta.8 onward) and SBOMs, available as separate OCI artifacts in the same registry namespace
 
@@ -218,6 +219,12 @@ operator:
   configInitImage: registry.internal.corp/busybox  # instead of busybox
   resticImage: registry.internal.corp/restic:latest  # instead of restic/restic
   sentinelImage: registry.internal.corp/gameplane/sentinel:0.2.0-beta.8
+
+# Mirror the CRD-apply hook's kubectl image (needed at upgrade time and on
+# an install over leftover CRDs)
+crds:
+  autoApply:
+    image: registry.internal.corp/kubectl:v1.36.3
 ```
 
 ### Pre-provision dependencies

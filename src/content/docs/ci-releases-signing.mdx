@@ -86,6 +86,8 @@ A `v` tag builds and signs images, packages the OCI chart, creates release notes
 
 Release images carry Cosign signatures recorded in the public Sigstore Rekor transparency log. Verify any released or edge image with the `cosign.pub` key at the repo root. Pre-rotation releases (v0.2.0-beta.7 and earlier) used the retired Ed25519 key and require `cosign-legacy.pub` with the `--insecure-ignore-tlog=true` flag (see [Key Rotation](../credential-rotation/) for trust continuity).
 
+Signing is mandatory and fail-closed: without `COSIGN_PRIVATE_KEY` the release job fails before anything is pushed. Every signing job (`release.yaml`, `publish-edge.yaml`, `images.yaml` and `republish-modules.yaml`) runs in the `release-signing` environment, whose deployment policy admits only `master` and `v*` tags, so a run on any other ref never receives the key. Images are pushed by digest, signed and verified, and only then tagged, so a published tag always names a signed image.
+
 ---
 
 ## Next guide
