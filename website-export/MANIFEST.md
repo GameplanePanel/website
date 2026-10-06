@@ -40,3 +40,22 @@ The lunaris library (`H:`-prefixed ids and variables) was removed from the desig
   of `design-assets/gameplane-icon.png`; Not Found `vh8hz` shows `design-assets/gameplane-mark.png` (PNGs rendered from
   the SVG logos, since Pencil does not render SVG image fills).
 - Re-exported: JSON for the 102 screens/components (8 changed), screenshots for all 102 (component instances changed).
+
+## 2026-10-06 incremental: docs sync with the main repo (v0.3.0 docs)
+
+Docs screens updated to mirror the `docs: sync the docs with the main repo's October changes` commit (pages under
+`src/content/docs/`). Condensed text only, plus new sections where a page gained an H2; v0.3.0-only content is marked.
+
+- New screens: `QHFdH` (Docs — Remote Agent Gateway, copied from `CuW6O`) and `wCt6V` (Docs — Server Networking &
+  Tunnels, copied from `s3NwF`).
+- New sections: `OIN7m` (Multiple clusters and the gateway), `CuW6O` (Manage independent clusters), `D4SNhN` (CRD updates
+  on upgrade, Upgrade notes for v0.3.0), `KFLCi` (API ↔ remote gateway), `N4TBV` (Submitting a change, Game modules and
+  submodules), `TESyw` (folder delete item), `s3NwF` (relay tunnels item).
+- Text and pager updates: `zeM79` `A2sAtw` `SKMOT` `QdLzE` `P5qsD` `rW1Ux` `n8pnD` `HpLFh` `X0DeYH` `p5Gci` `BEcZK`
+  `b5u3Ui` `o7PQv` `ydcNa` `cpCjN` `Nnd3Y` `rqx1v` `b5srx` `aZAEs` `gEOuV` `mYDXb` `yuCG9` `ZwM1N` `VgF1s`.
+- Heights changed: `OIN7m` 1000, `CuW6O` 1120, `D4SNhN` 1000, `N4TBV` 960, `HpLFh` 1280, `BEcZK` 1000, `VgF1s` 1000,
+  `QHFdH` 1140.
+- Reviewed with no change: `VtYGz` `kTRsn` `ZTnNa` `upO5i` `eDaA6` `ac8lF` (nothing on the screen maps to the page diff;
+  not re-exported).
+- JSON: `Print(JSON.stringify(Get(id, {depth: 30, includePathGeometry: true})))`, re-serialized with `jq .`; `jq empty`
+  passes, zero `"..."` elisions, node counts match the live file. Screenshots: `Export([id], "png", …, {scale: 2})`.

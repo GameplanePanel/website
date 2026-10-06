@@ -1,9 +1,9 @@
 {
   "type": "frame",
-  "id": "BEcZK",
+  "id": "wCt6V",
   "x": 0,
-  "y": 62548,
-  "name": "Screen/Docs \u2014 High Availability",
+  "y": 117108,
+  "name": "Screen/Docs — Server Networking & Tunnels",
   "theme": {
     "semantic": "dark"
   },
@@ -13,7 +13,7 @@
   "fill": "$background/background",
   "children": [
     {
-      "id": "P84epB",
+      "id": "w6l1R",
       "type": "ref",
       "ref": "K2Rt4H",
       "height": "fill_container",
@@ -22,7 +22,7 @@
     },
     {
       "type": "frame",
-      "id": "KTN1C",
+      "id": "fhXV7",
       "name": "Docs Main",
       "width": "fill_container",
       "height": "fill_container",
@@ -30,23 +30,23 @@
       "layout": "vertical",
       "children": [
         {
-          "id": "JSy36",
+          "id": "e43QYM",
           "type": "ref",
           "ref": "SOdlr",
           "name": "Docs Top Bar",
           "width": "fill_container",
           "descendants": {
             "NImey": {
-              "content": "Platform"
+              "content": "Operate"
             },
             "ikbi6": {
-              "content": "High Availability"
+              "content": "Server Networking & Tunnels"
             }
           }
         },
         {
           "type": "frame",
-          "id": "a44T55",
+          "id": "LwBO9",
           "name": "Docs Article Body",
           "clip": true,
           "width": "fill_container",
@@ -56,7 +56,7 @@
           "children": [
             {
               "type": "frame",
-              "id": "RvmCv",
+              "id": "YWwHg",
               "name": "Docs Article",
               "width": 780,
               "layout": "vertical",
@@ -64,10 +64,10 @@
               "children": [
                 {
                   "type": "text",
-                  "id": "cI848",
+                  "id": "NH0sG",
                   "name": "Article Eyebrow",
                   "fill": "$accent/accent",
-                  "content": "PLATFORM",
+                  "content": "CONFIGURE",
                   "fontFamily": "JetBrains Mono",
                   "fontSize": 11,
                   "fontWeight": "600",
@@ -75,12 +75,12 @@
                 },
                 {
                   "type": "text",
-                  "id": "kQWe8",
+                  "id": "gp569",
                   "name": "Article Title",
                   "fill": "$foreground/foreground",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "High availability and failure domains",
+                  "content": "Server Networking & Tunnels",
                   "lineHeight": 1.1,
                   "fontFamily": "JetBrains Mono",
                   "fontSize": 30,
@@ -88,12 +88,12 @@
                 },
                 {
                   "type": "text",
-                  "id": "fPOMe",
+                  "id": "i2Wqc",
                   "name": "Article Lead",
                   "fill": "$muted",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "Replicate only supported components, remove avoidable single points of failure, and test disruption against explicit objectives.",
+                  "content": "Route player connections through an external relay when you lack a public IP, port-forwarding, or a cluster load balancer. A tunnel layers over the server's backing Service; it is not a fifth expose mode. Use it only when direct exposure is unavailable.",
                   "lineHeight": 1.45,
                   "fontFamily": "Geist",
                   "fontSize": 15,
@@ -101,24 +101,24 @@
                 },
                 {
                   "type": "frame",
-                  "id": "RGdvT",
+                  "id": "wMeUk",
                   "name": "Article Metadata",
                   "gap": 8,
                   "alignItems": "center",
                   "children": [
                     {
-                      "id": "vMsNv",
+                      "id": "urMRD",
                       "type": "ref",
                       "ref": "NZPtq",
                       "name": "Meta Chip 0",
                       "descendants": {
                         "NLG8t": {
-                          "content": "PRODUCTION GUIDE"
+                          "content": "NETWORKING"
                         }
                       }
                     },
                     {
-                      "id": "sk9eO",
+                      "id": "LBuDl",
                       "type": "ref",
                       "ref": "EbSsA",
                       "name": "Meta Chip 1",
@@ -129,13 +129,13 @@
                       }
                     },
                     {
-                      "id": "M9Uq4",
+                      "id": "vyBDU",
                       "type": "ref",
                       "ref": "EbSsA",
                       "name": "Meta Chip 2",
                       "descendants": {
                         "yb6zz": {
-                          "content": "17 MIN"
+                          "content": "18 MIN"
                         }
                       }
                     }
@@ -143,7 +143,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "MjZyO",
+                  "id": "QpxML",
                   "name": "Article Callout",
                   "width": "fill_container",
                   "fill": "$accent/soft",
@@ -160,22 +160,22 @@
                   "children": [
                     {
                       "type": "icon",
-                      "id": "fVgQG",
+                      "id": "tqABK",
                       "name": "Article Callout Icon",
                       "width": 16,
                       "height": 16,
-                      "icon": "shield-check",
+                      "icon": "workflow",
                       "library": "lucide",
                       "fill": "$accent/soft-foreground"
                     },
                     {
                       "type": "text",
-                      "id": "u01PJ2",
+                      "id": "ib4Nk",
                       "name": "Article Callout Text",
                       "fill": "$accent/soft-foreground",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "Replica count alone is not HA; edge, database, storage, scheduling capacity, and leader behavior must survive the same failure.",
+                      "content": "Tunnels add operational cost. Each tunnel-enabled server gets its own always-on tunnel pod to hold the public address, even while the game sleeps.",
                       "fontFamily": "Geist",
                       "fontSize": 12.5,
                       "fontWeight": "normal"
@@ -184,7 +184,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "x7BPnI",
+                  "id": "ecL1w",
                   "name": "Guide Section 1",
                   "width": "fill_container",
                   "layout": "vertical",
@@ -192,22 +192,22 @@
                   "children": [
                     {
                       "type": "text",
-                      "id": "RaqRE",
+                      "id": "x3LjQ",
                       "name": "Section Title 1",
                       "fill": "$foreground/foreground",
-                      "content": "Define the supported contract",
+                      "content": "When to use a tunnel",
                       "fontFamily": "JetBrains Mono",
                       "fontSize": 17,
                       "fontWeight": "600"
                     },
                     {
                       "type": "text",
-                      "id": "IxKdS",
+                      "id": "w26CKe",
                       "name": "Section Body 1",
                       "fill": "$muted",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "Publish replica safety, leader election, migration ownership, session behavior, and remaining singleton constraints.",
+                      "content": "Use a tunnel when you lack a public IP, port-forwarding, or cluster load balancer access—but not if you already have a working LoadBalancer or public IP.",
                       "lineHeight": 1.45,
                       "fontFamily": "Geist",
                       "fontSize": 13,
@@ -215,7 +215,7 @@
                     },
                     {
                       "type": "frame",
-                      "id": "wqmnO",
+                      "id": "LQST4",
                       "name": "Section List 1",
                       "width": "fill_container",
                       "fill": "$surface/surface",
@@ -232,7 +232,7 @@
                       "children": [
                         {
                           "type": "frame",
-                          "id": "w6Grg",
+                          "id": "xPwvX",
                           "name": "Section 1 Item 0",
                           "width": "fill_container",
                           "gap": 8,
@@ -240,7 +240,7 @@
                           "children": [
                             {
                               "type": "icon",
-                              "id": "z7IhGq",
+                              "id": "E5sNSW",
                               "name": "Section 1 Item Icon 0",
                               "width": 13,
                               "height": 13,
@@ -250,12 +250,12 @@
                             },
                             {
                               "type": "text",
-                              "id": "ZgwJi",
+                              "id": "d2qBrm",
                               "name": "Section 1 Item Text 0",
                               "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
-                              "content": "List supported replica counts and leader-election behavior.",
+                              "content": "Use when behind CGNAT or restrictive ISP",
                               "fontFamily": "Geist",
                               "fontSize": 12.5,
                               "fontWeight": "normal"
@@ -264,7 +264,7 @@
                         },
                         {
                           "type": "frame",
-                          "id": "CICGY",
+                          "id": "axBJn",
                           "name": "Section 1 Item 1",
                           "width": "fill_container",
                           "gap": 8,
@@ -272,7 +272,7 @@
                           "children": [
                             {
                               "type": "icon",
-                              "id": "myq38",
+                              "id": "dJ9Ku",
                               "name": "Section 1 Item Icon 1",
                               "width": 13,
                               "height": 13,
@@ -282,12 +282,12 @@
                             },
                             {
                               "type": "text",
-                              "id": "uZVsb",
+                              "id": "brkGI",
                               "name": "Section 1 Item Text 1",
                               "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
-                              "content": "State database requirements and embedded-mode limitations.",
+                              "content": "Use when port-forwarding is unavailable",
                               "fontFamily": "Geist",
                               "fontSize": 12.5,
                               "fontWeight": "normal"
@@ -296,7 +296,7 @@
                         },
                         {
                           "type": "frame",
-                          "id": "DvIaC",
+                          "id": "pVX9U",
                           "name": "Section 1 Item 2",
                           "width": "fill_container",
                           "gap": 8,
@@ -304,7 +304,7 @@
                           "children": [
                             {
                               "type": "icon",
-                              "id": "KglS2",
+                              "id": "kpMqf",
                               "name": "Section 1 Item Icon 2",
                               "width": 13,
                               "height": 13,
@@ -314,12 +314,44 @@
                             },
                             {
                               "type": "text",
-                              "id": "x1Y5i",
+                              "id": "WTt4d",
                               "name": "Section 1 Item Text 2",
                               "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
-                              "content": "Separate cluster-scoped dependencies from application replicas.",
+                              "content": "Use when LoadBalancer is not an option",
+                              "fontFamily": "Geist",
+                              "fontSize": 12.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Ro06n",
+                          "name": "Section 1 Item 3",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "Y8GG6",
+                              "name": "Section 1 Item Icon 2",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "check",
+                              "library": "lucide",
+                              "fill": "$accent/accent"
+                            },
+                            {
+                              "type": "text",
+                              "id": "At1A7",
+                              "name": "Section 1 Item Text 2",
+                              "fill": "$default/foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Do not use if you already have public IP and working port-forwarding",
                               "fontFamily": "Geist",
                               "fontSize": 12.5,
                               "fontWeight": "normal"
@@ -332,7 +364,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "z61f7",
+                  "id": "p23tk",
                   "name": "Guide Section 2",
                   "width": "fill_container",
                   "layout": "vertical",
@@ -340,22 +372,22 @@
                   "children": [
                     {
                       "type": "text",
-                      "id": "OMct3",
+                      "id": "umjnk",
                       "name": "Section Title 2",
                       "fill": "$foreground/foreground",
-                      "content": "Spread dependencies",
+                      "content": "Choose a provider",
                       "fontFamily": "JetBrains Mono",
                       "fontSize": 17,
                       "fontWeight": "600"
                     },
                     {
                       "type": "text",
-                      "id": "ew7MI",
+                      "id": "Ze6o1",
                       "name": "Section Body 2",
                       "fill": "$muted",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "Place safe replicas and durable dependencies across nodes, zones, and independent failure domains.",
+                      "content": "Three relay providers are supported: frp for production, Tailscale for private networks, and playit.gg for casual testing.",
                       "lineHeight": 1.45,
                       "fontFamily": "Geist",
                       "fontSize": 13,
@@ -363,7 +395,7 @@
                     },
                     {
                       "type": "frame",
-                      "id": "Eerkx",
+                      "id": "nsT2h",
                       "name": "Section List 2",
                       "width": "fill_container",
                       "fill": "$surface/surface",
@@ -380,7 +412,7 @@
                       "children": [
                         {
                           "type": "frame",
-                          "id": "R0F3n0",
+                          "id": "E58cZg",
                           "name": "Section 2 Item 0",
                           "width": "fill_container",
                           "gap": 8,
@@ -388,7 +420,7 @@
                           "children": [
                             {
                               "type": "icon",
-                              "id": "B50gb",
+                              "id": "xVTSt",
                               "name": "Section 2 Item Icon 0",
                               "width": 13,
                               "height": 13,
@@ -398,12 +430,12 @@
                             },
                             {
                               "type": "text",
-                              "id": "e155H",
+                              "id": "F4ZRG4",
                               "name": "Section 2 Item Text 0",
                               "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
-                              "content": "Use anti-affinity, topology spread, and appropriate disruption budgets.",
+                              "content": "Use frp for production servers with custom public domains",
                               "fontFamily": "Geist",
                               "fontSize": 12.5,
                               "fontWeight": "normal"
@@ -412,7 +444,7 @@
                         },
                         {
                           "type": "frame",
-                          "id": "jpMFk",
+                          "id": "gfsap",
                           "name": "Section 2 Item 1",
                           "width": "fill_container",
                           "gap": 8,
@@ -420,7 +452,7 @@
                           "children": [
                             {
                               "type": "icon",
-                              "id": "D8rBh",
+                              "id": "OvSBS",
                               "name": "Section 2 Item Icon 1",
                               "width": 13,
                               "height": 13,
@@ -430,12 +462,12 @@
                             },
                             {
                               "type": "text",
-                              "id": "qqtdj",
+                              "id": "cB687",
                               "name": "Section 2 Item Text 1",
                               "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
-                              "content": "Provide redundant edge, supported HA database, storage, DNS, and backups.",
+                              "content": "Use Tailscale for private play on your tailnet (free, no VPS)",
                               "fontFamily": "Geist",
                               "fontSize": 12.5,
                               "fontWeight": "normal"
@@ -444,7 +476,7 @@
                         },
                         {
                           "type": "frame",
-                          "id": "eM6vS",
+                          "id": "WnLt6",
                           "name": "Section 2 Item 2",
                           "width": "fill_container",
                           "gap": 8,
@@ -452,7 +484,7 @@
                           "children": [
                             {
                               "type": "icon",
-                              "id": "p23N9",
+                              "id": "de5Cc",
                               "name": "Section 2 Item Icon 2",
                               "width": 13,
                               "height": 13,
@@ -462,12 +494,12 @@
                             },
                             {
                               "type": "text",
-                              "id": "KwrPd",
+                              "id": "mvLoP",
                               "name": "Section 2 Item Text 2",
                               "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
-                              "content": "Reserve failover capacity instead of saturating every node.",
+                              "content": "Use playit.gg for free public relay and quick testing",
                               "fontFamily": "Geist",
                               "fontSize": 12.5,
                               "fontWeight": "normal"
@@ -480,7 +512,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "lO97Y",
+                  "id": "jQuKg",
                   "name": "Guide Section 3",
                   "width": "fill_container",
                   "layout": "vertical",
@@ -488,22 +520,22 @@
                   "children": [
                     {
                       "type": "text",
-                      "id": "bHDsD",
+                      "id": "Q1UYn",
                       "name": "Section Title 3",
                       "fill": "$foreground/foreground",
-                      "content": "Test disruption",
+                      "content": "Get the tunnel running",
                       "fontFamily": "JetBrains Mono",
                       "fontSize": 17,
                       "fontWeight": "600"
                     },
                     {
                       "type": "text",
-                      "id": "CX9P4",
+                      "id": "mOiu6",
                       "name": "Section Body 3",
                       "fill": "$muted",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "Drain or terminate one dependency at a time and measure availability, reconciliation continuity, handoff, sessions, jobs, and audit.",
+                      "content": "Set credentials via dashboard (recommended), API, or kubectl with proper ownerReferences. The tunnel pod connects and serves players even while the game sleeps.",
                       "lineHeight": 1.45,
                       "fontFamily": "Geist",
                       "fontSize": 13,
@@ -511,7 +543,7 @@
                     },
                     {
                       "type": "frame",
-                      "id": "aKK2B",
+                      "id": "WCLNY",
                       "name": "Quick Reference",
                       "width": "fill_container",
                       "fill": "$surface/tertiary",
@@ -525,10 +557,10 @@
                       "children": [
                         {
                           "type": "text",
-                          "id": "Mh26l",
+                          "id": "v9skG",
                           "name": "Quick Reference Label",
                           "fill": "$accent/accent",
-                          "content": "HA TEST",
+                          "content": "SETUP CHECKLIST",
                           "fontFamily": "JetBrains Mono",
                           "fontSize": 9,
                           "fontWeight": "600",
@@ -536,30 +568,30 @@
                         },
                         {
                           "type": "text",
-                          "id": "yS5D3",
+                          "id": "Uj44H",
                           "name": "Quick Reference Line 1",
                           "fill": "$foreground/foreground",
-                          "content": "01  Replicate only replica-safe parts (Operator 2+; API stays at 1)",
+                          "content": "01  Prepare relay credentials (frp token, Tailscale key, or playit secret)",
                           "fontFamily": "JetBrains Mono",
                           "fontSize": 11.5,
                           "fontWeight": "normal"
                         },
                         {
                           "type": "text",
-                          "id": "FQ5Ee",
+                          "id": "y7vKcf",
                           "name": "Quick Reference Line 2",
                           "fill": "$foreground/foreground",
-                          "content": "02  One domain loss leaves edge, control plane, DB, storage, capacity",
+                          "content": "02  Create GameServer with tunnel enabled and provider configured",
                           "fontFamily": "JetBrains Mono",
                           "fontSize": 11.5,
                           "fontWeight": "normal"
                         },
                         {
                           "type": "text",
-                          "id": "U81tQl",
+                          "id": "VSWdf",
                           "name": "Quick Reference Line 3",
                           "fill": "$foreground/foreground",
-                          "content": "03  Test leader, DB, ingress, and node loss; record RTO/RPO",
+                          "content": "03  Provide credentials via dashboard; verify TunnelReady condition",
                           "fontFamily": "JetBrains Mono",
                           "fontSize": 11.5,
                           "fontWeight": "normal"
@@ -570,7 +602,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "OI6L1",
+                  "id": "NjQFY",
                   "name": "Article Next Link",
                   "width": "fill_container",
                   "stroke": "$border/border",
@@ -590,14 +622,14 @@
                   "children": [
                     {
                       "type": "frame",
-                      "id": "lCnJk",
+                      "id": "v96YGE",
                       "name": "Next Link Text",
                       "layout": "vertical",
                       "gap": 2,
                       "children": [
                         {
                           "type": "text",
-                          "id": "NWAvv",
+                          "id": "j8FigB",
                           "name": "Next Link Eyebrow",
                           "fill": "$field/placeholder",
                           "content": "NEXT GUIDE",
@@ -607,10 +639,10 @@
                         },
                         {
                           "type": "text",
-                          "id": "V8WoE",
+                          "id": "HGwKX",
                           "name": "Next Link Title",
                           "fill": "$foreground/foreground",
-                          "content": "Upgrade execution",
+                          "content": "Cluster and storage operations",
                           "fontFamily": "JetBrains Mono",
                           "fontSize": 13,
                           "fontWeight": "500"
@@ -619,7 +651,7 @@
                     },
                     {
                       "type": "icon",
-                      "id": "IvhOd",
+                      "id": "OpG7W",
                       "name": "Next Link Icon",
                       "width": 15,
                       "height": 15,
@@ -633,7 +665,7 @@
             },
             {
               "type": "frame",
-              "id": "L5jyv",
+              "id": "xZXwa",
               "name": "Docs Page Aside",
               "width": 250,
               "layout": "vertical",
@@ -641,7 +673,7 @@
               "children": [
                 {
                   "type": "frame",
-                  "id": "HUHdQ",
+                  "id": "T1B3x",
                   "name": "Docs Table of Contents",
                   "width": "fill_container",
                   "fill": "$surface/secondary",
@@ -655,7 +687,7 @@
                   "children": [
                     {
                       "type": "text",
-                      "id": "JLfCO",
+                      "id": "djHkp",
                       "name": "TOC Label",
                       "fill": "$field/placeholder",
                       "content": "ON THIS PAGE",
@@ -666,7 +698,7 @@
                     },
                     {
                       "type": "frame",
-                      "id": "bwZUS",
+                      "id": "A14VL",
                       "name": "TOC Row 0",
                       "width": "fill_container",
                       "gap": 8,
@@ -674,7 +706,7 @@
                       "children": [
                         {
                           "type": "icon",
-                          "id": "VWlvw",
+                          "id": "NbJZz",
                           "name": "TOC Icon 0",
                           "width": 12,
                           "height": 12,
@@ -684,10 +716,10 @@
                         },
                         {
                           "type": "text",
-                          "id": "I0Er4S",
+                          "id": "WHrxu",
                           "name": "TOC Text 0",
                           "fill": "$foreground/foreground",
-                          "content": "HA contract",
+                          "content": "When to use",
                           "fontFamily": "Geist",
                           "fontSize": 12.5,
                           "fontWeight": "500"
@@ -696,7 +728,7 @@
                     },
                     {
                       "type": "frame",
-                      "id": "fnPaC",
+                      "id": "q3eqR",
                       "name": "TOC Row 1",
                       "width": "fill_container",
                       "gap": 8,
@@ -704,7 +736,7 @@
                       "children": [
                         {
                           "type": "icon",
-                          "id": "OfSOK",
+                          "id": "hmKLi",
                           "name": "TOC Icon 1",
                           "width": 12,
                           "height": 12,
@@ -714,10 +746,10 @@
                         },
                         {
                           "type": "text",
-                          "id": "x4HLpq",
+                          "id": "MHQKJ",
                           "name": "TOC Text 1",
                           "fill": "$muted",
-                          "content": "Failure domains",
+                          "content": "Choose provider",
                           "fontFamily": "Geist",
                           "fontSize": 12.5,
                           "fontWeight": "normal"
@@ -726,7 +758,7 @@
                     },
                     {
                       "type": "frame",
-                      "id": "T1wgS",
+                      "id": "w7ejRv",
                       "name": "TOC Row 2",
                       "width": "fill_container",
                       "gap": 8,
@@ -734,7 +766,7 @@
                       "children": [
                         {
                           "type": "icon",
-                          "id": "Y83lJ",
+                          "id": "D1SRJ",
                           "name": "TOC Icon 2",
                           "width": 12,
                           "height": 12,
@@ -744,10 +776,10 @@
                         },
                         {
                           "type": "text",
-                          "id": "O8HzB",
+                          "id": "Unf3w",
                           "name": "TOC Text 2",
                           "fill": "$muted",
-                          "content": "Disruption tests",
+                          "content": "Setup",
                           "fontFamily": "Geist",
                           "fontSize": 12.5,
                           "fontWeight": "normal"
@@ -756,7 +788,7 @@
                     },
                     {
                       "type": "rectangle",
-                      "id": "vooOq",
+                      "id": "l7z12m",
                       "name": "TOC Divider",
                       "fill": "$border/border",
                       "width": "fill_container",
@@ -764,7 +796,7 @@
                     },
                     {
                       "type": "text",
-                      "id": "v1u42",
+                      "id": "xuKZW",
                       "name": "Coverage Label",
                       "fill": "$field/placeholder",
                       "content": "COVERS",
@@ -775,7 +807,7 @@
                     },
                     {
                       "type": "frame",
-                      "id": "X1k88w",
+                      "id": "lzYNT",
                       "name": "Coverage Row 0",
                       "width": "fill_container",
                       "gap": 7,
@@ -783,7 +815,7 @@
                       "children": [
                         {
                           "type": "icon",
-                          "id": "xDD93",
+                          "id": "wi1jd",
                           "name": "Coverage Icon 0",
                           "width": 12,
                           "height": 12,
@@ -793,10 +825,10 @@
                         },
                         {
                           "type": "text",
-                          "id": "i0FaA",
+                          "id": "bVJ0m",
                           "name": "Coverage Text 0",
                           "fill": "$muted",
-                          "content": "Replicas",
+                          "content": "Tunnels",
                           "fontFamily": "Geist",
                           "fontSize": 12,
                           "fontWeight": "normal"
@@ -805,7 +837,7 @@
                     },
                     {
                       "type": "frame",
-                      "id": "cGs57",
+                      "id": "d11U9k",
                       "name": "Coverage Row 1",
                       "width": "fill_container",
                       "gap": 7,
@@ -813,7 +845,7 @@
                       "children": [
                         {
                           "type": "icon",
-                          "id": "Rtor4",
+                          "id": "IxKhV",
                           "name": "Coverage Icon 1",
                           "width": 12,
                           "height": 12,
@@ -823,10 +855,10 @@
                         },
                         {
                           "type": "text",
-                          "id": "UrCKb",
+                          "id": "iZ8XR",
                           "name": "Coverage Text 1",
                           "fill": "$muted",
-                          "content": "Failure domains",
+                          "content": "Relay",
                           "fontFamily": "Geist",
                           "fontSize": 12,
                           "fontWeight": "normal"
@@ -835,7 +867,7 @@
                     },
                     {
                       "type": "frame",
-                      "id": "pyeqS",
+                      "id": "hscYM",
                       "name": "Coverage Row 2",
                       "width": "fill_container",
                       "gap": 7,
@@ -843,7 +875,7 @@
                       "children": [
                         {
                           "type": "icon",
-                          "id": "VCmsZ",
+                          "id": "k8XzND",
                           "name": "Coverage Icon 2",
                           "width": 12,
                           "height": 12,
@@ -853,10 +885,10 @@
                         },
                         {
                           "type": "text",
-                          "id": "Y9sYZW",
+                          "id": "xbzGV",
                           "name": "Coverage Text 2",
                           "fill": "$muted",
-                          "content": "RTO",
+                          "content": "NAT traversal",
                           "fontFamily": "Geist",
                           "fontSize": 12,
                           "fontWeight": "normal"
@@ -867,7 +899,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "ZEkCJ",
+                  "id": "L2y0YZ",
                   "name": "Edit Page Card",
                   "width": "fill_container",
                   "fill": "$background/background",
@@ -881,7 +913,7 @@
                   "children": [
                     {
                       "type": "text",
-                      "id": "FvE2q",
+                      "id": "cKx0M",
                       "name": "Edit Page Title",
                       "fill": "$foreground/foreground",
                       "content": "Improve this page",
@@ -891,7 +923,7 @@
                     },
                     {
                       "type": "text",
-                      "id": "TEBAG",
+                      "id": "iHwdm",
                       "name": "Edit Page Body",
                       "fill": "$muted",
                       "textGrowth": "fixed-width",
@@ -904,14 +936,14 @@
                     },
                     {
                       "type": "frame",
-                      "id": "FgOLs",
+                      "id": "dSWJG",
                       "name": "Edit Page Link",
                       "gap": 6,
                       "alignItems": "center",
                       "children": [
                         {
                           "type": "text",
-                          "id": "O685l",
+                          "id": "M4qDPO",
                           "name": "Edit Page Link Text",
                           "fill": "$accent/soft-foreground",
                           "content": "Edit this page",
@@ -921,7 +953,7 @@
                         },
                         {
                           "type": "icon",
-                          "id": "j3yNtH",
+                          "id": "cHbQk",
                           "name": "Edit Page Link Icon",
                           "width": 12,
                           "height": 12,

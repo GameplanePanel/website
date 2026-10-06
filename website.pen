@@ -1,5 +1,5 @@
 {
-  "version": "2.15",
+  "version": "2.20",
   "children": [
     {
       "type": "frame",
@@ -1151,7 +1151,7 @@
                     "type": "image",
                     "enabled": true,
                     "url": "design-assets/gameplane-icon.png",
-                    "mode": "fill"
+                    "mode": "cover"
                   },
                   "cornerRadius": "$radius/md",
                   "justifyContent": "center",
@@ -4212,7 +4212,7 @@
       },
       "clip": true,
       "width": 1440,
-      "height": 900,
+      "height": 1000,
       "fill": "$background/background",
       "children": [
         {
@@ -4680,7 +4680,7 @@
                       "fill": "$muted",
                       "textGrowth": "fixed-width",
                       "width": 820,
-                      "content": "Console and log traffic flow API ↔ Agent directly over mTLS; the Operator provisions and reconciles both.",
+                      "content": "In the home cluster, console and log traffic flow API ↔ Agent directly over mTLS; the Operator provisions and reconciles both. Remote clusters go through an optional gateway (below).",
                       "textAlign": "center",
                       "fontFamily": "$typography/font-sans",
                       "fontSize": 12,
@@ -4774,6 +4774,37 @@
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "ModuleSource CRs declare where templates come from — OCI registry, git, HTTP, local, or dashboard upload.",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$typography/font-sans",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "QIGcw",
+                  "name": "Multiple clusters and the gateway",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "H5vmfu",
+                      "fill": "$foreground/foreground",
+                      "content": "Multiple clusters and the gateway (v0.3.0)",
+                      "fontFamily": "$typography/font-mono",
+                      "fontSize": 18,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "m5Qk68",
+                      "fill": "$muted",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "One central API and dashboard can manage independent clusters registered as Cluster resources. Each target cluster runs its own operator, and optionally a private gateway built from the API image. The gateway has no database, no user login and no browser or admin routes. Users authenticate only to the central API, which stays the authorization authority.",
                       "lineHeight": 1.5,
                       "fontFamily": "$typography/font-sans",
                       "fontSize": 14,
@@ -5065,7 +5096,7 @@
                       "fill": "$muted",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "Permission-based RBAC with admin/operator/viewer roles, scoped per namespace or cluster-wide.",
+                      "content": "Permission-based RBAC with admin/operator/viewer roles, scoped per namespace or cluster-wide. Registering a cluster grants no user access by itself: remote access uses supplemental per-cluster grants, and a global union of permission names never authorizes a row in another cluster.",
                       "lineHeight": 1.5,
                       "fontFamily": "$typography/font-sans",
                       "fontSize": 14,
@@ -5097,6 +5128,37 @@
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
                       "content": "mTLS with an operator-managed CA; the agent refuses plain HTTP once TLS material is present.",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$typography/font-sans",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "nak8d",
+                  "name": "API ↔ remote gateway",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "EltoE",
+                      "fill": "$foreground/foreground",
+                      "content": "API ↔ remote gateway",
+                      "fontFamily": "$typography/font-mono",
+                      "fontSize": 18,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "UYIWs",
+                      "fill": "$muted",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "In v0.3.0, optional agent gateway for remote clusters. Central API reaches it with dedicated mTLS identity, separate trust material from local agent CA. Gateway exposes only allowlisted operations in configured namespaces.",
                       "lineHeight": 1.5,
                       "fontFamily": "$typography/font-sans",
                       "fontSize": 14,
@@ -5212,7 +5274,7 @@
                               "type": "text",
                               "id": "Q7UBD",
                               "fill": "$foreground/foreground",
-                              "content": "Module Authoring",
+                              "content": "Operate the server fleet",
                               "fontFamily": "$typography/font-mono",
                               "fontSize": 14,
                               "fontWeight": "500"
@@ -5611,7 +5673,7 @@
       },
       "clip": true,
       "width": 1440,
-      "height": 900,
+      "height": 960,
       "fill": "$background/background",
       "children": [
         {
@@ -5823,7 +5885,69 @@
                       "fill": "$muted",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "Go via gofmt/vet/golangci-lint; TypeScript strict with ESLint — comments only when the why isn't obvious.",
+                      "content": "Indentation: tabs in Go, 2 spaces elsewhere. Go: gofmt, vet, golangci-lint. TypeScript: strict with ESLint + Prettier. Comments only when why isn't obvious.",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$typography/font-sans",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "bZQPI",
+                  "name": "Submitting a change",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "NhhOO",
+                      "fill": "$foreground/foreground",
+                      "content": "Submitting a change",
+                      "fontFamily": "$typography/font-mono",
+                      "fontSize": 18,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "vcqC2",
+                      "fill": "$muted",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Fork the repository and create a feature branch. Run only quick compile checks locally. For UI work, include Pencil node IDs in PR description. Sign your commits. Verify PR labels: type: and area:.",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$typography/font-sans",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "ceKhm",
+                  "name": "Game modules and submodules",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Od21k",
+                      "fill": "$foreground/foreground",
+                      "content": "Game modules and submodules",
+                      "fontFamily": "$typography/font-mono",
+                      "fontSize": 18,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "yIzMh",
+                      "fill": "$muted",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Game-module changes belong in gameplane-module repository. Open the module PR there; once it merges, bump the submodule pointer. Repoint submodules locally without committing.",
                       "lineHeight": 1.5,
                       "fontFamily": "$typography/font-sans",
                       "fontSize": 14,
@@ -5884,7 +6008,7 @@
                               "type": "text",
                               "id": "dXLka",
                               "fill": "$foreground/foreground",
-                              "content": "Module Authoring",
+                              "content": "Local development setup",
                               "fontFamily": "$typography/font-mono",
                               "fontSize": 14,
                               "fontWeight": "500"
@@ -5895,10 +6019,46 @@
                     },
                     {
                       "type": "frame",
-                      "id": "tjyxc",
-                      "width": 1,
-                      "height": 1,
-                      "layout": "none"
+                      "id": "g1nn6",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "MZxVB",
+                          "layout": "vertical",
+                          "alignItems": "end",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "HdvO5",
+                              "fill": "$muted",
+                              "content": "Next",
+                              "fontFamily": "$typography/font-sans",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "A2zon",
+                              "fill": "$foreground/foreground",
+                              "content": "Contribution & Design Workflow",
+                              "fontFamily": "$typography/font-mono",
+                              "fontSize": 14,
+                              "fontWeight": "500"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "knnkZ",
+                          "width": 14,
+                          "height": 14,
+                          "icon": "arrow-right",
+                          "library": "lucide",
+                          "fill": "$muted"
+                        }
+                      ]
                     }
                   ]
                 }
@@ -5919,7 +6079,7 @@
       },
       "clip": true,
       "width": 1440,
-      "height": 1200,
+      "height": 1280,
       "fill": "$background/background",
       "children": [
         {
@@ -6270,7 +6430,7 @@
                           "fill": "$foreground/foreground",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "Integrated frp, Tailscale, playit relay sidecars; playit mappings user-managed via playit.gg account. [optional; disabled by default]",
+                          "content": "Integrated frp, Tailscale, playit relays (a separate tunnel pod per server); playit mappings user-managed via playit.gg account. [optional; disabled by default]",
                           "lineHeight": 1.4,
                           "fontFamily": "$typography/font-sans",
                           "fontSize": 12,
@@ -6507,7 +6667,7 @@
                           "fill": "$foreground/foreground",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "OCI bundles via ModuleSource (git/http/oci/local/upload); optional cosign signature verification per source. 16 ready-to-use templates shipped.",
+                          "content": "OCI bundles via ModuleSource (git/http/oci/local/upload); optional cosign signature verification per source. 30 ready-to-use templates on master (16 in v0.2.0-beta.8; the other 14 arrive in v0.3.0).",
                           "lineHeight": 1.4,
                           "fontFamily": "$typography/font-sans",
                           "fontSize": 12,
@@ -6586,7 +6746,7 @@
                           "fill": "$foreground/foreground",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "Cluster CRD for remote registration/monitoring; console/log streaming local-cluster only. [local cluster only for streaming]",
+                          "content": "Cluster CRD for remote registration and health checks; in v0.2.0-beta.8 console/log streaming is local-cluster only. From v0.3.0: remote Pod logs/PTY, optional private gateway, and unified dashboard with location filters.",
                           "lineHeight": 1.4,
                           "fontFamily": "$typography/font-sans",
                           "fontSize": 12,
@@ -6855,7 +7015,7 @@
                               "type": "text",
                               "id": "IlV6C",
                               "fill": "$foreground/foreground",
-                              "content": "Contributing",
+                              "content": "Dashboard tour",
                               "fontFamily": "$typography/font-mono",
                               "fontSize": 14,
                               "fontWeight": "500"
@@ -6889,7 +7049,7 @@
                               "type": "text",
                               "id": "iWfmq",
                               "fill": "$foreground/foreground",
-                              "content": "Roadmap",
+                              "content": "Sign-in & Account Recovery",
                               "fontFamily": "$typography/font-mono",
                               "fontSize": 14,
                               "fontWeight": "500"
@@ -7074,7 +7234,7 @@
                               "fill": "$muted",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
-                              "content": "WebSocket console/log/file streams are local-cluster-scoped — remote clusters are registered and health-checked but not yet streamed.",
+                              "content": "WebSocket console/log/file streams are local-cluster-scoped in v0.2.0-beta.8 — remote clusters are registered and health-checked but not yet streamed. v0.3.0 adds remote access through an optional agent gateway.",
                               "lineHeight": 1.5,
                               "fontFamily": "$typography/font-sans",
                               "fontSize": 13,
@@ -7106,7 +7266,7 @@
                               "fill": "$muted",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
-                              "content": "The PostgreSQL driver is experimental (build-tag-gated, work-in-progress); SQLite is the production-tested database.",
+                              "content": "The PostgreSQL driver is experimental (build-tag-gated); SQLite is the production-tested database. v0.3.0 makes the driver work end to end, but it stays experimental: keep a single API replica, and it is not yet covered by e2e or upgrade tests.",
                               "lineHeight": 1.5,
                               "fontFamily": "$typography/font-sans",
                               "fontSize": 13,
@@ -7182,7 +7342,7 @@
                               "fill": "$muted",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
-                              "content": "Server-side audit-log export and webhook push sink.",
+                              "content": "Multicluster agent gateway — optional private mTLS gateway per cluster, with combined dashboard, Servers, Backups and Search views.",
                               "lineHeight": 1.5,
                               "fontFamily": "$typography/font-sans",
                               "fontSize": 13,
@@ -7211,7 +7371,7 @@
                               "fill": "$muted",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
-                              "content": "Audit-to-syslog bridge.",
+                              "content": "PostgreSQL driver works end to end — still experimental, keep a single API replica.",
                               "lineHeight": 1.5,
                               "fontFamily": "$typography/font-sans",
                               "fontSize": 13,
@@ -7305,7 +7465,7 @@
                               "type": "text",
                               "id": "LuSUV",
                               "fill": "$foreground/foreground",
-                              "content": "Comparison",
+                              "content": "Frequently Asked Questions",
                               "fontFamily": "$typography/font-mono",
                               "fontSize": 14,
                               "fontWeight": "500"
@@ -7339,7 +7499,7 @@
                               "type": "text",
                               "id": "U1eKI",
                               "fill": "$foreground/foreground",
-                              "content": "FAQ",
+                              "content": "Changelog",
                               "fontFamily": "$typography/font-mono",
                               "fontSize": 14,
                               "fontWeight": "500"
@@ -7840,7 +8000,7 @@
                           "fill": "$muted",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "Added: fleet metrics, server-side audit export, audit webhook sink, syslog bridge. Changed: default module source is now git-based.",
+                          "content": "Multicluster gateways, theme customization, PostgreSQL support, network capture, module authoring, 14 new game modules.",
                           "lineHeight": 1.5,
                           "fontFamily": "$typography/font-sans",
                           "fontSize": 13,
@@ -8521,7 +8681,7 @@
                               "type": "text",
                               "id": "GDxqj",
                               "fill": "$foreground/foreground",
-                              "content": "FAQ",
+                              "content": "Roadmap & Known Limitations",
                               "fontFamily": "$typography/font-mono",
                               "fontSize": 14,
                               "fontWeight": "500"
@@ -8532,10 +8692,46 @@
                     },
                     {
                       "type": "frame",
-                      "id": "XMvnR",
-                      "width": 1,
-                      "height": 1,
-                      "layout": "none"
+                      "id": "sVgzD",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "r0pfb",
+                          "layout": "vertical",
+                          "alignItems": "end",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "exnC9",
+                              "fill": "$muted",
+                              "content": "Next",
+                              "fontFamily": "$typography/font-sans",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "G6krZ3",
+                              "fill": "$foreground/foreground",
+                              "content": "Get Involved",
+                              "fontFamily": "$typography/font-mono",
+                              "fontSize": 14,
+                              "fontWeight": "500"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "EYNPT",
+                          "width": 14,
+                          "height": 14,
+                          "icon": "arrow-right",
+                          "library": "lucide",
+                          "fill": "$muted"
+                        }
+                      ]
                     }
                   ]
                 }
@@ -14655,7 +14851,7 @@
                 "type": "image",
                 "enabled": true,
                 "url": "design-assets/gameplane-mark.png",
-                "mode": "fit"
+                "mode": "contain"
               }
             },
             {
@@ -14812,7 +15008,7 @@
                     "type": "image",
                     "enabled": true,
                     "url": "design-assets/gameplane-icon.png",
-                    "mode": "fill"
+                    "mode": "cover"
                   },
                   "cornerRadius": "$radius/md",
                   "justifyContent": "center",
@@ -15679,7 +15875,7 @@
                     "type": "image",
                     "enabled": true,
                     "url": "design-assets/gameplane-icon.png",
-                    "mode": "fill"
+                    "mode": "cover"
                   },
                   "cornerRadius": "$radius/md",
                   "justifyContent": "center",
@@ -15896,7 +16092,7 @@
                     "type": "image",
                     "enabled": true,
                     "url": "design-assets/gameplane-icon.png",
-                    "mode": "fill"
+                    "mode": "cover"
                   },
                   "cornerRadius": "$radius/md",
                   "justifyContent": "center",
@@ -17352,7 +17548,7 @@
                           "fill": "$accent/soft-foreground",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "Start with one cluster selected. Every list, metric, and action inherits that scope.",
+                          "content": "In v0.2.0-beta.8, a cluster selector scopes everything. From v0.3.0, the dashboard combines every authorized cluster with an optional Location filter.",
                           "fontFamily": "Geist",
                           "fontSize": 12.5,
                           "fontWeight": "normal"
@@ -17384,7 +17580,7 @@
                           "fill": "$muted",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "The dashboard is a cluster-scoped control surface. Use the top bar to change context without losing your place.",
+                          "content": "Opening a server pins it to its own cluster and namespace, so changing a list filter never retargets the server you are working on.",
                           "lineHeight": 1.45,
                           "fontFamily": "Geist",
                           "fontSize": 13,
@@ -17432,7 +17628,7 @@
                                   "fill": "$default/foreground",
                                   "textGrowth": "fixed-width",
                                   "width": "fill_container",
-                                  "content": "Cluster selector scopes fleet metrics, lists, and creation flows.",
+                                  "content": "Narrows the dashboard, Servers and Backups to one cluster; combined view is default (v0.3.0).",
                                   "fontFamily": "Geist",
                                   "fontSize": 12.5,
                                   "fontWeight": "normal"
@@ -17464,7 +17660,7 @@
                                   "fill": "$default/foreground",
                                   "textGrowth": "fixed-width",
                                   "width": "fill_container",
-                                  "content": "Global search jumps to servers, backups, users, and modules.",
+                                  "content": "Finds any server by name across the clusters you can access.",
                                   "fontFamily": "Geist",
                                   "fontSize": 12.5,
                                   "fontWeight": "normal"
@@ -23042,7 +23238,7 @@
                           "fill": "$muted",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "Select ClusterIP, NodePort, or LoadBalancer based on where players connect and who controls the network edge.",
+                          "content": "Select ClusterIP, NodePort, or LoadBalancer based on where players connect and who controls the network edge. When you have no public IP or no control over the network edge, layer a relay tunnel over the Service.",
                           "lineHeight": 1.45,
                           "fontFamily": "Geist",
                           "fontSize": 13,
@@ -23155,6 +23351,38 @@
                                   "textGrowth": "fixed-width",
                                   "width": "fill_container",
                                   "content": "Attach provider annotations and DNS only when the controller supports them.",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 12.5,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "uvoEx",
+                              "name": "Section 1 Item 3",
+                              "width": "fill_container",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "id": "yeKwY",
+                                  "name": "Section 1 Item Icon 2",
+                                  "width": 13,
+                                  "height": 13,
+                                  "icon": "check",
+                                  "library": "lucide",
+                                  "fill": "$accent/accent"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "y0JVjj",
+                                  "name": "Section 1 Item Text 2",
+                                  "fill": "$default/foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Layer relay tunnels (frp, Tailscale, playit) over the Service when lacking public IP or LoadBalancer.",
                                   "fontFamily": "Geist",
                                   "fontSize": 12.5,
                                   "fontWeight": "normal"
@@ -23985,7 +24213,7 @@
                           "fill": "$muted",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "Use per-server or global views to start snapshots, filter phases, and inspect destination, size, timestamps, and errors.",
+                          "content": "Use per-server or global views to start snapshots, filter phases, and inspect destination, size, timestamps, and errors. From v0.3.0, the Backups page groups its filters in a popover on the right of the search row: Location (when several clusters are registered), Server and the current tab's Phase. Selections apply when you click Apply.",
                           "lineHeight": 1.45,
                           "fontFamily": "Geist",
                           "fontSize": 13,
@@ -24388,7 +24616,7 @@
                               "id": "g06VqS",
                               "name": "Next Link Title",
                               "fill": "$foreground/foreground",
-                              "content": "Cluster and storage operations",
+                              "content": "Backup Destinations",
                               "fontFamily": "JetBrains Mono",
                               "fontSize": 13,
                               "fontWeight": "500"
@@ -25871,7 +26099,7 @@
                           "fill": "$muted",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "Invite and edit local users, reset credentials deliberately, and use service accounts for automation rather than shared logins.",
+                          "content": "Invite and edit local users, reset credentials deliberately, and give automation its own account rather than a shared login.",
                           "lineHeight": 1.45,
                           "fontFamily": "Geist",
                           "fontSize": 13,
@@ -25951,7 +26179,7 @@
                                   "fill": "$default/foreground",
                                   "textGrowth": "fixed-width",
                                   "width": "fill_container",
-                                  "content": "Scope service accounts to the minimum permissions and rotate credentials.",
+                                  "content": "Give each automation its own local user with the minimum role, and rotate its password.",
                                   "fontFamily": "Geist",
                                   "fontSize": 12.5,
                                   "fontWeight": "normal"
@@ -27217,7 +27445,7 @@
                               "id": "GgseU",
                               "name": "Next Link Title",
                               "fill": "$foreground/foreground",
-                              "content": "Modules and sources",
+                              "content": "System log viewer",
                               "fontFamily": "JetBrains Mono",
                               "fontSize": 13,
                               "fontWeight": "500"
@@ -30046,7 +30274,7 @@
                               "id": "XEhHY",
                               "name": "Next Link Title",
                               "fill": "$foreground/foreground",
-                              "content": "Upgrade and migrate",
+                              "content": "Dashboard tour",
                               "fontFamily": "JetBrains Mono",
                               "fontSize": 13,
                               "fontWeight": "500"
@@ -30388,7 +30616,7 @@
       },
       "clip": true,
       "width": 1440,
-      "height": 900,
+      "height": 1000,
       "fill": "$background/background",
       "children": [
         {
@@ -30949,6 +31177,72 @@
                     },
                     {
                       "type": "frame",
+                      "id": "P1ch8s",
+                      "name": "Guide Section 4",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "GE524",
+                          "name": "Section Title 3",
+                          "fill": "$foreground/foreground",
+                          "content": "CRD updates on upgrade",
+                          "fontFamily": "JetBrains Mono",
+                          "fontSize": 17,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "wHtaW",
+                          "name": "Section Body 3",
+                          "fill": "$muted",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Helm cannot auto-update CRDs, but the chart's autoApply hook applies them server-side. From v0.3.0, Helm 4 needs --force-conflicts on a first install over v0.2 CRDs.",
+                          "lineHeight": 1.45,
+                          "fontFamily": "Geist",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "w2Xb8",
+                      "name": "Guide Section 5",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "D5jOxT",
+                          "name": "Section Title 3",
+                          "fill": "$foreground/foreground",
+                          "content": "Upgrade notes for v0.3.0",
+                          "fontFamily": "JetBrains Mono",
+                          "fontSize": 17,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "O2vzsD",
+                          "name": "Section Body 3",
+                          "fill": "$muted",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "GameServers roll once for network capture volume. Owner-only server operations (transfer, collaborate, wipe, delete). Playit tunnel egress widened. Tunnel Secrets must be owned by GameServer.",
+                          "lineHeight": 1.45,
+                          "fontFamily": "Geist",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
                       "id": "GzehF",
                       "name": "Article Next Link",
                       "width": "fill_container",
@@ -30989,7 +31283,7 @@
                               "id": "pVDYw",
                               "name": "Next Link Title",
                               "fill": "$foreground/foreground",
-                              "content": "Troubleshooting",
+                              "content": "Executable upgrades and rollback",
                               "fontFamily": "JetBrains Mono",
                               "fontSize": 13,
                               "fontWeight": "500"
@@ -31127,6 +31421,66 @@
                               "name": "TOC Text 2",
                               "fill": "$muted",
                               "content": "Rollback",
+                              "fontFamily": "Geist",
+                              "fontSize": 12.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "zrPcr",
+                          "name": "TOC Row 3",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "UCM3z",
+                              "name": "TOC Icon 2",
+                              "width": 12,
+                              "height": 12,
+                              "icon": "hash",
+                              "library": "lucide",
+                              "fill": "$field/placeholder"
+                            },
+                            {
+                              "type": "text",
+                              "id": "f34OII",
+                              "name": "TOC Text 2",
+                              "fill": "$muted",
+                              "content": "CRD updates",
+                              "fontFamily": "Geist",
+                              "fontSize": 12.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "dHQHZ",
+                          "name": "TOC Row 4",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "lA9d1",
+                              "name": "TOC Icon 2",
+                              "width": 12,
+                              "height": 12,
+                              "icon": "hash",
+                              "library": "lucide",
+                              "fill": "$field/placeholder"
+                            },
+                            {
+                              "type": "text",
+                              "id": "CZ9Tf",
+                              "name": "TOC Text 2",
+                              "fill": "$muted",
+                              "content": "v0.3.0 notes",
                               "fontFamily": "Geist",
                               "fontSize": 12.5,
                               "fontWeight": "normal"
@@ -34348,7 +34702,7 @@
                               "id": "c2mN5N",
                               "name": "Quick Reference Line 3",
                               "fill": "$foreground/foreground",
-                              "content": "03  Recovery → self-service or audited admin reset; OIDC resets upstream",
+                              "content": "03  Recovery → audited admin reset or bootstrap-admin break-glass; OIDC resets upstream",
                               "fontFamily": "JetBrains Mono",
                               "fontSize": 11.5,
                               "fontWeight": "normal"
@@ -34399,7 +34753,7 @@
                               "id": "yTLSd",
                               "name": "Next Link Title",
                               "fill": "$foreground/foreground",
-                              "content": "Template-specific configuration",
+                              "content": "Using the Mobile Dashboard",
                               "fontFamily": "JetBrains Mono",
                               "fontSize": 13,
                               "fontWeight": "500"
@@ -37964,7 +38318,7 @@
                                   "fill": "$default/foreground",
                                   "textGrowth": "fixed-width",
                                   "width": "fill_container",
-                                  "content": "Use valid names and verify the breadcrumb before confirming.",
+                                  "content": "Use valid names and verify the breadcrumb before confirming",
                                   "fontFamily": "Geist",
                                   "fontSize": 12.5,
                                   "fontWeight": "normal"
@@ -38028,7 +38382,39 @@
                                   "fill": "$default/foreground",
                                   "textGrowth": "fixed-width",
                                   "width": "fill_container",
-                                  "content": "Verify upload size, type, provenance, and ownership after completion.",
+                                  "content": "Verify upload size, type, provenance, and ownership after completion",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 12.5,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "O5wilB",
+                              "name": "Section 2 Item 3",
+                              "width": "fill_container",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "id": "cSTIi",
+                                  "name": "Section 2 Item Icon 3",
+                                  "width": 13,
+                                  "height": 13,
+                                  "icon": "check",
+                                  "library": "lucide",
+                                  "fill": "$accent/accent"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "c3eCc",
+                                  "name": "Section 2 Item Text 3",
+                                  "fill": "$default/foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Delete folders from the tree (v0.3.0)",
                                   "fontFamily": "Geist",
                                   "fontSize": 12.5,
                                   "fontWeight": "normal"
@@ -40057,7 +40443,7 @@
                               "id": "Y5Qg0",
                               "name": "Next Link Title",
                               "fill": "$foreground/foreground",
-                              "content": "Ingress, TLS, and external access",
+                              "content": "Air-gapped and private-registry installation",
                               "fontFamily": "JetBrains Mono",
                               "fontSize": 13,
                               "fontWeight": "500"
@@ -41943,7 +42329,7 @@
                               "id": "li2nn",
                               "name": "Next Link Title",
                               "fill": "$foreground/foreground",
-                              "content": "Multi-cluster topology",
+                              "content": "Platform Disaster Recovery",
                               "fontFamily": "JetBrains Mono",
                               "fontSize": 13,
                               "fontWeight": "500"
@@ -42285,7 +42671,7 @@
       },
       "clip": true,
       "width": 1440,
-      "height": 900,
+      "height": 1120,
       "fill": "$background/background",
       "children": [
         {
@@ -42846,6 +43232,195 @@
                     },
                     {
                       "type": "frame",
+                      "id": "qDBwV",
+                      "name": "Article Callout",
+                      "width": "fill_container",
+                      "fill": "$accent/soft",
+                      "cornerRadius": "$radius/xl",
+                      "stroke": "$border/border",
+                      "strokeWidth": 1,
+                      "strokeAlignment": "inner",
+                      "gap": 10,
+                      "padding": [
+                        10,
+                        12
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "GCxoO",
+                          "name": "Article Callout Icon",
+                          "width": 16,
+                          "height": 16,
+                          "icon": "milestone",
+                          "library": "lucide",
+                          "fill": "$accent/soft-foreground"
+                        },
+                        {
+                          "type": "text",
+                          "id": "kAfre",
+                          "name": "Article Callout Text",
+                          "fill": "$accent/soft-foreground",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "The optional agent gateway and the unified cross-cluster dashboard described below arrive in v0.3.0. In v0.2.0-beta.8 you can register clusters and manage their resources from one dashboard, but console and log streaming is scoped to the local control-plane cluster.",
+                          "fontFamily": "Geist",
+                          "fontSize": 12.5,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "QFjvS",
+                      "name": "Guide Section 1",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "gCqrN",
+                          "name": "Section Title 1",
+                          "fill": "$foreground/foreground",
+                          "content": "Manage independent clusters from one dashboard",
+                          "fontFamily": "JetBrains Mono",
+                          "fontSize": 17,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Q1D92r",
+                          "name": "Section Body 1",
+                          "fill": "$muted",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "One central API and login manages independent registered clusters.",
+                          "lineHeight": 1.45,
+                          "fontFamily": "Geist",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "TF8SV",
+                          "name": "Section List 1",
+                          "width": "fill_container",
+                          "fill": "$surface/surface",
+                          "cornerRadius": "$radius/2xl",
+                          "stroke": "$border/border",
+                          "strokeWidth": 1,
+                          "strokeAlignment": "inner",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "padding": [
+                            8,
+                            10
+                          ],
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "W0h9A",
+                              "name": "Section 1 Item 0",
+                              "width": "fill_container",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "id": "e6KU4m",
+                                  "name": "Section 1 Item Icon 0",
+                                  "width": 13,
+                                  "height": 13,
+                                  "icon": "check",
+                                  "library": "lucide",
+                                  "fill": "$accent/accent"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "W7pZuF",
+                                  "name": "Section 1 Item Text 0",
+                                  "fill": "$default/foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Central API uses each cluster's Kubernetes API for resource changes, Pod logs, and PTY attach",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 12.5,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "uzizP",
+                              "name": "Section 1 Item 1",
+                              "width": "fill_container",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "id": "UCZZI",
+                                  "name": "Section 1 Item Icon 1",
+                                  "width": 13,
+                                  "height": 13,
+                                  "icon": "check",
+                                  "library": "lucide",
+                                  "fill": "$accent/accent"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "xev04",
+                                  "name": "Section 1 Item Text 1",
+                                  "fill": "$default/foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Dashboard combines resources across clusters with optional Location filter (v0.3.0)",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 12.5,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "sU1Zi",
+                              "name": "Section 1 Item 2",
+                              "width": "fill_container",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "id": "t7sn2N",
+                                  "name": "Section 1 Item Icon 2",
+                                  "width": 13,
+                                  "height": 13,
+                                  "icon": "check",
+                                  "library": "lucide",
+                                  "fill": "$accent/accent"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "U4QiGv",
+                                  "name": "Section 1 Item Text 2",
+                                  "fill": "$default/foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Requires matching API, operator, and agent versions in all clusters",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 12.5,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
                       "id": "fYKw1",
                       "name": "Article Next Link",
                       "width": "fill_container",
@@ -42886,7 +43461,7 @@
                               "id": "lJ4Me",
                               "name": "Next Link Title",
                               "fill": "$foreground/foreground",
-                              "content": "Air-gapped installation",
+                              "content": "High availability and failure domains",
                               "fontFamily": "JetBrains Mono",
                               "fontSize": 13,
                               "fontWeight": "500"
@@ -43024,6 +43599,36 @@
                               "name": "TOC Text 2",
                               "fill": "$muted",
                               "content": "Promotion",
+                              "fontFamily": "Geist",
+                              "fontSize": 12.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "wXygh",
+                          "name": "TOC Row 2",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "rHyAr",
+                              "name": "TOC Icon 2",
+                              "width": 12,
+                              "height": 12,
+                              "icon": "hash",
+                              "library": "lucide",
+                              "fill": "$field/placeholder"
+                            },
+                            {
+                              "type": "text",
+                              "id": "ppwi8",
+                              "name": "TOC Text 2",
+                              "fill": "$muted",
+                              "content": "Manage clusters",
                               "fontFamily": "Geist",
                               "fontSize": 12.5,
                               "fontWeight": "normal"
@@ -43829,7 +44434,7 @@
                               "id": "p9RSW",
                               "name": "Next Link Title",
                               "fill": "$foreground/foreground",
-                              "content": "High availability",
+                              "content": "Agent gateway",
                               "fontFamily": "JetBrains Mono",
                               "fontSize": 13,
                               "fontWeight": "500"
@@ -44171,7 +44776,7 @@
       },
       "clip": true,
       "width": 1440,
-      "height": 900,
+      "height": 1000,
       "fill": "$background/background",
       "children": [
         {
@@ -44369,7 +44974,7 @@
                           "fill": "$muted",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "Publish replica safety, leader election, migration ownership, session behavior, and remaining singleton constraints.",
+                          "content": "Publish replica safety, leader election, migration ownership, session behavior, and remaining single points of failure.",
                           "lineHeight": 1.45,
                           "fontFamily": "Geist",
                           "fontSize": 13,
@@ -44676,6 +45281,7 @@
                           "id": "aKK2B",
                           "name": "Quick Reference",
                           "width": "fill_container",
+                          "height": 130,
                           "fill": "$surface/tertiary",
                           "cornerRadius": "$radius/xl",
                           "stroke": "$border/border",
@@ -44701,7 +45307,7 @@
                               "id": "yS5D3",
                               "name": "Quick Reference Line 1",
                               "fill": "$foreground/foreground",
-                              "content": "01  Replicate only components documented as replica-safe",
+                              "content": "01  Replicate only replica-safe parts (Operator 2+; API stays at 1)",
                               "fontFamily": "JetBrains Mono",
                               "fontSize": 11.5,
                               "fontWeight": "normal"
@@ -44772,7 +45378,7 @@
                               "id": "V8WoE",
                               "name": "Next Link Title",
                               "fill": "$foreground/foreground",
-                              "content": "Upgrade execution",
+                              "content": "Kubernetes node maintenance and upgrades",
                               "fontFamily": "JetBrains Mono",
                               "fontSize": 13,
                               "fontWeight": "500"
@@ -53259,7 +53865,7 @@
                               "id": "GcFnz",
                               "name": "Next Link Title",
                               "fill": "$foreground/foreground",
-                              "content": "Ownership and danger zone",
+                              "content": "Ownership, collaborators, and danger zone",
                               "fontFamily": "JetBrains Mono",
                               "fontSize": 13,
                               "fontWeight": "500"
@@ -53767,7 +54373,7 @@
                           "fill": "$accent/soft-foreground",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "Wipe and Delete have different resource consequences, but both require a verified backup and an explicit owner decision.",
+                          "content": "Ownership, collaborators, transfer, wipe, and delete are available in v0.2.0-beta.8, where operator-role users can also run them on servers they don't own. From v0.3.0, transferring ownership, editing collaborators, wiping data and deleting a server need the server's owner or an admin. Servers with no recorded owner (for example created with kubectl or GitOps) can then be transferred, wiped or deleted only by an admin.",
                           "fontFamily": "Geist",
                           "fontSize": 12.5,
                           "fontWeight": "normal"
@@ -54202,7 +54808,7 @@
                               "id": "xiNqn",
                               "name": "Next Link Title",
                               "fill": "$foreground/foreground",
-                              "content": "Backup destinations",
+                              "content": "Console, Events & Logs",
                               "fontFamily": "JetBrains Mono",
                               "fontSize": 13,
                               "fontWeight": "500"
@@ -57974,7 +58580,7 @@
                               "id": "roSmX",
                               "name": "Next Link Title",
                               "fill": "$foreground/foreground",
-                              "content": "User administration",
+                              "content": "Multi-cluster Topology",
                               "fontFamily": "JetBrains Mono",
                               "fontSize": 13,
                               "fontWeight": "500"
@@ -58482,7 +59088,7 @@
                           "fill": "$accent/soft-foreground",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "Service-account creation is availability-dependent; do not document a token workflow until the shipped UI and API support it.",
+                          "content": "Gameplane has no service accounts or API tokens yet; machine-to-machine tokens are planned for v1.1. Until then, give automation its own local user with the narrowest role that works, and never share a person's login.",
                           "fontFamily": "Geist",
                           "fontSize": 12.5,
                           "fontWeight": "normal"
@@ -58917,7 +59523,7 @@
                               "id": "kBBIl",
                               "name": "Next Link Title",
                               "fill": "$foreground/foreground",
-                              "content": "System log viewer",
+                              "content": "Permission Catalog",
                               "fontFamily": "JetBrains Mono",
                               "fontSize": 13,
                               "fontWeight": "500"
@@ -61391,7 +61997,7 @@
                                   "fill": "$default/foreground",
                                   "textGrowth": "fixed-width",
                                   "width": "fill_container",
-                                  "content": "Use a name that distinguishes environments and clusters.",
+                                  "content": "Use a name that distinguishes environments and clusters (optional)",
                                   "fontFamily": "Geist",
                                   "fontSize": 12.5,
                                   "fontWeight": "normal"
@@ -61746,7 +62352,7 @@
                               "id": "biGQY",
                               "name": "Next Link Title",
                               "fill": "$foreground/foreground",
-                              "content": "Using the mobile dashboard",
+                              "content": "Modules & Sources",
                               "fontFamily": "JetBrains Mono",
                               "fontSize": 13,
                               "fontWeight": "500"
@@ -64575,7 +65181,7 @@
                               "id": "N3G8uU",
                               "name": "Next Link Title",
                               "fill": "$foreground/foreground",
-                              "content": "Web dashboard development",
+                              "content": "Local development setup",
                               "fontFamily": "JetBrains Mono",
                               "fontSize": 13,
                               "fontWeight": "500"
@@ -65375,7 +65981,7 @@
                                   "fill": "$default/foreground",
                                   "textGrowth": "fixed-width",
                                   "width": "fill_container",
-                                  "content": "SSE/WebSocket clients cancel and reconnect visibly on scope changes.",
+                                  "content": "Sockets bind to cluster and namespace; leaving the server view closes streams (v0.3.0).",
                                   "fontFamily": "Geist",
                                   "fontSize": 12.5,
                                   "fontWeight": "normal"
@@ -66461,7 +67067,7 @@
                               "id": "oceKE",
                               "name": "Next Link Title",
                               "fill": "$foreground/foreground",
-                              "content": "Operator and CRD development",
+                              "content": "Kubectl & GitOps Recipes",
                               "fontFamily": "JetBrains Mono",
                               "fontSize": 13,
                               "fontWeight": "500"
@@ -72012,7 +72618,7 @@
                           "fill": "$muted",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "A v tag builds and signs images, packages the OCI chart, creates release notes, and publishes official modules.",
+                          "content": "A v tag builds and signs images, packages the OCI chart, creates release notes, and publishes official modules. Signing is mandatory and fail-closed: the job fails without COSIGN_PRIVATE_KEY before anything is pushed.",
                           "lineHeight": 1.45,
                           "fontFamily": "Geist",
                           "fontSize": 13,
@@ -76627,7 +77233,7 @@
                                   "fill": "$default/foreground",
                                   "textGrowth": "fixed-width",
                                   "width": "fill_container",
-                                  "content": "Declare parameters, validation, labels, icons, and capability gates.",
+                                  "content": "Declare parameters, validation, labels, icons, and gates; currentFrom pre-fills from live status (v0.3.0).",
                                   "fontFamily": "Geist",
                                   "fontSize": 12.5,
                                   "fontWeight": "normal"
@@ -76834,7 +77440,7 @@
                               "id": "LSjd1",
                               "name": "Next Link Title",
                               "fill": "$foreground/foreground",
-                              "content": "Test and publish modules",
+                              "content": "Test, Publish & Sign Modules",
                               "fontFamily": "JetBrains Mono",
                               "fontSize": 13,
                               "fontWeight": "500"
@@ -81167,7 +81773,7 @@
       },
       "clip": true,
       "width": 1440,
-      "height": 900,
+      "height": 1000,
       "fill": "$background/background",
       "children": [
         {
@@ -82392,7 +82998,7 @@
                           "id": "KsrS8",
                           "name": "Reference 2 Row 2",
                           "width": "fill_container",
-                          "height": 38,
+                          "height": 60,
                           "fill": "$background/background",
                           "stroke": "$separator/separator",
                           "strokeWidth": {
@@ -82499,7 +83105,7 @@
                                   "fill": "$muted",
                                   "textGrowth": "fixed-width",
                                   "width": "fill_container",
-                                  "content": "Cancel old sockets before reconnecting in new scope.",
+                                  "content": "A socket stays bound to the cluster and namespace of the server that opened it, and reconnects retain that target. Leaving the server view closes its streams, so a new view opens fresh sockets in its own scope and never inherits stale state.",
                                   "fontFamily": "Geist",
                                   "fontSize": 11,
                                   "fontWeight": "normal"
@@ -95855,7 +96461,7 @@
                 "type": "image",
                 "enabled": true,
                 "url": "design-assets/gameplane-icon.png",
-                "mode": "fill"
+                "mode": "cover"
               },
               "cornerRadius": "$radius/md",
               "justifyContent": "center",
@@ -96044,7 +96650,7 @@
                         "type": "image",
                         "enabled": true,
                         "url": "design-assets/gameplane-icon.png",
-                        "mode": "fill"
+                        "mode": "cover"
                       },
                       "cornerRadius": "$radius/md",
                       "justifyContent": "center",
@@ -96855,7 +97461,7 @@
           "fill": {
             "type": "image",
             "enabled": true,
-            "mode": "fill"
+            "mode": "cover"
           },
           "cornerRadius": 9999
         },
@@ -106747,6 +107353,2183 @@
                   "fontFamily": "$typography/font-sans",
                   "fontSize": 14,
                   "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "wCt6V",
+      "x": 0,
+      "y": 117108,
+      "name": "Screen/Docs — Server Networking & Tunnels",
+      "theme": {
+        "semantic": "dark"
+      },
+      "clip": true,
+      "width": 1440,
+      "height": 900,
+      "fill": "$background/background",
+      "children": [
+        {
+          "id": "w6l1R",
+          "type": "ref",
+          "ref": "K2Rt4H",
+          "height": "fill_container",
+          "name": "DocsSidebar/Expanded",
+          "width": 280
+        },
+        {
+          "type": "frame",
+          "id": "fhXV7",
+          "name": "Docs Main",
+          "width": "fill_container",
+          "height": "fill_container",
+          "fill": "$background/background",
+          "layout": "vertical",
+          "children": [
+            {
+              "id": "e43QYM",
+              "type": "ref",
+              "ref": "SOdlr",
+              "name": "Docs Top Bar",
+              "width": "fill_container",
+              "descendants": {
+                "NImey": {
+                  "content": "Operate"
+                },
+                "ikbi6": {
+                  "content": "Server Networking & Tunnels"
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "LwBO9",
+              "name": "Docs Article Body",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "gap": 32,
+              "padding": 32,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "YWwHg",
+                  "name": "Docs Article",
+                  "width": 780,
+                  "layout": "vertical",
+                  "gap": 14,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "NH0sG",
+                      "name": "Article Eyebrow",
+                      "fill": "$accent/accent",
+                      "content": "CONFIGURE",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 11,
+                      "fontWeight": "600",
+                      "letterSpacing": 0.8
+                    },
+                    {
+                      "type": "text",
+                      "id": "gp569",
+                      "name": "Article Title",
+                      "fill": "$foreground/foreground",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Server Networking & Tunnels",
+                      "lineHeight": 1.1,
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 30,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "i2Wqc",
+                      "name": "Article Lead",
+                      "fill": "$muted",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Route player connections through an external relay when you lack a public IP, port-forwarding, or a cluster load balancer. A tunnel layers over the server's backing Service; it is not a fifth expose mode. Use it only when direct exposure is unavailable.",
+                      "lineHeight": 1.45,
+                      "fontFamily": "Geist",
+                      "fontSize": 15,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "wMeUk",
+                      "name": "Article Metadata",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "id": "urMRD",
+                          "type": "ref",
+                          "ref": "NZPtq",
+                          "name": "Meta Chip 0",
+                          "descendants": {
+                            "NLG8t": {
+                              "content": "NETWORKING"
+                            }
+                          }
+                        },
+                        {
+                          "id": "LBuDl",
+                          "type": "ref",
+                          "ref": "EbSsA",
+                          "name": "Meta Chip 1",
+                          "descendants": {
+                            "yb6zz": {
+                              "content": "v0.2"
+                            }
+                          }
+                        },
+                        {
+                          "id": "vyBDU",
+                          "type": "ref",
+                          "ref": "EbSsA",
+                          "name": "Meta Chip 2",
+                          "descendants": {
+                            "yb6zz": {
+                              "content": "18 MIN"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "QpxML",
+                      "name": "Article Callout",
+                      "width": "fill_container",
+                      "fill": "$accent/soft",
+                      "cornerRadius": "$radius/xl",
+                      "stroke": "$border/border",
+                      "strokeWidth": 1,
+                      "strokeAlignment": "inner",
+                      "gap": 10,
+                      "padding": [
+                        10,
+                        12
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "tqABK",
+                          "name": "Article Callout Icon",
+                          "width": 16,
+                          "height": 16,
+                          "icon": "workflow",
+                          "library": "lucide",
+                          "fill": "$accent/soft-foreground"
+                        },
+                        {
+                          "type": "text",
+                          "id": "ib4Nk",
+                          "name": "Article Callout Text",
+                          "fill": "$accent/soft-foreground",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Tunnels add operational cost. Each tunnel-enabled server gets its own always-on tunnel pod to hold the public address, even while the game sleeps.",
+                          "fontFamily": "Geist",
+                          "fontSize": 12.5,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ecL1w",
+                      "name": "Guide Section 1",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "x3LjQ",
+                          "name": "Section Title 1",
+                          "fill": "$foreground/foreground",
+                          "content": "When to use a tunnel",
+                          "fontFamily": "JetBrains Mono",
+                          "fontSize": 17,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "w26CKe",
+                          "name": "Section Body 1",
+                          "fill": "$muted",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Use a tunnel when you lack a public IP, port-forwarding, or cluster load balancer access—but not if you already have a working LoadBalancer or public IP.",
+                          "lineHeight": 1.45,
+                          "fontFamily": "Geist",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "LQST4",
+                          "name": "Section List 1",
+                          "width": "fill_container",
+                          "fill": "$surface/surface",
+                          "cornerRadius": "$radius/2xl",
+                          "stroke": "$border/border",
+                          "strokeWidth": 1,
+                          "strokeAlignment": "inner",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "padding": [
+                            8,
+                            10
+                          ],
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "xPwvX",
+                              "name": "Section 1 Item 0",
+                              "width": "fill_container",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "id": "E5sNSW",
+                                  "name": "Section 1 Item Icon 0",
+                                  "width": 13,
+                                  "height": 13,
+                                  "icon": "check",
+                                  "library": "lucide",
+                                  "fill": "$accent/accent"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "d2qBrm",
+                                  "name": "Section 1 Item Text 0",
+                                  "fill": "$default/foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Use when behind CGNAT or restrictive ISP",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 12.5,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "axBJn",
+                              "name": "Section 1 Item 1",
+                              "width": "fill_container",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "id": "dJ9Ku",
+                                  "name": "Section 1 Item Icon 1",
+                                  "width": 13,
+                                  "height": 13,
+                                  "icon": "check",
+                                  "library": "lucide",
+                                  "fill": "$accent/accent"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "brkGI",
+                                  "name": "Section 1 Item Text 1",
+                                  "fill": "$default/foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Use when port-forwarding is unavailable",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 12.5,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "pVX9U",
+                              "name": "Section 1 Item 2",
+                              "width": "fill_container",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "id": "kpMqf",
+                                  "name": "Section 1 Item Icon 2",
+                                  "width": 13,
+                                  "height": 13,
+                                  "icon": "check",
+                                  "library": "lucide",
+                                  "fill": "$accent/accent"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "WTt4d",
+                                  "name": "Section 1 Item Text 2",
+                                  "fill": "$default/foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Use when LoadBalancer is not an option",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 12.5,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "Ro06n",
+                              "name": "Section 1 Item 3",
+                              "width": "fill_container",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "id": "Y8GG6",
+                                  "name": "Section 1 Item Icon 2",
+                                  "width": 13,
+                                  "height": 13,
+                                  "icon": "check",
+                                  "library": "lucide",
+                                  "fill": "$accent/accent"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "At1A7",
+                                  "name": "Section 1 Item Text 2",
+                                  "fill": "$default/foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Do not use if you already have public IP and working port-forwarding",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 12.5,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "p23tk",
+                      "name": "Guide Section 2",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "umjnk",
+                          "name": "Section Title 2",
+                          "fill": "$foreground/foreground",
+                          "content": "Choose a provider",
+                          "fontFamily": "JetBrains Mono",
+                          "fontSize": 17,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Ze6o1",
+                          "name": "Section Body 2",
+                          "fill": "$muted",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Three relay providers are supported: frp for production, Tailscale for private networks, and playit.gg for casual testing.",
+                          "lineHeight": 1.45,
+                          "fontFamily": "Geist",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "nsT2h",
+                          "name": "Section List 2",
+                          "width": "fill_container",
+                          "fill": "$surface/surface",
+                          "cornerRadius": "$radius/2xl",
+                          "stroke": "$border/border",
+                          "strokeWidth": 1,
+                          "strokeAlignment": "inner",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "padding": [
+                            8,
+                            10
+                          ],
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "E58cZg",
+                              "name": "Section 2 Item 0",
+                              "width": "fill_container",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "id": "xVTSt",
+                                  "name": "Section 2 Item Icon 0",
+                                  "width": 13,
+                                  "height": 13,
+                                  "icon": "check",
+                                  "library": "lucide",
+                                  "fill": "$accent/accent"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "F4ZRG4",
+                                  "name": "Section 2 Item Text 0",
+                                  "fill": "$default/foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Use frp for production servers with custom public domains",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 12.5,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "gfsap",
+                              "name": "Section 2 Item 1",
+                              "width": "fill_container",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "id": "OvSBS",
+                                  "name": "Section 2 Item Icon 1",
+                                  "width": 13,
+                                  "height": 13,
+                                  "icon": "check",
+                                  "library": "lucide",
+                                  "fill": "$accent/accent"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "cB687",
+                                  "name": "Section 2 Item Text 1",
+                                  "fill": "$default/foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Use Tailscale for private play on your tailnet (free, no VPS)",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 12.5,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "WnLt6",
+                              "name": "Section 2 Item 2",
+                              "width": "fill_container",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "id": "de5Cc",
+                                  "name": "Section 2 Item Icon 2",
+                                  "width": 13,
+                                  "height": 13,
+                                  "icon": "check",
+                                  "library": "lucide",
+                                  "fill": "$accent/accent"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "mvLoP",
+                                  "name": "Section 2 Item Text 2",
+                                  "fill": "$default/foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Use playit.gg for free public relay and quick testing",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 12.5,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "jQuKg",
+                      "name": "Guide Section 3",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Q1UYn",
+                          "name": "Section Title 3",
+                          "fill": "$foreground/foreground",
+                          "content": "Get the tunnel running",
+                          "fontFamily": "JetBrains Mono",
+                          "fontSize": 17,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "mOiu6",
+                          "name": "Section Body 3",
+                          "fill": "$muted",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Set credentials via dashboard (recommended), API, or kubectl with proper ownerReferences. The tunnel pod connects and serves players even while the game sleeps.",
+                          "lineHeight": 1.45,
+                          "fontFamily": "Geist",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "WCLNY",
+                          "name": "Quick Reference",
+                          "width": "fill_container",
+                          "fill": "$surface/tertiary",
+                          "cornerRadius": "$radius/xl",
+                          "stroke": "$border/border",
+                          "strokeWidth": 1,
+                          "strokeAlignment": "inner",
+                          "layout": "vertical",
+                          "gap": 3,
+                          "padding": 12,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "v9skG",
+                              "name": "Quick Reference Label",
+                              "fill": "$accent/accent",
+                              "content": "SETUP CHECKLIST",
+                              "fontFamily": "JetBrains Mono",
+                              "fontSize": 9,
+                              "fontWeight": "600",
+                              "letterSpacing": 0.6
+                            },
+                            {
+                              "type": "text",
+                              "id": "Uj44H",
+                              "name": "Quick Reference Line 1",
+                              "fill": "$foreground/foreground",
+                              "content": "01  Prepare relay credentials (frp token, Tailscale key, or playit secret)",
+                              "fontFamily": "JetBrains Mono",
+                              "fontSize": 11.5,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "y7vKcf",
+                              "name": "Quick Reference Line 2",
+                              "fill": "$foreground/foreground",
+                              "content": "02  Create GameServer with tunnel enabled and provider configured",
+                              "fontFamily": "JetBrains Mono",
+                              "fontSize": 11.5,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "VSWdf",
+                              "name": "Quick Reference Line 3",
+                              "fill": "$foreground/foreground",
+                              "content": "03  Provide credentials via dashboard; verify TunnelReady condition",
+                              "fontFamily": "JetBrains Mono",
+                              "fontSize": 11.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "NjQFY",
+                      "name": "Article Next Link",
+                      "width": "fill_container",
+                      "stroke": "$border/border",
+                      "strokeWidth": {
+                        "top": 1
+                      },
+                      "strokeAlignment": "inner",
+                      "strokeLinejoin": "round",
+                      "padding": [
+                        10,
+                        0,
+                        0,
+                        0
+                      ],
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "v96YGE",
+                          "name": "Next Link Text",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "j8FigB",
+                              "name": "Next Link Eyebrow",
+                              "fill": "$field/placeholder",
+                              "content": "NEXT GUIDE",
+                              "fontFamily": "Geist",
+                              "fontSize": 10,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "HGwKX",
+                              "name": "Next Link Title",
+                              "fill": "$foreground/foreground",
+                              "content": "Cluster and storage operations",
+                              "fontFamily": "JetBrains Mono",
+                              "fontSize": 13,
+                              "fontWeight": "500"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "OpG7W",
+                          "name": "Next Link Icon",
+                          "width": 15,
+                          "height": 15,
+                          "icon": "arrow-right",
+                          "library": "lucide",
+                          "fill": "$muted"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "xZXwa",
+                  "name": "Docs Page Aside",
+                  "width": 250,
+                  "layout": "vertical",
+                  "gap": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "T1B3x",
+                      "name": "Docs Table of Contents",
+                      "width": "fill_container",
+                      "fill": "$surface/secondary",
+                      "cornerRadius": "$radius/2xl",
+                      "stroke": "$border/border",
+                      "strokeWidth": 1,
+                      "strokeAlignment": "inner",
+                      "layout": "vertical",
+                      "gap": 10,
+                      "padding": 16,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "djHkp",
+                          "name": "TOC Label",
+                          "fill": "$field/placeholder",
+                          "content": "ON THIS PAGE",
+                          "fontFamily": "JetBrains Mono",
+                          "fontSize": 9,
+                          "fontWeight": "600",
+                          "letterSpacing": 0.7
+                        },
+                        {
+                          "type": "frame",
+                          "id": "A14VL",
+                          "name": "TOC Row 0",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "NbJZz",
+                              "name": "TOC Icon 0",
+                              "width": 12,
+                              "height": 12,
+                              "icon": "hash",
+                              "library": "lucide",
+                              "fill": "$accent/accent"
+                            },
+                            {
+                              "type": "text",
+                              "id": "WHrxu",
+                              "name": "TOC Text 0",
+                              "fill": "$foreground/foreground",
+                              "content": "When to use",
+                              "fontFamily": "Geist",
+                              "fontSize": 12.5,
+                              "fontWeight": "500"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "q3eqR",
+                          "name": "TOC Row 1",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "hmKLi",
+                              "name": "TOC Icon 1",
+                              "width": 12,
+                              "height": 12,
+                              "icon": "hash",
+                              "library": "lucide",
+                              "fill": "$field/placeholder"
+                            },
+                            {
+                              "type": "text",
+                              "id": "MHQKJ",
+                              "name": "TOC Text 1",
+                              "fill": "$muted",
+                              "content": "Choose provider",
+                              "fontFamily": "Geist",
+                              "fontSize": 12.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "w7ejRv",
+                          "name": "TOC Row 2",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "D1SRJ",
+                              "name": "TOC Icon 2",
+                              "width": 12,
+                              "height": 12,
+                              "icon": "hash",
+                              "library": "lucide",
+                              "fill": "$field/placeholder"
+                            },
+                            {
+                              "type": "text",
+                              "id": "Unf3w",
+                              "name": "TOC Text 2",
+                              "fill": "$muted",
+                              "content": "Setup",
+                              "fontFamily": "Geist",
+                              "fontSize": 12.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "rectangle",
+                          "id": "l7z12m",
+                          "name": "TOC Divider",
+                          "fill": "$border/border",
+                          "width": "fill_container",
+                          "height": 1
+                        },
+                        {
+                          "type": "text",
+                          "id": "xuKZW",
+                          "name": "Coverage Label",
+                          "fill": "$field/placeholder",
+                          "content": "COVERS",
+                          "fontFamily": "JetBrains Mono",
+                          "fontSize": 9,
+                          "fontWeight": "600",
+                          "letterSpacing": 0.7
+                        },
+                        {
+                          "type": "frame",
+                          "id": "lzYNT",
+                          "name": "Coverage Row 0",
+                          "width": "fill_container",
+                          "gap": 7,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "wi1jd",
+                              "name": "Coverage Icon 0",
+                              "width": 12,
+                              "height": 12,
+                              "icon": "book-open",
+                              "library": "lucide",
+                              "fill": "$field/placeholder"
+                            },
+                            {
+                              "type": "text",
+                              "id": "bVJ0m",
+                              "name": "Coverage Text 0",
+                              "fill": "$muted",
+                              "content": "Tunnels",
+                              "fontFamily": "Geist",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "d11U9k",
+                          "name": "Coverage Row 1",
+                          "width": "fill_container",
+                          "gap": 7,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "IxKhV",
+                              "name": "Coverage Icon 1",
+                              "width": 12,
+                              "height": 12,
+                              "icon": "book-open",
+                              "library": "lucide",
+                              "fill": "$field/placeholder"
+                            },
+                            {
+                              "type": "text",
+                              "id": "iZ8XR",
+                              "name": "Coverage Text 1",
+                              "fill": "$muted",
+                              "content": "Relay",
+                              "fontFamily": "Geist",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "hscYM",
+                          "name": "Coverage Row 2",
+                          "width": "fill_container",
+                          "gap": 7,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "k8XzND",
+                              "name": "Coverage Icon 2",
+                              "width": 12,
+                              "height": 12,
+                              "icon": "book-open",
+                              "library": "lucide",
+                              "fill": "$field/placeholder"
+                            },
+                            {
+                              "type": "text",
+                              "id": "xbzGV",
+                              "name": "Coverage Text 2",
+                              "fill": "$muted",
+                              "content": "NAT traversal",
+                              "fontFamily": "Geist",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "L2y0YZ",
+                      "name": "Edit Page Card",
+                      "width": "fill_container",
+                      "fill": "$background/background",
+                      "cornerRadius": "$radius/3xl",
+                      "stroke": "$border/border",
+                      "strokeWidth": 1,
+                      "strokeAlignment": "inner",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "padding": 14,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "cKx0M",
+                          "name": "Edit Page Title",
+                          "fill": "$foreground/foreground",
+                          "content": "Improve this page",
+                          "fontFamily": "JetBrains Mono",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "iHwdm",
+                          "name": "Edit Page Body",
+                          "fill": "$muted",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Found a gap? Open a docs issue or suggest an edit on GitHub.",
+                          "lineHeight": 1.4,
+                          "fontFamily": "Geist",
+                          "fontSize": 11.5,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "dSWJG",
+                          "name": "Edit Page Link",
+                          "gap": 6,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "M4qDPO",
+                              "name": "Edit Page Link Text",
+                              "fill": "$accent/soft-foreground",
+                              "content": "Edit this page",
+                              "fontFamily": "Geist",
+                              "fontSize": 12,
+                              "fontWeight": "500"
+                            },
+                            {
+                              "type": "icon",
+                              "id": "cHbQk",
+                              "name": "Edit Page Link Icon",
+                              "width": 12,
+                              "height": 12,
+                              "icon": "external-link",
+                              "library": "lucide",
+                              "fill": "$accent/accent"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "QHFdH",
+      "x": 0,
+      "y": 118088,
+      "name": "Screen/Docs — Remote Agent Gateway",
+      "theme": {
+        "semantic": "dark"
+      },
+      "clip": true,
+      "width": 1440,
+      "height": 1140,
+      "fill": "$background/background",
+      "children": [
+        {
+          "id": "R1n5h",
+          "type": "ref",
+          "ref": "K2Rt4H",
+          "height": "fill_container",
+          "name": "DocsSidebar/Expanded",
+          "width": 280
+        },
+        {
+          "type": "frame",
+          "id": "PlDdL",
+          "name": "Docs Main",
+          "width": "fill_container",
+          "height": "fill_container",
+          "fill": "$background/background",
+          "layout": "vertical",
+          "children": [
+            {
+              "id": "Ku9Il",
+              "type": "ref",
+              "ref": "SOdlr",
+              "name": "Docs Top Bar",
+              "width": "fill_container",
+              "descendants": {
+                "NImey": {
+                  "content": "Platform"
+                },
+                "ikbi6": {
+                  "content": "Agent gateway"
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "lOEwV",
+              "name": "Docs Article Body",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "gap": 32,
+              "padding": 32,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "l6IQjM",
+                  "name": "Docs Article",
+                  "width": 780,
+                  "layout": "vertical",
+                  "gap": 14,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "nWAT3",
+                      "name": "Article Eyebrow",
+                      "fill": "$accent/accent",
+                      "content": "PLATFORM",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 11,
+                      "fontWeight": "600",
+                      "letterSpacing": 0.8
+                    },
+                    {
+                      "type": "text",
+                      "id": "TmIfW",
+                      "name": "Article Title",
+                      "fill": "$foreground/foreground",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Remote agent gateway",
+                      "lineHeight": 1.1,
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 30,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "q7kq5v",
+                      "name": "Article Lead",
+                      "fill": "$muted",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Run one central Gameplane API and dashboard, plus an operator and an optional gateway in each remote cluster. The gateway proxies approved agent operations over mTLS so the central dashboard can reach consoles, files, players and captures in clusters it does not run in.",
+                      "lineHeight": 1.45,
+                      "fontFamily": "Geist",
+                      "fontSize": 15,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "nvPIU",
+                      "name": "Article Metadata",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "id": "dEhXo",
+                          "type": "ref",
+                          "ref": "NZPtq",
+                          "name": "Meta Chip 0",
+                          "descendants": {
+                            "NLG8t": {
+                              "content": "GATEWAY"
+                            }
+                          }
+                        },
+                        {
+                          "id": "DhSsr",
+                          "type": "ref",
+                          "ref": "EbSsA",
+                          "name": "Meta Chip 1",
+                          "descendants": {
+                            "yb6zz": {
+                              "content": "v0.2"
+                            }
+                          }
+                        },
+                        {
+                          "id": "BhSkh",
+                          "type": "ref",
+                          "ref": "EbSsA",
+                          "name": "Meta Chip 2",
+                          "descendants": {
+                            "yb6zz": {
+                              "content": "14 MIN"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "jkIg1",
+                      "name": "Article Callout",
+                      "width": "fill_container",
+                      "fill": "$accent/soft",
+                      "cornerRadius": "$radius/xl",
+                      "stroke": "$border/border",
+                      "strokeWidth": 1,
+                      "strokeAlignment": "inner",
+                      "gap": 10,
+                      "padding": [
+                        10,
+                        12
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "Fnyay",
+                          "name": "Article Callout Icon",
+                          "width": 16,
+                          "height": 16,
+                          "icon": "milestone",
+                          "library": "lucide",
+                          "fill": "$accent/soft-foreground"
+                        },
+                        {
+                          "type": "text",
+                          "id": "jMSXT",
+                          "name": "Article Callout Text",
+                          "fill": "$accent/soft-foreground",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "The gateway ships in v0.3.0 and is not available in v0.2.0-beta.8.",
+                          "fontFamily": "Geist",
+                          "fontSize": 12.5,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "eLuG5",
+                      "name": "Article Callout",
+                      "width": "fill_container",
+                      "fill": "$accent/soft",
+                      "cornerRadius": "$radius/xl",
+                      "stroke": "$border/border",
+                      "strokeWidth": 1,
+                      "strokeAlignment": "inner",
+                      "gap": 10,
+                      "padding": [
+                        10,
+                        12
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "CdVif",
+                          "name": "Article Callout Icon",
+                          "width": 16,
+                          "height": 16,
+                          "icon": "shield-alert",
+                          "library": "lucide",
+                          "fill": "$accent/soft-foreground"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Y2TRsJ",
+                          "name": "Article Callout Text",
+                          "fill": "$accent/soft-foreground",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "The central API still reaches each Kubernetes API directly for resources, Pod logs and PTY attach. The gateway is not a Kubernetes tunnel and has no database or login.",
+                          "fontFamily": "Geist",
+                          "fontSize": 12.5,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "KKCN3",
+                      "name": "Guide Section 1",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "w2uan",
+                          "name": "Section Title 1",
+                          "fill": "$foreground/foreground",
+                          "content": "What the gateway carries",
+                          "fontFamily": "JetBrains Mono",
+                          "fontSize": 17,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "nZN8l",
+                          "name": "Section Body 1",
+                          "fill": "$muted",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "The gateway extends registered clusters with console, file management, player operations, live status and captures. Registry browsing and modpacks use the selected cluster's Kubernetes client and game template.",
+                          "lineHeight": 1.45,
+                          "fontFamily": "Geist",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "XSm6h",
+                          "name": "Section List 1",
+                          "width": "fill_container",
+                          "fill": "$surface/surface",
+                          "cornerRadius": "$radius/2xl",
+                          "stroke": "$border/border",
+                          "strokeWidth": 1,
+                          "strokeAlignment": "inner",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "padding": [
+                            8,
+                            10
+                          ],
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "ZgHNP",
+                              "name": "Section 1 Item 0",
+                              "width": "fill_container",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "id": "WgsPX",
+                                  "name": "Section 1 Item Icon 0",
+                                  "width": 13,
+                                  "height": 13,
+                                  "icon": "check",
+                                  "library": "lucide",
+                                  "fill": "$accent/accent"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "GJtxm",
+                                  "name": "Section 1 Item Text 0",
+                                  "fill": "$default/foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "RCON console, game logs, file manager, player operations and server status",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 12.5,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "nwaqW",
+                              "name": "Section 1 Item 1",
+                              "width": "fill_container",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "id": "JYqrP",
+                                  "name": "Section 1 Item Icon 1",
+                                  "width": 13,
+                                  "height": 13,
+                                  "icon": "check",
+                                  "library": "lucide",
+                                  "fill": "$accent/accent"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "SxtmS",
+                                  "name": "Section 1 Item Text 1",
+                                  "fill": "$default/foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Agent-based mods and UID-bound capture files",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 12.5,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "k78RF",
+                              "name": "Section 1 Item 2",
+                              "width": "fill_container",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "id": "sR1Pz",
+                                  "name": "Section 1 Item Icon 2",
+                                  "width": 13,
+                                  "height": 13,
+                                  "icon": "check",
+                                  "library": "lucide",
+                                  "fill": "$accent/accent"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "T8UjFc",
+                                  "name": "Section 1 Item Text 2",
+                                  "fill": "$default/foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Registry browsing and modpacks use the selected cluster's Kubernetes client",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 12.5,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "U9vhG",
+                      "name": "Guide Section 1",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "iDFlx",
+                          "name": "Section Title 1",
+                          "fill": "$foreground/foreground",
+                          "content": "Deploy the gateway with Helm",
+                          "fontFamily": "JetBrains Mono",
+                          "fontSize": 17,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "GyyNp",
+                          "name": "Section Body 1",
+                          "fill": "$muted",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Use matching API, operator and agent versions. Create Secrets for server TLS, central client CA, and agent credentials, then install with Helm setting api.enabled=false and gateway.enabled=true.",
+                          "lineHeight": 1.45,
+                          "fontFamily": "Geist",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "h3s4p",
+                          "name": "Section List 1",
+                          "width": "fill_container",
+                          "fill": "$surface/surface",
+                          "cornerRadius": "$radius/2xl",
+                          "stroke": "$border/border",
+                          "strokeWidth": 1,
+                          "strokeAlignment": "inner",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "padding": [
+                            8,
+                            10
+                          ],
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "LutgN",
+                              "name": "Section 1 Item 0",
+                              "width": "fill_container",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "id": "nnifv",
+                                  "name": "Section 1 Item Icon 0",
+                                  "width": 13,
+                                  "height": 13,
+                                  "icon": "check",
+                                  "library": "lucide",
+                                  "fill": "$accent/accent"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "i5HYm",
+                                  "name": "Section 1 Item Text 0",
+                                  "fill": "$default/foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "clusterID must match the Cluster resource name exactly",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 12.5,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "E04BRW",
+                              "name": "Section 1 Item 1",
+                              "width": "fill_container",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "id": "HND61",
+                                  "name": "Section 1 Item Icon 1",
+                                  "width": 13,
+                                  "height": 13,
+                                  "icon": "check",
+                                  "library": "lucide",
+                                  "fill": "$accent/accent"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "reKxX",
+                                  "name": "Section 1 Item Text 1",
+                                  "fill": "$default/foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Create Role and RoleBinding in each configured namespace with read-only get access",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 12.5,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "bCHex",
+                              "name": "Section 1 Item 2",
+                              "width": "fill_container",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "id": "Jvo3Q",
+                                  "name": "Section 1 Item Icon 2",
+                                  "width": 13,
+                                  "height": 13,
+                                  "icon": "check",
+                                  "library": "lucide",
+                                  "fill": "$accent/accent"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "iEsvP",
+                                  "name": "Section 1 Item Text 2",
+                                  "fill": "$default/foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Configure NetworkPolicy for central API CIDRs, Kubernetes API endpoints, DNS, and game agent traffic",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 12.5,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "WpDkw",
+                      "name": "Guide Section 2",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "wvNDk",
+                          "name": "Section Title 2",
+                          "fill": "$foreground/foreground",
+                          "content": "Register the gateway centrally",
+                          "fontFamily": "JetBrains Mono",
+                          "fontSize": 17,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "I93Tv",
+                          "name": "Section Body 2",
+                          "fill": "$muted",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Create a credential Secret in the central API namespace, then add the gateway reference to the existing Cluster resource with URL and tlsSecretRef.",
+                          "lineHeight": 1.45,
+                          "fontFamily": "Geist",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "GAWwN",
+                          "name": "Section List 2",
+                          "width": "fill_container",
+                          "fill": "$surface/surface",
+                          "cornerRadius": "$radius/2xl",
+                          "stroke": "$border/border",
+                          "strokeWidth": 1,
+                          "strokeAlignment": "inner",
+                          "layout": "vertical",
+                          "gap": 5,
+                          "padding": [
+                            8,
+                            10
+                          ],
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "WzK19",
+                              "name": "Section 2 Item 0",
+                              "width": "fill_container",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "id": "q3XxK6",
+                                  "name": "Section 2 Item Icon 0",
+                                  "width": 13,
+                                  "height": 13,
+                                  "icon": "check",
+                                  "library": "lucide",
+                                  "fill": "$accent/accent"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "gvp64",
+                                  "name": "Section 2 Item Text 0",
+                                  "fill": "$default/foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Create Secret with ca.crt, tls.crt and tls.key for central client authentication",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 12.5,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "LH8B7",
+                              "name": "Section 2 Item 1",
+                              "width": "fill_container",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "id": "PrWrT",
+                                  "name": "Section 2 Item Icon 1",
+                                  "width": 13,
+                                  "height": 13,
+                                  "icon": "check",
+                                  "library": "lucide",
+                                  "fill": "$accent/accent"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "XTaAg",
+                                  "name": "Section 2 Item Text 1",
+                                  "fill": "$default/foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Client certificate must chain to gateway.centralClientCASecret and carry the gateway URI SAN",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 12.5,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "HIxz3",
+                              "name": "Section 2 Item 2",
+                              "width": "fill_container",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "id": "sN0AY",
+                                  "name": "Section 2 Item Icon 2",
+                                  "width": 13,
+                                  "height": 13,
+                                  "icon": "check",
+                                  "library": "lucide",
+                                  "fill": "$accent/accent"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "mj0mq",
+                                  "name": "Section 2 Item Text 2",
+                                  "fill": "$default/foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Registration name must match the gateway's clusterID",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 12.5,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "N9XImu",
+                      "name": "Guide Section 3",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "f81U3u",
+                          "name": "Section Title 3",
+                          "fill": "$foreground/foreground",
+                          "content": "Verify the installation",
+                          "fontFamily": "JetBrains Mono",
+                          "fontSize": 17,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Covjz",
+                          "name": "Section Body 3",
+                          "fill": "$muted",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Confirm the gateway Pod is Ready, the Cluster resource shows Healthy, and test console, file manager and players on a test server.",
+                          "lineHeight": 1.45,
+                          "fontFamily": "Geist",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "eWmil",
+                          "name": "Quick Reference",
+                          "width": "fill_container",
+                          "fill": "$surface/tertiary",
+                          "cornerRadius": "$radius/xl",
+                          "stroke": "$border/border",
+                          "strokeWidth": 1,
+                          "strokeAlignment": "inner",
+                          "layout": "vertical",
+                          "gap": 3,
+                          "padding": 12,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "nVmyZ",
+                              "name": "Quick Reference Label",
+                              "fill": "$accent/accent",
+                              "content": "GATEWAY",
+                              "fontFamily": "JetBrains Mono",
+                              "fontSize": 9,
+                              "fontWeight": "600",
+                              "letterSpacing": 0.6
+                            },
+                            {
+                              "type": "text",
+                              "id": "ymqKR",
+                              "name": "Quick Reference Line 1",
+                              "fill": "$foreground/foreground",
+                              "content": "01  Secrets first: server TLS, central client CA, agent client + CA",
+                              "fontFamily": "JetBrains Mono",
+                              "fontSize": 11.5,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "JWm24",
+                              "name": "Quick Reference Line 2",
+                              "fill": "$foreground/foreground",
+                              "content": "02  Helm: api.enabled=false, gateway.enabled=true, clusterID, peerURI, NetworkPolicy CIDRs",
+                              "fontFamily": "JetBrains Mono",
+                              "fontSize": 11.5,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "Rzlo6",
+                              "name": "Quick Reference Line 3",
+                              "fill": "$foreground/foreground",
+                              "content": "03  Central: labeled credential Secret + Cluster spec.agentGateway",
+                              "fontFamily": "JetBrains Mono",
+                              "fontSize": 11.5,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "GD8Xx",
+                              "name": "Quick Reference Line 4",
+                              "fill": "$foreground/foreground",
+                              "content": "04  Verify a test server end to end; Cluster health is Kubernetes-only",
+                              "fontFamily": "JetBrains Mono",
+                              "fontSize": 11.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "dU3I4",
+                      "name": "Article Next Link",
+                      "width": "fill_container",
+                      "stroke": "$border/border",
+                      "strokeWidth": {
+                        "top": 1
+                      },
+                      "strokeAlignment": "inner",
+                      "strokeLinejoin": "round",
+                      "padding": [
+                        10,
+                        0,
+                        0,
+                        0
+                      ],
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "Z5ZHl0",
+                          "name": "Next Link Text",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "Vk5Du",
+                              "name": "Next Link Eyebrow",
+                              "fill": "$field/placeholder",
+                              "content": "NEXT GUIDE",
+                              "fontFamily": "Geist",
+                              "fontSize": 10,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "s9jYyT",
+                              "name": "Next Link Title",
+                              "fill": "$foreground/foreground",
+                              "content": "Users, authentication, and RBAC",
+                              "fontFamily": "JetBrains Mono",
+                              "fontSize": 13,
+                              "fontWeight": "500"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "icon",
+                          "id": "Jq5Gc",
+                          "name": "Next Link Icon",
+                          "width": 15,
+                          "height": 15,
+                          "icon": "arrow-right",
+                          "library": "lucide",
+                          "fill": "$muted"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "iu5q0",
+                  "name": "Docs Page Aside",
+                  "width": 250,
+                  "layout": "vertical",
+                  "gap": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "H4BGa",
+                      "name": "Docs Table of Contents",
+                      "width": "fill_container",
+                      "fill": "$surface/secondary",
+                      "cornerRadius": "$radius/2xl",
+                      "stroke": "$border/border",
+                      "strokeWidth": 1,
+                      "strokeAlignment": "inner",
+                      "layout": "vertical",
+                      "gap": 10,
+                      "padding": 16,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "te7uU",
+                          "name": "TOC Label",
+                          "fill": "$field/placeholder",
+                          "content": "ON THIS PAGE",
+                          "fontFamily": "JetBrains Mono",
+                          "fontSize": 9,
+                          "fontWeight": "600",
+                          "letterSpacing": 0.7
+                        },
+                        {
+                          "type": "frame",
+                          "id": "tyZnG",
+                          "name": "TOC Row 2",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "AyYi6",
+                              "name": "TOC Icon 2",
+                              "width": 12,
+                              "height": 12,
+                              "icon": "hash",
+                              "library": "lucide",
+                              "fill": "$field/placeholder"
+                            },
+                            {
+                              "type": "text",
+                              "id": "URbLj",
+                              "name": "TOC Text 2",
+                              "fill": "$muted",
+                              "content": "What the gateway carries",
+                              "fontFamily": "Geist",
+                              "fontSize": 12.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "eqrHv",
+                          "name": "TOC Row 0",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "fZU0m",
+                              "name": "TOC Icon 0",
+                              "width": 12,
+                              "height": 12,
+                              "icon": "hash",
+                              "library": "lucide",
+                              "fill": "$accent/accent"
+                            },
+                            {
+                              "type": "text",
+                              "id": "fSxnl",
+                              "name": "TOC Text 0",
+                              "fill": "$foreground/foreground",
+                              "content": "Deploy the gateway with Helm",
+                              "fontFamily": "Geist",
+                              "fontSize": 12.5,
+                              "fontWeight": "500"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "q1p03z",
+                          "name": "TOC Row 1",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "J0DD1k",
+                              "name": "TOC Icon 1",
+                              "width": 12,
+                              "height": 12,
+                              "icon": "hash",
+                              "library": "lucide",
+                              "fill": "$field/placeholder"
+                            },
+                            {
+                              "type": "text",
+                              "id": "zN8Gg",
+                              "name": "TOC Text 1",
+                              "fill": "$muted",
+                              "content": "Register the gateway centrally",
+                              "fontFamily": "Geist",
+                              "fontSize": 12.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "yuicL",
+                          "name": "TOC Row 2",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "b1ub5e",
+                              "name": "TOC Icon 2",
+                              "width": 12,
+                              "height": 12,
+                              "icon": "hash",
+                              "library": "lucide",
+                              "fill": "$field/placeholder"
+                            },
+                            {
+                              "type": "text",
+                              "id": "FpN27",
+                              "name": "TOC Text 2",
+                              "fill": "$muted",
+                              "content": "Verify the installation",
+                              "fontFamily": "Geist",
+                              "fontSize": 12.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "rectangle",
+                          "id": "LCZH6",
+                          "name": "TOC Divider",
+                          "fill": "$border/border",
+                          "width": "fill_container",
+                          "height": 1
+                        },
+                        {
+                          "type": "text",
+                          "id": "c0cu9",
+                          "name": "Coverage Label",
+                          "fill": "$field/placeholder",
+                          "content": "COVERS",
+                          "fontFamily": "JetBrains Mono",
+                          "fontSize": 9,
+                          "fontWeight": "600",
+                          "letterSpacing": 0.7
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Bzy8z",
+                          "name": "Coverage Row 0",
+                          "width": "fill_container",
+                          "gap": 7,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "mOWpx",
+                              "name": "Coverage Icon 0",
+                              "width": 12,
+                              "height": 12,
+                              "icon": "book-open",
+                              "library": "lucide",
+                              "fill": "$field/placeholder"
+                            },
+                            {
+                              "type": "text",
+                              "id": "RLO4Z",
+                              "name": "Coverage Text 0",
+                              "fill": "$muted",
+                              "content": "Gateway",
+                              "fontFamily": "Geist",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "tzu9a",
+                          "name": "Coverage Row 1",
+                          "width": "fill_container",
+                          "gap": 7,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "SHP2w",
+                              "name": "Coverage Icon 1",
+                              "width": 12,
+                              "height": 12,
+                              "icon": "book-open",
+                              "library": "lucide",
+                              "fill": "$field/placeholder"
+                            },
+                            {
+                              "type": "text",
+                              "id": "M1h7f",
+                              "name": "Coverage Text 1",
+                              "fill": "$muted",
+                              "content": "mTLS",
+                              "fontFamily": "Geist",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "D2Oyu",
+                          "name": "Coverage Row 2",
+                          "width": "fill_container",
+                          "gap": 7,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "z9Dzh",
+                              "name": "Coverage Icon 2",
+                              "width": 12,
+                              "height": 12,
+                              "icon": "book-open",
+                              "library": "lucide",
+                              "fill": "$field/placeholder"
+                            },
+                            {
+                              "type": "text",
+                              "id": "pPDHq",
+                              "name": "Coverage Text 2",
+                              "fill": "$muted",
+                              "content": "Cluster registration",
+                              "fontFamily": "Geist",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Ivwze",
+                          "name": "Coverage Row 2",
+                          "width": "fill_container",
+                          "gap": 7,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "Zauoi",
+                              "name": "Coverage Icon 2",
+                              "width": 12,
+                              "height": 12,
+                              "icon": "book-open",
+                              "library": "lucide",
+                              "fill": "$field/placeholder"
+                            },
+                            {
+                              "type": "text",
+                              "id": "GAfxZ",
+                              "name": "Coverage Text 2",
+                              "fill": "$muted",
+                              "content": "Troubleshooting",
+                              "fontFamily": "Geist",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "z7siBh",
+                      "name": "Edit Page Card",
+                      "width": "fill_container",
+                      "fill": "$background/background",
+                      "cornerRadius": "$radius/3xl",
+                      "stroke": "$border/border",
+                      "strokeWidth": 1,
+                      "strokeAlignment": "inner",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "padding": 14,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "nRoS1",
+                          "name": "Edit Page Title",
+                          "fill": "$foreground/foreground",
+                          "content": "Improve this page",
+                          "fontFamily": "JetBrains Mono",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "TNTaK",
+                          "name": "Edit Page Body",
+                          "fill": "$muted",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Found a gap? Open a docs issue or suggest an edit on GitHub.",
+                          "lineHeight": 1.4,
+                          "fontFamily": "Geist",
+                          "fontSize": 11.5,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Uw52v",
+                          "name": "Edit Page Link",
+                          "gap": 6,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "dg0IA",
+                              "name": "Edit Page Link Text",
+                              "fill": "$accent/soft-foreground",
+                              "content": "Edit this page",
+                              "fontFamily": "Geist",
+                              "fontSize": 12,
+                              "fontWeight": "500"
+                            },
+                            {
+                              "type": "icon",
+                              "id": "CkFKe",
+                              "name": "Edit Page Link Icon",
+                              "width": 12,
+                              "height": 12,
+                              "icon": "external-link",
+                              "library": "lucide",
+                              "fill": "$accent/accent"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
                 }
               ]
             }

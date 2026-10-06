@@ -169,7 +169,7 @@
                   "fill": "$muted",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "Permission-based RBAC with admin/operator/viewer roles, scoped per namespace or cluster-wide.",
+                  "content": "Permission-based RBAC with admin/operator/viewer roles, scoped per namespace or cluster-wide. Registering a cluster grants no user access by itself: remote access uses supplemental per-cluster grants, and a global union of permission names never authorizes a row in another cluster.",
                   "lineHeight": 1.5,
                   "fontFamily": "$typography/font-sans",
                   "fontSize": 14,
@@ -201,6 +201,37 @@
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
                   "content": "mTLS with an operator-managed CA; the agent refuses plain HTTP once TLS material is present.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "nak8d",
+              "name": "API ↔ remote gateway",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "EltoE",
+                  "fill": "$foreground/foreground",
+                  "content": "API ↔ remote gateway",
+                  "fontFamily": "$typography/font-mono",
+                  "fontSize": 18,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "UYIWs",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "In v0.3.0, optional agent gateway for remote clusters. Central API reaches it with dedicated mTLS identity, separate trust material from local agent CA. Gateway exposes only allowlisted operations in configured namespaces.",
                   "lineHeight": 1.5,
                   "fontFamily": "$typography/font-sans",
                   "fontSize": 14,
@@ -316,7 +347,7 @@
                           "type": "text",
                           "id": "Q7UBD",
                           "fill": "$foreground/foreground",
-                          "content": "Module Authoring",
+                          "content": "Operate the server fleet",
                           "fontFamily": "$typography/font-mono",
                           "fontSize": 14,
                           "fontWeight": "500"
