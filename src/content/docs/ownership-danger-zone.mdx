@@ -13,9 +13,6 @@ covers: ["Ownership", "RBAC", "Deletion"]
 import DocsCallout from "../../components/docs/DocsCallout.astro";
 import DocsSectionList from "../../components/docs/DocsSectionList.astro";
 import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
-import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
-
-<DocsArticleMeta groupId="servers-config" readTime="13 MIN" />
 
 <DocsCallout icon="shield-alert" title="Coming in v0.3.0: owner-or-admin tightening">
   Ownership, collaborators, transfer, wipe, and delete are available in v0.2.0-beta.8, where operator-role users can also run them on servers they don't own. From v0.3.0, transferring ownership, editing collaborators, wiping data and deleting a server need the server's owner or an admin. Servers with no recorded owner (for example created with kubectl or GitOps) can then be transferred, wiped or deleted only by an admin.

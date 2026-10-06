@@ -11,14 +11,9 @@ covers: ["Replicas", "Failure domains", "RTO"]
 next: executable-upgrades-rollback
 ---
 
-import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
 import DocsCallout from "../../components/docs/DocsCallout.astro";
 import DocsSectionList from "../../components/docs/DocsSectionList.astro";
 import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
-
-<DocsArticleMeta groupId="cluster-storage" readTime="17 MIN" />
-
-Replicate only supported components, remove avoidable single points of failure, and test disruption against explicit objectives.
 
 <DocsCallout icon="shield-alert" title="Replica count alone is not HA.">
   Edge routing, database, storage, scheduling capacity, and leader behavior must survive the same failure. Merely running two copies without testing the loss of one domain leaves you with two identical failures, not redundancy.

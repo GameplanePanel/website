@@ -14,11 +14,6 @@ next: "general-server-settings"
 import DocsCallout from "../../components/docs/DocsCallout.astro";
 import DocsSectionList from "../../components/docs/DocsSectionList.astro";
 import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
-import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
-
-<DocsArticleMeta groupId="servers-config" readTime="10 MIN" />
-
-Read desired state, health, capacity, connection endpoint, and live game context before taking an action.
 
 <DocsCallout icon="shield-alert" title="Treat state, conditions, events, and live game status as one story—not four independent indicators.">
   Every significant change (restart, scale, configuration update) touches the state machine. Read the phase, conditions, events, and live player count together to understand why a server is in its current state and what actions are safe.

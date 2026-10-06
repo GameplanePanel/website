@@ -14,11 +14,8 @@ next: troubleshooting
 import DocsCallout from "../../components/docs/DocsCallout.astro";
 import DocsSectionList from "../../components/docs/DocsSectionList.astro";
 import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
-import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
 
 Gameplane releases are pinned with signed container images and strict Kubernetes compatibility. Every upgrade is reversible if planned carefully; every migration is documented in the release notes.
-
-<DocsArticleMeta groupId="upgrades" readTime="15 MIN" />
 
 <DocsCallout icon="refresh-cw" title="Plan platform changes in isolation">
   Do not combine a platform upgrade with unrelated server, storage, authentication, or network changes. Each change introduces risk vectors; combining them makes root-cause analysis impossible when something breaks.

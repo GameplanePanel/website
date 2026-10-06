@@ -14,11 +14,8 @@ next: public-website-development
 import DocsCallout from "../../components/docs/DocsCallout.astro";
 import DocsSectionList from "../../components/docs/DocsSectionList.astro";
 import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
-import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
 
 Gameplane ships three optional deployable services plus one shared Go library, all opt-in and off by default. Each is independently deployable, testable, and packaged with its own Helm toggle.
-
-<DocsArticleMeta groupId="component-guides" readTime="15 MIN" />
 
 <DocsCallout icon="shield-alert" title="Opt-in safety boundaries">
 Optional services remain opt-in and require independent least-privilege RBAC, bounded I/O, health, metrics, and secret-safe logs.
