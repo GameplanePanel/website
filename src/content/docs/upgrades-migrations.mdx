@@ -75,7 +75,7 @@ Most releases are backward-compatible, but some introduce schema changes or requ
 - [CHANGELOG](../changelog/) — upgrade notes at the top of the release section
 - [Supported Versions Matrix](../supported-versions-matrix/) — which clusters/Kubernetes versions are compatible
 - Network changes — if the release adds new `NetworkPolicy` or changes to `spec.networking`
-- CRD migrations — if any CRD fields were removed, renamed, or changed in meaning
+- CRD migrations — if any CRD fields were removed, renamed, or changed in meaning (CRDs are applied automatically by the chart's `crds.autoApply` hook; see [CRD updates on upgrade](#crd-updates-on-upgrade))
 
 ## Stage and observe
 
@@ -197,6 +197,37 @@ kubectl rollout status deploy/gameplane-api -n gameplane-system
     "03  Production observed; version recorded; rollback window closed",
   ]}
 />
+
+## CRD updates on upgrade
+
+`helm upgrade` never updates CRDs (a Helm limitation: files under a chart's `crds/` directory are installed once and ignored afterwards). The chart works around this with `crds.autoApply` (enabled by default), a pre-install/pre-upgrade hook that runs `kubectl apply --server-side` over the current CRDs. No manual `kubectl apply` step is needed. The hook runs on every `helm upgrade`, and on a `helm install` only when the cluster holds CRDs from a different chart version that an earlier, uninstalled release left behind. A genuinely fresh install never depends on pulling the hook's `kubectl` image.
+
+If you set `crds.autoApply.enabled=false`, apply the CRDs yourself:
+
+```sh
+kubectl apply --server-side -f charts/gameplane/crds/
+```
+
+- **Helm 3, reinstalling over leftover CRDs:** the hook runs, so air-gapped clusters need `crds.autoApply.image` mirrored for that case.
+- **Helm 4:** `crds/` is applied natively with a server-side apply under the field manager `helm`. CRDs last applied by v0.2.0-beta.8 or earlier were applied under the `kubectl` manager, so a Helm 4 `helm install` over such leftovers stops with `conflict with "kubectl" ... .spec.versions`. Re-run it once with `--force-conflicts`:
+
+```sh
+helm install gameplane charts/gameplane -n gameplane-system --create-namespace --force-conflicts
+```
+
+<DocsCallout icon="info" title="Arrives in v0.3.0">
+The Helm 4 field-manager behavior and the hook-on-reinstall behavior above are part of v0.3.0.
+</DocsCallout>
+
+## Upgrade notes for v0.3.0
+
+Read these before upgrading from v0.2.0-beta.8:
+
+- **Every existing GameServer rolls once.** Network capture needs a pre-provisioned volume on every game pod, because Kubernetes ephemeral containers can add containers to a running pod but not volumes. The capture `emptyDir` is therefore added to every pod template, and each pod is recreated once on upgrade, interrupting active player sessions. This does not repeat on later starts. Servers that do not opt into capture carry only an empty, unused volume: no capture sidecar, no `CAP_NET_RAW`, no network change. Plan the upgrade window accordingly.
+- **Owner-only server operations.** Transferring ownership, editing collaborators, wiping data and deleting a server now need the server's owner or an admin. Operator-role users keep their other server permissions but can no longer run these four operations on servers they do not own. Servers with no recorded owner (for example created with kubectl or GitOps) can be transferred, wiped or deleted only by an admin.
+- **Playit tunnel egress widened.** The operator-managed NetworkPolicy for a GameServer using the `playit` tunnel provider now adds an unrestricted egress rule (all ports and protocols, any destination) alongside the DNS/advertised-ports rule every provider gets. Previously playit could not reach its relay.
+- **Helm 3 and Helm 4 CRD handling.** See the section above, including the one-time `--force-conflicts` for Helm 4.
+- **Tunnel credential Secrets must be owned by their GameServer.** The operator refuses a tunnel credentials Secret whose `ownerReference` does not match the GameServer's name and UID, scales the tunnel to zero and reports `TunnelReady=False` with reason `TunnelCredentialRefused`. Secrets created with plain `kubectl create secret` for v0.2.0-beta.8 are refused after the upgrade: re-enter the credential in the server's Networking tab (which writes an owned `<server>-tunnel-auth` Secret) or add the ownerReference. See [Server Networking & Tunnels](../server-networking-tunnels/).
 
 ## Rollback decision
 

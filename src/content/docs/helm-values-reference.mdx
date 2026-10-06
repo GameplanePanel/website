@@ -71,10 +71,40 @@ The following OIDC fields enable install-time role mapping and customization of 
 | Key | Type | Default | Description |
 |---|---|---|---|
 | `api.oidc.displayName` | string | `"Single sign-on"` | Label for the OIDC login button shown on the login screen (before authentication). |
-| `api.oidc.groupsClaim` | string | *(empty — defaults to "groups")* | OIDC claim name containing group or role memberships. Examples: `groups`, `roles`, `membership`, `department`. When empty, uses the default claim "groups". |
+| `api.oidc.groupsClaim` | string | *(empty — defaults to "groups")* | OIDC claim name containing group or role memberships. Examples: `groups`, `roles`, `membership`, `department`. When empty, the `groups` claim is read. This only chooses which claim is read; it does not turn group-based role mapping on or off (`roleMappings` does). Mapping is active whenever at least one `roleMappings` list is non-empty or an admin has set a mapping override in the dashboard. With neither, new OIDC users get `viewer` and existing users' roles are never re-evaluated. |
 | `api.oidc.defaultRole` | string | *(empty — defaults to "viewer")* | Default dashboard role for new OIDC users when no group matches a configured mapping. Accepted: `viewer`, `operator`, `admin`, `deny` (deny = reject login). When empty, defaults to "viewer". |
 | `api.oidc.roleMappings` | object | `{admin: [], operator: [], viewer: []}` | Map OIDC groups to dashboard roles at install/upgrade time. Example: `admin: ["gameplane-admins", "ops-team"]`. DB-managed role overrides (set via dashboard) take precedence and survive Helm upgrades. |
 </DocsCallout>
+
+## API replicas and trusted proxies
+
+| Key | Type | Default | Description |
+|---|---|---|---|
+| `api.replicas` | integer | `1` | Keep at `1`. SQLite is single-writer on a ReadWriteOnce volume; with `db.driver: postgres` (experimental) the user-management lock and audit hash chain are still per-process. |
+| `api.trustedProxies` | string | loopback + RFC 1918 + link-local + ULA ranges | Comma-separated CIDRs of trusted reverse proxies. The API reads `X-Forwarded-For` only when the TCP peer is inside one of these networks; any other peer is itself the client. Used for rate limiting and audit records. The default suits in-cluster ingress. If dashboard users connect from a private network and per-client limits matter for them, narrow it to the ranges your proxies run in (for example the pod CIDR). For direct exposure without an ingress, set it to `""`. |
+
+## CRD auto-apply
+
+`helm upgrade` never updates CRDs, so the chart applies them with a hook. See [CRD updates on upgrade](../upgrades-migrations/#crd-updates-on-upgrade).
+
+| Key | Type | Default | Description |
+|---|---|---|---|
+| `crds.autoApply.enabled` | boolean | `true` | Run a pre-install/pre-upgrade hook that applies the chart's CRDs with `kubectl apply --server-side`. It runs on every upgrade; from v0.3.0 it also runs on an install over CRDs that an earlier, uninstalled release left behind. |
+| `crds.autoApply.image` | string | `registry.k8s.io/kubectl:v1.36.3` | `kubectl` image the hook runs. Retag to a private mirror for air-gapped installs. |
+| `crds.autoApply.pullPolicy` | enum | `IfNotPresent` | Pull policy for the hook image, separate from `image.pullPolicy` so tracking `:edge` does not re-pull it on every upgrade. |
+
+## Agent mTLS and S3 audit sink
+
+| Key | Type | Default | Description |
+|---|---|---|---|
+| `api.agentMTLS.caSecretRef.name` | string | `gameplane-agent-ca` | Secret holding the CA for in-pod agent mTLS (`ca.crt`, `ca.key`). By default the chart generates it at install and reuses it on upgrade. From v0.3.0 you can bring your own: pre-create the Secret in the release namespace and set its name, and the chart does not generate it. Data key names are fixed. A referenced Secret that does not exist then fails a live install or upgrade, and rotating a custom Secret rolls the API and operator. |
+| `api.agentMTLS.clientCertRef.name` | string | `gameplane-agent-client` | Secret holding the API/operator client certificate (`tls.crt`, `tls.key`). Same rules as above. |
+| `api.audit.s3.endpoint` | string | *(empty)* | S3-compatible endpoint `host:port` (for example `minio:9000`). Leave empty to disable the S3 sink. |
+| `api.audit.s3.bucket` | string | *(empty)* | Bucket name (required when `endpoint` is set). |
+| `api.audit.s3.prefix` | string | *(empty)* | Object key prefix, for example `gameplane-audit`. Empty = bucket root. |
+| `api.audit.s3.region` | string | *(empty)* | S3 region. Empty defaults to `us-east-1`. |
+| `api.audit.s3.insecure` | boolean | `false` | Use plain HTTP instead of HTTPS (no TLS at all), for local S3-compatible endpoints. TLS verification is never skipped. |
+| `api.audit.s3.credentialsSecretRef` | object | *(empty name)* | Secret holding the S3 credentials. Leave `name` empty to disable the S3 sink. |
 
 ## API database and persistence
 
@@ -82,7 +112,7 @@ Configure data persistence, audit logging, and telemetry.
 
 | Key | Type | Default | Description |
 |---|---|---|---|
-| `api.db.driver` | enum | `sqlite` | Database backend: `sqlite` (single-node, built-in) or `postgres` (multi-node, external server). Requires `-tags postgres` image rebuild for PostgreSQL support. |
+| `api.db.driver` | enum | `sqlite` | Database backend: `sqlite` (built-in, production-tested) or `postgres` (external server, experimental). The published api image is built without PostgreSQL, so `postgres` needs an image rebuilt with `-tags postgres`; it is not yet covered by e2e or upgrade tests, and `api.replicas` must stay `1` with either driver. |
 | `api.db.dsn` | string | `file:/data/gameplane.db?_pragma=journal_mode(WAL)` | Database connection string. SQLite path (only when `driver: sqlite`). For PostgreSQL, use a connection string like `postgres://gameplane:***@postgres/gameplane?sslmode=require`. |
 | `api.storage.size` | string | `2Gi` | Size of the SQLite PersistentVolumeClaim (only when `db.driver: sqlite`). Adjust based on audit log retention and historical data. |
 | `api.storage.storageClassName` | string | *(empty)* | Storage class for the SQLite PVC. When empty, uses the cluster's default storage class. |
@@ -132,6 +162,17 @@ Configure default-deny policies for game pods and backups.
 | `networkPolicies.backupEgress.enabled` | boolean | `true` | Allow backup/restore Job pods to reach external restic repositories (S3, REST, SFTP, etc.). Covers HTTPS and SSH ports by default. |
 | `networkPolicies.gameIngress.enabled` | boolean | `true` | Create per-GameServer Ingress NetworkPolicies allowing player traffic from `fromCIDRs`. Operator configures the exact advertised ports per server. |
 | `networkPolicies.gameIngress.fromCIDRs` | list | `["0.0.0.0/0"]` | CIDR ranges allowed to reach game ports. Set to a LAN range (e.g., `["192.168.1.0/24"]`) to restrict access. Cannot be an empty list; set `enabled: false` instead. |
+| `networkPolicies.apiServerCIDRs` | list | `[]` (falls back to RFC 1918 + link-local) | CIDRs holding the kube-apiserver endpoints the agent sidecar reaches for its status heartbeat, on TCP 443 and 6443. Set it to narrow that egress to your API endpoints, or when they sit outside those ranges. |
+
+<DocsCallout icon="info" title="Coming in v0.3.0">
+These network capture values are not available in v0.2.0-beta.8.
+
+| Key | Type | Default | Description |
+|---|---|---|---|
+| `capture.enabled` | boolean | `false` | Let admins opt individual GameServers into packet capture. Capture is always opt-in per server; a server that does not opt in gets no capture sidecar. |
+| `capture.defaultMaxDurationSeconds` | integer | `300` | Default maximum runtime per network capture (5 minutes). Captures stop automatically at the limit. |
+| `capture.defaultMaxSizeBytes` | integer | `943718400` | Default maximum capture size (900 MiB), kept under the 1 GiB `emptyDir` limit backing the capture volume. Captures stop automatically at the limit. |
+</DocsCallout>
 
 ## Advanced: MCP and telemetry
 
@@ -139,7 +180,7 @@ Configure optional integrations.
 
 | Key | Type | Default | Description |
 |---|---|---|---|
-| `mcpServer.enabled` | boolean | `false` | Deploy a read-only Model Context Protocol (MCP) server for AI assistant integrations. Read-only, stdio JSON-RPC only (no network port). See `mcp-server/README.md`. |
+| `mcpServer.enabled` | boolean | `false` | Deploy a read-only Model Context Protocol (MCP) server for AI assistant integrations. It reads 7 Gameplane CRDs (not `Cluster`, nor `NetworkCapture`, the ninth CRD added in v0.3.0), plus Pods, Events and pod logs. Read-only, stdio JSON-RPC only (no network port). See `mcp-server/README.md`. |
 | `api.telemetry.receiver.enabled` | boolean | `false` | Deploy the bundled telemetry receiver (telemetry-receiver image) for opt-in anonymous usage stats. When enabled and `endpoint` is unset, the API auto-wires to it. Admin toggle in dashboard controls whether anything is sent. |
 
 ## Example: minimal production install

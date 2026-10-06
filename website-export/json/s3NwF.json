@@ -207,7 +207,7 @@
                       "fill": "$muted",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "Select ClusterIP, NodePort, or LoadBalancer based on where players connect and who controls the network edge.",
+                      "content": "Select ClusterIP, NodePort, or LoadBalancer based on where players connect and who controls the network edge. When you have no public IP or no control over the network edge, layer a relay tunnel over the Service.",
                       "lineHeight": 1.45,
                       "fontFamily": "Geist",
                       "fontSize": 13,
@@ -325,6 +325,38 @@
                               "fontWeight": "normal"
                             }
                           ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "uvoEx",
+                          "name": "Section 1 Item 3",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "yeKwY",
+                              "name": "Section 1 Item Icon 2",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "check",
+                              "library": "lucide",
+                              "fill": "$accent/accent"
+                            },
+                            {
+                              "type": "text",
+                              "id": "y0JVjj",
+                              "name": "Section 1 Item Text 2",
+                              "fill": "$default/foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Layer relay tunnels (frp, Tailscale, playit) over the Service when lacking public IP or LoadBalancer.",
+                              "fontFamily": "Geist",
+                              "fontSize": 12.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
                         }
                       ]
                     }
@@ -355,7 +387,7 @@
                       "fill": "$muted",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "Treat every port override and CIDR allow-list as part of the server’s documented interface.",
+                      "content": "Treat every port override and CIDR allow-list as part of the server's documented interface.",
                       "lineHeight": 1.45,
                       "fontFamily": "Geist",
                       "fontSize": 13,

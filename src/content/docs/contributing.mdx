@@ -4,7 +4,7 @@ description: Follow the dev loop, the design-first workflow, and code style stan
 section: develop
 group: local-development
 order: 3
-icon: userss
+icon: users
 ---
 
 import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
@@ -29,6 +29,29 @@ UI changes start in design.pen — the designed screens are the source of truth 
 
 ## Code standards
 
-Go via gofmt/vet/golangci-lint; TypeScript strict with ESLint — comments only when the why isn't obvious.
+- **Indentation**: tabs in Go, 2 spaces elsewhere (YAML, JSON, TypeScript, Markdown). LF line endings everywhere.
+- **Go**: `gofmt`, `go vet`, `golangci-lint`. Errors are wrapped with `%w` to preserve the cause chain.
+- **Linting**: fix the underlying issue; do not add inline suppression directives (`//nolint:`, `// eslint-disable`). The few centralized exemptions live in `.golangci.yml`.
+- **TypeScript**: strict mode, ESLint + Prettier, and no `any` without a justification comment.
+- **Comments**: write one only when the *why* is non-obvious (a hidden invariant, workaround, or constraint a reader would ask about).
 
-The full contribution guide — test tiers, signed commits, and the PR process — is in [contributing.md on GitHub](https://github.com/ValgulNecron/Gameplane/blob/master/docs/contributing.md).
+## Submitting a change
+
+1. Fork the repository and create a feature branch.
+2. Run only quick compile checks locally (`go build ./...`, `npx tsc --noEmit`). The full test and lint suites run on CI, where they are gated; see [Testing, coverage, and E2E](../testing-coverage-e2e/).
+3. If you change `.github/workflows/` or `.github/actions/`, run the static workflow checks before pushing: `actionlint .github/workflows/*.yaml` and `zizmor .github/workflows/ .github/actions/`. Pin every external action to a full 40-character commit SHA with a `# vX.Y.Z` comment (Dependabot keeps the pins current), and give every job an explicit least-privilege `permissions` block and a `timeout-minutes`.
+4. For UI work, include the Pencil node IDs you touched in the PR description.
+5. Sign your commits (`git commit -s`).
+6. Check that the PR carries at least one `type:` label and one `area:` label (CodeRabbit applies them; you verify them). Breaking CRD, API or chart-value changes also take `breaking`.
+
+## Game modules and submodules
+
+Game-module changes belong in the separate `gameplane-module` repository, vendored here as the `modules/` submodule. Open the module PR there; once it merges, bump the submodule pointer in a follow-up PR.
+
+`.gitmodules` points both submodules (`modules/`, `website/`) at the upstream GitHub URLs, so a fork clones them without forking them too. To work on your own fork of a submodule, repoint it locally and don't commit the change:
+
+```sh
+git submodule set-url modules https://github.com/<you>/gameplane-module.git
+```
+
+The full contribution guide, including per-component test commands and the release process, is in [contributing.md on GitHub](https://github.com/ValgulNecron/Gameplane/blob/master/docs/contributing.md). Release signing is covered in [CI, releases, and signing](../ci-releases-signing/).

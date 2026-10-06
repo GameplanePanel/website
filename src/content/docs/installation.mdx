@@ -117,7 +117,7 @@ From v0.3.0 the chart can also seed the provider's display name and role mapping
 api:
   oidc:
     displayName: "My SSO Provider"
-    groupsClaim: "groups"           # OIDC claim containing group memberships
+    groupsClaim: "groups"           # which OIDC claim to read (empty = "groups"); does not turn mapping on or off
     defaultRole: "viewer"           # Default role when group mapping doesn't match
     roleMappings:
       admin:
@@ -217,7 +217,7 @@ printf '%s' "$ADMIN_PASSWORD" | kubectl -n gameplane-system exec -i deploy/gamep
   /api bootstrap-admin --username admin --password-stdin
 ```
 
-If a user already exists, pass `--force` to rotate the password and promote them to `admin`.
+If a user already exists, pass `--force` to rotate the password, promote them to `admin`, and end their existing sessions.
 
 ### Step 3: Verify the installation
 
@@ -302,7 +302,7 @@ kubectl -n gameplane-system logs deploy/gameplane-api
 
 Common issues:
 
-- **SQLite database locked**: If using SQLite with multiple API replicas (not supported), only one can write at a time. Use a single `api.replicas: 1` or switch to PostgreSQL.
+- **SQLite database locked**: SQLite is single-writer on a ReadWriteOnce volume, so running multiple API replicas is not supported. Keep `api.replicas: 1`. PostgreSQL is experimental and does not make extra replicas safe either: the user-management lock and audit hash chain remain per-process.
 - **Missing default StorageClass**: The API needs a PVC for the SQLite database. Verify with `kubectl get sc`.
 
 ### Ingress / TLS not working

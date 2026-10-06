@@ -9,7 +9,7 @@
   },
   "clip": true,
   "width": 1440,
-  "height": 900,
+  "height": 1000,
   "fill": "$background/background",
   "children": [
     {
@@ -570,6 +570,72 @@
                 },
                 {
                   "type": "frame",
+                  "id": "P1ch8s",
+                  "name": "Guide Section 4",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "GE524",
+                      "name": "Section Title 3",
+                      "fill": "$foreground/foreground",
+                      "content": "CRD updates on upgrade",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 17,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "wHtaW",
+                      "name": "Section Body 3",
+                      "fill": "$muted",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Helm cannot auto-update CRDs, but the chart's autoApply hook applies them server-side. From v0.3.0, Helm 4 needs --force-conflicts on a first install over v0.2 CRDs.",
+                      "lineHeight": 1.45,
+                      "fontFamily": "Geist",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "w2Xb8",
+                  "name": "Guide Section 5",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "D5jOxT",
+                      "name": "Section Title 3",
+                      "fill": "$foreground/foreground",
+                      "content": "Upgrade notes for v0.3.0",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 17,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "O2vzsD",
+                      "name": "Section Body 3",
+                      "fill": "$muted",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "GameServers roll once for network capture volume. Owner-only server operations (transfer, collaborate, wipe, delete). Playit tunnel egress widened. Tunnel Secrets must be owned by GameServer.",
+                      "lineHeight": 1.45,
+                      "fontFamily": "Geist",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
                   "id": "GzehF",
                   "name": "Article Next Link",
                   "width": "fill_container",
@@ -610,7 +676,7 @@
                           "id": "pVDYw",
                           "name": "Next Link Title",
                           "fill": "$foreground/foreground",
-                          "content": "Troubleshooting",
+                          "content": "Executable upgrades and rollback",
                           "fontFamily": "JetBrains Mono",
                           "fontSize": 13,
                           "fontWeight": "500"
@@ -748,6 +814,66 @@
                           "name": "TOC Text 2",
                           "fill": "$muted",
                           "content": "Rollback",
+                          "fontFamily": "Geist",
+                          "fontSize": 12.5,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "zrPcr",
+                      "name": "TOC Row 3",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "UCM3z",
+                          "name": "TOC Icon 2",
+                          "width": 12,
+                          "height": 12,
+                          "icon": "hash",
+                          "library": "lucide",
+                          "fill": "$field/placeholder"
+                        },
+                        {
+                          "type": "text",
+                          "id": "f34OII",
+                          "name": "TOC Text 2",
+                          "fill": "$muted",
+                          "content": "CRD updates",
+                          "fontFamily": "Geist",
+                          "fontSize": 12.5,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "dHQHZ",
+                      "name": "TOC Row 4",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "lA9d1",
+                          "name": "TOC Icon 2",
+                          "width": 12,
+                          "height": 12,
+                          "icon": "hash",
+                          "library": "lucide",
+                          "fill": "$field/placeholder"
+                        },
+                        {
+                          "type": "text",
+                          "id": "CZ9Tf",
+                          "name": "TOC Text 2",
+                          "fill": "$muted",
+                          "content": "v0.3.0 notes",
                           "fontFamily": "Geist",
                           "fontSize": 12.5,
                           "fontWeight": "normal"

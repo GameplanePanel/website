@@ -61,6 +61,8 @@ The 11 buckets partition tests by **login pressure, not feature area**. The API 
 
 Use `BUCKET=<name> make test-e2e-bucket` to run a single bucket locally against a live cluster.
 
+The separate `ingress-nginx smoke (kind)` CI job boots a Kind cluster with the node config `make dev-up` uses, applies the dev ingress-nginx manifest pinned in `deploy/kind/up.sh` and waits for the controller rollout. It runs only when `deploy/kind/**` or the CI workflow file changes.
+
 <DocsQuickReference
   label="TEST PYRAMID"
   items={[

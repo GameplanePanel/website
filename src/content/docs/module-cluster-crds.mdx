@@ -73,13 +73,15 @@ ModuleSource indexes a module catalog (OCI registry, git repo, HTTP archive, or 
 
 ## Cluster registration
 
-The Cluster CRD registers a remote Kubernetes cluster for multi-cluster deployments. Each Cluster holds a kubeconfig Secret reference and reports health.
+The Cluster CRD registers a remote Kubernetes cluster for multi-cluster deployments. Each Cluster holds a kubeconfig Secret reference, optionally a reference to a private agent gateway (v0.3.0), and reports Kubernetes connectivity health. The `metadata.name` must equal the gateway's configured cluster ID.
 
 | Field | Type | Required | Purpose |
 |---|---|---|---|
 | `spec.displayName` | string | no | Human-readable label for the cluster (appears in the dashboard) |
 | `spec.kubeconfigSecret.name` | string | yes | Name of a Secret in the operator namespace holding the kubeconfig |
 | `spec.kubeconfigSecret.key` | string | no | Secret data key where kubeconfig lives; defaults to `kubeconfig` |
+| `spec.agentGateway.url` | string | no | **(v0.3.0)** HTTPS origin of the cluster's agent gateway, with no userinfo, path, query or fragment (for example `https://remote-1-gateway.internal:8443`) |
+| `spec.agentGateway.tlsSecretRef.name` | string | yes, if `agentGateway` is set | **(v0.3.0)** Secret in the central API namespace holding `ca.crt`, `tls.crt` and `tls.key`, labeled `gameplane.local/agent-gateway-credentials: "true"`; values are never returned by the API |
 | `status.phase` | enum | read-only | Unknown / Healthy / Unhealthy — reflects latest connectivity check |
 | `status.lastCheckTime` | time | read-only | When health was last assessed |
 | `status.message` | string | read-only | Details about the current phase (error reason if Unhealthy) |
@@ -107,3 +109,4 @@ The Cluster CRD registers a remote Kubernetes cluster for multi-cluster deployme
 - **[CRD Catalog](../crd-catalog/)** — overview of all 9 Gameplane CRDs.
 - **[Status, Phases & Conditions](../status-phases-conditions/)** — how to interpret phase and condition values.
 - **[Multi-cluster Topology](../multi-cluster/)** — register and manage remote clusters.
+- **[Remote Agent Gateway](../remote-agent-gateway/)** — install the gateway and fill in `spec.agentGateway`.

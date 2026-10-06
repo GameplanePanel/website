@@ -9,7 +9,7 @@
   },
   "clip": true,
   "width": 1440,
-  "height": 900,
+  "height": 960,
   "fill": "$background/background",
   "children": [
     {
@@ -221,7 +221,69 @@
                   "fill": "$muted",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "Go via gofmt/vet/golangci-lint; TypeScript strict with ESLint — comments only when the why isn't obvious.",
+                  "content": "Indentation: tabs in Go, 2 spaces elsewhere. Go: gofmt, vet, golangci-lint. TypeScript: strict with ESLint + Prettier. Comments only when why isn't obvious.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "bZQPI",
+              "name": "Submitting a change",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "NhhOO",
+                  "fill": "$foreground/foreground",
+                  "content": "Submitting a change",
+                  "fontFamily": "$typography/font-mono",
+                  "fontSize": 18,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "vcqC2",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Fork the repository and create a feature branch. Run only quick compile checks locally. For UI work, include Pencil node IDs in PR description. Sign your commits. Verify PR labels: type: and area:.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "ceKhm",
+              "name": "Game modules and submodules",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Od21k",
+                  "fill": "$foreground/foreground",
+                  "content": "Game modules and submodules",
+                  "fontFamily": "$typography/font-mono",
+                  "fontSize": 18,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "yIzMh",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Game-module changes belong in gameplane-module repository. Open the module PR there; once it merges, bump the submodule pointer. Repoint submodules locally without committing.",
                   "lineHeight": 1.5,
                   "fontFamily": "$typography/font-sans",
                   "fontSize": 14,
@@ -282,7 +344,7 @@
                           "type": "text",
                           "id": "dXLka",
                           "fill": "$foreground/foreground",
-                          "content": "Module Authoring",
+                          "content": "Local development setup",
                           "fontFamily": "$typography/font-mono",
                           "fontSize": 14,
                           "fontWeight": "500"
@@ -293,10 +355,46 @@
                 },
                 {
                   "type": "frame",
-                  "id": "tjyxc",
-                  "width": 1,
-                  "height": 1,
-                  "layout": "none"
+                  "id": "g1nn6",
+                  "gap": 6,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "MZxVB",
+                      "layout": "vertical",
+                      "alignItems": "end",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "HdvO5",
+                          "fill": "$muted",
+                          "content": "Next",
+                          "fontFamily": "$typography/font-sans",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "A2zon",
+                          "fill": "$foreground/foreground",
+                          "content": "Contribution & Design Workflow",
+                          "fontFamily": "$typography/font-mono",
+                          "fontSize": 14,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "icon",
+                      "id": "knnkZ",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "arrow-right",
+                      "library": "lucide",
+                      "fill": "$muted"
+                    }
+                  ]
                 }
               ]
             }

@@ -9,7 +9,7 @@
   },
   "clip": true,
   "width": 1440,
-  "height": 900,
+  "height": 1000,
   "fill": "$background/background",
   "children": [
     {
@@ -477,7 +477,7 @@
                   "fill": "$muted",
                   "textGrowth": "fixed-width",
                   "width": 820,
-                  "content": "Console and log traffic flow API ↔ Agent directly over mTLS; the Operator provisions and reconciles both.",
+                  "content": "In the home cluster, console and log traffic flow API ↔ Agent directly over mTLS; the Operator provisions and reconciles both. Remote clusters go through an optional gateway (below).",
                   "textAlign": "center",
                   "fontFamily": "$typography/font-sans",
                   "fontSize": 12,
@@ -571,6 +571,37 @@
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
                   "content": "ModuleSource CRs declare where templates come from — OCI registry, git, HTTP, local, or dashboard upload.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$typography/font-sans",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "QIGcw",
+              "name": "Multiple clusters and the gateway",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "H5vmfu",
+                  "fill": "$foreground/foreground",
+                  "content": "Multiple clusters and the gateway (v0.3.0)",
+                  "fontFamily": "$typography/font-mono",
+                  "fontSize": 18,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "m5Qk68",
+                  "fill": "$muted",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "One central API and dashboard can manage independent clusters registered as Cluster resources. Each target cluster runs its own operator, and optionally a private gateway built from the API image. The gateway has no database, no user login and no browser or admin routes. Users authenticate only to the central API, which stays the authorization authority.",
                   "lineHeight": 1.5,
                   "fontFamily": "$typography/font-sans",
                   "fontSize": 14,

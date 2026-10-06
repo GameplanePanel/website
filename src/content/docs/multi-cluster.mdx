@@ -4,7 +4,7 @@ description: Make cluster boundaries explicit and operate independent environmen
 section: platform
 group: cluster-storage
 order: 3
-icon: boxeses
+icon: boxes
 sidebarLabel: Multi-cluster
 eyebrow: PLATFORM
 readTime: 14 MIN
@@ -23,6 +23,57 @@ Make cluster boundaries explicit and operate independent environments without im
 <DocsCallout icon="shield-alert" title="Shared policy, not shared state">
   Share policy through GitOps and SSO; do not share live databases, controller state, or repository credentials across boundaries.
 </DocsCallout>
+
+<DocsCallout icon="milestone" title="Coming in v0.3.0">
+  The optional agent gateway and the unified cross-cluster dashboard described below arrive in v0.3.0. In v0.2.0-beta.8 you can register clusters and manage their resources from one dashboard, but console and log streaming is scoped to the local control-plane cluster.
+</DocsCallout>
+
+## Manage independent clusters from one dashboard
+
+One central API and login manages independent registered clusters. Each remote cluster runs its own operator and, optionally, a private [agent gateway](../remote-agent-gateway/). Clusters stay independent execution and storage boundaries; only their presentation is combined.
+
+### What works across clusters
+
+The central API connects directly to each registered Kubernetes API for resource changes, Pod logs and PTY attach. The gateway adds the agent-based operations on top; it does not tunnel Kubernetes traffic.
+
+| Capability | How it reaches the remote cluster |
+|---|---|
+| Create, edit and delete GameServers, Backups and other resources | Central API to the cluster's Kubernetes API, using the registered kubeconfig |
+| Pod startup/stdout logs and PTY console attach | Selected cluster's Kubernetes API; no gateway needed |
+| RCON console, game log files, file manager, players, live status, agent-based mods, RCON module actions | Gateway, which forwards to the game Pod's agent over mTLS |
+| Stdin module actions | Selected cluster's Kubernetes client, after a workload-ownership check |
+| Packet-capture downloads and cleanup | Gateway capture route; requires an upgraded gateway and capture sidecar |
+| Registry browsing, modpacks, ID-list mods | Selected cluster's Kubernetes client and game template; provider credentials stay in the central installation |
+| Node inventory and storage totals | Central API reads the cluster's Kubernetes API with the registered kubeconfig's identity |
+
+The same server pages and permissions apply to local and remote servers. Every operation stays bound to its cluster, namespace and resource identity, and an unavailable remote never falls back to a local server with the same name.
+
+### What does not work across clusters
+
+- No cross-cluster scheduling, automatic failover, shared storage, or live game migration; move worlds with backup and restore (see [Promote and migrate](#promote-and-migrate)).
+- No second user database: accounts, roles, the module catalog, audit and installation settings stay centrally managed.
+- Node-join tokens, kubeconfig issuance and installation storage configuration are local-cluster operations and are unavailable while viewing a remote cluster.
+- Registration is an administrator step. The dashboard's **Clusters** page lists and selects existing registrations; you enroll a cluster through the `Cluster` resource and its credential Secrets.
+- A gateway outage does not stop games or their local operator, and the `Cluster` health status reports Kubernetes connectivity only, not gateway health.
+
+### Match component versions
+
+Use matching API, operator and agent versions in every cluster. Remote requests use only the UID-bound agent route; an older agent, or an operator that has not yet injected the server UID, fails closed with a 404 and there is no fallback to legacy agent paths. Upgrading the operator can roll existing game Pods, so schedule it for a maintenance window. Capture downloads and cleanup additionally need an upgraded capture sidecar: files written by an older sidecar stay available locally but are refused on the remote route. The [agent gateway guide](../remote-agent-gateway/) covers the upgrade details.
+
+### One view across locations
+
+The dashboard, Servers, Backups and Search combine every resource the user is authorized to see, across all registered clusters, with an optional **Location** filter. There is no global cluster switcher in the ordinary shell.
+
+- **Dashboard:** combined server and player counts; inventory cards combine only the sites where the user has inventory permission. CPU and memory ratios use summed usage over matching capacity, and unavailable metrics show as unknown rather than zero. Unavailable or truncated scopes are listed next to partial totals.
+- **Servers:** one list with the existing game, namespace, status and text filters plus Location, kept inside the Filter popover. Same-named servers in different clusters or namespaces stay distinct, and each row acts on its own cluster and namespace.
+- **Server detail:** links carry the cluster and namespace. Console, files, players, settings and backups inherit that target, so refreshing or opening a link in another tab never depends on a previous selection. Legacy links without a cluster mean the local cluster.
+- **Backups and Search:** snapshots, schedules, restores and server search combine authorized scopes and keep each result's cluster, namespace and name. Filters stage until you click Apply.
+- **Creating a server:** the target is chosen before creation. A single eligible placement is automatic; with several, you pick a location, with an eligible local placement preferred. Gameplane does not schedule across clusters or retry a failed creation on another site.
+- **Partial data:** a disconnected cluster or a list limit produces a visible partial-data state, and a failed remote query never falls back to local data.
+
+### Grant access per cluster
+
+Kubernetes credentials and dashboard grants are separate. The registered kubeconfig must be able to read the target cluster's resources, and users need a grant for the cluster and namespace they use. In **Users & RBAC**, create a role, edit the user, choose the remote cluster for a supplemental grant, pick the role and namespace, and add it. The user's local primary role stays separate, and changing grants revokes their sessions so they sign in again. For node inventory, use a role containing `cluster:read` with **All namespaces**; namespace-only server grants do not expose inventory. Remote all-namespace roles may hold only `cluster:read` and namespaced permissions; wildcard and central-administration permissions are rejected.
 
 ## Define the control boundary
 
@@ -98,3 +149,4 @@ Promote `Cluster` CRs, `GameTemplate`, and `Module` manifests through version co
 - [High Availability](../high-availability/) — Replicate the control plane for production resilience.
 - [Backups & Recovery](../backups-recovery/) — Back up game worlds and move them between clusters.
 - [Users, Auth & RBAC](../users-auth-rbac/) — Set up authentication and role bindings per cluster.
+- [Remote agent gateway](../remote-agent-gateway/) — Install the per-cluster gateway, register it centrally, verify and troubleshoot it.

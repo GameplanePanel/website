@@ -22,8 +22,8 @@ Core workflows — deploy a game server, console, files, backups/restore, module
     title="Known limitations"
     icon="minus"
     items={[
-      "WebSocket console/log/file streams are local-cluster-scoped — remote clusters are registered and health-checked but not yet streamed.",
-      "The PostgreSQL driver is experimental (build-tag-gated, work-in-progress); SQLite is the production-tested database.",
+      "WebSocket console/log/file streams are local-cluster-scoped in v0.2.0-beta.8 — remote clusters are registered and health-checked but not yet streamed. v0.3.0 adds remote access through an optional agent gateway.",
+      "The PostgreSQL driver is experimental (build-tag-gated); SQLite is the production-tested database. v0.3.0 makes the driver work end to end, but it stays experimental: keep a single API replica, and it is not yet covered by e2e or upgrade tests.",
     ]}
   />
   <IconList
@@ -62,11 +62,11 @@ Core workflows — deploy a game server, console, files, backups/restore, module
     icon="circle-dot"
     iconClass="text-primary"
     items={[
-      "13 new top-steam-game modules — FiveM, Farming Simulator 25, Arma Reforger, Squad, Hell Let Loose, and others (30 total).",
+      "14 new game modules — FiveM, Farming Simulator 25, Arma Reforger, Squad, Hell Let Loose, Nuclear Option and others (30 in total, up from 16 in v0.2.0-beta.8).",
       "Install-time OIDC role mappings and default StorageClass — zero post-deploy auth configuration.",
       "Share link expiry options — custom expiration dates and no-expiry choice per share.",
-      "Audit-log webhook push sink — forward audit events to HTTP endpoints for external logging/SIEM integration (in progress).",
-      "Audit-to-syslog bridge relay — forward RFC 5424 audit events to syslog endpoints (in progress).",
+      "Multicluster agent gateway and unified server management — an optional private mTLS gateway per cluster, with combined dashboard, Servers, Backups and Search views. Cluster health still reports Kubernetes connectivity only; dedicated gateway health is follow-up work.",
+      "PostgreSQL driver works end to end — still experimental: keep a single API replica.",
     ]}
   />
 </div>

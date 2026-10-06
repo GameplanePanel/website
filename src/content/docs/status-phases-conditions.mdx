@@ -40,6 +40,7 @@ GameServer conditions align with the Kubernetes Condition API (`metav1.Condition
 | **Progressing** | A spec change is being rolled out | True / False |
 | **Healthy** | Liveness/readiness probes pass | True / False |
 | **AddressAssignment** | External address allocated (LoadBalancer mode) | True / False / Unknown |
+| **TunnelReady** | Tunnel Deployment is ready and its provider config is complete (ports mapped, credentials present); present only while a tunnel is enabled. From v0.3.0, reason `TunnelCredentialRefused` means the credential Secret is not owned by the GameServer | True / False / (absent) |
 | **DataWipe** | Wipe-data job succeeded | True / False / (absent) |
 
 ## Backup & Restore
@@ -90,7 +91,7 @@ A ModuleSource indexes a catalog (Git, OCI registry, HTTP, or local) and caches 
 
 ## Cluster health phases
 
-A remote Cluster's phase reflects the last health check:
+A remote Cluster's phase reflects the last Kubernetes API health check. It does not probe the optional agent gateway, so a Healthy cluster can still have an unreachable gateway:
 
 | Phase | Meaning |
 |-------|---------|

@@ -19,11 +19,15 @@ Local accounts with argon2id hashing, or OIDC (Keycloak, Google, GitHub) with JW
 
 ## Authorization
 
-Permission-based RBAC with admin/operator/viewer roles, scoped per namespace or cluster-wide.
+Permission-based RBAC with admin/operator/viewer roles, scoped per namespace or cluster-wide. Registering a cluster grants no user access by itself: remote access uses supplemental per-cluster grants, and a global union of permission names never authorizes a row in another cluster.
 
 ## API ↔ Agent
 
 mTLS with an operator-managed CA; the agent refuses plain HTTP once TLS material is present.
+
+## API ↔ remote gateway
+
+In v0.3.0, remote clusters can run an optional [agent gateway](../remote-agent-gateway/). The central API reaches it with a dedicated mTLS identity: separate trust material from the local agent CA, and an exact URI SAN the gateway requires in the client certificate. The central API remains the user-authorization authority, so a trusted client certificate grants delegated access to the gateway's allowlisted agent operations only. It is not a user credential, so keep its private key restricted to the central API workload. The gateway exposes only allowlisted operations in its configured namespaces, never forwards browser cookies, bearer tokens or CSRF headers, and reaches agents over local agent mTLS on versioned, GameServer-UID-bound routes. Missing or malformed credentials fail closed with no fallback to a same-named local server. Removing trust or permissions blocks new operations but does not immediately end an existing stream; restart the gateway or set `gateway.maxRequestDuration` to bound that window.
 
 <DocsCallout icon="shield-alert" title="Found a security issue?">
   Report it privately via GitHub Security Advisories rather than a public issue — we'll coordinate

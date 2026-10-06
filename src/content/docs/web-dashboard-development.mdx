@@ -63,7 +63,7 @@ The shared request layer owns credentials, CSRF, errors, cluster selection, and 
     {
       icon: "check",
       label: "SSE/WebSocket clients reconnect with visible status",
-      text: "Status callbacks surface \"reconnecting…\" to the UI; WS streams (console/RCON/log) remain local-cluster-scoped today, so switching clusters does not yet tear down an open stream (tracked in docs/roadmap.md).",
+      text: "Status callbacks surface \"reconnecting…\" to the UI; a socket is bound to the open server's cluster and namespace, reconnects keep that target, and leaving the server view closes its streams. Inventory selection and list filters never retarget an open server operation, and unsupported remote operations fail instead of reaching a same-named local server (v0.3.0).",
     },
   ]}
 />

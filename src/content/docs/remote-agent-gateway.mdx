@@ -1,0 +1,316 @@
+---
+title: Remote agent gateway
+description: Install the optional per-cluster gateway, register it with the central API over mTLS, and verify and troubleshoot remote console, file, player and capture access.
+section: platform
+group: cluster-storage
+order: 10
+icon: network
+sidebarLabel: Agent gateway
+eyebrow: PLATFORM
+readTime: 14 MIN
+covers: ["Gateway", "mTLS", "Cluster registration", "Troubleshooting"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
+
+<DocsArticleMeta groupId="cluster-storage" readTime="14 MIN" />
+
+Run one central Gameplane API and dashboard, plus an operator and an optional gateway in each remote cluster. The gateway proxies approved agent operations over mTLS so the central dashboard can reach consoles, files, players and captures in clusters it does not run in.
+
+<DocsCallout icon="milestone" title="Coming in v0.3.0">
+  The agent gateway ships in v0.3.0 and is not available in v0.2.0-beta.8.
+</DocsCallout>
+
+<DocsCallout icon="shield-alert" title="The gateway does not replace Kubernetes credentials">
+  The central API still connects directly to each registered Kubernetes API for resource changes, Pod logs, PTY attach and stdin module actions. The gateway is not a Kubernetes tunnel, does not replicate storage, and has no database or user login. Users authenticate to the central API, which keeps authorization.
+</DocsCallout>
+
+## What the gateway carries
+
+The gateway extends registered clusters with the RCON console, game log files, file management, player operations, live status, agent-based mods and capture files. Registry browsing, modpacks and ID-list mods use the selected cluster's Kubernetes client and game template, and provider credentials stay in the central installation. See [Multi-cluster topology](../multi-cluster/) for the full list of what works and what does not across clusters.
+
+## Prepare the remote cluster
+
+Use matching API, operator and agent versions in the remote cluster. The gateway runs the API image's `gateway` subcommand under a dedicated ServiceAccount with read-only `get` access to GameServers, NetworkCaptures and Services in its configured namespaces. It has no database and no user login.
+
+Create these Secrets in the chart release namespace before enabling the gateway:
+
+| Secret value | Required keys | Purpose |
+|---|---|---|
+| `gateway.serverTLSSecret` | `tls.crt`, `tls.key` | Gateway server identity, with a DNS SAN matching the configured endpoint |
+| `gateway.centralClientCASecret` | `ca.crt` | CA trusted to issue central API client certificates |
+| `gateway.agentClientSecret` | `tls.crt`, `tls.key` | Existing local agent client credentials; defaults to `gameplane-agent-client` |
+| `gateway.agentCASecret` | `ca.crt` | Existing local agent trust; defaults to `gameplane-agent-ca` |
+
+The gateway also requires an exact `gateway.peerURI` URI SAN in the central client certificate. Use a separate management trust root from the local agent CA. The chart mounts only `ca.crt` from the agent CA Secret, never its signing key, and keeps provisioning the local agent CA and client Secrets when the central API is disabled.
+
+### Certificate reload and stream lifetime
+
+- The gateway reloads its server and trust material on new TLS handshakes, rechecks central-peer trust on requests, and reloads agent credentials for new upstream requests. Allow time for Kubernetes Secret volume projection to update, and overlap client and server trust before retiring old certificates.
+- Streams and transfers have no fixed total-duration cap by default (`gateway.maxRequestDuration: 0s`). They still end at the central client certificate's expiry, when the caller disconnects, or when the gateway shuts down. A positive value such as `1h` adds a total lifetime, capped by certificate expiry.
+- Ordinary operations and Kubernetes identity lookups stay bounded to 30 seconds, and connection, TLS handshake and response-header timeouts remain in place.
+- Removing trust or permissions prevents new operations but does not immediately revoke an existing stream. Restart the gateway to end active sessions sooner, or set a maximum lifetime. Reconnecting checks authorization and trust again.
+- When upgrading with reused Helm values, change an existing `gateway.maxRequestDuration: 5m` to `0s` to remove the old cutoff.
+
+## Deploy the gateway with Helm
+
+Adapt the [example values](https://github.com/ValgulNecron/Gameplane/blob/master/charts/gameplane/examples/gateway-values.yaml) for a fresh remote installation:
+
+```yaml
+api:
+  enabled: false
+gateway:
+  enabled: true
+  clusterID: remote-1
+  peerURI: spiffe://gameplane.example/central-api
+  namespaces: [gameplane-games]
+  serverTLSSecret: gameplane-gateway-server
+  centralClientCASecret: gameplane-central-client-ca
+  networkPolicy:
+    peerCIDRs: [10.20.30.40/32]
+    apiServerCIDRs: [10.96.0.1/32, 10.0.0.10/32]
+```
+
+```sh
+helm upgrade --install gameplane ./charts/gameplane \
+  --namespace gameplane-system --create-namespace \
+  --values gateway-values.yaml
+```
+
+<DocsSectionList
+  items={[
+    {
+      icon: "check",
+      label: "clusterID must equal the Cluster resource name",
+      text: "The name of the Cluster resource in the central installation must match gateway.clusterID exactly.",
+    },
+    {
+      icon: "boxes",
+      label: "Namespaces",
+      text: "An empty namespaces list selects only gamesNamespace. Additional namespaces must already exist. The chart creates a Role and RoleBinding in each configured namespace and grants no cluster-wide gateway permissions.",
+    },
+    {
+      icon: "shield-check",
+      label: "Game network policies",
+      text: "When networkPolicies.enabled is true, the chart also creates matching agent ingress rules. When game network policies are disabled, no new game Pod isolation is introduced; any externally managed default-deny policies must allow gateway traffic on TCP 8090 and TCP 9091 for capture files.",
+    },
+    {
+      icon: "activity",
+      label: "Captures",
+      text: "Enable capture.enabled in the remote chart when captures are wanted. The gateway advertises that cluster's capture settings to the central API. With capture.enabled and networkPolicies.enabled both on, the chart allows TCP 9091 from this release's operator and enabled API pods in the system namespace; externally managed policies must permit the same control traffic.",
+    },
+  ]}
+/>
+
+`api.enabled: false` omits the API Deployment, Service, ServiceAccount and RBAC, the SQLite PVC, the dashboard and its ingress, the cluster-operations grants, the API ServiceMonitor, and the API-only audit and telemetry receivers. The operator, CRDs, agent mTLS and operator/agent monitoring remain. Default installations keep `api.enabled: true` and `gateway.enabled: false`.
+
+<DocsCallout icon="shield-alert" title="Converting an existing API installation">
+  This profile suits a fresh remote installation. For an existing API and database, preserve its PVC and data before disabling the API. Chart-created SQLite PVCs carry `helm.sh/resource-policy: keep`, and a live Helm render refuses to disable an older unannotated PVC. That check cannot run during offline `helm template` or GitOps rendering, and non-Helm pruning controllers may ignore the annotation, so configure your deployment controller's retention before changing an existing installation. The profile does not migrate the database or its users.
+</DocsCallout>
+
+### Gateway Helm values
+
+| Value | Default | Purpose |
+|---|---|---|
+| `gateway.enabled` | `false` | Deploy the gateway |
+| `gateway.replicas` | `1` | Gateway replicas |
+| `gateway.clusterID` | empty | Must match the central `Cluster` resource name |
+| `gateway.peerURI` | empty | Exact URI SAN trusted in the central API client certificate |
+| `gateway.namespaces` | `[]` | Namespaces the gateway may reach; empty selects only `gamesNamespace` |
+| `gateway.serverTLSSecret` | empty | Secret with `tls.crt` and `tls.key` for the gateway server |
+| `gateway.centralClientCASecret` | empty | Secret with `ca.crt` for the CA issuing central client certificates |
+| `gateway.agentCASecret` | `gameplane-agent-ca` | Existing local agent trust |
+| `gateway.agentClientSecret` | `gameplane-agent-client` | Existing local agent client credentials |
+| `gateway.maxRequestDuration` | `0s` | Optional total lifetime for operations and streams; `0s` disables the cap |
+| `gateway.networkPolicy.peerCIDRs` / `peerSelectors` | empty | Allowed sources of incoming TCP 8443; at least one is required |
+| `gateway.networkPolicy.apiServerCIDRs` | empty | Local Kubernetes API endpoint addresses; required |
+| `gateway.networkPolicy.dnsNamespace`, `dnsPodLabels`, `dnsCIDRs` | `kube-system`, `k8s-app: kube-dns`, empty | Cluster-local DNS; add the exact CIDR for NodeLocal DNS |
+
+## Grant inventory permissions
+
+The central API reads node inventory and storage totals directly from the selected cluster's Kubernetes API. Bind these read permissions to the identity in that cluster's **registered kubeconfig**, in addition to its game-resource permissions.
+
+| API group | Resource or path | Verbs | Purpose |
+|---|---|---|---|
+| core | `nodes` | `list` | Node identities, readiness and capacity |
+| core | `persistentvolumes` | `list` | Capacity of bound volumes for provisioned-storage totals |
+| `metrics.k8s.io` | `nodes` | `list` | Optional current node CPU and memory usage |
+| non-resource | `/version`, `/version/` | `get` | Target Kubernetes version; also needed for registration health |
+
+Create this supplemental ClusterRole in the **remote cluster** and bind it only to the ServiceAccount used by the registered kubeconfig:
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: gameplane-central-inventory
+rules:
+  - apiGroups: [""]
+    resources: [nodes, persistentvolumes]
+    verbs: [list]
+  # Optional: omit this rule when node usage metrics are not required.
+  - apiGroups: [metrics.k8s.io]
+    resources: [nodes]
+    verbs: [list]
+  - nonResourceURLs: [/version, /version/]
+    verbs: [get]
+```
+
+Remote capture management additionally needs these rules in the registered identity's namespace-scoped Role, in each managed game namespace:
+
+```yaml
+- apiGroups: [gameplane.local]
+  resources: [networkcaptures]
+  verbs: [get, list, create, patch, delete]
+- apiGroups: [gameplane.local]
+  resources: [networkcaptures/status]
+  verbs: [update]
+```
+
+The API initializes a new capture to Pending through the status subresource. Without that permission, a start request can return 403 after the capture was created, so inspect the capture list before submitting another start request. The gateway ServiceAccount does not need the inventory grants or any write access to capture resources.
+
+Inventory needs no `watch`, namespace or StorageClass enumeration, Secret access, node proxy access or cluster-admin. The namespace list comes from the central API's configured game-namespace allowlist and the user's grants, not from discovering every namespace. Provisioned storage is the sum of bound PV capacity, not measured disk use. Without metrics-server access, node capacity stays visible and current CPU and memory usage is unknown. A denied node or PV read is reported as an inventory error; it is never shown as an empty healthy cluster or retried against the central cluster.
+
+To let a dashboard user see a remote cluster's inventory, create a role containing `cluster:read` in **Users & RBAC**, edit the user, choose the remote cluster, select the role and **All namespaces**, and add the grant. The user must sign in again because grant changes revoke sessions.
+
+## Private networking
+
+The gateway Service is **ClusterIP on TCP 8443**. Provide private routing or a private TLS-passthrough relay to reach it; the chart creates no public ingress, NodePort or LoadBalancer. TLS must reach the gateway unchanged, because the gateway verifies the central client's certificate itself.
+
+A dedicated NetworkPolicy is installed whenever the gateway is enabled, even if the chart's game network policies are disabled. It permits only:
+
+- Incoming TCP 8443 from the configured `peerCIDRs` or `peerSelectors`.
+- DNS on TCP and UDP 53 to the configured DNS pods, or to exact `dnsCIDRs` for NodeLocal DNS.
+- TCP 443 and 6443 to `apiServerCIDRs` in the local cluster.
+- TCP 8090 to game agents in the explicitly allowed namespaces.
+- TCP 9091 to capture sidecars in those same namespaces.
+
+Use the source IPs the target cluster actually observes, accounting for private relay or SNAT behavior. `peerSelectors` identify pods inside this cluster, such as a relay, and cannot select pods by labels in another cluster; give both a namespace selector and a pod selector to narrow a relay allowance. Include the Kubernetes Service and post-DNAT API endpoint addresses your CNI needs. Enforcement requires a supporting CNI, and overlapping policies are additive.
+
+The chart uses TCP liveness and readiness probes so no unauthenticated HTTP endpoint is exposed. These show an open listener, not an end-to-end authenticated agent health check.
+
+## Register the gateway centrally
+
+The gateway needs an HTTPS certificate valid for its configured URL and must trust the central API's dedicated client certificate. Restrict network access to the central API through private networking or an explicit firewall rule.
+
+Create a credential Secret in the central API namespace (normally `gameplane-system`):
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: remote-1-gateway-client
+  namespace: gameplane-system
+  labels:
+    gameplane.local/agent-gateway-credentials: "true"
+type: Opaque
+stringData:
+  ca.crt: <PEM CA bundle validating the gateway server>
+  tls.crt: <PEM central API client certificate with the gateway's expected URI SAN>
+  tls.key: <PEM central API client private key>
+```
+
+These placeholders describe the keys; supply real credentials through your normal Secret-management workflow and never commit private keys to Git.
+
+Then add the optional gateway reference to the existing `Cluster` resource:
+
+```yaml
+apiVersion: gameplane.local/v1alpha1
+kind: Cluster
+metadata:
+  name: remote-1
+spec:
+  kubeconfigSecret:
+    name: remote-1-kubeconfig
+  agentGateway:
+    url: https://remote-1-gateway.internal:8443
+    tlsSecretRef:
+      name: remote-1-gateway-client
+```
+
+The registration name must match the gateway's `clusterID`. The URL is an HTTPS origin with no userinfo, path, query or fragment. Credentials are read only from the central API namespace and must carry the label above. Register the cluster through the central registration API or its `Cluster` resource, and set the gateway field through Kubernetes. The dashboard's **Clusters** page selects existing registrations; enrollment stays an operator-managed step. See [Module & Cluster CRDs](../module-cluster-crds/) for the field reference.
+
+## How requests are routed
+
+The central API authorizes the user, reads the cluster's GameServer UID, and sends an allowlisted operation to the gateway at `/v1/clusters/{cluster}/namespaces/{namespace}/servers/{name}/uids/{uid}/{operation}`. The gateway authenticates the central API, verifies its own cluster ID and the live GameServer and agent Service ownership, and connects to the local agent's UID route, which rejects a different UID. User cookies, bearer tokens and CSRF headers are never forwarded.
+
+A trusted gateway client certificate grants delegated access to the allowlisted agent operations; it is not a user credential, and the gateway does not reconstruct central role bindings. Keep that private key restricted to the central API workload.
+
+Internal mod-update reads use the same selected cluster for agent data and template lookup. RCON module actions use the gateway. Stdin module actions use the selected Kubernetes client and verify workload ownership before attach; Kubernetes attach has no atomic UID precondition, so this is a preflight check.
+
+### Failure behavior
+
+- The central API reads the Cluster and credential Secret for every new gateway operation. Missing, deleted, unlabeled or malformed credentials fail closed with no fallback to a local namesake.
+- Removing the `agentGateway` reference removes new interactive access without removing Kubernetes management.
+- Redirects are not followed, and writes are not automatically retried after an ambiguous failure.
+- Gateway health and Kubernetes reachability are separate: the `Cluster` health phase describes Kubernetes connectivity only. A gateway outage does not stop games or their local operator.
+
+### Captures
+
+Capture files use a separate allowlisted route that accepts only GET and DELETE and is bound to both the server UID and the capture UID. The gateway checks the live server, capture ownership, completion state and retention before reaching the fixed local capture sidecar port (9091), and the sidecar verifies both UIDs against persisted file identity, including after a restart. Remote deletion removes the file before deleting the NetworkCapture resource, so an unavailable gateway leaves the resource for retry. Files written by an older sidecar, without the identity binding, cannot be fetched remotely. No arbitrary sidecar path, address or legacy fallback is accepted.
+
+`GET /servers/{name}/capabilities` reports the selected server's identity and its cluster's capture support, enabled state, retention limits and start defaults. The central installation's capture flag does not enable or disable a remote cluster. Missing or incompatible gateway capabilities disable capture controls, and permissions still come from normal server and capture authorization. Historical downloads remain available after a cluster disables new captures, provided its gateway and bound files remain reachable.
+
+## Verify the installation
+
+1. Confirm the gateway Pod is Ready in the remote cluster. Readiness is a TCP check and shows only an open listener.
+2. Confirm the `Cluster` resource reports `Healthy`. That proves Kubernetes connectivity, not the gateway.
+3. In the dashboard, open a test server in that cluster and try the console, file manager and players. These routes prove the central API can authenticate to the gateway and reach the agent.
+4. If you use captures, confirm the capture controls are enabled; they stay disabled when the gateway's capabilities are missing or incompatible.
+
+Confirm a test server works end to end before relying on interactive management.
+
+## Upgrade behavior
+
+From v0.3.0 the operator injects `GAMEPLANE_SERVER_UID` into agents. Updating the operator can change existing StatefulSet templates and roll game Pods during reconciliation, so schedule it for a maintenance window. Remote requests use only `/v1/targets/{uid}/...`; old agents, or an operator that has not populated the UID, fail closed with 404 and there is no fallback to legacy agent paths.
+
+Capture sidecars also receive the server UID, and new capture starts bind the output to both the server UID and NetworkCapture UID on disk. Files from an older sidecar stay available through the local path but fail closed on the remote route. Upgrade all components before expecting remote capture downloads or cleanup.
+
+## Troubleshoot
+
+| Symptom | Likely cause and fix |
+|---|---|
+| Remote console, files or players return 404 | The agent is older than the UID-bound route, or the operator has not populated the server UID. Upgrade the operator and let game Pods roll so agents match. |
+| Every gateway operation fails, Cluster shows Healthy | Gateway health is separate from Kubernetes health. Check that the credential Secret exists in the central API namespace, carries `gameplane.local/agent-gateway-credentials: "true"` and holds `ca.crt`, `tls.crt` and `tls.key`; missing or malformed credentials fail closed. |
+| Gateway rejects the central API | The central client certificate must chain to `gateway.centralClientCASecret` and carry the exact `gateway.peerURI` URI SAN. The server certificate needs a DNS SAN matching the registered URL, and TLS must pass through any relay unchanged. |
+| Connection times out | Check `gateway.networkPolicy.peerCIDRs` or `peerSelectors` against the source IPs the remote cluster actually sees (SNAT), and `apiServerCIDRs` against post-DNAT API endpoints. |
+| Cluster name mismatch | The `Cluster` resource name must equal `gateway.clusterID`. |
+| Node inventory shows an error | The registered kubeconfig identity lacks the inventory ClusterRole; a denied read is an error, never an empty cluster. |
+| Capture start returns 403 after the capture appears | The registered identity lacks `update` on `networkcaptures/status`. Check the capture list before retrying. |
+| Capture controls are disabled | The gateway's capabilities are missing or incompatible, or that cluster has captures disabled. Upgrade the gateway, operator and capture sidecar together. |
+| Old capture will not download remotely | The file predates the identity binding. Use the site's local maintenance path. |
+| A revoked certificate still works on an open stream | Trust removal blocks new operations only. Restart the gateway or set `gateway.maxRequestDuration`. |
+
+### Capture cleanup recovery
+
+For an unreconciled (empty-phase), Pending or Running capture, request `:capture-stop`, wait for the operator to report a terminal phase, then retry deletion. The stop flow also handles Pending captures whose sidecar started before a status write failed. Repair operator permissions on `networkcaptures/status` if completion cannot persist.
+
+An upgraded sidecar returns 204 after deleting a matching bound file, or 410 after confirming that neither its identity nor the PCAP exists and no writer is active. A retry after a lost response uses the retained identity tombstone. The API keeps the record on ambiguous 404, 409 or 5xx responses, transport errors and unavailable sidecars. Repair gateway connectivity, credentials or sidecar availability and retry; none of these failures proves the file is gone. The API skips file cleanup only for an operator-confirmed never-started capture with no recorded Pod UID.
+
+If the site cannot be restored, an administrator must inspect the capture's `gameplane.local/capture-pod-uid` annotation, the actual Pod UID and capture storage. A container restart preserves emptyDir data, while replacing the Pod removes the old emptyDir. Confirm capture activity has stopped before any manual cleanup. Only then may an administrator delete the record on the selected cluster:
+
+```sh
+kubectl --context <remote-context> -n <namespace> delete networkcapture <capture-id>
+```
+
+Record-only deletion does not free retained file storage.
+
+<DocsQuickReference
+  label="GATEWAY"
+  items={[
+    "01  Secrets first: server TLS, central client CA, agent client + CA",
+    "02  Helm: api.enabled=false, gateway.enabled=true, clusterID, peerURI, NetworkPolicy CIDRs",
+    "03  Central: labeled credential Secret + Cluster spec.agentGateway",
+    "04  Verify a test server end to end; Cluster health is Kubernetes-only",
+  ]}
+/>
+
+## Related topics
+
+- [Multi-cluster topology](../multi-cluster/) — What works across clusters and the unified dashboard.
+- [Module & Cluster CRDs](../module-cluster-crds/) — The Cluster resource field reference.
+- [Cluster Nodes & Kubeconfig](../cluster-nodes-kubeconfig/) — Registered kubeconfig credentials and node inventory.
+- [Security](../security/) — Trust boundaries between API, gateway and agent.

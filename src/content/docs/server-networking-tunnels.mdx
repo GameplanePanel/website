@@ -1,0 +1,357 @@
+---
+title: "Server Networking & Tunnels"
+description: "Route players through external relays when you lack public IP or load balancers. Compare frp, Tailscale, and playit; configure credentials via dashboard, API, or kubectl."
+section: operate
+group: network-automation
+order: 3
+icon: globe
+eyebrow: CONFIGURE
+readTime: "18 MIN"
+covers: ["Tunnels", "Relay", "NAT traversal"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
+
+<DocsArticleMeta groupId="network-automation" readTime="18 MIN" />
+
+Route player connections through an external relay when you lack a public IP, port-forwarding, or a cluster load balancer. A tunnel layers over the server's backing Service; it is not a fifth `expose` mode. Use it only when direct exposure is unavailable.
+
+<DocsCallout icon="globe" title="Tunnels add operational cost">
+  Each tunnel-enabled server gets its own always-on tunnel pod (a separate `<server>-tunnel` Deployment, not a sidecar in the game pod). It keeps running while the game sleeps so it can hold the public address. Budget for this when planning idle auto-sleep.
+</DocsCallout>
+
+<DocsCallout icon="milestone" title="Changes in v0.3.0">
+  Tunnels, the `TunnelReady` condition and the `:tunnel-credentials` API are available in v0.2.0-beta.8. From v0.3.0 the operator refuses a credentials Secret that is not owned by its GameServer, the playit-assigned address appears in `status.endpoints`, and the playit tunnel's NetworkPolicy lets it reach its relay. In v0.2.0-beta.8 a playit tunnel cannot reach its relay while the chart's NetworkPolicies are enabled (the default).
+</DocsCallout>
+
+## When to use a tunnel
+
+Use a tunnel if:
+
+- You have no public IP (CGNAT, shared ISP, corporate network).
+- Port-forwarding is unavailable (router locked by ISP or admin).
+- LoadBalancer is not an option (on-premises cluster with no load-balancer service).
+- You're behind a restrictive NAT and cannot reach your cluster from the public internet.
+
+Do **not** use a tunnel if:
+
+- You already have a public IP with working port-forwarding — it's simpler and cheaper.
+- You have a working LoadBalancer (cloud or MetalLB/Cilium) and it reaches your cluster.
+- You're only deploying to private networks (no public play access needed).
+
+## Choose a provider
+
+Three relay providers are supported, each with different trade-offs:
+
+| Feature | frp | Tailscale | playit.gg |
+|---|---|---|---|
+| **Exposure** | Public internet | Private (tailnet only) | Public internet |
+| **UDP** | Yes | Yes | Yes |
+| **Address type** | Static (you set) | MagicDNS hostname | Dynamic (assigned at runtime) |
+| **Server needed** | Yes (you run frps) | No | No |
+| **Cost** | Your VPS | Free | Free tier (8 hrs/day); paid unlimited |
+| **Setup** | 30–60 min | 5 min | 2 min |
+| **Best for** | Production, custom domains | Friends/family on tailnet | Casual play, quick testing |
+
+For frp, each forwarded port's protocol (TCP or UDP) comes from that port's `protocol` field in the GameTemplate; it is not set separately in the frp tunnel spec.
+
+### frp (fast reverse proxy)
+
+**Use case:** Production servers with custom public domains.
+
+Self-hosted relay. You deploy `frps` on a VPS you control, configure a shared token, and Gameplane runs `frpc` in a tunnel pod that dials your `frps` and holds reverse-proxy tunnels. Players connect to `<your-domain>:<port>`. The address is static and under your control.
+
+Setup time is longer because you must provision and configure a VPS, but you get full control and a production-grade solution.
+
+### Tailscale
+
+**Use case:** Private networks — friends and family on your Tailscale tailnet.
+
+No VPS needed. The tunnel pod joins your Tailscale network and becomes a device reachable via MagicDNS. Only users on your tailnet can connect — this is **not** public-internet exposure. Tailscale Funnel does not help here (Funnel only supports TLS on ports 443/8443/10000, not arbitrary game ports/UDP).
+
+Ideal for private play: no VPS, and setup needs only an auth key.
+
+### playit.gg
+
+**Use case:** Free public relay for casual play and quick testing.
+
+No VPS needed. Sign up, get a secret key, and Gameplane writes it to a config file. The tunnel pod connects and playit assigns a public address at runtime. From v0.3.0 the address appears in `status.endpoints` once the tunnel pod reports it; the pod re-checks every 30 seconds, so a changed address shows up without a restart.
+
+The tunnel pod matches each playit tunnel to a game port by the **local port** the tunnel forwards to, so set each tunnel's local port in the playit dashboard to the game's container port (for example `25565` for Minecraft Java). If the template advertises a single port and the account has a single enabled tunnel, they are paired even when the ports differ.
+
+The free tier allows 8 hours a day per secret key; paid plans unlock 24/7. The address can change when the tunnel pod restarts, because playit does not guarantee address stability on the free tier.
+
+## Set up a tunnel
+
+### Step 1: Choose and prepare your relay
+
+**For frp:**
+Deploy `frps` on a VPS (see [frp documentation](https://github.com/fatedier/frp)) with a config file like:
+```toml
+bindAddr = "0.0.0.0"
+bindPort = 7000
+
+auth.method = "token"
+auth.additionalScopes = ["api"]
+auth.token = "your-secure-token-here"
+```
+Note the server address (e.g., `frp.example.com`) and port (e.g., `7000`).
+
+**For Tailscale:**
+Log into [login.tailscale.com](https://login.tailscale.com) → **Settings → Keys** → create a **Reusable key** and copy it.
+
+**For playit.gg:**
+Visit [playit.gg](https://playit.gg), sign up, and copy your **Secret Key** from **Settings**.
+
+### Step 2: Create a GameServer with tunnel enabled
+
+Set `spec.networking.tunnel.enabled: true`, pick a provider, and reference the credential Secret (name will be written by the dashboard or API):
+
+**frp example:**
+```yaml
+apiVersion: gameplane.local/v1alpha1
+kind: GameServer
+metadata:
+  name: minecraft-prod
+  namespace: gameplane-games
+spec:
+  templateRef:
+    name: minecraft-java
+  networking:
+    expose: ClusterIP  # Tunnel handles connectivity
+    tunnel:
+      enabled: true
+      provider: frp
+      credentialsSecretRef:
+        name: minecraft-prod-tunnel-auth
+      frp:
+        serverAddr: frp.example.com
+        serverPort: 7000
+        remotePorts:
+          - name: game
+            remotePort: 25565
+```
+
+**Tailscale example:**
+```yaml
+apiVersion: gameplane.local/v1alpha1
+kind: GameServer
+metadata:
+  name: minecraft-tailnet
+  namespace: gameplane-games
+spec:
+  templateRef:
+    name: minecraft-java
+  networking:
+    expose: ClusterIP
+    tunnel:
+      enabled: true
+      provider: tailscale
+      credentialsSecretRef:
+        name: minecraft-tailnet-tunnel-auth
+      tailscale:
+        hostname: my-minecraft-server
+        tags:
+          - tag:gameplane
+          - tag:minecraft
+```
+
+**playit.gg example:**
+```yaml
+apiVersion: gameplane.local/v1alpha1
+kind: GameServer
+metadata:
+  name: minecraft-playit
+  namespace: gameplane-games
+spec:
+  templateRef:
+    name: minecraft-java
+  networking:
+    expose: ClusterIP
+    tunnel:
+      enabled: true
+      provider: playit
+      credentialsSecretRef:
+        name: minecraft-playit-tunnel-auth
+```
+
+### Step 3: Provide the credential
+
+From v0.3.0 the operator only mounts a credentials Secret whose `ownerReference` matches this GameServer's name **and UID**. A plain `kubectl create secret generic` Secret has none, and a Secret left over from a deleted same-name GameServer has a stale UID, so the operator refuses it: `TunnelReady` turns `False` with reason `TunnelCredentialRefused` (naming the Secret, never its contents) and the tunnel Deployment is scaled to zero. Provide the credential in one of these ways:
+
+**Dashboard (recommended):**
+1. Create the server (or edit an existing one).
+2. Open the **Networking** tab.
+3. Enter the credential (frp token, Tailscale auth key, or playit secret key).
+4. Save — the dashboard creates the Secret with the correct ownerReference.
+
+**API:**
+```bash
+curl -X PUT \
+  -b "gameplane_session=$SESSION" \
+  -H "X-Gameplane-CSRF: $CSRF" \
+  -H "Content-Type: application/json" \
+  -d '{"provider": "frp", "values": {"token": "your-secure-token-here"}}' \
+  "https://gameplane.example.com/servers/minecraft-prod:tunnel-credentials?namespace=gameplane-games"
+```
+
+For Tailscale: `{"provider": "tailscale", "values": {"authKey": "tskey-client-xxxxx"}}`
+
+For playit: `{"provider": "playit", "values": {"secretKey": "<your-secret-key>"}}`
+
+**kubectl with ownerReference:**
+If you must create the Secret directly, first get the GameServer's UID:
+```bash
+kubectl -n gameplane-games get gameserver minecraft-prod -o jsonpath='{.metadata.uid}'
+```
+
+Then create a Secret with an ownerReference:
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: minecraft-prod-tunnel-auth
+  namespace: gameplane-games
+  ownerReferences:
+    - apiVersion: gameplane.local/v1alpha1
+      kind: GameServer
+      name: minecraft-prod
+      uid: <the-uid-you-got-above>
+type: Opaque
+stringData:
+  token: "your-secure-token-here"  # for frp
+  # authKey: "tskey-client-xxxxx"  # for Tailscale
+  # secretKey: "<your-secret-key>" # for playit
+```
+
+**Credential refused?** Check the server's `TunnelReady` condition:
+```bash
+kubectl -n gameplane-games get gameserver minecraft-prod \
+  -o jsonpath='{.status.conditions[?(@.type=="TunnelReady")]}' | jq
+```
+
+If the reason is `TunnelCredentialRefused`, the Secret lacks an ownerReference or has a stale one. The dashboard and API always write `<server>-tunnel-auth`: for a refused Secret with any other name, they create an owned one and point `credentialsSecretRef` at it. If the refused Secret is itself named `<server>-tunnel-auth` (as in the examples above), they answer `409 Conflict` instead; add the ownerReference to it, or delete it and save the credential again.
+
+## Tailscale ACL tags
+
+If you set `spec.networking.tunnel.tailscale.tags`, the tunnel pod requests those tags when registering with your tailnet. **Your tailnet's ACL must grant `tagOwners` for those tags to the auth key's owner**, otherwise Tailscale refuses the request.
+
+If the ACL doesn't grant the tags:
+1. The tunnel pod logs the error.
+2. It tries again without tags.
+3. If the auth key is single-use, this fallback fails and the device stays logged out.
+
+Configure `tagOwners` in your Tailscale ACL before setting tags on the GameServer.
+
+Each tag must be `tag:<name>` or a bare `<name>`, where the name starts with a letter and holds only letters, digits and hyphens. If any tag is invalid, the whole list is logged and ignored and the device registers untagged.
+
+## Cost and resource considerations
+
+A tunnel pod runs 24/7 to hold the public address, even when the game server is idle or asleep:
+
+- **Running game:** You pay for 2 pods (game + tunnel).
+- **Idle game:** You pay for 1 pod (tunnel only).
+- **Tunnel resources:** ~50 MiB memory, negligible CPU — small but not free.
+
+To minimize idle costs:
+
+- Use playit's free tier (8 hrs/day) or a paid tunnel provider with time-based billing.
+- Disable idle auto-sleep (`spec.idle.enabled: false`) and stop servers manually.
+- Use Tailscale (free, open-source).
+- Route multiple servers through one relay (if your relay supports it).
+
+## Interaction with other networking settings
+
+Tunnels layer over your backing Service. Other networking fields apply to the Service, not tunnel traffic:
+
+- **`hostname` / external-dns:** Applies to the Service, not the tunnel address. If your tunnel provider assigns a public address, point your DNS CNAME to that address, not to the `hostname` field.
+- **`sourceRanges` (IP allow-list):** Applies to the Service port. Tunnel traffic originates from the relay, not the player, so `sourceRanges` does not gate it. The relay provider (frp, Tailscale, playit) handles authentication and access control.
+- **`portOverrides` (NodePort specifics):** Applies to NodePort-mode exposures only. Tunnels ignore this.
+
+## Interaction with idle auto-sleep
+
+When a server enters idle sleep:
+
+- **Tunnel pod stays running** — it holds the relay connection and keeps the public address advertised.
+- **Game pod sleeps** — the game container is scaled down.
+- **Wake-on-connect works** — if a player connects to the public address while asleep, the relay wakes the game pod (if `spec.idle.wakeOnConnect` is enabled). Depending on the relay provider, the player may need to reconnect once after the game wakes.
+
+To avoid reconnects on wake:
+
+- Use Tailscale (better connection state handling).
+- Keep `spec.idle.enabled: false` and stop servers manually.
+- Disable `spec.idle.wakeOnConnect` so players only join running servers.
+
+## Troubleshooting
+
+### No address appears in `status.endpoints`
+
+1. **Check the tunnel pod is running:**
+   ```bash
+   kubectl -n gameplane-games get pods -l app.kubernetes.io/name=gameplane-tunnel,app.kubernetes.io/instance=minecraft-prod
+   ```
+
+2. **Check tunnel pod logs:**
+   ```bash
+   kubectl -n gameplane-games logs -f <tunnel-pod-name>
+   ```
+   Look for connection errors, auth failures, or provider-specific messages.
+
+3. **Verify the credential Secret's keys** (without printing the credential):
+   ```bash
+   kubectl -n gameplane-games get secret minecraft-prod-tunnel-auth -o jsonpath='{.data}' | jq 'keys'
+   ```
+   Ensure the key name matches the provider (`token` for frp, `authKey` for Tailscale, `secretKey` for playit).
+
+4. **Check the TunnelReady condition:**
+   ```bash
+   kubectl -n gameplane-games get gameserver minecraft-prod \
+     -o jsonpath='{.status.conditions[?(@.type=="TunnelReady")]}' | jq
+   ```
+   If the reason is `TunnelCredentialRefused`, add an ownerReference to the Secret or delete it and re-enter the credential via the dashboard. While the Secret is refused, the tunnel Deployment stays scaled to zero.
+
+5. **Check NetworkPolicy:**
+   With `networkPolicies.enabled` (the default), the games namespace denies egress by default, and the operator creates a `<server-name>-tunnel-egress` NetworkPolicy that lets the tunnel pod reach DNS (TCP/UDP 53), the game's advertised container ports, and its relay:
+   - **frp:** the frp server's `serverAddr:serverPort` (default TCP 7000)
+   - **Tailscale:** the control plane on TCP 443 and DERP relays on UDP 41641
+   - **playit:** any destination on any port, because playit publishes no fixed relay endpoints (from v0.3.0; in v0.2.0-beta.8 playit cannot reach its relay under this policy)
+
+   If the tunnel pod cannot reach the relay, verify the NetworkPolicy is not blocking it:
+   ```bash
+   kubectl -n gameplane-games get networkpolicy
+   kubectl -n gameplane-games exec <tunnel-pod> -- nc -zv <relay-address> <relay-port>
+   ```
+
+### Address keeps changing (playit.gg)
+
+On playit's free tier, addresses are not persistent — they may change if the pod restarts or the 8-hour daily window closes. Upgrade to a paid plan for stable addresses.
+
+### Players can connect but get connection refused
+
+1. Verify the game pod is running and ready:
+   ```bash
+   kubectl -n gameplane-games get pods minecraft-prod-0 -o wide
+   ```
+
+2. Check the game is listening on the expected port inside the pod.
+
+3. Verify the relay is configured to forward the port (check your frp config, playit dashboard, etc.).
+
+### Tailscale: server not appearing in `tailscale status`
+
+1. Check pod logs for auth errors or ACL tag rejections.
+2. Verify the auth key is valid and not expired (log into login.tailscale.com).
+3. Confirm the `hostname` in `spec.networking.tunnel.tailscale.hostname` (defaults to GameServer name if empty).
+
+## Security
+
+- **Credentials are Secrets:** Relay credentials (frp token, Tailscale auth key, playit secret key) are stored as Kubernetes Secrets in the games namespace and are never returned through the API. Only cluster administrators can read them directly.
+- **Tunnel images are signed:** Tunnel client images (frp, Tailscale, playit) are cosign-signed like all Gameplane images. Verify them with `cosign verify --key cosign.pub`.
+- **Relay trust model:** You are trusting the relay operator (your own frps VPS, Tailscale Inc., or playit.gg) not to inspect or modify player connections. For production, self-hosted frp gives you full control; Tailscale and playit are third-party services — review their privacy policies before use.
+- **Tailscale is invite-only:** Tailscale servers are only reachable by tailnet members, so they don't add public-internet attack surface.
+- **frp and playit are public:** Both expose servers to the internet — apply the same security practices as you would for a public LoadBalancer (disable admin consoles, keep images updated, restrict in-game permissions).
+
+---
+
+**Next guide:** [Backups and recovery](../backups-recovery/)

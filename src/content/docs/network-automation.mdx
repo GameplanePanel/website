@@ -25,7 +25,7 @@ Expose game ports intentionally, restrict source networks, and automate recurrin
 
 ## Choose an exposure model
 
-Select ClusterIP, NodePort, or LoadBalancer based on where players connect and who controls the network edge.
+Select ClusterIP, NodePort, or LoadBalancer based on where players connect and who controls the network edge. When you have no public IP or no control over the network edge, layer a relay tunnel over the Service.
 
 <DocsSectionList
   items={[
@@ -52,6 +52,7 @@ Select ClusterIP, NodePort, or LoadBalancer based on where players connect and w
 - **ClusterIP**: Internal-only access within the cluster. Ideal for internal game servers, proxies, or testing.
 - **NodePort**: Exposes the service on a static port on every node. Suitable for on-premises clusters or when you manage your own load balancing.
 - **LoadBalancer**: Integrates with your cloud provider's load balancer (or on-premises equivalent like MetalLB/Cilium). Requests a public or routable address, optionally from a named address pool.
+- **Relay tunnels** (frp, Tailscale, playit): Not an exposure mode but a layer over the Service that routes player connections through an external relay when you lack a public IP, port-forwarding, or a LoadBalancer. See [Server Networking & Tunnels](../server-networking-tunnels/) for setup and provider comparison.
 
 ## Restrict and verify connectivity
 

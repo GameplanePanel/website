@@ -38,7 +38,7 @@ Document engine, version, availability model, storage, ownership, connection lim
     {
       icon: "shield-check",
       label: "For PostgreSQL, define DNS, TLS/CA, user ownership, pooling, and limits.",
-      text: "Opt-in via --db-driver=postgres --db-dsn=. Supports multi-replica Kubernetes deployments. Document connection pool limits, application user permissions, and TLS certificate paths.",
+      text: "Opt-in via --db-driver=postgres --db-dsn=. Experimental; keep a single API replica (the user-management lock and audit hash chain are per-process), and not yet covered by e2e or upgrade tests. Document connection pool limits, application user permissions, and TLS certificate paths.",
     },
     {
       icon: "lock",
@@ -69,7 +69,7 @@ api:
 ### PostgreSQL
 
 PostgreSQL is an external relational database engine. Use it for:
-- Multi-replica deployments (multiple API pods with `--db-driver=postgres`).
+- An external, separately administered database. Keep `api.replicas: 1` even with PostgreSQL: the user-management lock and audit hash chain are still per-process, so extra replicas are not safe.
 - Longer data retention and advanced backup/recovery workflows.
 - Regulated environments requiring separate database administration.
 

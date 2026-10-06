@@ -92,6 +92,11 @@ Override timing one probe family at a time; startup protects boot, readiness gat
       label: "Liveness probe triggers pod restart on recovery failure",
       text: "The liveness probe, if defined, will cause the pod to restart if the game becomes permanently unresponsive. Do not enable liveness on games that hang during legitimate save sequences.",
     },
+    {
+      icon: "info",
+      label: "Exec probes for connection-sensitive games",
+      text: "Games like Terraria that crash on probe connections use exec probes instead of tcpSocket checks. The exec probe runs a command (e.g., checking /proc/net/tcp for a listening port) without connecting to the game server itself.",
+    },
   ]}
 />
 

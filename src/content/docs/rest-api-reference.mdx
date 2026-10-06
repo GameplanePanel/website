@@ -53,7 +53,7 @@ Every request must include:
 
 3. **Namespace Selector** — passed as `?namespace=<name>` for scoped resources (GameServers, Backups, etc.). Defaults to the user's default namespace if absent. Users can only access namespaces they have been granted permission to.
 
-4. **Cluster Selector** — passed as `?cluster=<id>` for multi-cluster installs. Defaults to the local (home) cluster. Users can only access clusters they have been granted permission to.
+4. **Cluster Selector** — passed as `?cluster=<id>` for multi-cluster installs. Defaults to the local (home) cluster. Users can only access clusters they have been granted permission to. Collection reads under `/fleet/*` (v0.3.0) ignore the default and combine every authorized cluster, with optional cluster and namespace filters, returning each item's `{cluster, namespace, name, uid}` target and flagging unavailable or truncated scopes.
 
 <DocsCallout icon="shield-alert" title="Browser mutations require session credentials and X-Gameplane-CSRF">
   Cluster and namespace selectors follow the same scope rules as the dashboard UI. A user bound to a specific namespace or remote cluster cannot bypass that scope by changing query parameters.

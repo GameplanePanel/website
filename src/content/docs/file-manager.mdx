@@ -56,7 +56,7 @@ New folders, new files, and uploads operate in the currently open directory.
     {
       icon: "check",
       label: "Use valid names and verify the breadcrumb before confirming",
-      text: "Ensure the path is correct and the name follows the game's file naming conventions.",
+      text: "Ensure the path is correct and the name follows the game's file naming conventions. Names can't contain \"/\" or be \".\" or \"..\"; a rejected name shows an inline error and Create stays disabled.",
     },
     {
       icon: "check",
@@ -66,7 +66,12 @@ New folders, new files, and uploads operate in the currently open directory.
     {
       icon: "check",
       label: "Verify upload size, type, provenance, and ownership after completion",
-      text: "Confirm the uploaded file has the expected size, format, and permissions.",
+      text: "Confirm the uploaded file has the expected size, format, and permissions. Uploaded files and mods are written group-readable, so the game process (same fsGroup, different user ID) can read them.",
+    },
+    {
+      icon: "triangle-alert",
+      label: "Delete folders from the tree (v0.3.0)",
+      text: "Folder rows carry a delete button (shown on hover or focus on desktop, always visible on mobile). After a confirmation, deleting a folder permanently removes it and everything inside it. A folder holding dot-prefixed (hidden) entries is refused.",
     },
   ]}
 />
