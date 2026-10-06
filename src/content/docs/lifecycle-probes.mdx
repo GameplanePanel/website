@@ -13,11 +13,6 @@ covers: ["Suspend", "Graceful stop", "Health"]
 import DocsCallout from "../../components/docs/DocsCallout.astro";
 import DocsSectionList from "../../components/docs/DocsSectionList.astro";
 import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
-import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
-
-<DocsArticleMeta groupId="servers-config" readTime="14 MIN" />
-
-Control desired running state, graceful shutdown, and probe timing so slow games recover without restart loops or data loss.
 
 <DocsCallout icon="heart-handshake" title="Use intentional Stop or Suspend for maintenance; do not weaken probes to hide a real process failure.">
 Disabling readiness/liveness probes masks underlying failures. If your game crashes frequently, investigate the root cause instead of loosening probe thresholds.

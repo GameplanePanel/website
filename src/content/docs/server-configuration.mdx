@@ -13,11 +13,8 @@ next: "network-automation"
 
 import DocsCallout from "../../components/docs/DocsCallout.astro";
 import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
-import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
 
 This guide covers the major configuration concerns when running a GameServer: version pinning, compute resources, environment variables, lifecycle timing, scheduling, and safety boundaries. Each change integrates declaratively with the GameServer spec and is reconciled by the operator.
-
-<DocsArticleMeta groupId="servers-config" readTime="14 MIN" />
 
 <DocsCallout icon="layers" title="Pod template changes require reconciliation.">
 Changes that affect the pod template (image, resources, storage, environment, probes) trigger a rolling restart of the underlying StatefulSet pod. Schedule these updates like planned maintenance to avoid disrupting active player sessions.

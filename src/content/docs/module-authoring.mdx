@@ -10,14 +10,9 @@ readTime: 12 MIN
 covers: ["Module format", "OCI artifacts", "Distribution", "Versioning", "Signing"]
 ---
 
-import DocsArticleMeta from "../../components/docs/DocsArticleMeta.astro";
 import CodeLabel from "../../components/docs/CodeLabel.astro";
 import DocsSectionList from "../../components/docs/DocsSectionList.astro";
 import DocsCallout from "../../components/docs/DocsCallout.astro";
-
-<DocsArticleMeta groupId="modules-sources" readTime="12 MIN" />
-
-Package game server templates as signed, versioned OCI artifacts with metadata, config schema, and capabilities.
 
 A **module** is a reusable, versioned game-server blueprint distributed as an OCI artifact. Gameplane hosts modules in registries (official or self-hosted) and lets operators install them into the cluster as `GameTemplate` resources, so game servers on the platform inherit their console protocol, configuration schema, and operational capabilities — backup quiesce, player moderation, and lifecycle management — without any platform-code changes.
 
