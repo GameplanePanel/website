@@ -2,7 +2,7 @@
 
 Public marketing + documentation website for [Gameplane](https://github.com/ValgulNecron/Gameplane) — a Kubernetes-native game server control panel.
 
-Live site: **https://valgulnecron.github.io/gameplane-website/**
+Live site: **https://gameplane.net/**
 
 Built with [Astro](https://astro.build), Tailwind CSS 4, and self-hosted JetBrains Mono / Geist fonts. Fully static — no client framework.
 
@@ -23,7 +23,7 @@ This repo is mounted as the `website/` git submodule of the main [Gameplane](htt
 
 Pushes to `main` deploy to GitHub Pages via `.github/workflows/deploy.yaml`. Pull requests are gated by `.github/workflows/ci.yaml` (lint, type-check, build).
 
-The site is served under the `/gameplane-website` base path (GitHub Pages project site). All internal links go through `withBase()` from `src/lib/url.ts` — never hardcode root-relative hrefs.
+The site is served from the root of the custom domain `gameplane.net` (`CUSTOM_DOMAIN` in `src/config.ts`, `public/CNAME`). All internal links go through `withBase()` from `src/lib/url.ts` — never hardcode root-relative hrefs, so unsetting `CUSTOM_DOMAIN` (base path `/gameplane-website`) keeps working.
 
 ### Switching to a custom domain
 
