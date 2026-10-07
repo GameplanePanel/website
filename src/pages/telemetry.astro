@@ -1,0 +1,104 @@
+---
+import MarketingLayout from "../layouts/MarketingLayout.astro";
+import SectionHeader from "../components/SectionHeader.astro";
+import { GITHUB_URL } from "../config";
+import { withBase } from "../lib/url";
+---
+
+<MarketingLayout
+  title="Telemetry data-handling statement | Gameplane"
+  description="What the Gameplane project's telemetry provider collects, how long it keeps it, and how to turn it off."
+>
+  <section class="px-5 py-12 md:px-20 md:py-20">
+    <SectionHeader eyebrow="TELEMETRY" title="Telemetry data-handling statement" subtitle="Last updated 2026-10-07." />
+    <div class="docs-prose mx-auto mt-10 max-w-[760px]">
+      <h2>Who operates it</h2>
+      <p>The Gameplane project maintainers run the default provider at <code>telemetry.gameplane.net</code>. Reports go to <code>https://telemetry.gameplane.net/ingest</code>. Anyone can run their own provider; this statement covers only the project's.</p>
+
+      <h2>What is sent</h2>
+      <p>Two tiers, about once a day, only while an admin has left them on.</p>
+      <ul>
+        <li><strong>Basic:</strong> exactly <code>version</code> (Gameplane version), <code>servers</code> (number of GameServers), <code>templates</code> (number of GameTemplates).</li>
+        <li><strong>Extended (adds only the following):</strong> a random install ID (a UUID generated on the install, not derived from the cluster, host, network or users); environment: Kubernetes minor version, a distribution category (k3s, rke2, k0s, eks, gke, aks, openshift, microk8s, minikube, kind, doks, talos or other), CPU architectures, and a node-count band (1, 2-3, 4-10, 11-50, 51+); game usage: a server count for each official catalog module plus one combined <code>custom</code> count; feature adoption: wake-on-connect, relay tunnel types (frp, tailscale, playit), packet capture, backups, single sign-on, audit forwarding (each yes/no), a registered-cluster band (1, 2-3, 4-10, 11+), database kind (sqlite or postgres) and UI language; the install's public signing key and the time the report was sent.</li>
+        <li>Every extended value comes from a fixed set of categories or bands, or is a number, the install ID, the public key or the send time; anything else is sent as <code>other</code>.</li>
+      </ul>
+
+      <h2>Signing and the install ID</h2>
+      <p>Extended reports are signed (Ed25519) with a key derived from a random secret that never leaves the install combined with the install ID; the provider binds an ID to the first key that uses it, so nobody can report under another install's ID. Signing proves which key sent a report, not that the install is real; figures are approximate and self-reported. The ID is pseudonymous: it lets the provider tell that two reports came from the same install. An admin can reset it in Admin Settings, and it is deleted from the install when extended telemetry is turned off.</p>
+
+      <h2>What is never collected</h2>
+      <p>Server names, namespaces, hostnames, player counts or names, custom module names, free text, or any address or identifier of your cluster, network or users. The provider does not store raw reports and does not store source network addresses. The report format cannot hold any of these.</p>
+      <p>Requests to <code>telemetry.gameplane.net</code> pass through Cloudflare's proxy, which sees the connecting address to deliver the request and handles it under Cloudflare's own privacy policy. The receiver uses the address only in memory to rate-limit and never stores it.</p>
+
+      <h2>What the provider stores</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Contents</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Daily aggregates</td>
+            <td>Counts per day by version, fleet-size band, and for extended reports counts by environment, game and feature category; never linked to an install ID</td>
+          </tr>
+          <tr>
+            <td>Activity records</td>
+            <td>A one-way keyed hash of the install ID, a fingerprint of the public key, first-seen and last-seen dates, last send time and last version; used for unique-install and new/lapsed counts</td>
+          </tr>
+          <tr>
+            <td>Total-reports counter</td>
+            <td>A single number only</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>How long</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Retention</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Daily aggregates</td>
+            <td>24 months (730 days), deleted by an hourly sweep</td>
+          </tr>
+          <tr>
+            <td>Activity records</td>
+            <td>90 days after the install's last report</td>
+          </tr>
+          <tr>
+            <td>Total-reports counter</td>
+            <td>Kept indefinitely</td>
+          </tr>
+          <tr>
+            <td>Source addresses</td>
+            <td>Memory only, never written to disk</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Abuse protection</h2>
+      <p>Reports are strictly validated (one JSON object, size cap 16 KiB, fixed-set values); per-source daily limit; proof-of-work on submission whose cost is zero under normal traffic and grows only with the request rate (installs refuse challenges above 26 bits); the dashboard is private (token of at least 32 characters, never public). Someone can still send fabricated reports, so figures are approximate.</p>
+
+      <h2>Public summary</h2>
+      <p><code>https://telemetry.gameplane.net/v1/summary</code> returns exactly five numbers: <code>asOf</code> date, reports on the latest day, reports in 30 days, total reports, and active installs in 30 days. Nothing else is public; the detailed dashboard is private to the maintainers.</p>
+
+      <h2>How to opt out</h2>
+      <ul>
+        <li><strong>At first login:</strong> A notice appears before any report is sent, showing both tiers and the destination. Admin Settings > Telemetry then shows separate basic and extended switches (turning basic off turns extended off).</li>
+        <li><strong>At install time:</strong> Set <code>--set api.telemetry.enabled=false</code> to hard-disable telemetry whatever the switches say, with no notice shown.</li>
+        <li><strong>Custom provider:</strong> Set <code>api.telemetry.endpoint=https://your-host/ingest</code> to send to your own provider instead and never also to the project's.</li>
+        <li>Existing installs that never saved a choice stay off after upgrading.</li>
+      </ul>
+      <p>See the docs on <a href={withBase("/docs/platform-settings-telemetry/")}>platform settings, telemetry, and build info</a>, the <a href={withBase("/docs/helm-values-reference/")}>Helm values reference</a>, and <a href={withBase("/docs/air-gapped-installation/")}>air-gapped installation</a>.</p>
+
+      <h2>Questions and requests</h2>
+      <p>Open an <a href={`${GITHUB_URL}/issues`}>issue on GitHub</a>; the maintainers operate the provider.</p>
+    </div>
+  </section>
+</MarketingLayout>

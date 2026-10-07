@@ -6,9 +6,9 @@ Snapshot of `website.pen` (Pencil, MCP-only) for review in git. Full re-export 2
 
 | Set | Count | Notes |
 |---|---|---|
-| Screens + local website components (Nav `Qczsa`, Footer `gnZrl`, Docs Top Bar `SOdlr`, Reference Top Bar `egO9x`, Badge/Outline `X4Xyl`, Docs/Expanded Sidebar `K2Rt4H`) | 102 | 96 `Screen/…` frames + 6 components |
+| Screens + local website components (Nav `Qczsa`, Footer `gnZrl`, Docs Top Bar `SOdlr`, Reference Top Bar `egO9x`, Badge/Outline `X4Xyl`, Docs/Expanded Sidebar `K2Rt4H`) | 104 | 98 `Screen/…` frames + 6 components |
 | HeroUI components (children of container `hYJwr`, "HeroUI: Design System Components") | 177 | copied from the dashboard's `design.pen` |
-| **Total** | **279** | `json/<id>.json` + `screenshots/<id>.png` each |
+| **Total** | **281** | `json/<id>.json` + `screenshots/<id>.png` each |
 
 The lunaris library (`H:`-prefixed ids and variables) was removed from the design; its 100 exports were deleted.
 
@@ -59,3 +59,22 @@ Docs screens updated to mirror the `docs: sync the docs with the main repo's Oct
   not re-exported).
 - JSON: `Print(JSON.stringify(Get(id, {depth: 30, includePathGeometry: true})))`, re-serialized with `jq .`; `jq empty`
   passes, zero `"..."` elisions, node counts match the live file. Screenshots: `Export([id], "png", …, {scale: 2})`.
+
+## 2026-10-07 incremental: telemetry
+
+Spec 022 (default telemetry) in the main repo: footer link, docs updates and two new pages
+(`src/pages/telemetry.astro`, `src/content/docs/telemetry-provider-kubernetes.mdx`).
+
+- New screens: `s0Q7Lf` (Docs — Telemetry Provider on Kubernetes, copied from `cpCjN`; next link → Modules & Sources)
+  and `K6tq5Z` (Telemetry Statement, copied from `ei1qC`).
+- Footer `gnZrl`: "Telemetry" link before GitHub in the Resources column; the inline mobile footer on `JjbY2` gets the
+  same link.
+- Text updates: `cpCjN` (Platform Settings: telemetry text, quick reference, next link → Telemetry Provider on
+  Kubernetes), `kTRsn` (Helm Values Reference: new Telemetry block for `api.telemetry.enabled`, `api.telemetry.endpoint`,
+  `api.telemetry.receiver.enabled`), `zeM79` (Air-gapped Installation: new section "Disable usage telemetry").
+- Heights changed: `kTRsn` 1100, `zeM79` 1060.
+- Re-exported: JSON + screenshots for `gnZrl` `JjbY2` `cpCjN` `kTRsn` `zeM79` `s0Q7Lf` `K6tq5Z`; screenshots only for
+  the screens whose footer instance changed but whose JSON did not: `B39hL` `hnTHJ` `ei1qC` `vh8hz` `tfxmL` `IGuE6`.
+- JSON: `JSON.stringify(Get(id, {depth: 30, includePathGeometry: true}))`, checked against the length and FNV-1a hash
+  Pencil printed, then pretty-printed (2-space indent, UTF-8, trailing newline); zero `"..."` elisions. Screenshots:
+  `export_nodes` at 2×.

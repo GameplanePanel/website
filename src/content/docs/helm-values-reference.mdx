@@ -128,7 +128,8 @@ Configure logging, metrics, and alerting sinks.
 | `api.audit.syslogBridge.enabled` | boolean | `false` | Deploy the bundled RFC 5424 syslog bridge (audit-syslog-bridge image). When enabled and `webhook.url` is unset, the API auto-wires to it. |
 | `api.audit.syslogBridge.syslog.addr` | string | *(empty — required if enabled)* | Syslog collector address in `host:port` format, e.g., `syslog.example:514`. |
 | `api.audit.syslogBridge.syslog.network` | enum | `tcp` | Syslog transport: `tcp` (recommended for reliability) or `udp` (no delivery confirmation). |
-| `api.telemetry.endpoint` | string | *(empty)* | External telemetry receiver URL, e.g., `https://telemetry.example.com/ingest`. Disables the bundled receiver auto-wiring. |
+| `api.telemetry.enabled` | boolean | `true` | Hard on/off for usage telemetry. `false` means the API never sends telemetry, whatever the admin switches say, and no first-login notice is shown. Use it for air-gapped and privacy-sensitive clusters. |
+| `api.telemetry.endpoint` | string | *(empty)* | Where reports go. Empty means the project's default provider, `https://telemetry.gameplane.net/ingest`. Set a URL such as `https://telemetry.example.com/ingest` to send reports to your own receiver instead; it replaces the default and disables the bundled receiver auto-wiring. |
 | `serviceMonitors.enabled` | boolean | `false` | Create Prometheus Operator ServiceMonitor resources for scraping Gameplane metrics. Requires Prometheus Operator to be installed in your cluster. |
 
 ## Storage and modules
@@ -179,7 +180,16 @@ Configure optional integrations.
 | Key | Type | Default | Description |
 |---|---|---|---|
 | `mcpServer.enabled` | boolean | `false` | Deploy a read-only Model Context Protocol (MCP) server for AI assistant integrations. It reads 7 Gameplane CRDs (not `Cluster`, nor `NetworkCapture`, the ninth CRD added in v0.3.0), plus Pods, Events and pod logs. Read-only, stdio JSON-RPC only (no network port). See `mcp-server/README.md`. |
-| `api.telemetry.receiver.enabled` | boolean | `false` | Deploy the bundled telemetry receiver (telemetry-receiver image) for opt-in anonymous usage stats. When enabled and `endpoint` is unset, the API auto-wires to it. Admin toggle in dashboard controls whether anything is sent. |
+| `api.telemetry.receiver.enabled` | boolean | `false` | Deploy the bundled telemetry receiver (telemetry-receiver image). When enabled and `endpoint` is unset, the API auto-wires to it, so reports stay in your cluster. Admin switches in the dashboard control whether anything is sent. |
+| `api.telemetry.receiver.persistence.enabled` | boolean | `true` | Keep the receiver's aggregates in a PVC at `/data` (`persistence.size`, default `1Gi`). With `false` an emptyDir is used and everything is lost on restart. While on, `receiver.replicas` must stay `1`. |
+| `api.telemetry.receiver.dashboard.tokenSecretRef.name` | string | *(empty)* | Secret holding the receiver's dashboard token (key `token`, at least 32 characters). Setting it starts the private dashboard listener on port 8081; reach it with `kubectl port-forward`. |
+| `api.telemetry.receiver.pepperSecretRef.name` | string | *(empty)* | Optional Secret (key `pepper`) with the HMAC pepper for install IDs. Empty means the receiver generates and stores one. |
+| `api.telemetry.receiver.publicSummary.enabled` | boolean | `false` | Serve five public aggregate counters on `GET /v1/summary`. |
+| `api.telemetry.receiver.retentionDays` | integer | `730` | Daily aggregate retention (minimum `365`). |
+| `api.telemetry.receiver.activityExpiryDays` | integer | `90` | Per-install activity record expiry (minimum `31`). |
+| `api.telemetry.receiver.ingestPow.enabled` | boolean | `false` | Require proof-of-work on report ingestion (tuned by `targetPerMinute` `60`, `minBits` `0`, `maxBits` `22`; `maxBits` at most `26`). Meant for a public provider. |
+
+To run a receiver for other installs, see [Run a telemetry provider on Kubernetes](../telemetry-provider-kubernetes/).
 
 ## Example: minimal production install
 

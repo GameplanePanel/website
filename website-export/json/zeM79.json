@@ -9,7 +9,7 @@
   },
   "clip": true,
   "width": 1440,
-  "height": 900,
+  "height": 1060,
   "fill": "$background/background",
   "children": [
     {
@@ -468,6 +468,154 @@
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
                               "content": "Pre-provision every dependency that would otherwise require public egress.",
+                              "fontFamily": "Geist",
+                              "fontSize": 12.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "bnwpq",
+                  "name": "Guide Section 2",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "VIhxu",
+                      "name": "Section Title 2",
+                      "fill": "$foreground/foreground",
+                      "content": "Disable usage telemetry",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 17,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Rksuv",
+                      "name": "Section Body 2",
+                      "fill": "$muted",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "New installs report to telemetry.gameplane.net; turn it off at install time so an offline cluster never retries.",
+                      "lineHeight": 1.45,
+                      "fontFamily": "Geist",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "v2NVGT",
+                      "name": "Section List 2",
+                      "width": "fill_container",
+                      "fill": "$surface/surface",
+                      "cornerRadius": "$radius/2xl",
+                      "stroke": "$border/border",
+                      "strokeWidth": 1,
+                      "strokeAlignment": "inner",
+                      "layout": "vertical",
+                      "gap": 5,
+                      "padding": [
+                        8,
+                        10
+                      ],
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "u14sh",
+                          "name": "Section 2 Item 0",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "V8cY0g",
+                              "name": "Section 2 Item Icon 0",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "check",
+                              "library": "lucide",
+                              "fill": "$accent/accent"
+                            },
+                            {
+                              "type": "text",
+                              "id": "Bz19Z",
+                              "name": "Section 2 Item Text 0",
+                              "fill": "$default/foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Set api.telemetry.enabled=false in values-offline.yaml: no notice, switches unavailable.",
+                              "fontFamily": "Geist",
+                              "fontSize": 12.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "bHFcS",
+                          "name": "Section 2 Item 1",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "R8Kyy",
+                              "name": "Section 2 Item Icon 1",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "check",
+                              "library": "lucide",
+                              "fill": "$accent/accent"
+                            },
+                            {
+                              "type": "text",
+                              "id": "J8bI0",
+                              "name": "Section 2 Item Text 1",
+                              "fill": "$default/foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Or enable the bundled receiver (api.telemetry.receiver.enabled=true) to keep figures in-cluster.",
+                              "fontFamily": "Geist",
+                              "fontSize": 12.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "fbmRB",
+                          "name": "Section 2 Item 2",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "CkeBb",
+                              "name": "Section 2 Item Icon 2",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "check",
+                              "library": "lucide",
+                              "fill": "$accent/accent"
+                            },
+                            {
+                              "type": "text",
+                              "id": "dbabW",
+                              "name": "Section 2 Item Text 2",
+                              "fill": "$default/foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Or point api.telemetry.endpoint at an internal receiver.",
                               "fontFamily": "Geist",
                               "fontSize": 12.5,
                               "fontWeight": "normal"
