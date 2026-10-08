@@ -56,7 +56,7 @@ kubectl -n gameplane-telemetry create configmap telemetry-trusted-proxies \
 kubectl -n gameplane-telemetry get configmap telemetry-trusted-proxies -o jsonpath='{.data.cidrs}'; echo
 ```
 
-The list is a static copy. Cloudflare changes its ranges rarely; when it does, rerun the last two commands and restart the receiver with `kubectl -n gameplane-telemetry rollout restart deploy/telemetry-receiver`, because the variable is read at start. Update Traefik's `forwardedHeaders.trustedIPs` the same way. If you prefer, set `TRUSTED_PROXY_CIDRS` as a literal `value:` in the Deployment instead of the ConfigMap reference; the receiver reads only the environment variable. [How the client address is resolved](#5-how-the-client-address-is-resolved) explains why the list matters. For the token and pepper, see [Secrets](https://github.com/ValgulNecron/Gameplane/blob/master/docs/telemetry-provider.md#secrets) and [Rotating secrets](https://github.com/ValgulNecron/Gameplane/blob/master/docs/telemetry-provider.md#rotating-secrets).
+The list is a static copy. Cloudflare changes its ranges rarely; when it does, rerun the last two commands and restart the receiver with `kubectl -n gameplane-telemetry rollout restart deploy/telemetry-receiver`, because the variable is read at start. Update Traefik's `forwardedHeaders.trustedIPs` the same way. If you prefer, set `TRUSTED_PROXY_CIDRS` as a literal `value:` in the Deployment instead of the ConfigMap reference; the receiver reads only the environment variable. [How the client address is resolved](#5-how-the-client-address-is-resolved) explains why the list matters. For the token and pepper, see [Secrets](https://github.com/GameplanePanel/Gameplane/blob/master/docs/telemetry-provider.md#secrets) and [Rotating secrets](https://github.com/GameplanePanel/Gameplane/blob/master/docs/telemetry-provider.md#rotating-secrets).
 
 ## 2. Certificate issuer (cert-manager DNS-01 through Cloudflare)
 
@@ -137,7 +137,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: receiver
-          image: ghcr.io/valgulnecron/gameplane/telemetry-receiver:edge   # CHANGE ME: pin a release tag
+          image: ghcr.io/gameplanepanel/gameplane/telemetry-receiver:edge   # CHANGE ME: pin a release tag
           imagePullPolicy: Always   # edge moves; use IfNotPresent once you pin a release tag
           env:
             - { name: LISTEN_ADDR, value: ":8080" }
@@ -258,7 +258,7 @@ Key points:
 - One replica with `Recreate`, because SQLite has a single writer. `fsGroup: 65532` makes `/data` writable for the distroless nonroot user.
 - `AUTH_TOKEN` is deliberately unset: a public provider accepts reports from any install.
 - `ID_PEPPER` is recommended. Without it the receiver generates a pepper and stores it in the database, so it is lost with the volume.
-- Proof-of-work is on with the defaults (target 60 challenges per minute, 0 to 22 bits). See [Proof-of-work on ingest](https://github.com/ValgulNecron/Gameplane/blob/master/docs/telemetry-provider.md#proof-of-work-on-ingest) to tune it.
+- Proof-of-work is on with the defaults (target 60 challenges per minute, 0 to 22 bits). See [Proof-of-work on ingest](https://github.com/GameplanePanel/Gameplane/blob/master/docs/telemetry-provider.md#proof-of-work-on-ingest) to tune it.
 - `PUBLIC_SUMMARY` is on, so `/v1/summary` is routed. If you turn it off, remove that path from the Ingress.
 - If the probes fail after the NetworkPolicy is applied (some CNIs block the node's own probe traffic), add an `ipBlock` for your node addresses to the 8080 rule.
 
@@ -278,7 +278,7 @@ The receiver rate-limits per source address, so it needs the install's address, 
 
 When the peer is inside `TRUSTED_PROXY_CIDRS`, the receiver takes the right-most `X-Forwarded-For` entry that is not itself trusted. That is why the list needs both the pod CIDR (for Traefik) and Cloudflare's ranges (to skip the edge address). Without Cloudflare's ranges, every install is attributed to one of a handful of edge addresses, and the per-source limits (20 reports a day, and the `/v1/challenge` burst) throttle all installs together.
 
-A client outside Cloudflare's ranges cannot choose its source address. Anything it puts in `X-Forwarded-For` stays to the left of the real entry and is ignored, and proof-of-work still applies to every request. A request that bypasses Cloudflare reaches Traefik from an untrusted address, so Traefik drops its `X-Forwarded-For`. An unparsable header falls back to the peer address. The address is used only in memory for rate limiting and is never stored; see [Source addresses and `TRUSTED_PROXY_CIDRS`](https://github.com/ValgulNecron/Gameplane/blob/master/docs/telemetry-provider.md#source-addresses-and-trusted_proxy_cidrs).
+A client outside Cloudflare's ranges cannot choose its source address. Anything it puts in `X-Forwarded-For` stays to the left of the real entry and is ignored, and proof-of-work still applies to every request. A request that bypasses Cloudflare reaches Traefik from an untrusted address, so Traefik drops its `X-Forwarded-For`. An unparsable header falls back to the peer address. The address is used only in memory for rate limiting and is never stored; see [Source addresses and `TRUSTED_PROXY_CIDRS`](https://github.com/GameplanePanel/Gameplane/blob/master/docs/telemetry-provider.md#source-addresses-and-trusted_proxy_cidrs).
 
 For a provider without a CDN, trust only the ingress controller's pod CIDR.
 
@@ -357,6 +357,6 @@ spec:
 
 **Upgrade:** change the image tag in the manifest and run `kubectl apply -f telemetry-provider.yaml`. On `edge` with `imagePullPolicy: Always`, run `kubectl -n gameplane-telemetry rollout restart deploy/telemetry-receiver` instead. The Recreate strategy stops the old pod before the new one starts, so ingest returns 503 for a few seconds. Installs retry the next day or on their own backoff.
 
-**Back up first:** take a snapshot of the PVC, or stop the receiver (`kubectl -n gameplane-telemetry scale deploy/telemetry-receiver --replicas=0`) and copy the `/data` folder. See [Back up and restore `telemetry.db`](https://github.com/ValgulNecron/Gameplane/blob/master/docs/telemetry-provider.md#back-up-and-restore-telemetrydb) for details.
+**Back up first:** take a snapshot of the PVC, or stop the receiver (`kubectl -n gameplane-telemetry scale deploy/telemetry-receiver --replicas=0`) and copy the `/data` folder. See [Back up and restore `telemetry.db`](https://github.com/GameplanePanel/Gameplane/blob/master/docs/telemetry-provider.md#back-up-and-restore-telemetrydb) for details.
 
-**Secret rotation:** update the Secret, then restart with `kubectl -n gameplane-telemetry rollout restart deploy/telemetry-receiver`. See [Rotating secrets](https://github.com/ValgulNecron/Gameplane/blob/master/docs/telemetry-provider.md#rotating-secrets) for the effects.
+**Secret rotation:** update the Secret, then restart with `kubectl -n gameplane-telemetry rollout restart deploy/telemetry-receiver`. See [Rotating secrets](https://github.com/GameplanePanel/Gameplane/blob/master/docs/telemetry-provider.md#rotating-secrets) for the effects.
