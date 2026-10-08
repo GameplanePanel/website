@@ -1,12 +1,12 @@
 # gameplane-website
 
-Public marketing + documentation website for [Gameplane](https://github.com/ValgulNecron/Gameplane) — a Kubernetes-native game server control panel.
+Public marketing + documentation website for [Gameplane](https://github.com/GameplanePanel/Gameplane) — a Kubernetes-native game server control panel.
 
 Live site: **https://gameplane.net/**
 
 Built with [Astro](https://astro.build), Tailwind CSS 4, and self-hosted JetBrains Mono / Geist fonts. Fully static — no client framework.
 
-This repo is mounted as the `website/` git submodule of the main [Gameplane](https://github.com/ValgulNecron/Gameplane) repo. The visual source of truth is the **Group/Public Website** screens in the main repo's `design.pen` (Pencil); design changes happen there first, then get translated to code here.
+This repo is mounted as the `website/` git submodule of the main [Gameplane](https://github.com/GameplanePanel/Gameplane) repo. The visual source of truth is the **Group/Public Website** screens in the main repo's `design.pen` (Pencil); design changes happen there first, then get translated to code here.
 
 ## Commands
 
@@ -23,7 +23,7 @@ This repo is mounted as the `website/` git submodule of the main [Gameplane](htt
 
 Pushes to `main` deploy to GitHub Pages via `.github/workflows/deploy.yaml`. Pull requests are gated by `.github/workflows/ci.yaml` (lint, type-check, build).
 
-The site is served from the root of the custom domain `gameplane.net` (`CUSTOM_DOMAIN` in `src/config.ts`, `public/CNAME`). All internal links go through `withBase()` from `src/lib/url.ts` — never hardcode root-relative hrefs, so unsetting `CUSTOM_DOMAIN` (base path `/gameplane-website`) keeps working.
+The site is served from the root of the custom domain `gameplane.net` (`CUSTOM_DOMAIN` in `src/config.ts`, `public/CNAME`). All internal links go through `withBase()` from `src/lib/url.ts` — never hardcode root-relative hrefs, so unsetting `CUSTOM_DOMAIN` (base path `/website`) keeps working.
 
 ### Switching to a custom domain
 

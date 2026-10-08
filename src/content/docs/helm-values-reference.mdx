@@ -15,6 +15,8 @@ import DocsCallout from "../../components/docs/DocsCallout.astro";
 Use `helm template` or `helm diff` to preview your values before applying them to production. Secret values should always be referenced from Kubernetes Secrets, never committed to version control.
 </DocsCallout>
 
+Releases up to and including v0.3.0 are published under `ghcr.io/valgulnecron`, so this page uses that registry; releases after v0.3.0 move to `ghcr.io/gameplanepanel`.
+
 ## Core and image settings
 
 Configure container images, registry access, and fundamental cluster behavior.
@@ -225,4 +227,4 @@ networkPolicies:
       - 0.0.0.0/0
 ```
 
-See the full [Helm chart values.yaml](https://github.com/ValgulNecron/Gameplane/blob/master/charts/gameplane/values.yaml) for all options and detailed comments.
+See the full [Helm chart values.yaml](https://github.com/GameplanePanel/Gameplane/blob/master/charts/gameplane/values.yaml) for all options and detailed comments.

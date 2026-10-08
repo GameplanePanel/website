@@ -15,6 +15,8 @@ import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
 
 Gameplane runs on Kubernetes and deploys via Helm. This guide walks through preparing a cluster, configuring the Helm chart, installing Gameplane, and verifying a working control plane.
 
+Releases up to and including v0.3.0 are published under `ghcr.io/valgulnecron`, so this page uses that registry; releases after v0.3.0 move to `ghcr.io/gameplanepanel`.
+
 ## Prerequisites and topology
 
 Start with a supported Kubernetes and Helm version, ready nodes, DNS, and a default or explicitly selected StorageClass.
@@ -266,7 +268,7 @@ Create a simple test GameServer to verify the operator is reconciling correctly:
 
 ## Verifying image signatures
 
-Every published image (tagged releases and `:edge`), the Helm chart, and official module bundles are signed with the project's cosign key, [`cosign.pub`](https://github.com/ValgulNecron/Gameplane/blob/master/cosign.pub), and recorded in the public Sigstore Rekor transparency log:
+Every published image (tagged releases and `:edge`), the Helm chart, and official module bundles are signed with the project's cosign key, [`cosign.pub`](https://github.com/GameplanePanel/Gameplane/blob/master/cosign.pub), and recorded in the public Sigstore Rekor transparency log:
 
 ```bash
 cosign verify --key cosign.pub \

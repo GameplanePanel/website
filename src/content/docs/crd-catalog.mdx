@@ -47,6 +47,6 @@ Every Gameplane custom resource lives in the `gameplane.local/v1alpha1` API grou
 
 Each CRD's full schema—all `spec` fields, `status` conditions, and behavioral annotations—is documented in the source repository:
 
-- **Type definitions:** [`operator/api/v1alpha1` on GitHub](https://github.com/ValgulNecron/Gameplane/tree/master/operator/api/v1alpha1) — every `.go` file's doc comments are the source that `make manifests` generates CRD YAML from.
-- **Generated YAML:** [`operator/config/crd/` on GitHub](https://github.com/ValgulNecron/Gameplane/tree/master/operator/config/crd/) or your installed cluster via `kubectl get crds` and `kubectl describe crd <name>.gameplane.local`.
+- **Type definitions:** [`operator/api/v1alpha1` on GitHub](https://github.com/GameplanePanel/Gameplane/tree/master/operator/api/v1alpha1) — every `.go` file's doc comments are the source that `make manifests` generates CRD YAML from.
+- **Generated YAML:** [`operator/config/crd/` on GitHub](https://github.com/GameplanePanel/Gameplane/tree/master/operator/config/crd/) or your installed cluster via `kubectl get crds` and `kubectl describe crd <name>.gameplane.local`.
 - **Related guides:** See [GameServer & Template Schema](../gameserver-template-schema/) for workload structure, [Module & Cluster CRDs](../module-cluster-crds/) for registry and multi-cluster configuration, and [Backup & Restore CRDs](../backup-restore-crds/) for data lifecycle details.
