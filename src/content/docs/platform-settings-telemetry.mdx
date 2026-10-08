@@ -1,6 +1,6 @@
 ---
 title: "Platform settings, telemetry, and build info"
-description: "Maintain instance identity and defaults, make an explicit telemetry choice, and capture exact build data for support."
+description: "Maintain instance identity and defaults, review the telemetry tiers and opt-out, and capture exact build data for support."
 section: "platform"
 group: "audit-observability"
 order: 7
@@ -44,26 +44,33 @@ Keep instance name, canonical external URL, and default namespace stable and env
 
 ## Telemetry and privacy
 
-Usage telemetry is an explicit choice and is not a substitute for operational metrics and logs.
+Usage telemetry is on by default for new installs and is not a substitute for operational metrics and logs. Reports go to the project's provider at `telemetry.gameplane.net` unless the operator chose another destination or disabled telemetry. The project's [data-handling statement](../../telemetry/) lists exactly what is collected and how long it is kept.
 
-When enabled, the API sends a daily anonymous report containing only the cluster version, count of active GameServers, and count of GameTemplates. The current implementation excludes server names, player counts, and identifying data.
+On a new install the first admin to sign in sees a notice naming the destination and both tiers; nothing is sent until an admin has seen it. Admin Settings > Telemetry then shows the destination, a preview of the next report, the last attempt, separate switches for the basic and extended tiers, and an install-ID reset. Turning basic off turns extended off with it.
+
+**Basic** sends only the Gameplane version, the GameServer count and the GameTemplate count. **Extended** adds a random install ID, the Kubernetes minor version, a distribution category, CPU architectures and a node-count band, server counts per official module (custom modules are one combined count), feature adoption flags and bands, the database kind, the UI language, a public signing key and the send time. Every value comes from a fixed set or is a number; names, namespaces, hostnames, addresses and player data are never sent.
 
 <DocsSectionList
   items={[
     {
       icon: "check",
-      label: "The current promise excludes server names, players, and identifying data",
-      text: "Only version, server count, and template count are transmitted. No names, IDs, or private configuration is collected.",
+      label: "Choose the tiers deliberately",
+      text: "Basic and extended have separate switches. Turn extended off to keep only the version and the two counts, or turn both off to send nothing. Resetting the install ID gives the install a new, unlinkable ID and signing key.",
     },
     {
       icon: "check",
-      label: "Document any required organizational privacy review",
-      text: "If your organization requires a Data Processing Agreement or privacy assessment, collect the details from the telemetry-receiver configuration and CHANGELOG before enabling.",
+      label: "Operators can disable or redirect telemetry at install time",
+      text: "Set `api.telemetry.enabled=false` for a hard off that no admin switch can override (the switches are shown as unavailable and no notice appears). Set `api.telemetry.endpoint` to send reports to your own receiver instead of the project's. See the Helm values reference and the air-gapped guide.",
     },
     {
       icon: "check",
       label: "Recheck the saved choice after upgrades",
-      text: "Telemetry state persists across upgrades. After updating Gameplane, verify that your chosen setting (enabled or disabled) matches your policy.",
+      text: "Installs that never saved a choice stay off after an upgrade; installs that had basic on keep basic and get extended only when an admin turns it on. After updating, confirm the setting matches your policy.",
+    },
+    {
+      icon: "check",
+      label: "Document any required organizational privacy review",
+      text: "If your organization requires a privacy review, use the data-handling statement and the field list above; the provider keeps daily aggregates for 24 months and per-install activity records for 90 days.",
     },
   ]}
 />
@@ -88,7 +95,7 @@ Before opening a support ticket or upgrading:
   label="PLATFORM RECORD"
   items={[
     "Stable instance name + canonical URL + intentional namespace",
-    "Explicit telemetry choice; operational monitoring remains separate",
+    "Telemetry tiers chosen on purpose (or disabled at install); operational monitoring remains separate",
     "Record chart/image-tag/Kubernetes/values before support or upgrade",
   ]}
 />

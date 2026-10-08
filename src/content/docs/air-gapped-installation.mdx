@@ -329,6 +329,19 @@ helm upgrade gameplane oci://registry.internal.corp/gameplane/charts-gameplane \
 
 Confirm the operator and API pods roll with the new image digest, and re-run GameServer tests above.
 
+### Disable usage telemetry
+
+New installs send anonymous usage reports to the project's provider at `telemetry.gameplane.net` unless told otherwise. An air-gapped cluster cannot reach it, and the reporter would retry for nothing. Turn telemetry off at install time so the API never attempts the connection, whatever an admin later toggles:
+
+```yaml
+# values-offline.yaml
+api:
+  telemetry:
+    enabled: false
+```
+
+With `api.telemetry.enabled=false` no first-login notice is shown and Admin Settings > Telemetry shows both switches as unavailable. To keep usage figures inside the cluster instead, leave telemetry enabled and set `api.telemetry.receiver.enabled=true` (the bundled receiver, mirrored as `telemetry-receiver` in the image list above), or point `api.telemetry.endpoint` at an internal receiver. See [Platform settings, telemetry, and build info](../platform-settings-telemetry/) and the [data-handling statement](https://gameplane.net/telemetry/).
+
 ### Test with egress fully blocked
 
 If possible, disconnect the cluster from the public internet (or block all egress via NetworkPolicy) and repeat the above tests to confirm every artifact is truly local. A 404 or timeout on any pull request confirms you missed an image.
@@ -339,5 +352,6 @@ If possible, disconnect the cluster from the public internet (or block all egres
     "01  Mirror chart + images + modules + signatures + SBOMs by digest",
     "02  Render offline; reject public hosts and mutable tags",
     "03  Test install, server, backup, upgrade, rollback with egress blocked",
+    "04  Set api.telemetry.enabled=false (or an internal endpoint) so no report leaves the cluster",
   ]}
 />
