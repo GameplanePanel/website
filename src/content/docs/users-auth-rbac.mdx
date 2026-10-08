@@ -120,7 +120,7 @@ Helm role mappings eliminate the need for a `bootstrap-admin` account in OIDC-on
 
 When deploying with Helm, set `api.oidc.enabled=true`, `api.oidc.groupsClaim` to the name of your IdP's groups claim (e.g., `"groups"`), and configure `api.oidc.roleMappings.{admin,operator,viewer}` with a list of group names for each role. On first login, Gameplane matches the user's group membership against the mappings and assigns the highest-privilege matching role.
 
-After deployment, admins can override role mappings through the dashboard without restarting the API. Helm upgrades preserve dashboard customizations — they do not overwrite group mappings that have already been edited in the UI. For detailed Helm value examples and troubleshooting, see the [OIDC provider setup documentation](https://github.com/ValgulNecron/Gameplane/blob/master/docs/oidc.md#role-mapping-at-install-time-no-bootstrap-admin-required) on GitHub.
+After deployment, admins can override role mappings through the dashboard without restarting the API. Helm upgrades preserve dashboard customizations — they do not overwrite group mappings that have already been edited in the UI. For detailed Helm value examples and troubleshooting, see the [OIDC provider setup documentation](https://github.com/GameplanePanel/Gameplane/blob/master/docs/oidc.md#role-mapping-at-install-time-no-bootstrap-admin-required) on GitHub.
 
 <DocsQuickReference
   label="LOCKOUT PREVENTION"

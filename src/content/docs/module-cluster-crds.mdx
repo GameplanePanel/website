@@ -38,7 +38,7 @@ ModuleSource indexes a module catalog (OCI registry, git repo, HTTP archive, or 
 |---|---|---|---|
 | `spec.type` | enum | no | oci / git / http / local / upload — selects which of spec.oci/git/http/local is active; defaults to `oci` |
 | `spec.oci` | object | conditional | OCI registry config (required if `type=oci`) |
-| `spec.oci.url` | string | yes | Registry/repository prefix (e.g., `ghcr.io/valgulnecron/gameplane-modules`) |
+| `spec.oci.url` | string | yes | Registry/repository prefix (e.g., `ghcr.io/gameplanepanel/gameplane-modules`) |
 | `spec.oci.modules` | array | yes | Explicit list of `{name: string}` entries; registries cannot be enumerated, so the catalog is declarative |
 | `spec.oci.pullSecretRef` | LocalObjectReference | no | Secret in operator namespace holding `kubernetes.io/dockerconfigjson` credentials for private registries |
 | `spec.oci.insecure` | bool | no | Allow plain HTTP (no TLS) — for local kind/k3d registries only; never use on production |

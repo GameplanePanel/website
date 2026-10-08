@@ -1,6 +1,6 @@
 # gameplane-website — AI assistant guide
 
-Public marketing + docs site for Gameplane; the `website/` submodule of `ValgulNecron/Gameplane`. Static Astro, strict TypeScript, Tailwind CSS 4, no client framework. Default branch: `main`.
+Public marketing + docs site for Gameplane; the `website/` submodule of `GameplanePanel/Gameplane`. Static Astro, strict TypeScript, Tailwind CSS 4, no client framework. Default branch: `main`.
 
 ## House rules
 
@@ -13,7 +13,7 @@ Public marketing + docs site for Gameplane; the `website/` submodule of `ValgulN
 ## Architecture
 
 - **Semantic tokens only:** Tailwind utilities backed by CSS custom properties in `src/styles/global.css` (`bg-background`, `text-foreground`, `text-primary`, …), never raw hex — this keeps the `.theme-light` band on the landing page working.
-- **Internal links via `withBase()`** (`src/lib/url.ts`): the site deploys under `/gameplane-website` on GitHub Pages, so bare root-relative hrefs 404. Markdown cross-doc links are relative (`./architecture/`).
+- **Internal links via `withBase()`** (`src/lib/url.ts`): the site deploys under `/website` on GitHub Pages, so bare root-relative hrefs 404. Markdown cross-doc links are relative (`./architecture/`).
 - **Docs:** content collection `src/content/docs/*.mdx` (schema `src/content.config.ts`); sidebar order and prev/next derive from `src/lib/docs-nav.ts`, so adding a page is frontmatter-only.
 - OG/canonical meta use absolute URLs from `Astro.site`. Deployment config (origin, base path, GitHub URL, displayed version) lives in `src/config.ts`.
 
