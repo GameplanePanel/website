@@ -50,8 +50,8 @@ Match access modes, reclaim policy, expansion, topology, and backup strategy to 
 
 - **Use a default StorageClass or select one explicitly during creation.** Select a StorageClass explicitly per server or template via `spec.storage.storageClassName`; if none is set, the cluster's default StorageClass is used. Verify one exists and matches your needs (e.g., SSD for high-IOPS games, networked storage for multi-pod backups).
 
-<DocsCallout icon="milestone" title="Coming in v0.3.0">
-  An install-time Helm default (`operator.gameDataStorage.storageClassName`) is coming in v0.3.0 and is not yet available in beta.8.
+<DocsCallout icon="milestone" title="Available since v0.3.0">
+  An install-time Helm default (`operator.gameDataStorage.storageClassName`) is available since v0.3.0.
 </DocsCallout>
 - **Confirm `allowVolumeExpansion` before increasing a server PVC.** Game worlds grow; if you plan to increase PVC size later, ensure the StorageClass allows expansion. Check with `kubectl get storageclass -o wide` — the `ALLOWVOLUMEEXPANSION` column should be `true`. You can edit a GameServer's `spec.storage.size` to trigger a resize (the Kubernetes CSI driver and underlying storage backend must support it).
 - **Understand whether deletion retains or removes the underlying volume.** StorageClass `reclaimPolicy` is `Delete` (volume deleted on PVC deletion) or `Retain` (volume kept for manual recovery). For production game servers, consider `Retain` to preserve world data even if a GameServer CRD is deleted. Consult your storage provider's documentation on reclaim semantics.

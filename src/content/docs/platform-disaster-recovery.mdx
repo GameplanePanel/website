@@ -47,7 +47,7 @@ Capture every versioned artifact, platform state source, credential, trust root,
 
 A disaster recovery manifest should document and preserve:
 
-- **Release and configuration:** Gameplane version (e.g., `v0.2.0-beta.8`), Helm values (including `api.db.driver`, ingress hostname, OIDC settings, storage class defaults), cluster Kubernetes version, and all base-image versions (restic, busybox, kubectl).
+- **Release and configuration:** Gameplane version (e.g., `v0.3.0`), Helm values (including `api.db.driver`, ingress hostname, OIDC settings, storage class defaults), cluster Kubernetes version, and all base-image versions (restic, busybox, kubectl).
 - **CRD and operator state:** All GameServer, GameTemplate, Module, ModuleSource, and Cluster CRD definitions; the operator's RBAC role and ClusterRole; and the operator's audit/observability configuration.
 - **Platform database:** SQLite file or PostgreSQL backup dump, including all tables for users, roles, permissions, audit logs, RBAC overrides, and platform settings.
 - **Secrets and certificates:** All platform Secrets (backup repository credentials, OIDC client secrets, API signing keys, TLS certificates, image registry credentials, database credentials, webhook auth tokens), stored securely off-cluster with access controls.
@@ -78,7 +78,7 @@ A platform-wide rebuild must follow this sequence:
 
   ```bash
   helm upgrade --install gameplane oci://ghcr.io/valgulnecron/charts/gameplane \
-    --version 0.2.0-beta.8 \
+    --version 0.3.0 \
     --namespace gameplane-system \
     --create-namespace \
     --values /path/to/recorded-values.yaml

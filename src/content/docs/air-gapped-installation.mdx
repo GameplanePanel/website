@@ -78,11 +78,11 @@ Every image and the chart are signed with cosign. Before mirroring, verify the s
 ```sh
 # Verify operator image
 cosign verify --key cosign.pub \
-  ghcr.io/valgulnecron/gameplane/operator:0.2.0-beta.8
+  ghcr.io/valgulnecron/gameplane/operator:0.3.0
 
 # Verify chart
 cosign verify --key cosign.pub \
-  ghcr.io/valgulnecron/charts/gameplane:0.2.0-beta.8
+  ghcr.io/valgulnecron/charts/gameplane:0.3.0
 
 # Game modules are signed the same way
 cosign verify --key cosign.pub \
@@ -98,20 +98,20 @@ Use `crane` (Google's OCI tool) or your registry vendor's mirror command to copy
 ```sh
 # Mirror operator image to private registry
 crane copy \
-  ghcr.io/valgulnecron/gameplane/operator:0.2.0-beta.8 \
-  registry.internal.corp/gameplane/operator:0.2.0-beta.8
+  ghcr.io/valgulnecron/gameplane/operator:0.3.0 \
+  registry.internal.corp/gameplane/operator:0.3.0
 
 # Mirror Helm chart
 crane copy \
-  ghcr.io/valgulnecron/charts/gameplane:0.2.0-beta.8 \
-  registry.internal.corp/gameplane/charts-gameplane:0.2.0-beta.8
+  ghcr.io/valgulnecron/charts/gameplane:0.3.0 \
+  registry.internal.corp/gameplane/charts-gameplane:0.3.0
 ```
 
 Mirrors must preserve the digest — verify the copied artifacts have the same digest as the source:
 
 ```sh
-crane digest ghcr.io/valgulnecron/gameplane/operator:0.2.0-beta.8
-crane digest registry.internal.corp/gameplane/operator:0.2.0-beta.8
+crane digest ghcr.io/valgulnecron/gameplane/operator:0.3.0
+crane digest registry.internal.corp/gameplane/operator:0.3.0
 # Both must print the same sha256:...
 ```
 
@@ -190,7 +190,7 @@ Configure Helm to use it:
 
 ```sh
 helm upgrade --install gameplane oci://registry.internal.corp/gameplane/charts-gameplane \
-  --version 0.2.0-beta.8 \
+  --version 0.3.0 \
   --namespace gameplane-system --create-namespace \
   --set image.pullSecrets[0].name=registry-creds
 ```
@@ -203,18 +203,18 @@ For every image in the chart values, rewrite the registry hostname but **never c
 # Default
 image:
   registry: ghcr.io/valgulnecron
-  tag: "0.2.0-beta.8"
+  tag: "0.3.0"
 
 # Rewritten for internal registry (same tag, different registry)
 image:
   registry: registry.internal.corp/gameplane
-  tag: "0.2.0-beta.8"
+  tag: "0.3.0"
 
 # Override optional image pulls
 operator:
   configInitImage: registry.internal.corp/busybox  # instead of busybox
   resticImage: registry.internal.corp/restic:latest  # instead of restic/restic
-  sentinelImage: registry.internal.corp/gameplane/sentinel:0.2.0-beta.8
+  sentinelImage: registry.internal.corp/gameplane/sentinel:0.3.0
 
 # Mirror the CRD-apply hook's kubectl image (needed at upgrade time and on
 # an install over leftover CRDs)
@@ -246,7 +246,7 @@ Before disconnecting from the public internet, render the final manifest to conf
 
 ```sh
 helm template gameplane oci://registry.internal.corp/gameplane/charts-gameplane \
-  --version 0.2.0-beta.8 \
+  --version 0.3.0 \
   --namespace gameplane-system \
   -f values-offline.yaml \
   > manifests.yaml
@@ -264,7 +264,7 @@ Apply the rendered manifest or use Helm with your internal registry:
 
 ```sh
 helm upgrade --install gameplane oci://registry.internal.corp/gameplane/charts-gameplane \
-  --version 0.2.0-beta.8 \
+  --version 0.3.0 \
   --namespace gameplane-system --create-namespace \
   -f values-offline.yaml
 ```

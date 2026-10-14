@@ -29,7 +29,7 @@ Gameplane's Helm chart is distributed as an OCI artifact on GitHub Container Reg
 - **Optional component images** — `audit-syslog-bridge`, `telemetry-receiver`, `sentinel`, `tunnel-frp`, `tunnel-tailscale`, `tunnel-playit`, `mcp-server` and `capture-sidecar` — are pulled only when the optional component they belong to is enabled (and, for `sentinel` and `capture-sidecar`, only for GameServers that opt in). A default install pulls four images: `operator`, `api`, `web` and `agent`.
 - **GameServer agent images** are pulled per-server, on-demand, so pre-staging is not required.
 
-Before your first production install, document and approve the release you intend to deploy: the specific chart version (e.g., `0.2.0-beta.8`) and any image tag or pull secret overrides in your values file.
+Before your first production install, document and approve the release you intend to deploy: the specific chart version (e.g., `0.3.0`) and any image tag or pull secret overrides in your values file.
 
 ## Render and review
 
@@ -81,7 +81,7 @@ Gameplane requires:
 - **A default StorageClass** for game-server data PVCs (any RWO CSI driver works)
 - **Optional: an ingress controller** (nginx-ingress by default) and cert-manager for TLS
 
-The current stable release is **v0.2.0-beta.8**. Install by specifying the version explicitly to ensure reproducibility.
+The current release is **v0.3.0** (pre-v1). Install by specifying the version explicitly to ensure reproducibility.
 
 ## Image signature verification
 
@@ -89,7 +89,7 @@ All released images, the chart, and official game modules are signed with cosign
 
 ```sh
 cosign verify --key cosign.pub \
-  ghcr.io/valgulnecron/gameplane/operator:0.2.0-beta.8
+  ghcr.io/valgulnecron/gameplane/operator:0.3.0
 ```
 
 Pre-rotation releases (v0.2.0-beta.7 and earlier) used the retired Ed25519 key and lack transparency log entries — verify those with `cosign-legacy.pub` and `--insecure-ignore-tlog=true`.
