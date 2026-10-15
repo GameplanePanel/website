@@ -10,12 +10,18 @@ export async function getStaticPaths() {
     .filter((doc) => doc.id !== "dashboard-tour")
     .map((doc) => {
       const index = docs.findIndex((entry) => entry.id === doc.id);
+      // A `next:` frontmatter slug overrides the sequence order.
+      const override = doc.data.next;
+      const nextDoc = override ? docs.find((entry) => entry.id === override) : undefined;
+      if (override && !nextDoc) {
+        throw new Error(`docs/${doc.id}: next "${override}" does not match any doc`);
+      }
       return {
         params: { slug: doc.id },
         props: {
           doc,
           prev: index > 0 ? docs[index - 1] : null,
-          next: index < docs.length - 1 ? docs[index + 1] : null,
+          next: nextDoc ?? (index < docs.length - 1 ? docs[index + 1] : null),
         },
       };
     });
