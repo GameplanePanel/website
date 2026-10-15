@@ -32,7 +32,7 @@ Read release notes and compatibility constraints. Export your current configurat
     {
       icon: "file-code",
       label: "Release Notes",
-      text: "Review the Changelog and any upgrade notes for your target version. Unreleased features marked as 'Coming in v0.3.0' require `v0.3.0-rc.1` or later.",
+      text: "Review the Changelog and any upgrade notes for your target version. Features marked as 'Available since v0.3.0' require `v0.3.0` or later.",
     },
     {
       icon: "database",
@@ -110,10 +110,10 @@ Upgrade a non-production or canary environment first. Watch the rollout, check m
 Once you have verified your values and backups, apply the upgrade to your cluster:
 
 ```bash
-# Upgrade to a specific version (e.g., 0.2.0-beta.8)
+# Upgrade to a specific version (e.g., 0.3.0)
 helm upgrade gameplane oci://ghcr.io/valgulnecron/charts/gameplane \
   --namespace gameplane-system \
-  --version 0.2.0-beta.8 \
+  --version 0.3.0 \
   --values gameplane-values-backup.yaml \
   --wait
 
@@ -214,7 +214,7 @@ kubectl apply --server-side -f charts/gameplane/crds/
 helm install gameplane charts/gameplane -n gameplane-system --create-namespace --force-conflicts
 ```
 
-<DocsCallout icon="info" title="Arrives in v0.3.0">
+<DocsCallout icon="info" title="Available since v0.3.0">
 The Helm 4 field-manager behavior and the hook-on-reinstall behavior above are part of v0.3.0.
 </DocsCallout>
 

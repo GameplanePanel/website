@@ -30,7 +30,7 @@ Use fleet metrics for symptom detection, Kubernetes events for control-plane cau
 
 - **Keep API and operator streams separate when following live logs.** Both services emit structured logs; keep them in separate streams to avoid losing context when debugging a single component's behavior.
 - **Use structured-level filters and download raw evidence for correlation.** The Dashboard Logs page (Admin Settings → Observability) supports filtering by level; download the full log window as JSON for offline analysis across multiple components.
-- **Document telemetry settings and privacy expectations for operators.** Telemetry is opt-in and off by default (no `api.telemetry.endpoint` or bundled receiver configured out of the box, and an admin-only dashboard toggle must also be turned on before anything is sent). When enabled, the telemetry-receiver collects anonymous cluster usage (server counts, resource requests, uptime) but does not capture game data, player information, or audit events. Audit telemetry settings in Platform Settings so all cluster operators are aware of what is being transmitted.
+- **Document telemetry settings and privacy expectations for operators.** Usage telemetry is on by default for new installs; admins can turn it off in Admin Settings > Telemetry. When enabled, the telemetry-receiver collects anonymous cluster usage (server counts, resource requests, uptime) but does not capture game data, player information, or audit events. Audit telemetry settings in Platform Settings so all cluster operators are aware of what is being transmitted.
 
 ## Notifications and platform settings
 
@@ -71,4 +71,4 @@ Each sink is tested independently via the Dashboard form before saving. The API 
 - [Production Observability](../production-observability/) — Prometheus, dashboards, and fleet-wide metrics
 - [Metrics, Alerts & Dashboards](../metrics-alerts-dashboards/) — Scraping, alerting rules, and Grafana sinks
 - [Notification Sinks](../notification-sinks/) — Configuring webhooks, ntfy, Slack, and SMTP
-- [Platform Settings & Telemetry](../platform-settings-telemetry/) — Instance identity, update channels, and opt-in telemetry
+- [Platform Settings & Telemetry](../platform-settings-telemetry/) — Instance identity, update channels, and telemetry settings

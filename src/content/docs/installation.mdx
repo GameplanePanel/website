@@ -157,7 +157,7 @@ networkPolicies:
 
 ### Module sources and catalog
 
-By default, Gameplane ships with the official game catalog (16 modules in v0.2.0, 30 in v0.3.0):
+By default, Gameplane ships with the official game catalog (16 modules in v0.2.0, 29 in v0.3.0):
 
 ```yaml
 defaultModuleSource:
@@ -181,11 +181,11 @@ Deploy the pinned OCI chart, bootstrap the first administrator, then validate po
 
 ### Step 1: Install the Helm chart
 
-Install a tagged release straight from the GitHub Container Registry (GHCR). Replace `<version>` with a release, e.g., `0.2.0-beta.8`:
+Install a tagged release straight from the GitHub Container Registry (GHCR). Replace `<version>` with a release, e.g., `0.3.0`:
 
 ```bash
 helm upgrade --install gameplane oci://ghcr.io/valgulnecron/charts/gameplane \
-  --version 0.2.0-beta.8 \
+  --version 0.3.0 \
   --namespace gameplane-system --create-namespace \
   --values values.override.yaml
 ```
@@ -240,8 +240,8 @@ modulesources.gameplane.local
 restores.gameplane.local
 ```
 
-<DocsCallout icon="info" title="Coming in v0.3.0">
-  NetworkCapture (packet capture for protocol debugging) will be the 9th CRD, arriving in v0.3.0-rc.1.
+<DocsCallout icon="info" title="Available since v0.3.0">
+  NetworkCapture (packet capture for protocol debugging) is the 9th CRD, available since v0.3.0.
 </DocsCallout>
 
 ### Step 4: Access the dashboard
@@ -260,7 +260,7 @@ Create a simple test GameServer to verify the operator is reconciling correctly:
 <DocsQuickReference
   label="INSTALL CHECK"
   items={[
-    "helm upgrade --install gameplane oci://ghcr.io/valgulnecron/charts/gameplane --version 0.2.0-beta.8 --namespace gameplane-system --create-namespace --values values.override.yaml",
+    "helm upgrade --install gameplane oci://ghcr.io/valgulnecron/charts/gameplane --version 0.3.0 --namespace gameplane-system --create-namespace --values values.override.yaml",
     "kubectl -n gameplane-system get pods && kubectl get crds | grep gameplane",
     "Log in, select the cluster, and create a test server to verify the operator reconciles",
   ]}
@@ -272,7 +272,7 @@ Every published image (tagged releases and `:edge`), the Helm chart, and officia
 
 ```bash
 cosign verify --key cosign.pub \
-  ghcr.io/valgulnecron/gameplane/operator:0.2.0-beta.8
+  ghcr.io/valgulnecron/gameplane/operator:0.3.0
 ```
 
 Pre-rotation releases (v0.2.0-beta.7 and earlier) used the retired Ed25519 key and lack transparency log entries — verify those with `cosign-legacy.pub` and `--insecure-ignore-tlog=true`.
@@ -285,7 +285,7 @@ The Helm chart defaults to pulling images from GitHub Container Registry (`ghcr.
 
 ```bash
 helm upgrade --install gameplane oci://ghcr.io/valgulnecron/charts/gameplane \
-  --version 0.2.0-beta.8 \
+  --version 0.3.0 \
   --set image.registry=your-private-registry.com
 ```
 
