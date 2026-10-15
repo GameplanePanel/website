@@ -234,6 +234,35 @@
   color: var(--foreground);
 }
 
+/* Feature catalog (features.mdx): when the column is wide enough, every area
+   table spans the full width with the same column positions, so the tables
+   line up down the page. Narrower columns keep the default scrolling table. */
+.feature-catalog {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+@container (min-width: 800px) {
+  .feature-catalog table {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    overflow: hidden;
+  }
+
+  .feature-catalog td {
+    min-width: 0;
+    overflow-wrap: break-word;
+  }
+
+  .feature-catalog th:nth-child(1) { width: 24%; }
+  .feature-catalog th:nth-child(2) { width: 120px; }
+  .feature-catalog th:nth-child(3) { width: 100px; }
+  .feature-catalog th:nth-child(5) { width: 16%; }
+}
+
 /* Shiki blocks: force the design's terminal background over the theme's. */
 .astro-code {
   background-color: var(--terminal) !important;

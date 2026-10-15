@@ -18,6 +18,8 @@ Notification rows take effect once a notification sink is configured.
 
 Status date: 2026-10-14 (v0.3.0, pre-v1). See the [roadmap](./roadmap/) for what is planned and in progress.
 
+<div class="feature-catalog">
+
 ## Servers and lifecycle
 
 | Capability | Maturity | Default | Description | Docs |
@@ -32,7 +34,7 @@ Status date: 2026-10-14 (v0.3.0, pre-v1). See the [roadmap](./roadmap/) for what
 | Graceful stop with the game's native shutdown sequence | beta | on | Runs the template stop sequence over RCON, telnet or stdin before the pod scales to zero so world saves finish. | [server operations](./server-operations/) |
 | Wipe world data with typed confirmation | beta | on | Suspends the server, erases the world volume and resumes, for owners or admins only. | [ownership danger zone](./ownership-danger-zone/) |
 | Browse and filter the server list across namespaces | beta | on | The Servers page lists servers from every namespace the viewer may read and filters them with All, Running and Stopped tabs. | [server overview](./server-overview/) |
-| Keep game data on a PVC with clear storage errors | beta | on | Game data stays on its PVC when the game pod is deleted, and a missing storage class sets Ready to False with reason PVCProvisioningFailed; an install-time default storage class is opt-in. | - |
+| Keep game data on a PVC with clear storage errors | beta | on | Game data stays on its PVC when the game pod is deleted, and a missing storage class sets Ready to False with reason PVCProvisioningFailed; an install-time default storage class is opt-in. | [cluster storage](./cluster-storage/) |
 | Edit game configuration from the Settings tab | in progress | n/a | Lets an operator change a server game configuration from its Settings tab, with validation. | [roadmap](./roadmap/) |
 
 ## Console and admin actions
@@ -63,7 +65,7 @@ Status date: 2026-10-14 (v0.3.0, pre-v1). See the [roadmap](./roadmap/) for what
 |---|---|---|---|---|
 | View online players and capacity | stable | on | Shows the online count, the maximum and the player list, refreshed every 5 seconds, for templates that declare a player source. | [player administration](./player-administration/) |
 | Manage the whitelist, kick, ban and banned list | beta | on | Edits whitelist entries, kicks online players, adds or removes persistent bans and lists the banned players the game reports, through the template commands; kick returns HTTP 501 when the template does not declare it. | [player administration](./player-administration/) |
-| Steam display names on player lists | beta | off | Resolves Steam IDs to display names through the Steam Web API once a Secret is configured. | - |
+| Steam display names on player lists | beta | off | Resolves Steam IDs to display names through the Steam Web API once a Secret is configured. | [install (GitHub)](https://github.com/GameplanePanel/Gameplane/blob/master/docs/install.md#steam-display-names-optional) |
 
 ## Mods
 
@@ -150,18 +152,18 @@ Status date: 2026-10-14 (v0.3.0, pre-v1). See the [roadmap](./roadmap/) for what
 | Register, rotate and remove remote clusters | beta | on | Registering stores a remote Kubernetes target with its kubeconfig through the Clusters page or POST /clusters, PUT /clusters/\{name\}/kubeconfig rotates the credential in place, and removing a registration deletes the kubeconfig Secret the API created for it. | [multi cluster](./multi-cluster/) |
 | Create and read servers on a chosen registered cluster | stable | on | A create or read request with ?cluster=&lt;id> targets that cluster's own Kubernetes API, rejects unknown cluster ids with 400, and never falls back to a same-named local server when a remote target is missing. | [multi cluster](./multi-cluster/) |
 | Enforce per-cluster RBAC grants on remote servers | stable | on | A viewer bound only to the local cluster is forbidden from reading remote servers. | [multi cluster](./multi-cluster/) |
-| Route module, registry and mod-ID writes to the selected cluster | beta | on | Mod and modpack configuration writes go to the selected cluster with resource-version and UID protection, and remote module catalog reads and writes need a cluster-wide modules:read or modules:manage grant there. | - |
+| Route module, registry and mod-ID writes to the selected cluster | beta | on | Mod and modpack configuration writes go to the selected cluster with resource-version and UID protection, and remote module catalog reads and writes need a cluster-wide modules:read or modules:manage grant there. | [multi-cluster](./multi-cluster/) |
 | Keep node join tokens and kubeconfig issuance local to the central cluster | stable | on | Node join token and kubeconfig endpoints are available only for the local cluster. | [cluster nodes kubeconfig](./cluster-nodes-kubeconfig/) |
-| Add nodes and download kubeconfig from the Cluster page | beta | off | With clusterOps enabled, the Cluster page mints a node join command and a downloaded kubeconfig, which grants kube-system and CSR-approval RBAC. | - |
+| Add nodes and download kubeconfig from the Cluster page | beta | off | With clusterOps enabled, the Cluster page mints a node join command and a downloaded kubeconfig, which grants kube-system and CSR-approval RBAC. | [cluster nodes and kubeconfig](./cluster-nodes-kubeconfig/) |
 | Show API health and node inventory per registered cluster | beta | on | The Clusters page shows Kubernetes API health, version and last check, and the Cluster page lists nodes and capacity for the chosen cluster, showing an error rather than local data when a remote read fails. | [multi cluster](./multi-cluster/) |
 | Combined counts, search and location filters across sites | beta | on | The dashboard totals authorized sites and labels partial totals, one search covers authorized servers from every site without identity collisions, and location filters narrow servers, backups and schedules. | [dashboard tour](./dashboard-tour/) |
-| Open canonical server links that carry cluster and namespace | beta | on | Direct links and fresh tabs target the named cluster and namespace, ignoring stored cluster selections. | - |
-| Block unsafe remote dial addresses, with an optional CIDR allowlist | beta | on | Dial-time checks reject loopback, link-local, metadata, unspecified and multicast destinations for remote Kubernetes and gateway dials; limiting destinations to listed networks with GAMEPLANE_REMOTE_ALLOWED_CIDRS is opt-in. | - |
+| Open canonical server links that carry cluster and namespace | beta | on | Direct links and fresh tabs target the named cluster and namespace, ignoring stored cluster selections. | [multi-cluster](./multi-cluster/) |
+| Block unsafe remote dial addresses, with an optional CIDR allowlist | beta | on | Dial-time checks reject loopback, link-local, metadata, unspecified and multicast destinations for remote Kubernetes and gateway dials; limiting destinations to listed networks with GAMEPLANE_REMOTE_ALLOWED_CIDRS is opt-in. | [standalone panel (GitHub)](https://github.com/GameplanePanel/Gameplane/blob/master/docs/standalone-panel.md#install-and-register-remote-game-clusters) |
 | Run remote agent operations through the mTLS gateway | beta | off | The optional private gateway carries files, mods, player data and capture files to a registered cluster over mTLS, stores the gateway URL and labelled credentials per cluster, and refuses agents too old for the UID route. | [remote agent gateway](./remote-agent-gateway/) |
 | Rotate gateway trust and revoke gateway access | beta | off | Repeated PUT rotates gateway credentials, and DELETE removes gateway access while keeping the cluster registration. | [remote agent gateway](./remote-agent-gateway/) |
 | Keep games running when the gateway is down | beta | off | A gateway outage stops remote agent access but not games or the local operator. | [remote agent gateway](./remote-agent-gateway/) |
-| Run the central panel without a local Kubernetes cluster | beta | off | api.standalone runs the dashboard and API with no operator and the central host never runs games; Docker Compose installs it bound to 127.0.0.1:8080, and module installs act on a selected registered cluster. | - |
-| Manage the standalone panel encryption key | beta | off | Remote credentials are encrypted in SQL with a key file that must be backed up with the database; rotate-panel-key re-encrypts them offline, and a provisioned-key option requires an existing 32-byte key and never generates one. | - |
+| Run the central panel without a local Kubernetes cluster | beta | off | api.standalone runs the dashboard and API with no operator and the central host never runs games; Docker Compose installs it bound to 127.0.0.1:8080, and module installs act on a selected registered cluster. | [standalone panel (GitHub)](https://github.com/GameplanePanel/Gameplane/blob/master/docs/standalone-panel.md#central-panel-on-kubernetes) |
+| Manage the standalone panel encryption key | beta | off | Remote credentials are encrypted in SQL with a key file that must be backed up with the database; rotate-panel-key re-encrypts them offline, and a provisioned-key option requires an existing 32-byte key and never generates one. | [standalone panel (GitHub)](https://github.com/GameplanePanel/Gameplane/blob/master/docs/standalone-panel.md#rotate-the-master-encryption-key) |
 
 ## Users, auth and access
 
@@ -176,8 +178,8 @@ Status date: 2026-10-14 (v0.3.0, pre-v1). See the [roadmap](./roadmap/) for what
 | Refuse changes that would lock out every admin | beta | on | The API refuses an auth config save that leaves no sign-in provider enabled, counting the Helm provider as always enabled, and refuses to demote or delete the last user who can manage users. | [sign in recovery](./sign-in-recovery/) |
 | Save and customize dashboard theme preferences | beta | on | Any signed-in user can save personal theme preferences, and Settings, Theme and Appearance offers preset themes, custom colors with a contrast check, a CSS overlay, safe mode, and import and export. | [dashboard tour](./dashboard-tour/) |
 | Require the CSRF header on mutating requests | beta | on | Mutating requests must echo the CSRF cookie value in the X-Gameplane-CSRF header (double-submit). | [security](./security/) |
-| Share a read-only status link for one GameServer | beta | on | A token in a share link gives unauthenticated access to one GameServer's status and connection address, optionally with permission to wake it. | - |
-| Recover an admin with bootstrap-admin | beta | n/a | Running bootstrap-admin with --force resets a named account's password, promotes it to admin and ends its existing sessions, and --enable-local-login force-enables the local provider so a locked-out admin can sign in. | [sign in recovery](./sign-in-recovery/) |
+| Share a read-only status link for one GameServer | beta | on | A token in a share link gives unauthenticated access to one GameServer's status and connection address, optionally with permission to wake it. | [security (GitHub)](https://github.com/GameplanePanel/Gameplane/blob/master/docs/security.md#share-links) |
+| Recover an admin with bootstrap-admin | beta | n/a | Running `bootstrap-admin --force` resets a named account's password, promotes it to admin and ends its existing sessions, and `--enable-local-login` force-enables the local provider so a locked-out admin can sign in. | [sign in recovery](./sign-in-recovery/) |
 | Sign in with dashboard-managed or Helm-configured OIDC providers | beta | off | Admins add OIDC providers from Authentication settings with the client secret in a labelled Secret, applied without restart, and the api.oidc Helm values add a read-only provider that the dashboard cannot edit, disable or delete. | [users auth rbac](./users-auth-rbac/) |
 | Map IdP group claims to dashboard roles | beta | off | Helm-seeded group mappings assign the most privileged matching role at install time, the role is recomputed at every OIDC login, and admins can override a role's group list from Authentication settings, effective at the next login. | [users auth rbac](./users-auth-rbac/) |
 | Follow OIDC setup guides for five identity providers | beta | n/a | Step-by-step guides cover registering Gameplane as an OIDC client in Keycloak, Authentik, Google, Okta and Entra ID. | [users auth rbac](./users-auth-rbac/) |
@@ -198,7 +200,7 @@ Status date: 2026-10-14 (v0.3.0, pre-v1). See the [roadmap](./roadmap/) for what
 | Encrypt agent and capture control traffic with mTLS | stable | on | Operator-managed agent and capture-sidecar control connections use mutual TLS 1.2 or newer with a verified client certificate. | [security](./security/) |
 | Isolate pods with NetworkPolicies | stable | on | Applies NetworkPolicies that restrict ingress to game servers and give the API pod an egress policy that allows private ranges. | [security](./security/) |
 | Audit OIDC role assignments and mapping overrides | beta | off | Each OIDC role assignment, override and reset writes an audit event naming the provider, matched group and role transition. | [audit observability admin](./audit-observability-admin/) |
-| Verify release signatures with the current cosign key | beta | n/a | The ECDSA P-256 cosign key verifies releases from the July 2026 rotation onward, and the retired Ed25519 key verifies earlier releases. | - |
+| Verify release signatures with the current cosign key | beta | n/a | The ECDSA P-256 cosign key verifies releases from the July 2026 rotation onward, and the retired Ed25519 key verifies earlier releases. | [CI, releases and signing](./ci-releases-signing/) |
 | Sign the audit chain with a keyed HMAC | planned | n/a | An HMAC-keyed audit chain with the key held outside the database is a candidate future hardening. | [roadmap](./roadmap/) |
 
 ## Notifications
@@ -244,10 +246,12 @@ Status date: 2026-10-14 (v0.3.0, pre-v1). See the [roadmap](./roadmap/) for what
 
 | Capability | Maturity | Default | Description | Docs |
 |---|---|---|---|---|
-| Install and upgrade the panel from the Helm chart | stable | on | One helm upgrade --install installs the operator, API and dashboard, and a pre-upgrade hook applies the Gameplane CRDs so every upgrade keeps the schema current. | [installation](./installation/) |
+| Install and upgrade the panel from the Helm chart | stable | on | One `helm upgrade --install` installs the operator, API and dashboard, and a pre-upgrade hook applies the Gameplane CRDs so every upgrade keeps the schema current. | [installation](./installation/) |
 | Read-only MCP server | beta | off | An optional MCP server lets AI assistants read GameServers, pods, events and logs and propose fixes without writing. | [helm values reference](./helm-values-reference/) |
 | Helper image overrides for air-gapped mirrors | beta | n/a | Helm lets operators retag the config-init and restic helper images to a private registry mirror. | [air gapped installation](./air-gapped-installation/) |
 | Rolling edge images | beta | off | Setting image.tag to edge runs the rolling build published on every master push. | [installation](./installation/) |
 | Local Kind development loop | beta | n/a | Make targets create a Kind cluster with a local OCI registry, load images and run the web dev server. | [local development setup](./local-development-setup/) |
 | Store API data in PostgreSQL | experimental | off | Runs the API against a PostgreSQL database instead of SQLite, but only in images built with the postgres build tag. | [database configuration](./database-configuration/) |
-| Reuse an existing PVC for the API database or standalone panel key | beta | off | Mounts a pre-existing PersistentVolumeClaim for the API SQLite database, or a pre-existing key-only PersistentVolumeClaim for generated standalone encryption keys, instead of creating one. | - |
+| Reuse an existing PVC for the API database or standalone panel key | beta | off | Mounts a pre-existing PersistentVolumeClaim for the API SQLite database, or a pre-existing key-only PersistentVolumeClaim for generated standalone encryption keys, instead of creating one. | [helm values reference](./helm-values-reference/) |
+
+</div>
