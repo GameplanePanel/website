@@ -48,7 +48,7 @@ Usage telemetry is on by default for new installs and is not a substitute for op
 
 On a new install the first admin to sign in sees a notice naming the destination and both tiers; nothing is sent until an admin has seen it. Admin Settings > Telemetry then shows the destination, a preview of the next report, the last attempt, separate switches for the basic and extended tiers, and an install-ID reset. Turning basic off turns extended off with it.
 
-**Basic** sends only the Gameplane version, the GameServer count and the GameTemplate count. **Extended** adds a random install ID, the Kubernetes minor version, a distribution category, CPU architectures and a node-count band, server counts per official module (custom modules are one combined count), feature adoption flags and bands, the database kind, the UI language, a public signing key and the send time. Every value comes from a fixed set or is a number; names, namespaces, hostnames, addresses and player data are never sent.
+**Basic** sends only the Gameplane version, the GameServer count and the GameTemplate count, summed over every cluster the panel manages and can reach. **Extended** adds a random install ID, the Kubernetes minor versions, distribution categories, CPU architectures and a node-count band of those clusters, whether the panel runs on a cluster or standalone, server counts per official module (custom modules are one combined count), feature adoption flags and bands, the database kind, the UI language, a public signing key and the send time. Every value comes from a fixed set or is a number; names, namespaces, hostnames, addresses and player data are never sent.
 
 <DocsSectionList
   items={[
