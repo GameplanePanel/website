@@ -1,0 +1,9 @@
+# System dependencies for website (spec 026). Language libraries stay in go.mod/package.json.
+
+component = "website"
+
+[[dep]]
+name = "node"
+kind = "toolchain"
+version = "node"
+reason = "website engines need node >=22.12.0 (website/package.json:7-9); the devcontainer Node 24 satisfies it (inventory 6(b))."
