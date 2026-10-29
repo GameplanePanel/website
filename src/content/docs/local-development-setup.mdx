@@ -67,6 +67,32 @@ The Make targets create local infrastructure, build and load images, push module
   ]}
 />
 
+## Dev containers
+
+The repository ships one dev container profile per area, so a container installs only what your change needs. Pick it in VS Code with "Dev Containers: Reopen in Container", or under "Dev container configuration" in Codespaces; the full profile is the default.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "box",
+      label: "Component profiles",
+      text: "web, api, operator, agent, go-services, website, and modules: one area each.",
+    },
+    {
+      icon: "boxes",
+      label: "Part profiles",
+      text: "dashboard-api, control-plane, and modules-gp: a few areas plus kind for a live cluster.",
+    },
+    {
+      icon: "layers",
+      label: "Full profile",
+      text: "Everything, for cross-cutting changes.",
+    },
+  ]}
+/>
+
+The [profile table in docs/contributing.md](https://github.com/GameplanePanel/Gameplane/blob/master/docs/contributing.md#dev-container-profiles) lists what each profile installs, its setup time, and when to use it. A Make target that needs a missing tool stops with a `need:` message naming the profile to reopen in.
+
 ## Debug the environment
 
 Keep host and cluster registry addresses, kube context, namespaces, image tags, and Helm values aligned.
