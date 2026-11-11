@@ -63,7 +63,7 @@ spec:
 
 **Requests** reserve capacity on a node; the node must have available resources or the pod will not schedule. **Limits** cap resource usage; if a process exceeds the limit, the kubelet terminates and restarts the container.
 
-When requests equal limits (as shown above), Kubernetes assigns the pod **Guaranteed QoS**, the highest tier. Guaranteed pods are the last to be evicted during node resource pressure, making them suitable for sensitive or high-value servers. Set limits higher than requests if you want to allow occasional bursts without consuming baseline capacity.
+When requests equal limits (as shown above), Kubernetes assigns the pod **Guaranteed QoS**, the highest tier. Guaranteed pods are the last to be evicted during node resource pressure, making them suitable for sensitive or high-value servers. Set limits higher than requests if you want to allow occasional bursts without consuming baseline capacity. Since v0.4.0 you do not need to edit YAML for this: turn on **Reserve less than the limit** in the resources settings or in Create Server to request less than the limit (Burstable QoS).
 
 ### Storage expansion
 

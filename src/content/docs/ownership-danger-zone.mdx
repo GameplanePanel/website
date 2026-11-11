@@ -62,7 +62,7 @@ Wipe keeps configuration and resets world data; Delete removes the GameServer, w
 
 Both operations require a verified backup and an explicit owner decision:
 
-- **Wipe data** — Suspends the server, empties the persistent volume (retaining configuration and game templates), and restarts the server with a clean world. Use this when you want to reset the game world but keep your server's name, settings, and template configuration.
+- **Wipe data** — Suspends the server, empties the persistent volume (retaining configuration and game templates), and restarts the server with a clean world. Use this when you want to reset the game world but keep your server's name, settings, and template configuration. A wipe and any backup or restore of the same server take one lifecycle ownership, so a backup or restore never reads the volume while a wipe changes it (v0.4.0).
 - **Delete server** — Removes the entire GameServer Kubernetes resource, stops the workload pod, and deletes the data PersistentVolumeClaim (PVC). All game data, configuration, and deployment state are destroyed. Use this only when you no longer need the server.
 
 <DocsQuickReference

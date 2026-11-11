@@ -56,6 +56,8 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
 ```
 
+**Share links**: From v0.4.0 the chart renders a second Ingress, `gameplane-share`, for the `/share` and `/shares` paths. Share tokens sit in the URL path, so the chart turns off access logging for ingress-nginx on that Ingress (`ingress.shareLinks.disableAccessLog: true`). Other controllers need their own per-route log switch in `ingress.shareLinks.annotations`.
+
 **Game Exposure**: Each GameServer's `spec.networking.expose` field controls how the game is exposed:
 - **`ClusterIP`** (default): Reachable only from within the cluster.
 - **`NodePort`**: Exposed on a high port on every node. Players connect to `node-ip:node-port`.
@@ -143,11 +145,13 @@ nginx.ingress.kubernetes.io/use-forwarded-headers: "true"   # Trust X-Forwarded-
 nginx.ingress.kubernetes.io/proxy-set-headers: "gameplane-system/custom-headers"  # Custom headers
 ```
 
+**Security headers**: From v0.4.0 the dashboard sends a Content-Security-Policy and other security headers, and the agent and capture proxies cannot override the API's headers. Check that the Ingress and any proxy in front of it pass these headers through unchanged.
+
 **Forwarded Headers**: The API inspects `X-Forwarded-For`, `X-Forwarded-Proto`, and `X-Real-IP` headers to determine the actual client IP and protocol. Misconfigured proxies lead to wrong client IPs in logs and OIDC callback mismatches.
 
 **Backend mTLS**: The API communicates with agents over mTLS:
-- **API → Agent**: Client certificate signed by the operator-managed CA, mounted into the API pod at `/etc/gameplane/agent-ca/`.
-- **API → Database**: Optional mTLS for PostgreSQL backends (set `db.tls=true` in values).
+- **API → Agent**: The API presents a client certificate (`api.agentMTLS.clientCertRef`) and verifies agents against the operator-managed CA. The API pod mounts only the CA certificate (`ca.crt`) at `/etc/gameplane/agent-ca/`, never the CA key.
+- **API → Database**: For PostgreSQL, put TLS in `api.db.dsn`, for example `sslmode=require`. The chart has no `db.tls` value.
 - **API → Audit Syslog**: Plain HTTP-JSON webhook; the syslog bridge (`audit-syslog-bridge`) forwards to TLS syslog endpoints.
 
 ## Harden and validate
@@ -183,7 +187,7 @@ curl -i -N -H "Connection: Upgrade" -H "Upgrade: websocket" \
 
 The `$SESSION_TOKEN` is obtained from a prior dashboard or OIDC login, not from a Kubernetes ServiceAccount token.
 
-**File Uploads**: The Ingress `proxy-body-size` limit must exceed your largest world/mod file:
+**File Uploads**: The Ingress `proxy-body-size` limit must exceed your largest world/mod file. The chart sets `512m` by default in `ingress.annotations`:
 
 ```sh
 # Check the configured limit

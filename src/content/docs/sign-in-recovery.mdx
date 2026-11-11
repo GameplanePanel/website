@@ -76,7 +76,7 @@ Generic errors protect account details, so correlate the browser response with A
 - **Per-IP limit:** 5 attempts per minute (burst 10)
 - **Per-username limit:** 3 attempts per minute (burst 6)
 
-If you exceed either limit, wait 1 minute and retry. The rate limit is tied to the TCP peer address; if your API uses a proxy or load balancer, ensure the X-Forwarded-For header is **not** trusted by the API (the default). Check the API pod logs (`kubectl logs -f -n gameplane-system deploy/gameplane-api -c api`) for audit entries if a login appears stuck.
+If you exceed either limit, wait 1 minute and retry. A browser that has signed in to an account before (v0.4.0) skips the per-username limit for that account, so failed attempts from other browsers cannot lock the owner out. The per-IP limit still applies to every browser. The browser keeps this state for 30 days, and an API restart makes each browser count once more. The rate limit is tied to the TCP peer address; if your API uses a proxy or load balancer, ensure the X-Forwarded-For header is **not** trusted by the API (the default). Check the API pod logs (`kubectl logs -f -n gameplane-system deploy/gameplane-api -c api`) for audit entries if a login appears stuck.
 
 **OIDC failures** are often due to misconfigured redirect URIs, mismatched issuer URLs (including trailing slashes), or a provider-side clock skew:
 - Check **Admin Settings → General → External URL** — it must match your dashboard's public hostname exactly (e.g., `https://gameplane.example.com`).
@@ -97,6 +97,8 @@ An administrator with the `users:manage` role can reset any local user's passwor
 4. Set a temporary password
 5. Share the temporary password securely with the user (out of band, not via email)
 6. Ask the user to change it on first login
+
+The reset ends every session of that account, so anyone signed in as that user is signed out (v0.4.0).
 
 The user's effective role in Gameplane is determined by:
 - **Local account**: the role manually assigned in **Admin Settings → Users**

@@ -104,7 +104,7 @@ Most lifecycle actions return HTTP 202 (Accepted), indicating the operator will 
 - **Stop** (`POST /servers/{name}:stop`) — sets `spec.suspend=true`, gracefully shutting down and scaling to zero
 - **Restart** (`POST /servers/{name}:restart`) — stamps an annotation that triggers a pod restart; does not pause the server
 - **Wake** (`POST /servers/{name}:wake`) — wakes a server sleeping under idle auto-sleep (wake-on-connect); no-op if already running
-- **Wipe data** (`POST /servers/{name}:wipe-data`) — suspends the server, erases all files in the world volume, and resumes (for "reset world" workflows). Requires confirmation (server name typed back as `confirm` parameter).
+- **Wipe data** (`POST /servers/{name}:wipe-data`) — suspends the server, erases all files in the world volume, and resumes (for "reset world" workflows). Requires confirmation (server name typed back as `confirm` parameter). Backups, restores and wipes of the same server take one lifecycle ownership, so they never read or change the volume at the same time, and wipe workers finish before the server resumes (v0.4.0).
 
 **Configuration copying (HTTP 200):**
 - **Clone** (`POST /servers/{name}:clone`) — creates a new GameServer by copying the entire spec from the source (image, version, config, resources, networking), with a specified `newName`. The clone inherits the source's spec.suspend value (so a running source produces a running clone); stop it afterward if you want it to come up stopped. World data is not copied.

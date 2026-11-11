@@ -23,9 +23,13 @@ import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
   The optional agent gateway and the unified cross-cluster dashboard described below are available since v0.3.0. In v0.2.0-beta.8 you can register clusters and manage their resources from one dashboard, but console and log streaming is scoped to the local control-plane cluster.
 </DocsCallout>
 
+<DocsCallout icon="milestone" title="Available since v0.4.0">
+  Standalone panels run the central API and dashboard without a local game cluster, and the **Nodes** page lists the nodes of every cluster you can see. See the [standalone panel guide](../standalone-panel/) for setup, credentials and recovery.
+</DocsCallout>
+
 ## Manage independent clusters from one dashboard
 
-One central API and login manages independent registered clusters. Each remote cluster runs its own operator and, optionally, a private [agent gateway](../remote-agent-gateway/). Clusters stay independent execution and storage boundaries; only their presentation is combined.
+One central API and login manages independent registered clusters, whether the panel runs as a combined installation or as a [standalone panel](../standalone-panel/) without a local cluster. Each remote cluster runs its own operator and, optionally, a private [agent gateway](../remote-agent-gateway/). Clusters stay independent execution and storage boundaries; only their presentation is combined.
 
 ### What works across clusters
 
@@ -48,7 +52,7 @@ The same server pages and permissions apply to local and remote servers. Every o
 - No cross-cluster scheduling, automatic failover, shared storage, or live game migration; move worlds with backup and restore (see [Promote and migrate](#promote-and-migrate)).
 - No second user database: accounts, roles, the module catalog, audit and installation settings stay centrally managed.
 - Node-join tokens, kubeconfig issuance and installation storage configuration are local-cluster operations and are unavailable while viewing a remote cluster.
-- Registration is an administrator step. The dashboard's **Clusters** page lists and selects existing registrations; you enroll a cluster through the `Cluster` resource and its credential Secrets.
+- Registration is an administrator step. In a combined installation, the dashboard's **Clusters** page lists and selects existing registrations, and you enroll a cluster through the `Cluster` resource and its credential Secrets. In a standalone panel, a user with `cluster:manage` selects **Register cluster** on the **Clusters** page (or calls `POST /clusters`); the registration and its credentials are stored in the panel's database. Registration grants no workload access.
 - A gateway outage does not stop games or their local operator, and the `Cluster` health status reports Kubernetes connectivity only, not gateway health.
 
 ### Match component versions
@@ -57,10 +61,10 @@ Use matching API, operator and agent versions in every cluster. Remote requests 
 
 ### One view across locations
 
-The dashboard, Servers, Backups and Search combine every resource the user is authorized to see, across all registered clusters, with an optional **Location** filter. There is no global cluster switcher in the ordinary shell.
+The dashboard, Servers, Backups and Search combine every resource the user is authorized to see, across all registered clusters, with an optional **Cluster** filter. There is no global cluster switcher in the ordinary shell.
 
 - **Dashboard:** combined server and player counts; inventory cards combine only the sites where the user has inventory permission. CPU and memory ratios use summed usage over matching capacity, and unavailable metrics show as unknown rather than zero. Unavailable or truncated scopes are listed next to partial totals.
-- **Servers:** one list with the existing game, namespace, status and text filters plus Location, kept inside the Filter popover. Same-named servers in different clusters or namespaces stay distinct, and each row acts on its own cluster and namespace.
+- **Servers:** one list with the existing game, namespace, status and text filters plus Cluster, kept inside the Filter popover. Same-named servers in different clusters or namespaces stay distinct, and each row acts on its own cluster and namespace.
 - **Server detail:** links carry the cluster and namespace. Console, files, players, settings and backups inherit that target, so refreshing or opening a link in another tab never depends on a previous selection. Legacy links without a cluster mean the local cluster.
 - **Backups and Search:** snapshots, schedules, restores and server search combine authorized scopes and keep each result's cluster, namespace and name. Filters stage until you click Apply.
 - **Creating a server:** the target is chosen before creation. A single eligible placement is automatic; with several, you pick a location, with an eligible local placement preferred. Gameplane does not schedule across clusters or retry a failed creation on another site.
@@ -68,7 +72,7 @@ The dashboard, Servers, Backups and Search combine every resource the user is au
 
 ### Grant access per cluster
 
-Kubernetes credentials and dashboard grants are separate. The registered kubeconfig must be able to read the target cluster's resources, and users need a grant for the cluster and namespace they use. In **Users & RBAC**, create a role, edit the user, choose the remote cluster for a supplemental grant, pick the role and namespace, and add it. The user's local primary role stays separate, and changing grants revokes their sessions so they sign in again. For node inventory, use a role containing `cluster:read` with **All namespaces**; namespace-only server grants do not expose inventory. Remote all-namespace roles may hold only `cluster:read` and namespaced permissions; wildcard and central-administration permissions are rejected.
+Kubernetes credentials and dashboard grants are separate. The registered kubeconfig must be able to read the target cluster's resources, and users need a grant for the cluster and namespace they use. In **Users & RBAC**, create a role, edit the user, choose the remote cluster for a supplemental grant, pick the role and namespace, and add it. The user's local primary role stays separate, and changing grants revokes their sessions so they sign in again. For node inventory, use a role containing `cluster:read` with **All namespaces**; namespace-only server grants do not expose inventory. Remote all-namespace roles may hold `cluster:read`, `modules:read`, `modules:manage`, `templates:read`, `templates:write` and namespaced permissions; wildcard and central-administration permissions are rejected. Module and template access on a remote cluster needs an **All namespaces** grant on that cluster; a grant on `local` does not authorize a remote catalog.
 
 ## Define the control boundary
 
@@ -79,7 +83,7 @@ Document the supported relationship between control plane, database, namespace s
     {
       icon: "server",
       label: "One control plane and database form one operational boundary",
-      text: "The API server and database live on the control-plane cluster. Additional target clusters run their own operator instances but share neither database nor audit state.",
+      text: "In a combined installation, the API server and database live on the control-plane cluster; a standalone panel runs them on a host without Kubernetes. Additional target clusters run their own operator instances but share neither database nor audit state.",
     },
     {
       icon: "database",
@@ -108,7 +112,7 @@ Reuse policy safely while isolating credentials, failure domains, backups, endpo
     {
       icon: "lock",
       label: "Keep redirect URLs and service accounts cluster-specific",
-      text: "OIDC login happens once at the control plane; target clusters are reached through the operator's kubeconfig Secret, not a separate per-cluster login. RBAC role bindings are per-cluster; registering a cluster grants no implicit access.",
+      text: "OIDC login happens once at the control plane; target clusters are reached through their registered kubeconfig (a labelled Secret in a combined installation, encrypted SQL storage in a standalone panel), not a separate per-cluster login. RBAC role bindings are per-cluster; registering a cluster grants no implicit access.",
     },
     {
       icon: "layers",
@@ -122,7 +126,7 @@ Reuse policy safely while isolating credentials, failure domains, backups, endpo
 
 Promote manifests and modules through GitOps; move worlds only through verified backup and restore.
 
-Promote `Cluster` CRs, `GameTemplate`, and `Module` manifests through version control and argocd or flux deployments. Worlds and persistent game data migrate through the backup and restore subsystem:
+In a combined installation, promote `Cluster` CRs, `GameTemplate`, and `Module` manifests through version control and argocd or flux deployments; a standalone panel keeps its registrations in its database instead. Worlds and persistent game data migrate through the backup and restore subsystem:
 
 1. **Export** the source GameServer's configuration (template, mods, ownership).
 2. **Create a Backup** on the source cluster targeting a repository accessible from the target.
@@ -140,6 +144,7 @@ Promote `Cluster` CRs, `GameTemplate`, and `Module` manifests through version co
 
 ## Related topics
 
+- [Standalone panel](../standalone-panel/) — Run the central panel without host Kubernetes and register remote clusters in its database.
 - [Cluster Nodes & Kubeconfig](../cluster-nodes-kubeconfig/) — Register and manage target clusters and their connection credentials.
 - [High Availability](../high-availability/) — Replicate the control plane for production resilience.
 - [Backups & Recovery](../backups-recovery/) — Back up game worlds and move them between clusters.

@@ -17,14 +17,14 @@ Kubernetes 1.28+, Helm 3.13+, and a default StorageClass. An ingress controller 
 
 Pull the chart straight from GHCR and install with one helm upgrade --install command — no manual repo add needed.
 
-Releases up to and including v0.3.0 are published under `ghcr.io/valgulnecron`, so this page uses that registry; releases after v0.3.0 move to `ghcr.io/gameplanepanel`.
+Releases up to and including v0.3.0 are published under `ghcr.io/valgulnecron`; v0.4.0 and later are published under `ghcr.io/gameplanepanel`. The examples on this page use `0.4.0` and that registry.
 
 <CodeLabel>ONE-SHOT INSTALL</CodeLabel>
 
 ```sh
 helm upgrade --install gameplane \
-    oci://ghcr.io/valgulnecron/charts/gameplane \
-    --version 0.3.0 \
+    oci://ghcr.io/gameplanepanel/charts/gameplane \
+    --version 0.4.0 \
     --namespace gameplane-system --create-namespace
 ```
 
@@ -39,4 +39,4 @@ printf '%s' "$ADMIN_PASSWORD" | kubectl -n gameplane-system exec -i deploy/gamep
   /api bootstrap-admin --username admin --password-stdin
 ```
 
-For OIDC login, PostgreSQL instead of the bundled SQLite, and ingress/TLS options, see the full [installation guide](../installation/).
+For OIDC login, PostgreSQL instead of the bundled SQLite, and ingress/TLS options, see the full [installation guide](../installation/). To run the central dashboard and API without a local game cluster, see [Standalone panel](../standalone-panel/).

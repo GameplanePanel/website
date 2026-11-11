@@ -32,7 +32,7 @@ The breadcrumb starts at the exposed root, which is intentionally narrower than 
     {
       icon: "check",
       label: "Use the editor only for supported text content",
-      text: "The file editor is designed for safe text files; avoid binary or application-owned data.",
+      text: "The file editor is designed for safe text files; avoid binary or application-owned data. Only regular files can be opened or downloaded (v0.4.0).",
     },
     {
       icon: "check",
@@ -56,7 +56,7 @@ New folders, new files, and uploads operate in the currently open directory.
     {
       icon: "check",
       label: "Include the correct extension and avoid accidental replacement",
-      text: "Always include the proper file extension to prevent overwriting or creating incompatible files.",
+      text: "Always include the proper file extension. New files are created atomically and never overwrite an existing file (v0.4.0), so a name already in use is not replaced.",
     },
     {
       icon: "check",

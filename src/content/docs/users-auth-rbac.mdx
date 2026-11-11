@@ -98,6 +98,10 @@ The permission catalog includes:
 
 Owner-only server operations (transferring ownership, editing collaborators, wiping data, deleting the server) require either the server's owner or an admin. Operator-role users keep their other server permissions but cannot perform these four operations on servers they don't own.
 
+**Admin-level grants (v0.4.0).** `users:manage`, `roles:manage`, `config:manage` and `cluster:manage` lead to full administrator access. Only a holder of the `*` wildcard can add them to a role, assign a role that carries them, or edit, reset, delete or re-bind an account that holds them. Sign-in provider settings also need `*`. Holders of the other managing permissions can still grant every non-admin permission.
+
+**Selected-cluster catalogs (v0.4.0).** In combined and standalone installations, module and template catalog access needs a cluster-wide grant on the selected cluster or on all clusters (`*`). A grant on `local` keeps local access but does not authorize a remote catalog, and namespace-only grants never authorize a catalog.
+
 ## OIDC and SSO
 
 Configure identity providers through Helm install-time settings or the dashboard, validate claims and role mappings, and test the flow in a private session before enforcing SSO-only mode.

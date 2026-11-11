@@ -79,11 +79,13 @@ Permissions are bound to users through roles, and each binding is scoped across 
 
 1. **Namespace** — a Kubernetes namespace (`default`, `game-world-1`, etc.) or `*` for cluster-wide. A `servers:read` binding in `default` namespace grants read access to servers in `default` only; a `*` binding grants access to all servers.
 
-2. **Cluster** — the home cluster or a registered remote cluster, or `*` for all clusters. A binding on the home cluster does not grant access to servers on a remote cluster (no cross-cluster privilege escalation).
+2. **Cluster** — the home cluster or a registered remote cluster, or `*` for all clusters. A binding on the home cluster does not grant access to servers on a remote cluster (no cross-cluster privilege escalation). Module and template catalog permissions (`modules:*`, `templates:*`) need a cluster-wide grant on the selected cluster or on `*` (v0.4.0); a grant on `local` does not authorize a remote catalog, and namespace-only grants never authorize one.
 
 3. **Resource** — scoped permissions like `servers:read` apply within the namespace; cluster-scoped permissions like `templates:read` are never namespace-restricted.
 
 **Owner & collaborator fallback** — When a namespace permission check fails (e.g., the caller has `servers:read` in namespace A but requests access to a server in namespace B), the API checks if the caller is the server's owner or a collaborator. Owner-only operations (transferring ownership, managing collaborators, wiping data, and deleting a server) require the server's owner or an admin, even if the caller holds `servers:write` in that namespace. For a server with no recorded owner (e.g. one created via kubectl or GitOps), only these owner-only operations are admin-only — ordinary reads and writes via `servers:read`/`servers:write` still work normally for anyone holding those namespace permissions.
+
+**Admin-level permissions (v0.4.0).** `users:manage`, `roles:manage`, `config:manage` and `cluster:manage` lead to full administrator access. Only a holder of `*` can grant them or any other admin-level permission, assign a role that carries them, or edit, reset, delete or re-bind an account that holds them. Sign-in provider settings also need `*`.
 
 <DocsCallout icon="info" title="Unknown permission strings are rejected.">
   The permission vocabulary is fixed on the server. Custom roles may combine any subset of the catalog permissions. Requests that reference an unknown permission (a typo or a permission from a future version) are rejected with a 400 Bad Request.

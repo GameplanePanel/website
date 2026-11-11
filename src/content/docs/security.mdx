@@ -19,7 +19,7 @@ Local accounts with argon2id hashing, or OIDC (Keycloak, Google, GitHub) with JW
 
 ## Authorization
 
-Permission-based RBAC with admin/operator/viewer roles, scoped per namespace or cluster-wide. Registering a cluster grants no user access by itself: remote access uses supplemental per-cluster grants, and a global union of permission names never authorizes a row in another cluster.
+Permission-based RBAC with admin/operator/viewer roles, scoped per namespace or cluster-wide. Registering a cluster grants no user access by itself: remote access uses supplemental per-cluster grants, and a global union of permission names never authorizes a row in another cluster. Admin-level permissions (`users:manage`, `roles:manage`, `config:manage`, `cluster:manage`) can be granted, or the accounts that hold them edited, only by a holder of the `*` wildcard (v0.4.0). Module and template catalogs need a cluster-wide grant on the selected cluster or on all clusters (v0.4.0).
 
 ## API ↔ Agent
 
@@ -28,6 +28,32 @@ mTLS with an operator-managed CA; the agent refuses plain HTTP once TLS material
 ## API ↔ remote gateway
 
 In v0.3.0, remote clusters can run an optional [agent gateway](../remote-agent-gateway/). The central API reaches it with a dedicated mTLS identity: separate trust material from the local agent CA, and an exact URI SAN the gateway requires in the client certificate. The central API remains the user-authorization authority, so a trusted client certificate grants delegated access to the gateway's allowlisted agent operations only. It is not a user credential, so keep its private key restricted to the central API workload. The gateway exposes only allowlisted operations in its configured namespaces, never forwards browser cookies, bearer tokens or CSRF headers, and reaches agents over local agent mTLS on versioned, GameServer-UID-bound routes. Missing or malformed credentials fail closed with no fallback to a same-named local server. Removing trust or permissions blocks new operations but does not immediately end an existing stream; restart the gateway or set `gateway.maxRequestDuration` to bound that window.
+
+## Pre-release hardening (v0.4.0)
+
+The v0.4.0 hardening pass (PR #862) closed the following gaps. The complete model is in the [security doc on GitHub](https://github.com/GameplanePanel/Gameplane/blob/master/docs/security.md).
+
+- OIDC discovery, key fetches, code exchange and operator OCI registry dials go through the dial guard, which refuses unsafe destinations at dial time.
+- The dashboard sends a Content-Security-Policy and security headers, and agent and capture proxies can no longer override the API's security headers.
+- Share tokens stay out of access and error logs. Snapshot restores are checked against the live Backup owner, and unfinished or aborted snapshots are rejected.
+- The API pod no longer mounts the agent CA key.
+- A ValidatingAdmissionPolicy (Kubernetes 1.30 or later) limits waker service accounts to the wake annotation.
+- The agent serves regular files only and confines mod installs to the mods root.
+- Kubelet probes reach only the probe ports of the game container, through the per-server probes NetworkPolicy, which is on by default.
+- Operator Secret access is limited to the configured namespaces, and template environment Secret and ConfigMap references follow the server ownership rule.
+
+## Standalone credentials and remote workloads (v0.4.0)
+
+- Standalone encryption keys are kept outside database volumes, with fail-closed file-access checks, read-only provisioned custody and authenticated transactional rotation. Database backups and key backups need separate access policies, and recovery requires the matching key. See [standalone storage and recovery](https://github.com/GameplanePanel/Gameplane/blob/master/docs/standalone-panel.md#storage-and-recovery).
+- Standalone connections require verified TLS, reject unsafe destinations at dial time, and bound finite responses, watch frames and retained observations. Private networks stay reachable unless `GAMEPLANE_REMOTE_ALLOWED_CIDRS` (Compose) or `api.remoteAllowedCIDRs` (Helm) restricts the workload API and gateway destinations.
+
+## Steam display names
+
+With `api.steam.apiKeySecretRef.name` set, the API looks up public display names for Steam IDs in player lists. The key is read from the environment, is never logged and is never sent to the browser. Lookups leave only from the API pod. A display name is for display only: kick, ban and unban key on the Steam ID. Without a key, or when Steam is unreachable, player lists show raw Steam IDs.
+
+## Telemetry
+
+Usage reports are pseudonymous and carry a fixed set of fields; see [platform settings and telemetry](../platform-settings-telemetry/). Extended reports are signed with Ed25519, using a key derived from a per-install secret and the install ID, so a receiver can refuse forged, stale and replayed reports. Signing does not stop invented installs. The public receiver accepts unauthenticated reports by design and limits them per source. The receiver's dashboard runs on a private port and needs a token of at least 32 characters.
 
 <DocsCallout icon="shield-alert" title="Found a security issue?">
   Report it privately via GitHub Security Advisories rather than a public issue — we'll coordinate

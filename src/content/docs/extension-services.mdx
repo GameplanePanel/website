@@ -35,7 +35,7 @@ Each extension solves a narrow integration problem without becoming a mutation b
     {
       icon: "activity",
       label: "telemetry-receiver",
-      text: "Accepts the opt-in product telemetry path — anonymous daily usage reports ({version, servers, templates}) aggregated to Prometheus metrics, never stored raw.",
+      text: "Accepts the product telemetry path: anonymous daily usage reports in a basic tier and an optional extended tier. Reports are aggregated into daily counters and Prometheus metrics, with a token-protected dashboard, and raw reports are not stored.",
     },
     {
       icon: "terminal",
@@ -59,16 +59,19 @@ A schema-agnostic HTTP-JSON → syslog relay. It sits behind the API's audit web
 
 ### telemetry-receiver
 
-The collection endpoint for Gameplane's optional, anonymous, daily usage report — `{version, servers, templates}`, nothing else, sent only when an admin opts in via **Admin Settings → Telemetry → Send anonymous usage metrics**.
+The collection endpoint for Gameplane's anonymous daily usage reports. There are two tiers, each with its own toggle in **Admin Settings → Telemetry**: the basic tier (`version`, `servers`, `templates`) and an extended tier (v0.4.0) that adds fields such as a random install ID, the Kubernetes minor version and feature flags. A new install with a telemetry destination shares both tiers by default after the first administrator sees a notice on sign-in, and nothing is sent before that notice. Upgraded installs keep their saved choices, and the extended tier stays off until an admin turns it on. Set `api.telemetry.enabled=false` for a hard off. The data-handling statement is at https://gameplane.net/telemetry/.
 
 **Enable:** `api.telemetry.receiver.enabled=true`
 
+**Persistence and dashboard (v0.4.0):** `api.telemetry.receiver.persistence.enabled` (default `true`, 1Gi) keeps daily aggregates for 24 months and activity records for 90 days in SQLite on a PVC, with a single replica. The dashboard is served on `:8081` and needs `api.telemetry.receiver.dashboard.tokenSecretRef`; that token must be at least 32 characters.
+
 **Endpoints:**
 - `/ingest` — `POST` to ingest a report; requires auth token if `AUTH_TOKEN` is set.
-- `/metrics` — Prometheus text format (counters by version, histograms of server/template counts).
+- `/metrics` — Prometheus text format (counters by version, histograms of server/template counts). From v0.4.0 it is served on the dashboard port (`:8081`) and requires `Authorization: Bearer <DASHBOARD_TOKEN>`; without a dashboard token there is no metrics endpoint.
 - `/healthz` — `GET` → `200 ok`.
+- `/v1/summary` — `GET`, a public summary, only when `PUBLIC_SUMMARY=true` (v0.4.0).
 
-Raw reports are never stored, only aggregated counters. Version strings that don't parse are counted under `version="invalid"` to prevent label cardinality explosion.
+Raw reports are never stored. Daily aggregates are kept for 24 months and per-install activity records for 90 days by default (v0.4.0). Version strings that don't parse are counted under `version="invalid"` to prevent label cardinality explosion.
 
 ### mcp-server
 
@@ -116,7 +119,8 @@ Put cross-component invariants in small modules only when multiple callers requi
 
 `netguard` is **not deployed**; it's a Go package linked into the operator and the agent. It implements the SSRF egress dial-guard both use to keep outbound connections away from cluster-internal and cloud-metadata targets:
 
-- **Operator** (`ModuleSource` `git`/`http` fetches) — intentionally more permissive; self-hosted registries legitimately live on private/loopback addresses.
+- **Operator** (`ModuleSource` `git`/`http` fetches and OCI registry dials) — intentionally more permissive; self-hosted registries legitimately live on private/loopback addresses.
+- **API** (OIDC discovery, key fetches and code exchange) also dials through the guard as of v0.4.0.
 - **Agent** (`capabilities.mods.install` downloads) — stricter; mod-download URLs are less trusted.
 
 Both dial through a `net.Dialer.Control` hook that blocks the destination at connect time, enforced late enough that DNS rebinding can't slip past a name-based allowlist. See [Security](../security/) for the full threat model.

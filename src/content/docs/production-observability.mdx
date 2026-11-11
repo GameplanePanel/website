@@ -27,7 +27,7 @@ Label every signal with cluster, namespace, resource UID, and synchronized time 
     {
       icon: "activity",
       label: "Scrape documented metric endpoints",
-      text: "Collect metrics from API (port 9090), operator (port 8080), and agent sidecars (port 9090) using Prometheus ServiceMonitors and PodMonitors.",
+      text: "Collect metrics from API (port 9090), operator (port 8080), agent sidecars (port 9090), and relay tunnel pods (port 8091) using Prometheus ServiceMonitors and PodMonitors.",
     },
     {
       icon: "history",
@@ -47,6 +47,7 @@ Label every signal with cluster, namespace, resource UID, and synchronized time 
 - **API:** `/metrics` on the dedicated in-cluster listener (port `metricsPort`, default 9090). ServiceMonitor available when `serviceMonitors.enabled: true` in `values.yaml`.
 - **Operator:** `/metrics` on port 8080. Exports fleet state gauges like `gameplane_gameservers{phase=...}` and reconciliation counters.
 - **Agent sidecars:** `/metrics` on port 9090 (unauthenticated). PodMonitor available when `serviceMonitors.enabled: true`.
+- **Relay tunnel pods:** `/metrics` on port 8091, on the same listener as the health checks. Exports the `gameplane_tunnel_*` gauges (v0.4.0).
 
 **Logs collection:**
 
@@ -72,7 +73,7 @@ Cover control-plane health, reconciliation, fleet states, capacity, storage, bac
     {
       icon: "info",
       label: "Alert on stuck/failed work, capacity, DB, certs, backups, and sources",
-      text: "Configure alerts on PrometheusRules: GameplaneOperatorReconcileErrors, GameplaneOperatorWorkqueueBacklog, GameplaneGameServerFailed, GameplaneBackupFailed, and certificate expiry.",
+      text: "Configure alerts on PrometheusRules: GameplaneOperatorReconcileErrors, GameplaneOperatorWorkqueueBacklog, GameplaneGameServerFailed, GameplaneBackupFailed, GameplaneRelayUnavailable, GameplanePerformanceDegraded (v0.4.0), and certificate expiry.",
     },
     {
       icon: "info",

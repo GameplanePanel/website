@@ -66,17 +66,25 @@ Every payload contains these fields:
 | `message` | string | Detailed event message (may be empty) |
 | `test` | boolean | `true` for synthetic test sends; `false` for real events |
 
+Webhook payloads also carry three additive fields from v0.4.0. Every field above keeps its name and value.
+
+| Field | Type | Description |
+|---|---|---|
+| `language` | string | Language the `title` and `text` were rendered in: the destination's language, or the instance default |
+| `title` | string | Rendered headline, for example `[prod] backup failed: gameplane-games/nightly` |
+| `text` | string | Rendered one-line message |
+
 <DocsCallout icon="shield-alert" title="Event payload is part of the API contract">
   Field names and structure are locked for webhook consumers. Renaming or removing fields requires a major version bump and advance notice.
 </DocsCallout>
 
 ## Delivery by sink type
 
-Each sink kind formats the event data for its platform while preserving the core fields. The delivery behavior (retries, observability) is consistent across all types.
+Each sink kind formats the event data for its platform while preserving the core fields. The delivery behavior (retries, observability) is consistent across all types. Discord, email and webhook messages are rendered in the destination's language (v0.4.0); see [Notification Sinks](../notification-sinks/).
 
 | Adapter | Credential | Payload format | Observability |
 |---|---|---|---|
-| **Webhook** | Optional `authorization` header | Full JSON (fields above) | Delivery counters at `/metrics`; HTTP status logged |
+| **Webhook** | Optional `authorization` header | Full JSON (fields above, plus `language`, `title`, `text`) | Delivery counters at `/metrics`; HTTP status logged |
 | **Discord** | Webhook URL | One embed, color-coded (red for failures, green for successes) | Same metrics; delivery status in logs |
 | **Slack** | Incoming webhook URL | Plain text message (`{"text": "…"}`) | Works with every incoming-webhook variant and Mattermost compatibles |
 | **ntfy** | Topic URL + optional token | Plain-text POST with metadata in headers (`Title`, `Priority`, `Tags`) | High priority on failures; default otherwise |

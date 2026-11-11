@@ -25,6 +25,23 @@ List or create namespaced GameServer, Backup, and related resources.
 | `/schedules` | GET · POST | `schedules:read/write` | List and manage backup schedules. |
 | `/modules` | GET | `modules:read` | Browse installed and available module resources. |
 | `/users` | GET · POST | `users:read/manage` | List or invite platform users. |
+| `/users/me/language` | PUT | signed-in user | Save your dashboard language as `{"language": "<tag>"}`; `null` clears it (v0.4.0). |
+| `/auth/locale` | GET | none (public) | Instance default language tag for the login page; returns only the tag (v0.4.0). |
+
+## Clusters and Nodes
+
+Register and inspect the clusters you can see. Cluster-level mutations need `cluster:manage`.
+
+| Route | Method | Permission | Description |
+|---|---|---|---|
+| `/clusters` | GET | none (filtered by your grants) | List the registered clusters you can see. |
+| `/clusters` | POST | `cluster:manage` | Register a remote cluster. |
+| `/clusters/{name}` | DELETE | `cluster:manage` | Remove a cluster registration. |
+| `/clusters/{name}/kubeconfig` | PUT | `cluster:manage` | Replace a registered cluster's kubeconfig; keeps its identity and grants (v0.4.0). |
+| `/clusters/{name}/gateway` | PUT · DELETE | `cluster:manage` | Set or remove the remote agent gateway credentials (v0.4.0). |
+| `/cluster` | GET | `cluster:read` | Nodes and health of the selected cluster. |
+| `/fleet/inventory` | GET | exact cluster-wide inventory grant | Nodes of every cluster you can see, across clusters (v0.4.0 listing). |
+| `/fleet/servers`, `/fleet/backups`, `/fleet/schedules`, `/fleet/restores` | GET | per-item grants | Permission-filtered reads across every authorized cluster (v0.3.0). |
 
 ## Actions and Administration
 
@@ -72,7 +89,9 @@ The API returns standard HTTP status codes and plain-text error messages:
 - **429 Too Many Requests** — Rate limit exceeded (per-user and per-IP buckets apply to mutations)
 - **5xx Server Error** — Internal server error or Kubernetes API failure
 
-Error responses use `Content-Type: text/plain; charset=utf-8` with a plain-text message body. The HTTP status code carries the semantics.
+Error responses use `Content-Type: text/plain; charset=utf-8` with a plain-text message body by default. The HTTP status code carries the semantics.
+
+A client that lists `application/problem+json` in its `Accept` header (with a non-zero `q`) receives an RFC 9457 problem document instead (v0.4.0). It carries `type`, `status`, `title`, `detail`, a stable `messageId` and `args` (the message arguments), so the dashboard can show the message in the active language. Every other client keeps the plain-text body.
 
 ## Query Parameters and Filters
 

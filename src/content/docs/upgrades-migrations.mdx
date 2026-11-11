@@ -17,7 +17,7 @@ import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
 
 Gameplane releases are pinned with signed container images and strict Kubernetes compatibility. Every upgrade is reversible if planned carefully; every migration is documented in the release notes.
 
-Releases up to and including v0.3.0 are published under `ghcr.io/valgulnecron`, so this page uses that registry; releases after v0.3.0 move to `ghcr.io/gameplanepanel`.
+Releases up to and including v0.3.0 are published under `ghcr.io/valgulnecron`; v0.4.0 and later are published under `ghcr.io/gameplanepanel`. The examples on this page use `0.4.0` and that registry.
 
 <DocsCallout icon="refresh-cw" title="Plan platform changes in isolation">
   Do not combine a platform upgrade with unrelated server, storage, authentication, or network changes. Each change introduces risk vectors; combining them makes root-cause analysis impossible when something breaks.
@@ -110,10 +110,10 @@ Upgrade a non-production or canary environment first. Watch the rollout, check m
 Once you have verified your values and backups, apply the upgrade to your cluster:
 
 ```bash
-# Upgrade to a specific version (e.g., 0.3.0)
-helm upgrade gameplane oci://ghcr.io/valgulnecron/charts/gameplane \
+# Upgrade to a specific version (e.g., 0.4.0)
+helm upgrade gameplane oci://ghcr.io/gameplanepanel/charts/gameplane \
   --namespace gameplane-system \
-  --version 0.3.0 \
+  --version 0.4.0 \
   --values gameplane-values-backup.yaml \
   --wait
 
@@ -174,10 +174,11 @@ Only use the rollback procedure if migrations failed or core workflows are broke
 # 2. Export current CRDs in case you need to debug
 kubectl get crds -o yaml > crds-upgrade-state.yaml
 
-# 3. Roll back the Helm chart (example: rolling back from 0.2.0-beta.8 to 0.2.0-beta.7)
-helm upgrade gameplane oci://ghcr.io/valgulnecron/charts/gameplane \
+# 3. Roll back the Helm chart to the previous version, from the registry that published it
+#    (v0.3.0 and earlier: ghcr.io/valgulnecron; later releases: ghcr.io/gameplanepanel)
+helm upgrade gameplane oci://<registry>/charts/gameplane \
   --namespace gameplane-system \
-  --version 0.2.0-beta.7 \
+  --version <previous-version> \
   --values gameplane-values-backup.yaml \
   --wait
 
@@ -217,6 +218,24 @@ helm install gameplane charts/gameplane -n gameplane-system --create-namespace -
 <DocsCallout icon="info" title="Available since v0.3.0">
 The Helm 4 field-manager behavior and the hook-on-reinstall behavior above are part of v0.3.0.
 </DocsCallout>
+
+## Upgrade notes for v0.4.0
+
+Read these before upgrading from v0.3.0. The breaking changes come first. The full list is in the [CHANGELOG](../changelog/) under `[0.4.0]`.
+
+- **Breaking: administrator-level grants need `*`.** Holders of `users:manage`, `roles:manage`, `config:manage` or `cluster:manage` without `*` can no longer grant `*` or another admin-level permission, edit or reset an administrator, or edit auth providers. `/admin/config/auth` and `/admin/auth` need `*`.
+- **Breaking: kubelet probes reach only probe ports.** A new per-server `<server>-probes` NetworkPolicy admits kubelet CIDRs only to the game container's probe ports. It is on by default through `networkPolicies.probeIngress.enabled`. Set that value to `false` to restore the old all-ports `allow-kubelet-probes` rule.
+- **Breaking: custom CSS.** Stylesheets with `\` escapes, absolute `http(s):` references or protocol-relative `//` references are now rejected.
+- **Breaking: selected-cluster module and template grants.** In combined and standalone installations, catalog permissions need a cluster-wide grant on the selected cluster or on the wildcard cluster. A grant on `local` keeps local access but no longer authorizes a remote catalog. Before upgrading, grant a role with `modules:read`, `modules:manage`, `templates:read` and/or `templates:write` on each remote cluster, selecting **All namespaces**. See [Standalone panel](../standalone-panel/).
+- **Telemetry is on by default for new installs.** A new install with a destination in effect shares basic and extended data once the first admin has seen the first-login notice. Nothing is sent before then. Set `api.telemetry.enabled=false` for a hard off. See [Platform settings, telemetry, and build info](../platform-settings-telemetry/).
+- **Existing installs that saved basic telemetry start sending.** An install that turned on **Send anonymous usage metrics** while no destination was configured starts sending basic reports to `telemetry.gameplane.net` after the upgrade. Extended stays off. Set `api.telemetry.enabled=false` before upgrading to prevent this.
+- **An empty `api.telemetry.endpoint` now means the project default.** The admin toggles take effect on a stock install. Installs with a custom endpoint or the bundled receiver keep sending only there.
+- **Telemetry receiver changes.** The receiver's `/metrics` moved from `:8080` to `:8081` and requires `Authorization: Bearer <DASHBOARD_TOKEN>`. Update Prometheus scraping, or set `api.telemetry.receiver.dashboard.tokenSecretRef.name`. A `DASHBOARD_TOKEN` shorter than 32 characters now stops the receiver at startup. The receiver also stores data by default (`api.telemetry.receiver.persistence.enabled`, 1Gi). `helm upgrade --reuse-values` from 0.3.0 needs no new values: with no `persistence` block the receiver keeps using an `emptyDir`, as before.
+- **Password reset ends every session.** Migration `019_session_epoch.sql` runs on API startup. A password reset invalidates every session of that account.
+- **Share links have their own Ingress.** `/share` and `/shares` go through a second Ingress, `gameplane-share`, with access logging off for ingress-nginx. Other controllers need their own switch in `ingress.shareLinks.annotations`.
+- **The API is a singleton.** Every database driver uses the `Recreate` strategy, and `api.replicas` values other than 1 are rejected.
+- **Standalone panel.** The central panel can now run with Docker Compose or the standalone Helm profile, without a local game cluster or operator. Register remote clusters explicitly, and back up the database and its matching credential encryption key separately. When migrating a legacy `/data/panel.key` installation, keep the original key. See [Standalone panel](../standalone-panel/).
+- **Game and auxiliary pods can restart.** Agent, config-init, sentinel, tunnel and Restic pods now request resources on every install. Upgrades can restart game pods or leave them Pending when capacity is short. See the [v0.4.0 operational notes](https://github.com/GameplanePanel/Gameplane/blob/master/docs/release-notes.md).
 
 ## Upgrade notes for v0.3.0
 

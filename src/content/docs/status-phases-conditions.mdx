@@ -40,8 +40,10 @@ GameServer conditions align with the Kubernetes Condition API (`metav1.Condition
 | **Progressing** | A spec change is being rolled out | True / False |
 | **Healthy** | Liveness/readiness probes pass | True / False |
 | **AddressAssignment** | External address allocated (LoadBalancer mode) | True / False / Unknown |
-| **TunnelReady** | Tunnel Deployment is ready and its provider config is complete (ports mapped, credentials present); present only while a tunnel is enabled. From v0.3.0, reason `TunnelCredentialRefused` means the credential Secret is not owned by the GameServer | True / False / (absent) |
+| **TunnelReady** | Tunnel Deployment is ready, its provider config is complete (ports mapped, credentials present), and the relay has confirmed its registrations; present only while a tunnel is enabled. From v0.3.0, reason `TunnelCredentialRefused` means the credential Secret is not owned by the GameServer. From v0.4.0, reason `AwaitingAddress` means no address is assigned yet, and `RelayConnectionUnknown` means the provider cannot confirm its connection (the pinned Playit client) | True / False / (absent) |
 | **DataWipe** | Wipe-data job succeeded | True / False / (absent) |
+
+From v0.4.0 the GameServer status also carries `status.conditionArgs`: per condition type, the values interpolated into that condition's English message for its current reason. Dashboards use it to render the translated message. The English `message` is unchanged and remains the fallback. An entry is removed when the reason changes to one without arguments.
 
 ## Backup & Restore
 
@@ -55,6 +57,8 @@ GameServer conditions align with the Kubernetes Condition API (`metav1.Condition
 | **Failed** | Backup failed; see condition reason |
 
 Completed backups are immutable. A failed backup can be manually retried via `kubectl delete backup <name>` (re-creates immediately).
+
+Backup conditions separate copy success from consistency (v0.4.0). `Consistency=False` with reason `LiveMultiVolumeCopy` means an all-data copy was taken while the server ran. `CaptureReady` describes preparation and authorization, or a pending drain. `SnapshotCleaned` reports CSI snapshot reclamation.
 
 ### Restore phases
 
@@ -88,6 +92,10 @@ A ModuleSource indexes a catalog (Git, OCI registry, HTTP, or local) and caches 
 |-----------|---------|
 | **Synced** | Most recent index pull succeeded |
 | **Ready** | Complete catalog is available |
+
+## Game template conditions
+
+A GameTemplate reports `LocalesValid` (v0.4.0) for the translations shipped with its module bundle. It is `True` with reason `Valid` when every entry is valid. It is `False` with reason `InvalidEntries`, `LocalesTooLarge` or `WriteFailed` otherwise. Install never fails because of translations; invalid entries are dropped and reported in the condition and in Warning events.
 
 ## Cluster health phases
 

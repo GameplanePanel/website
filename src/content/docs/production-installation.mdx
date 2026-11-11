@@ -3,7 +3,7 @@ title: "Production Helm installation"
 description: "Build a pinned, reviewable release with explicit security, storage, database, access, backup, and telemetry choices."
 section: "platform"
 group: "cluster-storage"
-order: 8
+order: 9
 icon: "rocket"
 eyebrow: "INSTALL"
 readTime: "18 MIN"
@@ -17,7 +17,7 @@ import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
   Archive the exact chart, image digests, values, and rendered manifests accepted for each environment.
 </DocsCallout>
 
-Releases up to and including v0.3.0 are published under `ghcr.io/valgulnecron`, so this page uses that registry; releases after v0.3.0 move to `ghcr.io/gameplanepanel`.
+Releases up to and including v0.3.0 are published under `ghcr.io/valgulnecron`; v0.4.0 and later are published under `ghcr.io/gameplanepanel`. The examples on this page use `0.4.0` and that registry.
 
 ## Establish a production baseline
 
@@ -29,7 +29,7 @@ Gameplane's Helm chart is distributed as an OCI artifact on GitHub Container Reg
 - **Optional component images** — `audit-syslog-bridge`, `telemetry-receiver`, `sentinel`, `tunnel-frp`, `tunnel-tailscale`, `tunnel-playit`, `mcp-server` and `capture-sidecar` — are pulled only when the optional component they belong to is enabled (and, for `sentinel` and `capture-sidecar`, only for GameServers that opt in). A default install pulls four images: `operator`, `api`, `web` and `agent`.
 - **GameServer agent images** are pulled per-server, on-demand, so pre-staging is not required.
 
-Before your first production install, document and approve the release you intend to deploy: the specific chart version (e.g., `0.3.0`) and any image tag or pull secret overrides in your values file.
+Before your first production install, document and approve the release you intend to deploy: the specific chart version (e.g., `0.4.0`) and any image tag or pull secret overrides in your values file.
 
 ## Render and review
 
@@ -67,9 +67,9 @@ After the Helm release completes:
 <DocsQuickReference
   label="PRODUCTION INSTALL"
   items={[
-    "helm show values oci://ghcr.io/valgulnecron/charts/gameplane --version <version> > values-reference.yaml",
-    "helm template gameplane oci://ghcr.io/valgulnecron/charts/gameplane --version <version> -f values-prod.yaml > rendered.yaml",
-    "helm upgrade --install gameplane oci://ghcr.io/valgulnecron/charts/gameplane --version <version> -f values-prod.yaml --atomic --wait -n gameplane-system --create-namespace",
+    "helm show values oci://ghcr.io/gameplanepanel/charts/gameplane --version <version> > values-reference.yaml",
+    "helm template gameplane oci://ghcr.io/gameplanepanel/charts/gameplane --version <version> -f values-prod.yaml > rendered.yaml",
+    "helm upgrade --install gameplane oci://ghcr.io/gameplanepanel/charts/gameplane --version <version> -f values-prod.yaml --atomic --wait -n gameplane-system --create-namespace",
   ]}
 />
 
@@ -81,18 +81,18 @@ Gameplane requires:
 - **A default StorageClass** for game-server data PVCs (any RWO CSI driver works)
 - **Optional: an ingress controller** (nginx-ingress by default) and cert-manager for TLS
 
-The current release is **v0.3.0** (pre-v1). Install by specifying the version explicitly to ensure reproducibility.
+The current release is **v0.4.0** (pre-v1). Install by specifying the version explicitly to ensure reproducibility.
 
 ## Image signature verification
 
 All released images, the chart, and official game modules are signed with cosign and recorded in the Sigstore Rekor transparency log:
 
 ```sh
-cosign verify --key cosign.pub \
-  ghcr.io/valgulnecron/gameplane/operator:0.3.0
+cosign verify --key signing/cosign.pub \
+  ghcr.io/gameplanepanel/gameplane/operator:0.4.0
 ```
 
-Pre-rotation releases (v0.2.0-beta.7 and earlier) used the retired Ed25519 key and lack transparency log entries — verify those with `cosign-legacy.pub` and `--insecure-ignore-tlog=true`.
+Pre-rotation releases (v0.2.0-beta.7 and earlier) used the retired Ed25519 key and lack transparency log entries — verify those with `signing/2026-07-24-cosign-legacy.pub` and `--insecure-ignore-tlog=true`.
 
 ## Next steps
 

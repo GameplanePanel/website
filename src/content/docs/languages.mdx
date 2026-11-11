@@ -1,0 +1,73 @@
+---
+title: "Languages & Translations"
+description: "Pick a dashboard language, set the instance default and notification language, and translate Gameplane or module text."
+section: "platform"
+group: "users-access"
+order: 5
+icon: "globe"
+eyebrow: "ACCESS"
+readTime: "8 MIN"
+covers: ["Languages", "Translations", "Locales"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsSectionList from "../../components/docs/DocsSectionList.astro";
+
+Gameplane's dashboard, API error messages, game server conditions, notifications and module text can be shown in another language. English is the reference language and the fallback for anything that is not translated yet.
+
+<DocsCallout icon="info" title="Only listed languages appear in the picker">
+  A language is listed once at least 80% of its messages are translated. Anything missing shows in English, so a partly translated language still works where it is available.
+</DocsCallout>
+
+## Choose your language
+
+On the Theme & Appearance settings page, the language picker sets the dashboard language. French is the first translated language.
+
+<DocsSectionList
+  items={[
+    {
+      icon: "users",
+      label: "Saved to your account",
+      text: "A choice you make while signed in follows you to every browser and device. Choose Automatic (browser language) to clear it.",
+    },
+    {
+      icon: "globe",
+      label: "Signed-out pages",
+      text: "On the sign-in page and on shared links, the picker saves the choice to that browser only.",
+    },
+    {
+      icon: "history",
+      label: "Dates and numbers",
+      text: "Dates, numbers and relative times follow the active language.",
+    },
+  ]}
+/>
+
+The dashboard picks a language in this order: your saved choice, the browser language, the instance default, then English. Any message a language does not have is shown in English.
+
+## Admins set the defaults
+
+- **Instance default:** the Language card in Admin Settings sets the default language for the whole instance. It starts as English.
+- **Notification language:** each Discord, email and webhook destination can have its own language. Destinations with none use the instance default. Test sends use the destination's language. The headline and the fixed sentences are translated; the Kubernetes event reason and message are quoted in English.
+- **Telemetry:** the extended usage report includes the UI language. See [installation telemetry](https://github.com/GameplanePanel/Gameplane/blob/master/docs/install.md#telemetry).
+
+## What is translated
+
+- **Dashboard text and API errors:** the dashboard asks the API for translated error messages, so errors appear in the active language.
+- **Game server conditions:** the dashboard translates condition messages. The English `message` on the resource is unchanged.
+- **Module text:** a module's translations are used when the active language has them. Otherwise the module's English text is shown.
+
+## Module authors
+
+A module can ship `locales/<tag>.json` next to `module.yaml`. The operator checks the file against the ids that the module's templates use and stores the valid entries. A translation file that is invalid or too large never stops an install; the `LocalesValid` condition reports the problem instead. Each file is read up to 900 KiB, and all of a bundle's translation files together up to 4 MiB.
+
+Use `gp-module i18n extract` to write the English reference, `gp-module i18n stamp` after translating, and `gp-module validate` to check the result. See [module authoring](../module-authoring/) for the full layout.
+
+## Translators
+
+- A language is a folder, `i18n/locales/<tag>/`, with `app.json` (the messages) and `meta.json` (the name and direction). Copy `i18n/locales/en/` to start one.
+- Partial packs are welcome. They merge, but stay hidden from the picker until they reach 80%.
+- Check your pack with `go run ./cmd/i18n-check locales` from the `i18n` folder.
+- You can also translate in the browser on [Hosted Weblate](https://hosted.weblate.org/projects/gameplane/).
+
+The full guide, with the message rules and the review process, is in [translating.md on GitHub](https://github.com/GameplanePanel/Gameplane/blob/master/docs/translating.md).

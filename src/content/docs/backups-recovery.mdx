@@ -77,7 +77,7 @@ Backups combine a cron schedule with a restic repository, credentials, and expli
 Gameplane supports two backup strategies:
 
 **Restic-snapshot** (default):
-- Runs `restic backup` directly against the data volume
+- Runs `restic backup` directly against the server's data volumes. By default only `<server>-data` is captured (`volumePolicy: primary-only`). Opt in with `volumePolicy: all-data` (primary data, classified `data` extra volumes and active loader or mod volumes) and/or `powerPolicy: stop-copy-restart` (copies a stopped, drained server). Both are set on Backup, BackupSchedule or the GameServer's inline backup policy. (v0.4.0)
 - Stores snapshots in a restic repository (S3, GCS, SFTP, or local backend)
 - Supports both per-server and global snapshot browsing
 - Requires explicit restic repository credentials in a Secret
@@ -102,7 +102,7 @@ Retention rules apply after the backup completes. Restic supports overlapping po
 - **keep-monthly N** — keep N monthly backups (1st day)
 - **keep-yearly N** — keep N yearly backups (1st day)
 
-Leave all empty to keep everything (not recommended in production). The operator prunes snapshots when trim conditions are met.
+Leave all empty to keep everything (not recommended in production). A schedule with no retention policy trims nothing, so backups with retention disabled are kept. When a policy is set, the operator deletes `Backup` resources that fall outside every bucket. It does not run `restic forget` or `prune` against the repository, so repository storage is not reclaimed automatically; see [Backup Repository Operations](../backup-repository-operations/). (v0.4.0)
 
 ## Restore safely
 
@@ -123,6 +123,7 @@ Restore into a new server for verification, or overwrite only after stopping wri
 2. **Choose a target server:**
    - For restic-snapshot backups: specify an existing GameServer (will be suspended and overwritten) or a new one.
    - For volume-snapshot backups: the target must not exist; the operator creates a new GameServer with the snapshot data.
+   - For all-data restic captures (v0.4.0): the saved volume layout is checked against an existing target before the target is stopped. Same-server recovery needs the original claim UIDs. A mismatch fails visibly without suspending the target or writing any data.
 3. **Check available storage** on the target node or cluster to ensure the restore can complete.
 4. **Start the restore** and monitor the Restore resource's phase:
    - **Pending** — validating source backup and target server

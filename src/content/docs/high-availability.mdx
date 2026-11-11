@@ -3,7 +3,7 @@ title: "High availability and failure domains"
 description: "Replicate only supported components, remove avoidable single points of failure, and test disruption against explicit objectives."
 section: platform
 group: cluster-storage
-order: 4
+order: 5
 icon: shield-check
 eyebrow: PLATFORM
 readTime: 17 MIN
@@ -34,13 +34,13 @@ Publish replica safety, leader election, migration ownership, session behavior, 
 Before deploying with redundancy, decide which components will replicate and at what minimum count. The operator replicates safely at 2+ replicas, but the API must stay at 1 replica; game servers themselves are stateless replicas (one per instance) and scale independently.
 
 - **Operator component:** Leader-elected across replicas. Safe at 2+ replicas with `operator.replicas` in Helm values. Leader election uses Kubernetes leases; the operator exits on missed lease renewal, triggering a pod restart. A single-node cluster with one operator replica is fault-tolerant only within that node.
-- **API component:** Keep `api.replicas: 1` with either database driver: SQLite (default, production-tested) is single-writer on a RWO volume, and with PostgreSQL (experimental) the user-management lock and audit hash chain are still per-process, so extra replicas are not safe. Game agents talk to the API via Kubernetes Service discovery and automatically reconnect on pod restarts. The API stores game state, audit logs, and administrative data; loss of the API pod does not interrupt active game servers (they remain running and playable).
+- **API component:** The chart rejects any `api.replicas` value other than 1, and every API Deployment uses the `Recreate` strategy (v0.4.0). Keep `api.replicas: 1` with either database driver: SQLite (default, production-tested) is single-writer on a RWO volume, and with PostgreSQL (experimental) the user-management lock and audit hash chain are still per-process, so extra replicas are not safe. Game agents talk to the API via Kubernetes Service discovery and automatically reconnect on pod restarts. The API stores game state, audit logs, and administrative data; loss of the API pod does not interrupt active game servers (they remain running and playable).
 - **Game server pods:** Each GameServer pod is stateless application logic (plus ephemeral logs). World data persists on a PVC backed by your StorageClass. Multiple GameServers are independent replicas; loss of one pod does not affect others. Game servers are typically single-replica per instance; replication happens at the instance level, not the pod level.
 - **Ingress controller, load balancer, and DNS:** Provided by your Kubernetes distribution and network provider. Gameplane does not manage these; your infrastructure must provide redundancy (e.g., multi-zone load balancer, multiple ingress replicas, DNS failover).
 
 State database requirements and constraints:
 - **SQLite (default):** Single writer on a RWO PVC. Database file is mutable in place; concurrent writers corrupt it. Backups via restic snapshots. Simpler operational model; suitable for single-operator setups and development.
-- **PostgreSQL (experimental):** An external, separately administered database. Replication, point-in-time recovery, and connection pooling are PostgreSQL-native concerns. Not yet recommended for production: the published api image is built without it, it is not yet covered by e2e or upgrade tests, and it does not make multiple API replicas safe.
+- **PostgreSQL (experimental):** An external, separately administered database. Replication, point-in-time recovery, and connection pooling are PostgreSQL-native concerns. Not yet recommended for production: the published api image is built without it, it is exercised by the CI `api (postgres)` job and the PostgreSQL e2e buckets (including `postgres-availability`) but remains experimental, and it does not make multiple API replicas safe.
 
 Separate cluster-scoped dependencies from application replicas:
 - The operator, API, and sentinel (wake-on-connect) are control-plane components that manage the cluster. They have their own replicas and heartbeat logic.
@@ -117,7 +117,7 @@ Drain or terminate one dependency at a time and measure:
 - Off-site backup destination.
 
 **Geographic separation (multi-cluster, stretch cluster):**
-- Either run separate Gameplane control planes in each region or data center, or run one central API and dashboard and register each region's cluster, with its own operator and an optional [agent gateway](../remote-agent-gateway/) (v0.3.0). A gateway outage does not stop games or their local operator.
+- Either run separate Gameplane control planes in each region or data center, or run one central API and dashboard and register each region's cluster, with its own operator and an optional [agent gateway](../remote-agent-gateway/) (v0.3.0). From v0.4.0 the central panel can also run without a local game cluster; see [Standalone panel](../standalone-panel/). A gateway outage does not stop games or their local operator.
 - Game servers stay local to their data center; they do not migrate.
 - Backup and restore allow recovery to a different cluster if a whole region fails.
 

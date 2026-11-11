@@ -13,9 +13,9 @@ import DocsCallout from "../../components/docs/DocsCallout.astro";
 import DocsSectionList from "../../components/docs/DocsSectionList.astro";
 import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
 
-Gameplane runs on Kubernetes and deploys via Helm. This guide walks through preparing a cluster, configuring the Helm chart, installing Gameplane, and verifying a working control plane.
+Gameplane runs on Kubernetes and deploys via Helm. This guide walks through preparing a cluster, configuring the Helm chart, installing Gameplane, and verifying a working control plane. To run the central dashboard and API without a local game cluster, see [Standalone panel](../standalone-panel/).
 
-Releases up to and including v0.3.0 are published under `ghcr.io/valgulnecron`, so this page uses that registry; releases after v0.3.0 move to `ghcr.io/gameplanepanel`.
+Releases up to and including v0.3.0 are published under `ghcr.io/valgulnecron`; v0.4.0 and later are published under `ghcr.io/gameplanepanel`. The examples on this page use `0.4.0` and that registry.
 
 ## Prerequisites and topology
 
@@ -155,18 +155,32 @@ networkPolicies:
       - { protocol: TCP, port: 80 }
 ```
 
+<DocsCallout icon="shield-alert" title="Changed in v0.4.0">
+  Kubelet probes reach only the probe ports of each game server. `networkPolicies.probeIngress.enabled` (default `true`) creates a per-server `<server>-probes` NetworkPolicy. Set it to `false` to restore the older chart-wide rule that opens every game-pod port to `networkPolicies.kubeletCIDRs`. Extra probe ports go in `networkPolicies.probePorts`.
+</DocsCallout>
+
+### Telemetry
+
+Telemetry is on by default for new installs with a destination in effect, starting in v0.4.0. Nothing is sent until the first admin to sign in sees a first-login notice that lists every field and names the destination. Basic reports carry `version`, `servers` and `templates`. Extended reports add a random install ID, environment bands, server counts per official module, feature flags and the UI language. Admins control each tier in **Admin Settings → Telemetry**.
+
+- Set `api.telemetry.enabled: false` for a hard off, for air-gapped or privacy-sensitive clusters. It overrides the endpoint, the bundled receiver and the admin toggles, and hides the notice.
+- An empty `api.telemetry.endpoint` means the project's default receiver, `https://telemetry.gameplane.net/ingest`.
+- Existing installs upgrading from v0.3.0 that had saved **Send anonymous usage metrics** with no destination configured start sending basic reports to the default receiver after the upgrade. Set `api.telemetry.enabled: false` before upgrading to prevent this.
+
+Full field lists and the data-handling statement are in the [telemetry section of the install guide](https://github.com/GameplanePanel/Gameplane/blob/master/docs/install.md#telemetry).
+
 ### Module sources and catalog
 
-By default, Gameplane ships with the official game catalog (16 modules in v0.2.0, 29 in v0.3.0):
+By default, Gameplane ships with the official catalog of 29 game modules in v0.4.0. Hell Let Loose was withdrawn in v0.4.0; 16 modules shipped in v0.2.0-beta.8 and 14 were added in v0.3.0:
 
 ```yaml
 defaultModuleSource:
   enabled: true
   type: oci                         # Pull pre-built modules from OCI registry
   oci:
-    url: ghcr.io/valgulnecron/gameplane-modules
+    url: ghcr.io/gameplanepanel/gameplane-modules
     verify:
-      enabled: true                 # Verify cosign signatures on official modules
+      enabled: true                 # Verify cosign signatures on official modules (chart default: false)
 ```
 
 To manage sources via GitOps instead of letting Helm create the default, set `enabled: false` and apply `ModuleSource` resources manually.
@@ -181,11 +195,11 @@ Deploy the pinned OCI chart, bootstrap the first administrator, then validate po
 
 ### Step 1: Install the Helm chart
 
-Install a tagged release straight from the GitHub Container Registry (GHCR). Replace `<version>` with a release, e.g., `0.3.0`:
+Install a tagged release straight from the GitHub Container Registry (GHCR). Replace `<version>` with a release, e.g., `0.4.0`:
 
 ```bash
-helm upgrade --install gameplane oci://ghcr.io/valgulnecron/charts/gameplane \
-  --version 0.3.0 \
+helm upgrade --install gameplane oci://ghcr.io/gameplanepanel/charts/gameplane \
+  --version 0.4.0 \
   --namespace gameplane-system --create-namespace \
   --values values.override.yaml
 ```
@@ -195,7 +209,7 @@ The chart is OCI-packaged — no `helm repo add` is needed. The `appVersion` fie
 **Edge channel (latest development):** To track rolling `:edge` images from the `main` branch instead of a released version:
 
 ```bash
-helm upgrade --install gameplane oci://ghcr.io/valgulnecron/charts/gameplane \
+helm upgrade --install gameplane oci://ghcr.io/gameplanepanel/charts/gameplane \
   --version <version> --set image.tag=edge \
   --namespace gameplane-system --create-namespace
 ```
@@ -260,7 +274,7 @@ Create a simple test GameServer to verify the operator is reconciling correctly:
 <DocsQuickReference
   label="INSTALL CHECK"
   items={[
-    "helm upgrade --install gameplane oci://ghcr.io/valgulnecron/charts/gameplane --version 0.3.0 --namespace gameplane-system --create-namespace --values values.override.yaml",
+    "helm upgrade --install gameplane oci://ghcr.io/gameplanepanel/charts/gameplane --version 0.4.0 --namespace gameplane-system --create-namespace --values values.override.yaml",
     "kubectl -n gameplane-system get pods && kubectl get crds | grep gameplane",
     "Log in, select the cluster, and create a test server to verify the operator reconciles",
   ]}
@@ -268,14 +282,14 @@ Create a simple test GameServer to verify the operator is reconciling correctly:
 
 ## Verifying image signatures
 
-Every published image (tagged releases and `:edge`), the Helm chart, and official module bundles are signed with the project's cosign key, [`cosign.pub`](https://github.com/GameplanePanel/Gameplane/blob/master/cosign.pub), and recorded in the public Sigstore Rekor transparency log:
+Every published image (tagged releases and `:edge`), the Helm chart, and official module bundles are signed with the project's cosign key, [`signing/cosign.pub`](https://github.com/GameplanePanel/Gameplane/blob/master/signing/cosign.pub), and recorded in the public Sigstore Rekor transparency log:
 
 ```bash
-cosign verify --key cosign.pub \
-  ghcr.io/valgulnecron/gameplane/operator:0.3.0
+cosign verify --key signing/cosign.pub \
+  ghcr.io/gameplanepanel/gameplane/operator:0.4.0
 ```
 
-Pre-rotation releases (v0.2.0-beta.7 and earlier) used the retired Ed25519 key and lack transparency log entries — verify those with `cosign-legacy.pub` and `--insecure-ignore-tlog=true`.
+Pre-rotation releases (v0.2.0-beta.7 and earlier) used the retired Ed25519 key and lack transparency log entries — verify those with `signing/2026-07-24-cosign-legacy.pub` and `--insecure-ignore-tlog=true`.
 
 ## Troubleshooting
 
@@ -284,8 +298,8 @@ Pre-rotation releases (v0.2.0-beta.7 and earlier) used the retired Ed25519 key a
 The Helm chart defaults to pulling images from GitHub Container Registry (`ghcr.io`). For air-gapped clusters where Docker Hub or GHCR is unreachable, retag the images to a private registry mirror and set `image.registry`:
 
 ```bash
-helm upgrade --install gameplane oci://ghcr.io/valgulnecron/charts/gameplane \
-  --version 0.3.0 \
+helm upgrade --install gameplane oci://ghcr.io/gameplanepanel/charts/gameplane \
+  --version 0.4.0 \
   --set image.registry=your-private-registry.com
 ```
 
@@ -301,7 +315,7 @@ kubectl -n gameplane-system logs deploy/gameplane-api
 
 Common issues:
 
-- **SQLite database locked**: SQLite is single-writer on a ReadWriteOnce volume, so running multiple API replicas is not supported. Keep `api.replicas: 1`. PostgreSQL is experimental and does not make extra replicas safe either: the user-management lock and audit hash chain remain per-process.
+- **SQLite database locked**: SQLite is single-writer on a ReadWriteOnce volume, so running multiple API replicas is not supported. Keep `api.replicas: 1`; the chart rejects any other value. PostgreSQL is experimental and does not make extra replicas safe either: the user-management lock and audit hash chain remain per-process.
 - **Missing default StorageClass**: The API needs a PVC for the SQLite database. Verify with `kubectl get sc`.
 
 ### Ingress / TLS not working

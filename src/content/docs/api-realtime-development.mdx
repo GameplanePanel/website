@@ -45,9 +45,9 @@ Handlers stay close to Kubernetes resources while enforcing session, CSRF, permi
 
 ### Authentication and authorization
 
-The API supports two authentication flows: **local password** (argon2id hashing) and **OIDC** (via `coreos/go-oidc/v3`). Sessions are stored in the database with CSRF tokens and configurable expiry. Every API request runs through the `Session` middleware, which validates the session cookie and populates the request context.
+The API supports two authentication flows: **local password** (argon2id hashing) and **OIDC** (via `coreos/go-oidc/v3`). Sessions are stored in the database with CSRF tokens and configurable expiry. A password reset ends every session of that account (v0.4.0). Every API request runs through the `Session` middleware, which validates the session cookie and populates the request context.
 
-Authorization is role-based with three built-in roles (admin, operator, viewer) plus custom roles. The RBAC middleware (`internal/rbac/`) checks the user's permission against a rule table (method + path → permission), and falls back to per-GameServer owner/collaborator checks for fine-grained access.
+Authorization is role-based with three built-in roles (admin, operator, viewer) plus custom roles. The RBAC middleware (`internal/rbac/`) checks the user's permission against a rule table (method + path → permission), and falls back to per-GameServer owner/collaborator checks for fine-grained access. Since v0.4.0 (breaking), a holder of `users:manage`, `roles:manage`, `config:manage` or `cluster:manage` without `*` cannot grant `*` or another admin-level permission, edit or reset an administrator, or edit auth providers. `/admin/config/auth` and `/admin/auth` need `*`.
 
 **Permission discovery:** The `GET /roles` endpoint lists all permissions and role assignments (read by the dashboard settings UI).
 
@@ -55,7 +55,7 @@ Authorization is role-based with three built-in roles (admin, operator, viewer) 
 
 Every request has a logical cluster and namespace. The API resolves these via:
 
-- **Cluster:** extracted from `?cluster={name}` query param (defaults to `local` — the install cluster), validated against the Cluster CRD registry. Collection reads under `/fleet/*` (v0.3.0) instead combine every authorized scope, with optional cluster and namespace filters; each item carries an explicit `{cluster, namespace, name, uid}` target, and unavailable or truncated scopes are reported rather than silently dropped.
+- **Cluster:** extracted from `?cluster={name}` query param (defaults to `local` — the install cluster), validated against the Cluster CRD registry. Module and template catalog access follows the selected cluster: it needs a cluster-wide grant on that cluster or the wildcard cluster, so a grant on `local` no longer authorizes a remote catalog (v0.4.0, breaking). Collection reads under `/fleet/*` (v0.3.0) instead combine every authorized scope, with optional cluster and namespace filters; each item carries an explicit `{cluster, namespace, name, uid}` target, and unavailable or truncated scopes are reported rather than silently dropped.
 - **Namespace:** extracted from the URL path (`/servers/{name}` → namespace from server lookup) or defaulted to the user's home namespace
 
 Scope middleware (`internal/scope/`) extracts both before the handler runs. If a user tries to access a namespace they lack permission for, the handler returns `403 Forbidden` with a safe message (no namespace-existence leakage).
@@ -63,6 +63,8 @@ Scope middleware (`internal/scope/`) extracts both before the handler runs. If a
 ### Safe error messages
 
 The `httperr` package classifies errors into safe HTTP responses. Internal errors (e.g., "database connection lost") are logged server-side but returned to the client as generic `500 Internal Server Error`. Permission errors return `403 Forbidden` without revealing whether the resource exists. Not-found errors return `404`, but the safe message never reveals whether the 404 is because the resource doesn't exist or the user lacks permission to see it.
+
+Clients that list `application/problem+json` in `Accept` get an RFC 9457 body with a stable `messageId`, `args` and the English text in `detail` (v0.4.0). Every other client keeps the English plain-text body.
 
 ### Audit logging
 

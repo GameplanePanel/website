@@ -139,7 +139,8 @@ Follow this order to allow finalizers to complete:
    ```bash
    kubectl delete crd backups.gameplane.local backupschedules.gameplane.local \
      clusters.gameplane.local gameservers.gameplane.local gametemplates.gameplane.local \
-     modules.gameplane.local modulesources.gameplane.local restores.gameplane.local
+     modules.gameplane.local modulesources.gameplane.local networkcaptures.gameplane.local \
+     restores.gameplane.local
    ```
 
    If keeping the CRDs for re-import or recovery, skip this step. CRDs without resources consume minimal cluster resources.

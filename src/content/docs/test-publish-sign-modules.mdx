@@ -31,7 +31,7 @@ Validate and install through the same source path users will run, then exercise 
   ]}
 />
 
-Before publishing, validate that your `module.yaml` and `template.yaml` meet the schema requirements and that they appear in the ModuleSource catalog. Then create a test GameServer from your module and exercise every advertised feature: start the server, verify readiness, interact with the console, download files, check player lists, create and restore backups, and cleanly stop. Test upgrading from the previous version to confirm that data persists across version boundaries and that loader switches (if supported) don't corrupt PVCs.
+Before publishing, validate that your `module.yaml` and `template.yaml` meet the schema requirements and that they appear in the ModuleSource catalog. If the module ships translations, also check that its GameTemplate reports the `LocalesValid` condition with reason `Valid` (v0.4.0). Then create a test GameServer from your module and exercise every advertised feature: start the server, verify readiness, interact with the console, download files, check player lists, create and restore backups, and cleanly stop. Test upgrading from the previous version to confirm that data persists across version boundaries and that loader switches (if supported) don't corrupt PVCs.
 
 ## Sources and upgrades
 

@@ -19,7 +19,7 @@ import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
 Use only the release-specific rollback window.
 </DocsCallout>
 
-Releases up to and including v0.3.0 are published under `ghcr.io/valgulnecron`, so this page uses that registry; releases after v0.3.0 move to `ghcr.io/gameplanepanel`.
+Releases up to and including v0.3.0 are published under `ghcr.io/valgulnecron`; v0.4.0 and later are published under `ghcr.io/gameplanepanel`. The examples on this page use `0.4.0` and that registry.
 
 ## Preflight compatibility
 
@@ -40,7 +40,7 @@ Capture the entire current state before starting the upgrade:
 - **Database version:** Query the migration ledger directly: `sqlite3 <db-path> "SELECT version, applied_at FROM schema_migrations ORDER BY version;"` (or the equivalent `psql` query when running with `--db-driver=postgres`)
 - **CRD versions:** `kubectl get crd -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.spec.names.kind}{"\n"}{end}'`
 - **Helm values:** `helm get values gameplane -n gameplane-system > current-values.yaml`
-- **Rendered manifest diff:** `helm diff upgrade gameplane oci://ghcr.io/valgulnecron/charts/gameplane --version <target-version> -n gameplane-system` (requires `helm-diff` plugin)
+- **Rendered manifest diff:** `helm diff upgrade gameplane oci://ghcr.io/gameplanepanel/charts/gameplane --version <target-version> -n gameplane-system` (requires `helm-diff` plugin)
 
 ## Execute in release order
 
@@ -67,7 +67,7 @@ Test every core workflow after the upgrade completes:
 - Check audit logs are being recorded.
 - Run at least one complete login → server create → player join → graceful stop cycle.
 
-Roll back only if validation fails and the release-specific downgrade window permits it. CHANGELOG.md currently documents upgrade-impacting changes only under the "Upgrade Notes" section of `[Unreleased]`; released versions do not yet carry a per-release rollback-window annotation. If you must rollback:
+Roll back only if validation fails and the release-specific downgrade window permits it. CHANGELOG.md documents upgrade-impacting changes under an "Upgrade Notes" section in each release, for example `[0.4.0]`. Released sections do not yet carry a per-release rollback-window annotation. If you must rollback:
 
 1. Note the last-known-good version before the upgrade.
 2. Until a per-release rollback-window convention exists, treat any CRD field removal or required-field addition as rollback-unsafe by default. Confirm compatibility by diffing `operator/api/v1alpha1/*_types.go` between your source and target tags before attempting a downgrade.

@@ -15,7 +15,7 @@ import DocsCallout from "../../components/docs/DocsCallout.astro";
 Use `helm template` or `helm diff` to preview your values before applying them to production. Secret values should always be referenced from Kubernetes Secrets, never committed to version control.
 </DocsCallout>
 
-Releases up to and including v0.3.0 are published under `ghcr.io/valgulnecron`, so this page uses that registry; releases after v0.3.0 move to `ghcr.io/gameplanepanel`.
+Releases up to and including v0.3.0 are published under `ghcr.io/valgulnecron`; v0.4.0 and later are published under `ghcr.io/gameplanepanel`, the default `image.registry` below.
 
 ## Core and image settings
 
@@ -23,8 +23,8 @@ Configure container images, registry access, and fundamental cluster behavior.
 
 | Key | Type | Default | Description |
 |---|---|---|---|
-| `image.registry` | string | `ghcr.io/valgulnecron/gameplane` | Container registry where component images are published. Override to point to a private mirror for air-gapped installs. |
-| `image.tag` | string | *(empty — uses chart's `appVersion`)* | Image tag for all components. Empty defaults to the chart version (e.g., chart v0.2.0 pulls `v0.2.0` images). Set to `"edge"` to track rolling images published on every master push. |
+| `image.registry` | string | `ghcr.io/gameplanepanel/gameplane` | Container registry where component images are published. Override to point to a private mirror for air-gapped installs. |
+| `image.tag` | string | *(empty — uses chart's `appVersion`)* | Image tag for all components. Empty defaults to the chart's `appVersion` (e.g., chart 0.4.0 pulls `0.4.0` images). Set to `"edge"` to track rolling images published on every master push. |
 | `image.pullPolicy` | enum | `IfNotPresent` | Kubernetes image pull behavior: `IfNotPresent`, `Always`, or `Never`. Use `Always` for `:edge` tags; use `IfNotPresent` for production release tags. |
 | `image.pullSecrets` | list | `[]` | Array of image pull Secret names if your registry requires authentication. Example: `[{name: myregistry}]` |
 | `gamesNamespace` | string | `gameplane-games` | Kubernetes namespace where the operator creates GameServer pods. Does not need to exist at install time — the operator creates it. |
@@ -40,6 +40,12 @@ Control operator behavior, logging, high availability, and module storage.
 | `operator.leaderElect` | boolean | `true` | Enable leader election for HA deployments. Set to `false` for single-replica or resource-constrained clusters to avoid missed lease renewals causing crash loops. |
 | `operator.addressManager` | enum | `none` | Load-balancer address manager: `metallb`, `cilium`, or `none`. Controls how the operator expresses GameServer pool/address preferences on the Service. |
 | `operator.metalLBNamespace` | string | `metallb-system` | Namespace where MetalLB's IPAddressPool resources live (consulted only when `addressManager: metallb`). |
+| `operator.agentResources` | object | `null` | Complete ResourceRequirements for the agent sidecar and its config initializer. Default requests are 25m CPU and 64Mi memory. `null` or a missing key uses the defaults; `{}` clears them. The defaults add no CPU or memory limits. |
+| `operator.sentinelResources` | object | `null` | Complete ResourceRequirements for the wake sentinel. Default requests are 25m CPU and 32Mi memory. |
+| `operator.tunnelResources` | object | `null` | Complete ResourceRequirements for relay tunnel containers. Default requests are 25m CPU and 64Mi memory. |
+| `operator.backupResources` | object | `null` | Complete ResourceRequirements for backup, restore and forget/prune workers. Default requests are 100m CPU and 128Mi memory; forget/prune keeps 50m and 128Mi with a 512Mi memory limit. |
+| `operator.nodeSelector`, `operator.tolerations`, `operator.affinity`, `operator.topologySpreadConstraints`, `operator.priorityClassName` | mixed | `{}`, `[]`, `{}`, `[]`, `""` | Placement for the operator Deployment. The same keys exist for `api`, `web`, `gateway`, `mcpServer`, `api.telemetry.receiver` and `crds.autoApply`. Unsatisfied hard selectors, taints or topology constraints leave pods Pending. |
+| `operator.pdb.enabled` | boolean | `false` | Creates a PodDisruptionBudget for the operator. With `pdb.minAvailable` or `pdb.maxUnavailable` unset, the budget defaults to `maxUnavailable: 1`. The same `pdb` block exists on `api`, `web`, `gateway` and `mcpServer`. |
 
 ## Networking and ingress
 
@@ -52,6 +58,8 @@ Configure external access, TLS, and dashboard routing.
 | `ingress.host` | hostname | `gameplane.local` | DNS hostname presented to users and OIDC providers. Must be reachable and match OIDC redirect URLs. |
 | `ingress.tls` | boolean | `true` | Enable HTTPS. Session cookies and login credentials require TLS in production. Set to `false` only for throwaway dev clusters; provide a cert via cert-manager annotations or a pre-created `gameplane-tls` Secret. |
 | `web.enabled` | boolean | `true` | Deploy the web/dashboard frontend. Disable only for API-only installs; the ingress then points directly at the API. |
+| `ingress.shareLinks.disableAccessLog` | boolean | `true` | Routes `/share` and `/shares` through a second Ingress, `gameplane-share`, with access logging turned off for ingress-nginx, so share tokens stay out of controller logs. |
+| `ingress.shareLinks.annotations` | object | `{}` | Extra annotations for the share-link Ingress, added on top of `ingress.annotations`. Use it to switch off access logs on another controller. |
 
 ## Authentication
 
@@ -80,8 +88,20 @@ The following OIDC fields enable install-time role mapping and customization of 
 
 | Key | Type | Default | Description |
 |---|---|---|---|
-| `api.replicas` | integer | `1` | Keep at `1`. SQLite is single-writer on a ReadWriteOnce volume; with `db.driver: postgres` (experimental) the user-management lock and audit hash chain are still per-process. |
+| `api.replicas` | integer | `1` | Must be `1` in every mode. The chart rejects any other value, including with `db.driver: postgres`. SQLite is single-writer on a ReadWriteOnce volume, and the user-management lock and audit hash chain are per-process. Every API Deployment uses the `Recreate` strategy, so an upgrade stops the old API pod before its replacement starts. |
 | `api.trustedProxies` | string | loopback + RFC 1918 + link-local + ULA ranges | Comma-separated CIDRs of trusted reverse proxies. The API reads `X-Forwarded-For` only when the TCP peer is inside one of these networks; any other peer is itself the client. Used for rate limiting and audit records. The default suits in-cluster ingress. If dashboard users connect from a private network and per-client limits matter for them, narrow it to the ranges your proxies run in (for example the pod CIDR). For direct exposure without an ingress, set it to `""`. |
+
+## Remote destinations and Steam display names
+
+| Key | Type | Default | Description |
+|---|---|---|---|
+| `api.remoteAllowedCIDRs` | list | `[]` | Optional CIDRs for the destinations of standalone Kubernetes APIs and agent gateways (`GAMEPLANE_REMOTE_ALLOWED_CIDRS`). Empty permits safe public and private addresses; unsafe address classes stay blocked. Set it to restrict the workload API and gateway destinations. |
+| `api.steam.apiKeySecretRef.name` | string | `""` | Secret holding a Steam Web API key. Empty turns the display-name lookup off, and player lists show raw Steam IDs. The key is read into the API environment only; it is never logged and never sent to the browser. |
+| `api.steam.apiKeySecretRef.key` | string | `api-key` | Key inside that Secret. |
+| `api.steam.cache.maxEntries` | integer | `10000` | LRU bound on cached Steam IDs. Optional; in memory only. |
+| `api.steam.cache.ttl` | duration | `12h` | Lifetime of a resolved display name. |
+| `api.steam.cache.negativeTTL` | duration | `15m` | Lifetime of a Steam ID that Steam does not return. |
+| `api.steam.cache.timeout` | duration | `2s` | Timeout for each Steam Web API call. |
 
 ## CRD auto-apply
 
@@ -112,7 +132,7 @@ Configure data persistence, audit logging, and telemetry.
 
 | Key | Type | Default | Description |
 |---|---|---|---|
-| `api.db.driver` | enum | `sqlite` | Database backend: `sqlite` (built-in, production-tested) or `postgres` (external server, experimental). The published api image is built without PostgreSQL, so `postgres` needs an image rebuilt with `-tags postgres`; it is not yet covered by e2e or upgrade tests, and `api.replicas` must stay `1` with either driver. |
+| `api.db.driver` | enum | `sqlite` | Database backend: `sqlite` (built-in, production-tested) or `postgres` (external server, experimental). The published api image is built without PostgreSQL, so `postgres` needs an image rebuilt with `-tags postgres`; the CI `api (postgres)` job and the PostgreSQL e2e buckets (including `postgres-availability`) exercise it but it stays experimental, and `api.replicas` must stay `1` with either driver. |
 | `api.db.dsn` | string | `file:/data/gameplane.db?_pragma=journal_mode(WAL)` | Database connection string. SQLite path (only when `driver: sqlite`). For PostgreSQL, use a connection string like `postgres://gameplane:***@postgres/gameplane?sslmode=require`. |
 | `api.storage.size` | string | `2Gi` | Size of the SQLite PersistentVolumeClaim (only when `db.driver: sqlite`). Adjust based on audit log retention and historical data. |
 | `api.storage.storageClassName` | string | *(empty)* | Storage class for the SQLite PVC. When empty, uses the cluster's default storage class. |
@@ -130,8 +150,10 @@ Configure logging, metrics, and alerting sinks.
 | `api.audit.syslogBridge.enabled` | boolean | `false` | Deploy the bundled RFC 5424 syslog bridge (audit-syslog-bridge image). When enabled and `webhook.url` is unset, the API auto-wires to it. |
 | `api.audit.syslogBridge.syslog.addr` | string | *(empty — required if enabled)* | Syslog collector address in `host:port` format, e.g., `syslog.example:514`. |
 | `api.audit.syslogBridge.syslog.network` | enum | `tcp` | Syslog transport: `tcp` (recommended for reliability) or `udp` (no delivery confirmation). |
-| `api.telemetry.enabled` | boolean | `true` | Hard on/off for usage telemetry. `false` means the API never sends telemetry, whatever the admin switches say, and no first-login notice is shown. Use it for air-gapped and privacy-sensitive clusters. |
+| `api.telemetry.enabled` | boolean | `true` | Hard on/off for usage telemetry. `false` means the API never sends telemetry, whatever the admin switches say, and no first-login notice is shown. Use it for air-gapped and privacy-sensitive clusters. From v0.4.0, a new install with a destination in effect sends basic and extended reports by default, after the first-login notice; see [telemetry in the installation guide](../installation/#telemetry). |
 | `api.telemetry.endpoint` | string | *(empty)* | Where reports go. Empty means the project's default provider, `https://telemetry.gameplane.net/ingest`. Set a URL such as `https://telemetry.example.com/ingest` to send reports to your own receiver instead; it replaces the default and disables the bundled receiver auto-wiring. |
+| `api.telemetry.authSecretRef.name` | string | `""` | Secret (key `token`) whose value the API sends verbatim as the `Authorization` header. The bundled receiver requires it, and it is recommended whenever the receiver is enabled. |
+| `api.telemetry.interval` | duration | `24h` | Spacing between reports. The chart marks this value as testing only; leave it at the default. |
 | `serviceMonitors.enabled` | boolean | `false` | Create Prometheus Operator ServiceMonitor resources for scraping Gameplane metrics. Requires Prometheus Operator to be installed in your cluster. |
 
 ## Storage and modules
@@ -164,6 +186,8 @@ Configure default-deny policies for game pods and backups.
 | `networkPolicies.gameIngress.enabled` | boolean | `true` | Create per-GameServer Ingress NetworkPolicies allowing player traffic from `fromCIDRs`. Operator configures the exact advertised ports per server. |
 | `networkPolicies.gameIngress.fromCIDRs` | list | `["0.0.0.0/0"]` | CIDR ranges allowed to reach game ports. Set to a LAN range (e.g., `["192.168.1.0/24"]`) to restrict access. Cannot be an empty list; set `enabled: false` instead. |
 | `networkPolicies.apiServerCIDRs` | list | `[]` (falls back to RFC 1918 + link-local) | CIDRs holding the kube-apiserver endpoints the agent sidecar reaches for its status heartbeat, on TCP 443 and 6443. Set it to narrow that egress to your API endpoints, or when they sit outside those ranges. |
+| `networkPolicies.probeIngress.enabled` | boolean | `true` | Creates a per-server `<server>-probes` NetworkPolicy that admits `networkPolicies.kubeletCIDRs` only to that server's probe ports. `false` restores the older chart-wide `allow-kubelet-probes` rule. |
+| `networkPolicies.probePorts` | list | `[]` | Extra ports kubelets may reach on every game pod, for example `[{protocol: TCP, port: 25565}]`. With `probeIngress` disabled and this list empty, the kubelet CIDRs can reach any game-pod port, so list the probe ports there. |
 
 <DocsCallout icon="info" title="Available since v0.3.0">
 These network capture values are available since v0.3.0.
@@ -190,6 +214,12 @@ Configure optional integrations.
 | `api.telemetry.receiver.retentionDays` | integer | `730` | Daily aggregate retention (minimum `365`). |
 | `api.telemetry.receiver.activityExpiryDays` | integer | `90` | Per-install activity record expiry (minimum `31`). |
 | `api.telemetry.receiver.ingestPow.enabled` | boolean | `false` | Require proof-of-work on report ingestion (tuned by `targetPerMinute` `60`, `minBits` `0`, `maxBits` `22`; `maxBits` at most `26`). Meant for a public provider. |
+| `api.telemetry.receiver.ingestPow.targetPerMinute` | integer | `60` | Challenges a minute the difficulty stays at `minBits` before it rises with the request rate. |
+| `api.telemetry.receiver.ingestPow.minBits` | integer | `0` | Lowest difficulty in bits. |
+| `api.telemetry.receiver.ingestPow.maxBits` | integer | `22` | Highest difficulty in bits; the chart refuses values above `26`. |
+| `api.telemetry.receiver.ingestSourceDailyLimit` | integer | `20` | Accepted reports per source address per UTC day. `0` means unlimited. |
+| `api.telemetry.receiver.trustedProxyCIDRs` | list | `[]` | CIDRs whose `X-Forwarded-For` header is trusted when the receiver picks the report's source address. |
+| `api.telemetry.receiver.dashboard.ingressFrom` | list | `[]` | Extra NetworkPolicy peers allowed to reach the receiver's dashboard port `8081`. Port-forward works without any entry. |
 
 To run a receiver for other installs, see [Run a telemetry provider on Kubernetes](../telemetry-provider-kubernetes/).
 
@@ -197,7 +227,7 @@ To run a receiver for other installs, see [Run a telemetry provider on Kubernete
 
 ```yaml
 image:
-  tag: "0.2.0"
+  tag: "0.4.0"
 
 ingress:
   enabled: true

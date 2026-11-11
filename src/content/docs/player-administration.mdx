@@ -27,6 +27,7 @@ Online is live capacity; whitelist and ban totals are persistent access state.
 - Compare unusual counts with console and game logs. A disconnect flood (players vanishing between heartbeats) or a ban/kick in progress may explain mismatches.
 - Do not treat whitelist or ban totals as current connections. These are *access* flags, not *presence* — a banned player offline still shows in the count.
 - Resolve the exact identity before applying an access change. Display names may be ambiguous across games and identity modes (UUID, username, IP, SteamID, etc.).
+- Steam display names (v0.4.0): when the installation has a Steam Web API key configured, player lists show a public Steam display name next to each Steam ID. Without a key, or when Steam is slow or unreachable, the list shows the raw Steam ID. Kick, ban and unban still act on the Steam ID, never on the display name. See [installation](../installation/) for the key setup and the [security model](https://github.com/GameplanePanel/Gameplane/blob/master/docs/security.md#steam-display-name-lookup).
 
 ## Manage whitelist and bans
 

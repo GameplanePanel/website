@@ -47,7 +47,7 @@ Vitest/MSW and Playwright mock/live modes cover browser behavior; merged profile
 
 Every test belongs to one disjoint CI bucket; real game probes run as in-cluster Jobs and failures retain diagnostics.
 
-The 11 buckets partition tests by **login pressure, not feature area**. The API rate limiter is per-IP (burst 10, 5/min) and per-username (burst 6, 3/min). Each bucket keeps within its login budget (~7 admin logins):
+The 22 buckets partition tests by **login pressure, not feature area**. The API rate limiter is per-IP (burst 10, 5/min) and per-username (burst 6, 3/min). Each bucket keeps within its login budget (~7 admin logins):
 
 - **`operator`** — zero logins; runs parallel and wide.
 - **`api-auth`**, **`api-roles`**, **`api-rbac`**, **`api-agent`**, **`api-mods`** — API-specific tests, carefully metered.
@@ -55,6 +55,8 @@ The 11 buckets partition tests by **login pressure, not feature area**. The API 
 - **`bot-fast`**, **`bot-heavy`** — game bot harness tests.
 - **`multicluster`** — requires two kind clusters (one per node, set `GAMEPLANE_E2E_CLUSTER_B`).
 - **`upgrade`** — helm upgrade and state persistence.
+- **`optional-components`** — owns its cluster because it runs `helm upgrade`. It checks that the MCP server, the audit-syslog bridge and the tunnel are absent by default, then enables and checks each one.
+- **`postgres-availability`**, **`telemetry`**, **`capture-overhead`**, **`restricted-workloads`**, **`wake-hostport`**, **`network-isolation`**, **`management-placement`**, **`backup-preparation`**, **`monitoring`**, **`recovery`** — the remaining buckets. Their names are in `test/e2e/buckets.sh`.
 
 Use `BUCKET=<name> make test-e2e-bucket` to run a single bucket locally against a live cluster.
 

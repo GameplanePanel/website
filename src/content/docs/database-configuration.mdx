@@ -3,7 +3,7 @@ title: "Database configuration and lifecycle"
 description: "Select a supported topology, secure its connection, control migrations, and recover platform state independently of game worlds."
 section: "platform"
 group: "cluster-storage"
-order: 6
+order: 7
 icon: "database"
 eyebrow: "DATA"
 readTime: "18 MIN"
@@ -35,7 +35,7 @@ Document engine, version, availability model, storage, ownership, connection lim
     {
       icon: "shield-check",
       label: "For PostgreSQL, define DNS, TLS/CA, user ownership, pooling, and limits.",
-      text: "Opt-in via --db-driver=postgres --db-dsn=. Experimental; keep a single API replica (the user-management lock and audit hash chain are per-process), and not yet covered by e2e or upgrade tests. Document connection pool limits, application user permissions, and TLS certificate paths.",
+      text: "Opt-in via --db-driver=postgres --db-dsn=. Experimental; keep a single API replica (the user-management lock and audit hash chain are per-process), and still experimental despite the CI `api (postgres)` job and the PostgreSQL e2e buckets. Document connection pool limits, application user permissions, and TLS certificate paths.",
     },
     {
       icon: "lock",
@@ -114,6 +114,10 @@ Tie schema migrations to a pinned release and observe connectivity, locks, laten
   ]}
 />
 
+<DocsCallout icon="milestone" title="Available since v0.4.0">
+  Every API Deployment uses the `Recreate` strategy with SQLite or PostgreSQL. The old API pod stops before its replacement starts, so the panel has a brief outage during an upgrade. Existing game servers and their operator keep running. The chart rejects `api.replicas` values other than 1.
+</DocsCallout>
+
 ### Automatic migrations
 
 By default, the API reconciles schema on every startup:
@@ -128,6 +132,7 @@ kubectl -n gameplane-system logs -l app.kubernetes.io/name=gameplane-api --tail=
 - Migrations are idempotent; re-running the same migration set is safe.
 - Schema version is tracked internally; migrations are executed in order from the point where the previous run stopped.
 - Failed migrations block API startup (fail-closed). Address the error, resolve the database state, and retry.
+- Release 0.4.0 applies migration `019_session_epoch.sql` on startup. After it runs, a password reset ends every session of that account.
 
 ### Monitoring and observability
 
