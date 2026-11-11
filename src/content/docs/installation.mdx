@@ -95,10 +95,9 @@ api:
 
 ### Optional: OIDC authentication at install time
 
-If you use OIDC (OpenID Connect) for single sign-on, the chart can configure the provider at install time. In v0.2.0-beta.8 the chart accepts only the connection settings; map IdP groups to roles per provider under **Admin Settings → Authentication** after install:
+If you use OIDC (OpenID Connect) for single sign-on, the chart can configure the provider at install time, including its display name and the IdP group to role mappings (Helm-seeded mappings since v0.3.0). An admin can override them later under **Admin Settings → Authentication**:
 
 ```yaml
-# v0.2.0-beta.8
 api:
   oidc:
     enabled: true
@@ -107,14 +106,6 @@ api:
     clientSecretRef:
       name: "oidc-client-secret"    # k8s Secret with 'clientSecret' key
     redirectURL: "https://gameplane.your-domain.test/auth/oidc/callback"
-```
-
-From v0.3.0 the chart can also seed the provider's display name and role mappings. Add these keys only when installing a v0.3.0 or later chart:
-
-```yaml
-# v0.3.0 and later (in addition to the keys above)
-api:
-  oidc:
     displayName: "My SSO Provider"
     groupsClaim: "groups"           # which OIDC claim to read (empty = "groups"); does not turn mapping on or off
     defaultRole: "viewer"           # Default role when group mapping doesn't match

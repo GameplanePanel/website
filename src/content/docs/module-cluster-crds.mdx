@@ -62,8 +62,8 @@ ModuleSource indexes a module catalog (OCI registry, git repo, HTTP archive, or 
 | `status.lastSync` | time | read-only | Timestamp of most recent successful index |
 | `status.modules` | array | read-only | Cached catalog: each module includes `name`, `displayName`, `summary`, `game`, `categories`, `icon`, `reference`, `versions`, `latestVersion`, `digest` |
 
-<DocsCallout icon="info" title="OCI signature verification in beta.8">
-  Module signature verification (cosign keyed and keyless) is available in beta.8. Set `spec.verify.key` or `spec.verify.keyless` to enforce signing on pull. Keyless verification requires connectivity to the Fulcio OIDC endpoint; keyed verification works offline.
+<DocsCallout icon="info" title="OCI signature verification">
+  Module signature verification (cosign keyed and keyless) is available since v0.2.0-beta.8. Set `spec.verify.key` or `spec.verify.keyless` to enforce signing on pull. Keyless verification requires connectivity to the Fulcio OIDC endpoint; keyed verification works offline.
 </DocsCallout>
 
 A module bundle can also ship translations as `locales/<tag>.json` files next to `module.yaml` (v0.4.0). The OCI layer type is `application/vnd.gameplane.module.locale.v1+json`, and the same files are accepted from every other source. The operator validates them on install and reports problems in the GameTemplate `LocalesValid` condition. A translation problem never fails the install. Each file is read up to 900 KiB, and a bundle's files together up to 4 MiB. See [Module Authoring](../module-authoring/).
