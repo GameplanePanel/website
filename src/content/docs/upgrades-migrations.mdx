@@ -17,7 +17,7 @@ import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
 
 Gameplane releases are pinned with signed container images and strict Kubernetes compatibility. Every upgrade is reversible if planned carefully; every migration is documented in the release notes.
 
-Releases up to and including v0.3.0 are published under `ghcr.io/valgulnecron`, so this page uses that registry; releases after v0.3.0 move to `ghcr.io/gameplanepanel`.
+Releases from v0.4.0 are published under `ghcr.io/gameplanepanel`, which this page uses; v0.3.0 and earlier releases stay under `ghcr.io/valgulnecron`.
 
 <DocsCallout icon="refresh-cw" title="Plan platform changes in isolation">
   Do not combine a platform upgrade with unrelated server, storage, authentication, or network changes. Each change introduces risk vectors; combining them makes root-cause analysis impossible when something breaks.
@@ -110,10 +110,10 @@ Upgrade a non-production or canary environment first. Watch the rollout, check m
 Once you have verified your values and backups, apply the upgrade to your cluster:
 
 ```bash
-# Upgrade to a specific version (e.g., 0.3.0)
-helm upgrade gameplane oci://ghcr.io/valgulnecron/charts/gameplane \
+# Upgrade to a specific version (e.g., 0.4.0)
+helm upgrade gameplane oci://ghcr.io/gameplanepanel/charts/gameplane \
   --namespace gameplane-system \
-  --version 0.3.0 \
+  --version 0.4.0 \
   --values gameplane-values-backup.yaml \
   --wait
 
@@ -175,7 +175,7 @@ Only use the rollback procedure if migrations failed or core workflows are broke
 kubectl get crds -o yaml > crds-upgrade-state.yaml
 
 # 3. Roll back the Helm chart (example: rolling back from 0.2.0-beta.8 to 0.2.0-beta.7)
-helm upgrade gameplane oci://ghcr.io/valgulnecron/charts/gameplane \
+helm upgrade gameplane oci://ghcr.io/gameplanepanel/charts/gameplane \
   --namespace gameplane-system \
   --version 0.2.0-beta.7 \
   --values gameplane-values-backup.yaml \

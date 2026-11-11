@@ -15,7 +15,7 @@ import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
 
 Gameplane runs on Kubernetes and deploys via Helm. This guide walks through preparing a cluster, configuring the Helm chart, installing Gameplane, and verifying a working control plane.
 
-Releases up to and including v0.3.0 are published under `ghcr.io/valgulnecron`, so this page uses that registry; releases after v0.3.0 move to `ghcr.io/gameplanepanel`.
+Releases from v0.4.0 are published under `ghcr.io/gameplanepanel`, which this page uses; v0.3.0 and earlier releases stay under `ghcr.io/valgulnecron`.
 
 ## Prerequisites and topology
 
@@ -164,7 +164,7 @@ defaultModuleSource:
   enabled: true
   type: oci                         # Pull pre-built modules from OCI registry
   oci:
-    url: ghcr.io/valgulnecron/gameplane-modules
+    url: ghcr.io/gameplanepanel/gameplane-modules
     verify:
       enabled: true                 # Verify cosign signatures on official modules
 ```
@@ -181,11 +181,11 @@ Deploy the pinned OCI chart, bootstrap the first administrator, then validate po
 
 ### Step 1: Install the Helm chart
 
-Install a tagged release straight from the GitHub Container Registry (GHCR). Replace `<version>` with a release, e.g., `0.3.0`:
+Install a tagged release straight from the GitHub Container Registry (GHCR). Replace `<version>` with a release, e.g., `0.4.0`:
 
 ```bash
-helm upgrade --install gameplane oci://ghcr.io/valgulnecron/charts/gameplane \
-  --version 0.3.0 \
+helm upgrade --install gameplane oci://ghcr.io/gameplanepanel/charts/gameplane \
+  --version 0.4.0 \
   --namespace gameplane-system --create-namespace \
   --values values.override.yaml
 ```
@@ -195,7 +195,7 @@ The chart is OCI-packaged — no `helm repo add` is needed. The `appVersion` fie
 **Edge channel (latest development):** To track rolling `:edge` images from the `main` branch instead of a released version:
 
 ```bash
-helm upgrade --install gameplane oci://ghcr.io/valgulnecron/charts/gameplane \
+helm upgrade --install gameplane oci://ghcr.io/gameplanepanel/charts/gameplane \
   --version <version> --set image.tag=edge \
   --namespace gameplane-system --create-namespace
 ```
@@ -260,7 +260,7 @@ Create a simple test GameServer to verify the operator is reconciling correctly:
 <DocsQuickReference
   label="INSTALL CHECK"
   items={[
-    "helm upgrade --install gameplane oci://ghcr.io/valgulnecron/charts/gameplane --version 0.3.0 --namespace gameplane-system --create-namespace --values values.override.yaml",
+    "helm upgrade --install gameplane oci://ghcr.io/gameplanepanel/charts/gameplane --version 0.4.0 --namespace gameplane-system --create-namespace --values values.override.yaml",
     "kubectl -n gameplane-system get pods && kubectl get crds | grep gameplane",
     "Log in, select the cluster, and create a test server to verify the operator reconciles",
   ]}
@@ -272,7 +272,7 @@ Every published image (tagged releases and `:edge`), the Helm chart, and officia
 
 ```bash
 cosign verify --key cosign.pub \
-  ghcr.io/valgulnecron/gameplane/operator:0.3.0
+  ghcr.io/gameplanepanel/gameplane/operator:0.4.0
 ```
 
 Pre-rotation releases (v0.2.0-beta.7 and earlier) used the retired Ed25519 key and lack transparency log entries — verify those with `cosign-legacy.pub` and `--insecure-ignore-tlog=true`.
@@ -284,8 +284,8 @@ Pre-rotation releases (v0.2.0-beta.7 and earlier) used the retired Ed25519 key a
 The Helm chart defaults to pulling images from GitHub Container Registry (`ghcr.io`). For air-gapped clusters where Docker Hub or GHCR is unreachable, retag the images to a private registry mirror and set `image.registry`:
 
 ```bash
-helm upgrade --install gameplane oci://ghcr.io/valgulnecron/charts/gameplane \
-  --version 0.3.0 \
+helm upgrade --install gameplane oci://ghcr.io/gameplanepanel/charts/gameplane \
+  --version 0.4.0 \
   --set image.registry=your-private-registry.com
 ```
 
