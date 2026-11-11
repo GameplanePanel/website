@@ -15,7 +15,7 @@ import DocsCallout from "../../components/docs/DocsCallout.astro";
 Use `helm template` or `helm diff` to preview your values before applying them to production. Secret values should always be referenced from Kubernetes Secrets, never committed to version control.
 </DocsCallout>
 
-Releases up to and including v0.3.0 are published under `ghcr.io/valgulnecron`, so this page uses that registry; releases after v0.3.0 move to `ghcr.io/gameplanepanel`.
+Releases from v0.4.0 are published under `ghcr.io/gameplanepanel`, which this page uses; v0.3.0 and earlier releases stay under `ghcr.io/valgulnecron`.
 
 ## Core and image settings
 
@@ -23,7 +23,7 @@ Configure container images, registry access, and fundamental cluster behavior.
 
 | Key | Type | Default | Description |
 |---|---|---|---|
-| `image.registry` | string | `ghcr.io/valgulnecron/gameplane` | Container registry where component images are published. Override to point to a private mirror for air-gapped installs. |
+| `image.registry` | string | `ghcr.io/gameplanepanel/gameplane` | Container registry where component images are published. Override to point to a private mirror for air-gapped installs. |
 | `image.tag` | string | *(empty — uses chart's `appVersion`)* | Image tag for all components. Empty defaults to the chart version (e.g., chart v0.2.0 pulls `v0.2.0` images). Set to `"edge"` to track rolling images published on every master push. |
 | `image.pullPolicy` | enum | `IfNotPresent` | Kubernetes image pull behavior: `IfNotPresent`, `Always`, or `Never`. Use `Always` for `:edge` tags; use `IfNotPresent` for production release tags. |
 | `image.pullSecrets` | list | `[]` | Array of image pull Secret names if your registry requires authentication. Example: `[{name: myregistry}]` |

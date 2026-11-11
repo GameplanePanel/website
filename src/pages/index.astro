@@ -12,7 +12,7 @@ import { withBase } from "../lib/url";
 import serversScreenshot from "../assets/screenshots/servers.png";
 
 const chartVersion = VERSION.replace(/^v/, "");
-const helmCommand = `helm upgrade --install gameplane oci://ghcr.io/valgulnecron/charts/gameplane --version ${chartVersion} --namespace gameplane-system --create-namespace`;
+const helmCommand = `helm upgrade --install gameplane oci://ghcr.io/gameplanepanel/charts/gameplane --version ${chartVersion} --namespace gameplane-system --create-namespace`;
 
 const features = [
   {
@@ -141,7 +141,7 @@ const features = [
     <Terminal title="terminal" copyText={helmCommand} class="w-full max-w-[760px]">
       <div class="flex flex-col gap-1">
         <span class="text-primary">$ helm upgrade --install gameplane \</span>
-        <span class="text-white">&nbsp;&nbsp;&nbsp;&nbsp;oci://ghcr.io/valgulnecron/charts/gameplane \</span>
+        <span class="text-white">&nbsp;&nbsp;&nbsp;&nbsp;oci://ghcr.io/gameplanepanel/charts/gameplane \</span>
         <span class="text-muted-foreground">&nbsp;&nbsp;&nbsp;&nbsp;--version {chartVersion} \</span>
         <span class="text-muted-foreground"
           >&nbsp;&nbsp;&nbsp;&nbsp;--namespace gameplane-system --create-namespace</span

@@ -18,7 +18,7 @@ import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
 An offline install is accepted only when rendered manifests contain no public endpoint or mutable tag. Render once and validate before disconnecting from the public internet.
 </DocsCallout>
 
-Releases up to and including v0.3.0 are published under `ghcr.io/valgulnecron`, so this page uses that registry; releases after v0.3.0 move to `ghcr.io/gameplanepanel`.
+Releases from v0.4.0 are published under `ghcr.io/gameplanepanel`, which this page uses; v0.3.0 and earlier releases stay under `ghcr.io/valgulnecron`.
 
 ## Build the release bundle
 
@@ -48,24 +48,24 @@ Inventory, verify, and mirror all artifacts by digest before entering the restri
 
 Collect **all of the following by digest** (immutable hash references, not mutable tags):
 
-- **Helm chart** — `oci://ghcr.io/valgulnecron/charts/gameplane:<version>` and its SBOMs (Software Bill of Materials)
+- **Helm chart** — `oci://ghcr.io/gameplanepanel/charts/gameplane:<version>` and its SBOMs (Software Bill of Materials)
 - **Container images** — the four mandatory images:
-  - `ghcr.io/valgulnecron/gameplane/operator:<version>`
-  - `ghcr.io/valgulnecron/gameplane/api:<version>`
-  - `ghcr.io/valgulnecron/gameplane/web:<version>`
-  - `ghcr.io/valgulnecron/gameplane/agent:<version>`
+  - `ghcr.io/gameplanepanel/gameplane/operator:<version>`
+  - `ghcr.io/gameplanepanel/gameplane/api:<version>`
+  - `ghcr.io/gameplanepanel/gameplane/web:<version>`
+  - `ghcr.io/gameplanepanel/gameplane/agent:<version>`
 - **Optional images** (if enabled in values) — pulled per-feature:
   - `busybox` (via `operator.configInitImage`, defaults to Docker Hub)
   - `restic/restic` (via `operator.resticImage`, defaults to Docker Hub)
-  - `ghcr.io/valgulnecron/gameplane/sentinel` (wake-on-connect, optional)
-  - `ghcr.io/valgulnecron/gameplane/capture-sidecar` (packet capture, optional)
-  - `ghcr.io/valgulnecron/gameplane/audit-syslog-bridge` (audit relay, optional)
-  - `ghcr.io/valgulnecron/gameplane/telemetry-receiver` (usage metrics, optional)
-  - `ghcr.io/valgulnecron/gameplane/mcp-server` (AI integration, optional)
-  - `ghcr.io/valgulnecron/gameplane/tunnel-frp` (via `tunnelImages.frp`, relay tunnel components, optional)
-  - `ghcr.io/valgulnecron/gameplane/tunnel-tailscale` (via `tunnelImages.tailscale`, relay tunnel components, optional)
-  - `ghcr.io/valgulnecron/gameplane/tunnel-playit` (via `tunnelImages.playit`, relay tunnel components, optional)
-- **Game modules** — all bundles from `ghcr.io/valgulnecron/gameplane-modules`, versioned per your module source config
+  - `ghcr.io/gameplanepanel/gameplane/sentinel` (wake-on-connect, optional)
+  - `ghcr.io/gameplanepanel/gameplane/capture-sidecar` (packet capture, optional)
+  - `ghcr.io/gameplanepanel/gameplane/audit-syslog-bridge` (audit relay, optional)
+  - `ghcr.io/gameplanepanel/gameplane/telemetry-receiver` (usage metrics, optional)
+  - `ghcr.io/gameplanepanel/gameplane/mcp-server` (AI integration, optional)
+  - `ghcr.io/gameplanepanel/gameplane/tunnel-frp` (via `tunnelImages.frp`, relay tunnel components, optional)
+  - `ghcr.io/gameplanepanel/gameplane/tunnel-tailscale` (via `tunnelImages.tailscale`, relay tunnel components, optional)
+  - `ghcr.io/gameplanepanel/gameplane/tunnel-playit` (via `tunnelImages.playit`, relay tunnel components, optional)
+- **Game modules** — all bundles from `ghcr.io/gameplanepanel/gameplane-modules`, versioned per your module source config
 - **CRD manifests** — the CRD schemas (bundled in the chart)
 - **CRD-apply hook image** — the `kubectl` image behind `crds.autoApply.image` (default `registry.k8s.io/kubectl:v1.36.3`). The hook runs on every `helm upgrade`, and also on a `helm install` over Gameplane CRDs that an earlier, uninstalled release left behind. A genuinely fresh first install does not run it. Any image with `kubectl` on its `PATH` works.
 - **Cosign public keys** — `cosign.pub` (current key, ECDSA P-256) and `cosign-legacy.pub` (pre-rotation, Ed25519)
@@ -78,15 +78,15 @@ Every image and the chart are signed with cosign. Before mirroring, verify the s
 ```sh
 # Verify operator image
 cosign verify --key cosign.pub \
-  ghcr.io/valgulnecron/gameplane/operator:0.3.0
+  ghcr.io/gameplanepanel/gameplane/operator:0.4.0
 
 # Verify chart
 cosign verify --key cosign.pub \
-  ghcr.io/valgulnecron/charts/gameplane:0.3.0
+  ghcr.io/gameplanepanel/charts/gameplane:0.4.0
 
 # Game modules are signed the same way
 cosign verify --key cosign.pub \
-  ghcr.io/valgulnecron/gameplane-modules/minecraft:1.20.4
+  ghcr.io/gameplanepanel/gameplane-modules/minecraft:1.20.4
 ```
 
 Extract the digest from the verified signature and record it. On pre-rotation releases (v0.2.0-beta.7 and earlier), use `cosign-legacy.pub` with `--insecure-ignore-tlog=true` instead.
@@ -98,20 +98,20 @@ Use `crane` (Google's OCI tool) or your registry vendor's mirror command to copy
 ```sh
 # Mirror operator image to private registry
 crane copy \
-  ghcr.io/valgulnecron/gameplane/operator:0.3.0 \
-  registry.internal.corp/gameplane/operator:0.3.0
+  ghcr.io/gameplanepanel/gameplane/operator:0.4.0 \
+  registry.internal.corp/gameplane/operator:0.4.0
 
 # Mirror Helm chart
 crane copy \
-  ghcr.io/valgulnecron/charts/gameplane:0.3.0 \
-  registry.internal.corp/gameplane/charts-gameplane:0.3.0
+  ghcr.io/gameplanepanel/charts/gameplane:0.4.0 \
+  registry.internal.corp/gameplane/charts-gameplane:0.4.0
 ```
 
 Mirrors must preserve the digest — verify the copied artifacts have the same digest as the source:
 
 ```sh
-crane digest ghcr.io/valgulnecron/gameplane/operator:0.3.0
-crane digest registry.internal.corp/gameplane/operator:0.3.0
+crane digest ghcr.io/gameplanepanel/gameplane/operator:0.4.0
+crane digest registry.internal.corp/gameplane/operator:0.4.0
 # Both must print the same sha256:...
 ```
 
@@ -190,7 +190,7 @@ Configure Helm to use it:
 
 ```sh
 helm upgrade --install gameplane oci://registry.internal.corp/gameplane/charts-gameplane \
-  --version 0.3.0 \
+  --version 0.4.0 \
   --namespace gameplane-system --create-namespace \
   --set image.pullSecrets[0].name=registry-creds
 ```
@@ -202,19 +202,19 @@ For every image in the chart values, rewrite the registry hostname but **never c
 ```yaml
 # Default
 image:
-  registry: ghcr.io/valgulnecron
-  tag: "0.3.0"
+  registry: ghcr.io/gameplanepanel/gameplane
+  tag: "0.4.0"
 
 # Rewritten for internal registry (same tag, different registry)
 image:
   registry: registry.internal.corp/gameplane
-  tag: "0.3.0"
+  tag: "0.4.0"
 
 # Override optional image pulls
 operator:
   configInitImage: registry.internal.corp/busybox  # instead of busybox
   resticImage: registry.internal.corp/restic:latest  # instead of restic/restic
-  sentinelImage: registry.internal.corp/gameplane/sentinel:0.3.0
+  sentinelImage: registry.internal.corp/gameplane/sentinel:0.4.0
 
 # Mirror the CRD-apply hook's kubectl image (needed at upgrade time and on
 # an install over leftover CRDs)
@@ -246,7 +246,7 @@ Before disconnecting from the public internet, render the final manifest to conf
 
 ```sh
 helm template gameplane oci://registry.internal.corp/gameplane/charts-gameplane \
-  --version 0.3.0 \
+  --version 0.4.0 \
   --namespace gameplane-system \
   -f values-offline.yaml \
   > manifests.yaml
@@ -264,7 +264,7 @@ Apply the rendered manifest or use Helm with your internal registry:
 
 ```sh
 helm upgrade --install gameplane oci://registry.internal.corp/gameplane/charts-gameplane \
-  --version 0.3.0 \
+  --version 0.4.0 \
   --namespace gameplane-system --create-namespace \
   -f values-offline.yaml
 ```
@@ -324,7 +324,7 @@ Download the next release bundle (same process), mirror it, and upgrade:
 
 ```sh
 helm upgrade gameplane oci://registry.internal.corp/gameplane/charts-gameplane \
-  --version 0.3.0 \
+  --version 0.4.0 \
   --namespace gameplane-system
 ```
 

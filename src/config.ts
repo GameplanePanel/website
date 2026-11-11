@@ -9,4 +9,4 @@ export const SITE = CUSTOM_DOMAIN ?? "https://gameplanepanel.github.io";
 export const BASE = CUSTOM_DOMAIN ? "/" : "/website";
 
 export const GITHUB_URL = "https://github.com/GameplanePanel/Gameplane";
-export const VERSION = "v0.3.0";
+export const VERSION = "v0.4.0";

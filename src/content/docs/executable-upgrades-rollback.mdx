@@ -19,7 +19,7 @@ import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
 Use only the release-specific rollback window.
 </DocsCallout>
 
-Releases up to and including v0.3.0 are published under `ghcr.io/valgulnecron`, so this page uses that registry; releases after v0.3.0 move to `ghcr.io/gameplanepanel`.
+Releases from v0.4.0 are published under `ghcr.io/gameplanepanel`, which this page uses; v0.3.0 and earlier releases stay under `ghcr.io/valgulnecron`.
 
 ## Preflight compatibility
 
@@ -40,7 +40,7 @@ Capture the entire current state before starting the upgrade:
 - **Database version:** Query the migration ledger directly: `sqlite3 <db-path> "SELECT version, applied_at FROM schema_migrations ORDER BY version;"` (or the equivalent `psql` query when running with `--db-driver=postgres`)
 - **CRD versions:** `kubectl get crd -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.spec.names.kind}{"\n"}{end}'`
 - **Helm values:** `helm get values gameplane -n gameplane-system > current-values.yaml`
-- **Rendered manifest diff:** `helm diff upgrade gameplane oci://ghcr.io/valgulnecron/charts/gameplane --version <target-version> -n gameplane-system` (requires `helm-diff` plugin)
+- **Rendered manifest diff:** `helm diff upgrade gameplane oci://ghcr.io/gameplanepanel/charts/gameplane --version <target-version> -n gameplane-system` (requires `helm-diff` plugin)
 
 ## Execute in release order
 

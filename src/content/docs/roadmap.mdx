@@ -15,20 +15,22 @@ import { VERSION } from "../../config";
 
 ## Current release
 
-- **Version:** {VERSION} (pre-v1), released 2026-10-05. See the [changelog](https://github.com/GameplanePanel/Gameplane/blob/master/CHANGELOG.md).
+- **Version:** {VERSION} (pre-v1), released 2026-11-11. See the [changelog](https://github.com/GameplanePanel/Gameplane/blob/master/CHANGELOG.md).
 - **What works today:** see the [README](https://github.com/GameplanePanel/Gameplane/blob/master/README.md) and the [architecture overview](./architecture/).
 
-<DocsCallout icon="check" title="Pre-v1 status, as of 2026-10-14">
-  The CRDs, operator, API, agent, and dashboard are feature-complete for the v1 scope and stabilized for external testing, but the project is not yet recommended for unattended production. This page tracks what stands between v0.3 and a v1 GA release.
+<DocsCallout icon="check" title="Pre-v1 status, as of 2026-11-11">
+  The CRDs, operator, API, agent, and dashboard are feature-complete for the v1 scope and stabilized for external testing, but the project is not yet recommended for unattended production. This page tracks what stands between v0.4 and a v1 GA release.
 </DocsCallout>
 
 It is a living document: items move out of it as they ship, and anything discovered along the way gets added.
 
 ---
 
-## Shipped in v0.3.0 and since
+## Shipped releases
 
-### Since v0.3.0 (Unreleased)
+### Shipped in v0.4.0
+
+- Pre-release security hardening, fleet-wide node inventory, safer backup, restore and wipe exclusion, and the other fixes in the [v0.4.0 release notes](https://github.com/GameplanePanel/Gameplane/releases/tag/v0.4.0).
 
 - Independent central panel: Docker Compose runs the API and dashboard without a host Kubernetes cluster; a standalone Helm profile runs without the central operator or workloads ([changelog](https://github.com/GameplanePanel/Gameplane/blob/master/CHANGELOG.md)).
 - Credential maintenance: standalone key custody, offline `rotate-panel-key`, `PUT /clusters/{name}/kubeconfig`, and `PUT`/`DELETE /clusters/{name}/gateway` ([changelog](https://github.com/GameplanePanel/Gameplane/blob/master/CHANGELOG.md)).
