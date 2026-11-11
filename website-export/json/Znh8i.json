@@ -2,7 +2,7 @@
   "type": "frame",
   "id": "Znh8i",
   "x": 0,
-  "y": 12839,
+  "y": 11930,
   "name": "Screen/Docs — FAQ",
   "theme": {
     "semantic": "dark"
@@ -129,7 +129,7 @@
                           "content": "Is Gameplane production-ready?"
                         },
                         "tne6e": {
-                          "content": "It's in beta (v0.2.0-beta.8). Core workflows are feature-complete and tested, but not yet recommended for unattended production — see the Roadmap."
+                          "content": "It's a pre-v1 release (v0.4.0). Core workflows are feature-complete and tested, but not yet recommended for unattended production — see the Roadmap."
                         }
                       }
                     },
@@ -192,7 +192,7 @@
                           "content": "What database does it use?"
                         },
                         "tne6e": {
-                          "content": "SQLite by default and is the production-tested driver. A PostgreSQL driver exists but is experimental (build-tag-gated, work in progress)."
+                          "content": "SQLite by default and is the production-tested driver. The PostgreSQL driver works end to end but is experimental: it needs an API image built with the `postgres` build tag, and the API must stay a single replica."
                         }
                       }
                     },
@@ -211,6 +211,24 @@
                         },
                         "tne6e": {
                           "content": "Yes. Advanced users can bypass the API entirely and manage everything with kubectl apply — the operator is authoritative, so both stay in sync."
+                        }
+                      }
+                    },
+                    {
+                      "id": "tLPlD",
+                      "type": "ref",
+                      "ref": "v9zjax",
+                      "name": "FAQ Item Dashboard Cluster",
+                      "width": "fill_container",
+                      "descendants": {
+                        "C2FCOL": {
+                          "icon": "circle-help"
+                        },
+                        "XvFxz": {
+                          "content": "Do I need a Kubernetes cluster to run the dashboard?"
+                        },
+                        "tne6e": {
+                          "content": "Not for the panel itself since v0.4.0. Docker Compose or a standalone Helm profile runs the API and dashboard without Kubernetes; games still run on registered clusters, each with its own operator and agents."
                         }
                       }
                     }

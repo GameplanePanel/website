@@ -2,7 +2,7 @@
   "type": "frame",
   "id": "KFLCi",
   "x": 0,
-  "y": 7139,
+  "y": 6590,
   "name": "Screen/Docs — Security",
   "theme": {
     "semantic": "dark"
@@ -169,7 +169,7 @@
                   "fill": "$muted",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "Permission-based RBAC with admin/operator/viewer roles, scoped per namespace or cluster-wide. Registering a cluster grants no user access by itself: remote access uses supplemental per-cluster grants, and a global union of permission names never authorizes a row in another cluster.",
+                  "content": "Permission-based RBAC with admin/operator/viewer roles, scoped per namespace or cluster-wide. Registering a cluster grants no user access by itself, and a global permission union never authorizes another cluster's rows. Admin permissions can be granted only by a `*` holder (v0.4.0).",
                   "lineHeight": 1.5,
                   "fontFamily": "$typography/font-sans",
                   "fontSize": 14,

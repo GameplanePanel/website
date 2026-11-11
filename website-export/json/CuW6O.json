@@ -2,7 +2,7 @@
   "type": "frame",
   "id": "CuW6O",
   "x": 0,
-  "y": 60268,
+  "y": 56600,
   "name": "Screen/Docs — Multi-cluster Topology",
   "theme": {
     "semantic": "dark"
@@ -124,7 +124,7 @@
                       "name": "Meta Chip 1",
                       "descendants": {
                         "yb6zz": {
-                          "content": "v0.2"
+                          "content": "v0.4"
                         }
                       }
                     },
@@ -255,7 +255,7 @@
                               "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
-                              "content": "One control plane and database form one operational boundary.",
+                              "content": "Combined installs share one control plane and database; standalone panels run them without Kubernetes.",
                               "fontFamily": "Geist",
                               "fontSize": 12.5,
                               "fontWeight": "normal"
@@ -503,7 +503,7 @@
                       "fill": "$muted",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "Promote manifests and modules through GitOps; move worlds only through verified backup and restore.",
+                      "content": "Combined installs promote Cluster CRs and modules through GitOps; standalone panels keep registrations in their database. Move worlds only through verified backup and restore.",
                       "lineHeight": 1.45,
                       "fontFamily": "Geist",
                       "fontSize": 13,
@@ -602,7 +602,7 @@
                       "fill": "$accent/soft-foreground",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "The optional agent gateway and the unified cross-cluster dashboard described below arrive in v0.3.0. In v0.2.0-beta.8 you can register clusters and manage their resources from one dashboard, but console and log streaming is scoped to the local control-plane cluster.",
+                      "content": "The optional agent gateway and the unified cross-cluster dashboard described below are available since v0.3.0.",
                       "fontFamily": "Geist",
                       "fontSize": 12.5,
                       "fontWeight": "normal"
@@ -634,7 +634,7 @@
                       "fill": "$muted",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "One central API and login manages independent registered clusters.",
+                      "content": "One central API and login manages independent clusters, combined or standalone (v0.4.0).",
                       "lineHeight": 1.45,
                       "fontFamily": "Geist",
                       "fontSize": 13,
@@ -714,7 +714,7 @@
                               "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
-                              "content": "Dashboard combines resources across clusters with optional Location filter (v0.3.0)",
+                              "content": "Dashboard combines resources across clusters with optional Cluster filter (v0.3.0)",
                               "fontFamily": "Geist",
                               "fontSize": 12.5,
                               "fontWeight": "normal"
@@ -799,7 +799,7 @@
                           "id": "lJ4Me",
                           "name": "Next Link Title",
                           "fill": "$foreground/foreground",
-                          "content": "High availability and failure domains",
+                          "content": "Standalone panel",
                           "fontFamily": "JetBrains Mono",
                           "fontSize": 13,
                           "fontWeight": "500"
