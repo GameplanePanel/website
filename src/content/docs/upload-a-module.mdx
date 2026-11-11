@@ -40,6 +40,7 @@ gp-module validate path/to/bundle --strict
 ```
 
 The validator checks:
+- `locales/<tag>.json` translations are checked against `locales/en.json`, and an uploaded archive may contain them; they count toward the 900 KiB bundle limit (v0.4.0)
 - icon is ≤512 KiB (gp-module validate warns above this; non-blocking unless run with --strict)
 - gp-module validate additionally warns if the total bundle exceeds 1 MiB (also non-blocking unless --strict)
 - the upload API itself hard-rejects any bundle over 900 KiB regardless of validator warnings — this is the limit that actually blocks an upload, so keep bundles well under it even though the CLI's own warning threshold is higher.

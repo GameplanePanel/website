@@ -82,6 +82,8 @@ Game servers expose ports via the Kubernetes Service created for each GameServer
 
 **Important**: sourceRanges only take effect when expose mode is LoadBalancer. ClusterIP and NodePort servers do not filter by source CIDR at the Kubernetes level (use firewall rules instead for those modes).
 
+**Kubelet probes (v0.4.0):** each GameServer gets a `<server>-probes` NetworkPolicy that admits the kubelet CIDRs only to the ports its own liveness, readiness and startup probes use. This is on by default (`networkPolicies.probeIngress.enabled: true`). Ports you list in `networkPolicies.probePorts` are added to that allowance. Setting `networkPolicies.probeIngress.enabled: false` restores the older rule, which admits the kubelet to every game port, RCON included. Upgrading from an earlier release therefore changes what the kubelet can reach; check your module's probe ports before upgrading.
+
 ### Address Pools (LoadBalancer Only)
 
 When expose mode is LoadBalancer, optionally request a specific address pool or IP address:

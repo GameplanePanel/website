@@ -36,7 +36,7 @@ New users start with a **primary role** applied cluster-wide. The three built-in
 - **Operator** — manage servers and backups; cannot create/edit users or templates
 - **Viewer** — read-only access to servers, backups, and status
 
-You can refine permissions per namespace (e.g., restrict an operator to a specific game project) using per-namespace role bindings in the **Role Bindings** section of the user's card.
+You can refine permissions per namespace (e.g., restrict an operator to a specific game project) using per-namespace role bindings in the **Role Bindings** section of the user's card. Module and template catalog access is not granted by namespace bindings: it needs a cluster-wide grant on the selected cluster or on all clusters (v0.4.0).
 
 ## Edit roles and reset credentials
 
@@ -44,8 +44,8 @@ Role changes affect global authorization; local and OIDC credentials have differ
 
 <DocsSectionList
   items={[
-    { icon: "users", label: "Role Changes", text: "Edit display name, email, and primary role deliberately — changes apply on the user's next login." },
-    { icon: "lock", label: "Local Password Reset", text: "Reset only local passwords in Gameplane with a new 12+ character value; does not affect OIDC users." },
+    { icon: "users", label: "Role Changes", text: "Edit display name, email, and primary role deliberately — changes apply on the user's next login. Only a full administrator (the wildcard permission) can grant admin-level permissions or edit an administrator (v0.4.0)." },
+    { icon: "lock", label: "Local Password Reset", text: "Reset only local passwords in Gameplane with a new 12+ character value; does not affect OIDC users. A reset ends every session of that account (v0.4.0)." },
     { icon: "shield-check", label: "OIDC Management", text: "For OIDC-linked users, manage password, MFA, and account status at the upstream provider (Keycloak, Okta, etc.)." },
   ]}
 />
@@ -55,7 +55,7 @@ Role changes affect global authorization; local and OIDC credentials have differ
 1. Find the user in the dashboard Users page
 2. Click the user card to open details
 3. Tap **Reset Password** and enter a new 12+ character value
-4. The user can log in with the new password immediately
+4. The user can log in with the new password immediately. Every session the account already had is ended, so anyone signed in as that user is signed out (v0.4.0).
 
 **For OIDC users:**
 

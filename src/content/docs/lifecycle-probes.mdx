@@ -95,6 +95,10 @@ Override timing one probe family at a time; startup protects boot, readiness gat
   ]}
 />
 
+<DocsCallout icon="shield-alert" title="Kubelet probes reach only probe ports (v0.4.0)">
+Each GameServer gets a `<server>-probes` NetworkPolicy that admits kubelet sources to the game container's probe ports only. It is on by default through `networkPolicies.probeIngress.enabled`. Set that value to `false` to restore the older chart rule that opens every game-pod port to kubelet sources. Add any extra probe ports to `networkPolicies.probePorts`. See [NetworkPolicy isolation and migration](https://github.com/GameplanePanel/Gameplane/blob/master/docs/networking.md#networkpolicy-isolation-and-migration).
+</DocsCallout>
+
 <DocsQuickReference
   label="PROBE MODEL"
   items={[
@@ -141,6 +145,8 @@ spec:
 ## Suspending with idle auto-sleep
 
 If you enable idle auto-sleep (`spec.idle.enabled: true`), the operator scales the server down automatically after it reports zero players for the configured idle period. The graceful termination sequence still runs — the template's stop sequence executes with the same grace period, and data is preserved.
+
+To wake a sleeping server when a player connects, turn on **Wake on connect** in the server's Lifecycle settings (v0.4.0). It is off by default (`spec.idle.wakeOnConnect`, default `false`). While the server sleeps, a small pod holds its ports, which costs one extra pod per sleeping server. For UDP-only games the first join attempt only wakes the server, so the player joins on retry.
 
 For more details, see the [`spec.idle` configuration in the architecture docs](../architecture/).
 

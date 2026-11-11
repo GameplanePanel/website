@@ -28,7 +28,7 @@ const parseCell = (text: string): Cell => {
 const rows: CompareRow[] = [
   {
     dimension: "Deployment/runtime model",
-    gameplane: "Kubernetes-native CRDs and controller-runtime operator; scales from k3s homelab to multi-node clusters. [BETA]",
+    gameplane: "Combined Kubernetes install or standalone panel on Docker Compose; game workloads use Kubernetes CRDs and a controller-runtime operator, from k3s to multi-node clusters. [PRE-V1]",
     pterodactyl: "Self-hosted Panel with PHP/MySQL/Redis dependencies; Wings backend manages Docker containers.",
     amp: "Web-based control panel supporting Windows (native) and Linux (Debian 10+).",
     agones: "Kubernetes-native library extending K8s with GameServer/Fleet CRDs.",
@@ -56,21 +56,21 @@ const rows: CompareRow[] = [
   },
   {
     dimension: "Access control & authentication",
-    gameplane: "Local argon2id + OIDC (Keycloak/Google/GitHub); three built-in roles (admin/operator/viewer); custom roles supported.",
+    gameplane: "Local argon2id + OIDC (Keycloak, Authentik, Google, Okta, Entra ID); three built-in roles (admin/operator/viewer); custom roles supported.",
     pterodactyl: "2FA configurable per account or admin-only; subuser management via Artisan CLI.",
     amp: "Role-based access control; OIDC single-sign-on in Advanced Edition.",
     agones: "not applicable (Agones is a Kubernetes operator library)",
   },
   {
     dimension: "Game template distribution",
-    gameplane: "OCI bundles via ModuleSource (git/http/oci/local/upload); optional cosign signature verification per source. 16 ready-to-use templates shipped.",
+    gameplane: "OCI bundles via ModuleSource (git/http/oci/local/upload); optional cosign signature verification per source. 29 ready-to-use templates shipped.",
     pterodactyl: "Community eggs repository (eggs.pterodactyl.io) with nests and custom egg creation support.",
     amp: "Customizable templates framework; community-contributed templates available via external repositories.",
     agones: "not applicable (Agones is a Kubernetes operator library)",
   },
   {
     dimension: "Multi-tenancy & multi-cluster",
-    gameplane: "Cluster CRD for remote registration/monitoring; console/log streaming local-cluster only. [local cluster only for streaming]",
+    gameplane: "Remote registration through Cluster CRDs (combined mode) or SQL (standalone mode); central user grants; remote Pod logs and PTY attach; optional private gateway for agent operations. [gateway optional]",
     pterodactyl: "Single Panel managing multiple nodes; no documented remote cluster or cross-cluster streaming.",
     amp: "Multi-server management via controller architecture; multi-tenancy not supported in AMP 2 (planned for AMP 3).",
     agones: "Multi-cluster allocation via GameServerAllocationPolicy; allocator service with mTLS authentication.",
@@ -84,7 +84,7 @@ const rows: CompareRow[] = [
   },
   {
     dimension: "Target operator scope (self-hosted vs. managed SaaS)",
-    gameplane: "Self-hosted only; runs on Kubernetes (k3s, kubeadm, managed services); no managed SaaS offering.",
+    gameplane: "Self-hosted only; panel runs on Docker Compose or Kubernetes, while games require Kubernetes (k3s, kubeadm, managed services); no managed SaaS offering.",
     pterodactyl: "Self-hosted only; requires Linux system capable of running Docker containers.",
     amp: "Self-installed on user hardware (Windows or Linux); no managed SaaS version.",
     agones: "Self-hosted operator software; runs anywhere Kubernetes can run.",

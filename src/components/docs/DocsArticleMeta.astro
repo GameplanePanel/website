@@ -1,4 +1,5 @@
 ---
+import { VERSION } from "../../config";
 import { GROUPS } from "../../lib/docs-nav";
 
 interface Props {
@@ -7,7 +8,7 @@ interface Props {
   version?: string;
 }
 
-const { groupId, readTime, version = "v0.2" } = Astro.props;
+const { groupId, readTime, version = VERSION.split(".").slice(0, 2).join(".") } = Astro.props;
 const group = groupId ? GROUPS.find((g) => g.id === groupId) : undefined;
 ---
 

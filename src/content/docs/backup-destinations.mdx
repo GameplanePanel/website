@@ -91,10 +91,10 @@ Backup and Restore jobs run in the `gameplane-games` namespace. If you use Kuber
 - Read the backup destination Secret (already available since it's in the same namespace)
 - Write to the configured repository (via egress networking)
 
-By default, the backup egress policy (`operator.backupEgress` in Helm values) opens outbound TCP 443 (HTTPS) and TCP 22 (SFTP) to allow restic to reach common repository backends. If your repository uses a non-standard port, update the Helm values during installation:
+By default, the backup egress policy (`networkPolicies.backupEgress` in Helm values) opens outbound TCP 443 (HTTPS) and TCP 22 (SFTP) to allow restic to reach common repository backends. If your repository uses a non-standard port, update the Helm values during installation:
 
 ```yaml
-operator:
+networkPolicies:
   backupEgress:
     enabled: true
     ports:

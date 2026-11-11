@@ -51,6 +51,7 @@ A module lives on disk as a directory holding four files:
 | `module.yaml` | yes | Module metadata (name, version, display info) |
 | `README.md` | no | Operator documentation, rendered in the catalog |
 | `icon.png` | no | 256×256 PNG for the dashboard catalog tile |
+| `locales/<tag>.json` | no | Translations, one file per language (v0.4.0) |
 
 The official modules live in the standalone `GameplanePanel/module` repository, checked out as the `modules/` submodule of the main Gameplane repo.
 
@@ -90,6 +91,7 @@ Modules are distributed as **OCI artifacts** — the same registries that hold y
 | `template.yaml` | `application/vnd.gameplane.module.template.v1+yaml` | Template spec, required |
 | `README.md` | `application/vnd.gameplane.module.readme.v1+md` | Operator docs, optional |
 | `icon.png` | `image/png` | Dashboard tile icon, optional |
+| `locales/<tag>.json` | `application/vnd.gameplane.module.locale.v1+json` | Translations, optional (v0.4.0) |
 
 The artifact manifest is tagged as:
 
@@ -126,7 +128,7 @@ oras push \
 Or use the Makefile target:
 
 ```sh
-make modules-push REGISTRY=ghcr.io/gameplanepanel/gameplane-modules
+make modules-push MODULE_REGISTRY=ghcr.io/gameplanepanel/gameplane-modules
 ```
 
 For private registries, log in once with `oras login <registry>`. The cluster uses a `kubernetes.io/dockerconfigjson` secret (`ModuleSource.spec.oci.pullSecretRef`) — the same credential format kubelet uses for private images.
@@ -208,6 +210,17 @@ spec:
 The operator pulls the artifact, parses `module.yaml` + `template.yaml`, and creates a `GameTemplate` owned by this `Module`. The template then appears in the "Create server" wizard. Deleting the `Module` deletes the `GameTemplate`, but the operator refuses deletion while servers still reference it.
 
 If a module fails to upgrade (pull error, bad signature, incompatible operator), the previous template keeps running unchanged; the `Module.status.previousVersion` field records the last-known-good version for safe rollback.
+
+## Translations (v0.4.0)
+
+A module can ship translations next to `module.yaml`, in a `locales/` directory with one `locales/<tag>.json` per language (for example `fr.json` or `pt-BR.json`). Each file maps message ids to `{"defaultMessage": "..."}` entries and becomes one layer of the bundle. Language packs for the dashboard itself are covered in [Languages & Translations](../languages/).
+
+- `gp-module i18n extract` writes the English reference `locales/en.json`. It is generated, not hand-written, and it is not shipped. `gp-module validate` checks every translation against it.
+- `gp-module i18n stamp` records the English text each entry was translated from in `locales/.review.json`. If the English text changes later, `gp-module validate` warns with `locale-needs-review`.
+
+Translations never fail an install. The operator keeps the valid entries in a `<template>-locales` ConfigMap, drops the invalid ones, and reports problems on the GameTemplate as the `LocalesValid` condition and a Warning event. The condition reasons are `Valid`, `InvalidEntries`, `LocalesTooLarge` and `WriteFailed`.
+
+Each translation file is read up to 900 KiB. A language that would take a bundle's translation files past 4 MiB in total is skipped; languages count in file-name order, and the skipped language shows `LocalesTooLarge`.
 
 ## Next steps
 

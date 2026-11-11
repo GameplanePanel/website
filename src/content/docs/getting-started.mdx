@@ -39,4 +39,4 @@ printf '%s' "$ADMIN_PASSWORD" | kubectl -n gameplane-system exec -i deploy/gamep
   /api bootstrap-admin --username admin --password-stdin
 ```
 
-For OIDC login, PostgreSQL instead of the bundled SQLite, and ingress/TLS options, see the full [installation guide](../installation/).
+For OIDC login, PostgreSQL instead of the bundled SQLite, and ingress/TLS options, see the full [installation guide](../installation/). To run the central dashboard and API without a local game cluster, see [Standalone panel](../standalone-panel/).

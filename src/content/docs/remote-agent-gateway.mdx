@@ -3,7 +3,7 @@ title: Remote agent gateway
 description: Install the optional per-cluster gateway, register it with the central API over mTLS, and verify and troubleshoot remote console, file, player and capture access.
 section: platform
 group: cluster-storage
-order: 10
+order: 11
 icon: network
 sidebarLabel: Agent gateway
 eyebrow: PLATFORM
@@ -191,9 +191,9 @@ The chart uses TCP liveness and readiness probes so no unauthenticated HTTP endp
 
 ## Register the gateway centrally
 
-The gateway needs an HTTPS certificate valid for its configured URL and must trust the central API's dedicated client certificate. Restrict network access to the central API through private networking or an explicit firewall rule.
+The gateway needs an HTTPS certificate valid for its configured URL and must trust the central API's dedicated client certificate. Restrict network access to the central API through private networking or an explicit firewall rule. A standalone panel can also limit gateway destinations with `api.remoteAllowedCIDRs` (Helm) or `GAMEPLANE_REMOTE_ALLOWED_CIDRS`; see [registering a remote game cluster](../standalone-panel/#register-a-remote-game-cluster).
 
-Create a credential Secret in the central API namespace (normally `gameplane-system`):
+In a combined installation, create a credential Secret in the central API namespace (normally `gameplane-system`). A standalone panel stores the same credentials in its database instead, through `PUT /clusters/<name>/gateway`, with no Secret or `Cluster` resource; see the [standalone panel guide](../standalone-panel/#configure-remote-agent-access). The Secret looks like this:
 
 ```yaml
 apiVersion: v1
@@ -212,7 +212,7 @@ stringData:
 
 These placeholders describe the keys; supply real credentials through your normal Secret-management workflow and never commit private keys to Git.
 
-Then add the optional gateway reference to the existing `Cluster` resource:
+In a combined installation, add the optional gateway reference to the existing `Cluster` resource:
 
 ```yaml
 apiVersion: gameplane.local/v1alpha1
@@ -228,7 +228,7 @@ spec:
       name: remote-1-gateway-client
 ```
 
-The registration name must match the gateway's `clusterID`. The URL is an HTTPS origin with no userinfo, path, query or fragment. Credentials are read only from the central API namespace and must carry the label above. Register the cluster through the central registration API or its `Cluster` resource, and set the gateway field through Kubernetes. The dashboard's **Clusters** page selects existing registrations; enrollment stays an operator-managed step. See [Module & Cluster CRDs](../module-cluster-crds/) for the field reference.
+The registration name must match the gateway's `clusterID`. The URL is an HTTPS origin with no userinfo, path, query or fragment. Credentials are read only from the central API namespace and must carry the label above. Register the cluster with **Register cluster** on the dashboard's **Clusters** page (requires `cluster:manage`) or through the central registration API. In a combined installation, the `Cluster` resource can also set the gateway field through Kubernetes. See [Module & Cluster CRDs](../module-cluster-crds/) for the field reference.
 
 ## How requests are routed
 
@@ -240,7 +240,7 @@ Internal mod-update reads use the same selected cluster for agent data and templ
 
 ### Failure behavior
 
-- The central API reads the Cluster and credential Secret for every new gateway operation. Missing, deleted, unlabeled or malformed credentials fail closed with no fallback to a local namesake.
+- In a combined installation, the central API reads the Cluster and credential Secret for every new gateway operation; a standalone panel reads the same settings from its database. Missing, deleted, unlabeled or malformed credentials fail closed with no fallback to a local namesake.
 - Removing the `agentGateway` reference removes new interactive access without removing Kubernetes management.
 - Redirects are not followed, and writes are not automatically retried after an ambiguous failure.
 - Gateway health and Kubernetes reachability are separate: the `Cluster` health phase describes Kubernetes connectivity only. A gateway outage does not stop games or their local operator.
@@ -254,7 +254,7 @@ Capture files use a separate allowlisted route that accepts only GET and DELETE 
 ## Verify the installation
 
 1. Confirm the gateway Pod is Ready in the remote cluster. Readiness is a TCP check and shows only an open listener.
-2. Confirm the `Cluster` resource reports `Healthy`. That proves Kubernetes connectivity, not the gateway.
+2. Confirm the cluster reports healthy: the `Cluster` resource's `Healthy` phase in a combined installation, or the cluster's health on the **Clusters** page in a standalone panel. That proves Kubernetes connectivity, not the gateway.
 3. In the dashboard, open a test server in that cluster and try the console, file manager and players. These routes prove the central API can authenticate to the gateway and reach the agent.
 4. If you use captures, confirm the capture controls are enabled; they stay disabled when the gateway's capabilities are missing or incompatible.
 
@@ -271,7 +271,7 @@ Capture sidecars also receive the server UID, and new capture starts bind the ou
 | Symptom | Likely cause and fix |
 |---|---|
 | Remote console, files or players return 404 | The agent is older than the UID-bound route, or the operator has not populated the server UID. Upgrade the operator and let game Pods roll so agents match. |
-| Every gateway operation fails, Cluster shows Healthy | Gateway health is separate from Kubernetes health. Check that the credential Secret exists in the central API namespace, carries `gameplane.local/agent-gateway-credentials: "true"` and holds `ca.crt`, `tls.crt` and `tls.key`; missing or malformed credentials fail closed. |
+| Every gateway operation fails, Cluster shows Healthy | Gateway health is separate from Kubernetes health. In combined installations, check that the credential Secret exists in the central API namespace, carries `gameplane.local/agent-gateway-credentials: "true"` and holds `ca.crt`, `tls.crt` and `tls.key`; missing or malformed credentials fail closed. |
 | Gateway rejects the central API | The central client certificate must chain to `gateway.centralClientCASecret` and carry the exact `gateway.peerURI` URI SAN. The server certificate needs a DNS SAN matching the registered URL, and TLS must pass through any relay unchanged. |
 | Connection times out | Check `gateway.networkPolicy.peerCIDRs` or `peerSelectors` against the source IPs the remote cluster actually sees (SNAT), and `apiServerCIDRs` against post-DNAT API endpoints. |
 | Cluster name mismatch | The `Cluster` resource name must equal `gateway.clusterID`. |
@@ -307,6 +307,7 @@ Record-only deletion does not free retained file storage.
 
 ## Related topics
 
+- [Standalone panel](../standalone-panel/) — Run the central panel without host Kubernetes and register remote clusters in its database.
 - [Multi-cluster topology](../multi-cluster/) — What works across clusters and the unified dashboard.
 - [Module & Cluster CRDs](../module-cluster-crds/) — The Cluster resource field reference.
 - [Cluster Nodes & Kubeconfig](../cluster-nodes-kubeconfig/) — Registered kubeconfig credentials and node inventory.

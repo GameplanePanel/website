@@ -115,6 +115,10 @@ spec:
           restartPolicy: OnFailure
 ```
 
+### Multi-volume consistency (v0.4.0)
+
+A copy that includes more than one volume (`volumePolicy: all-data`) captures a single snapshot, but a live copy is not a consistent recovery point across those volumes. Its Backup reports `Consistency=False` with reason `LiveMultiVolumeCopy`, even when the game's quiesce succeeded. Only a stopped, fully drained source (`powerPolicy: stop-copy-restart`) gives consistency across the included roots. Quiesce still depends on the module's commands and cannot prove application state. A volume marked `backupRole: rebuildable` is excluded and reported as a recovery prerequisite, not copied. CSI volume snapshots stay primary-only.
+
 ### Pruning and retention
 
 Restic's retention policies are defined in `BackupSchedule.spec.retention`. Gameplane supports restic's `keep-*` vocabulary:

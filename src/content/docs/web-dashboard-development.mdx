@@ -51,7 +51,7 @@ The shared request layer owns credentials, CSRF, errors, cluster selection, and 
     {
       icon: "check",
       label: "api<T> injects credentials and CSRF",
-      text: "All callers use a single function signature for credentials, CSRF on mutations, and uniform `APIError` — no fetch-directly antipattern.",
+      text: "All callers use a single function signature for credentials, CSRF on mutations, and uniform `APIError` — no fetch-directly antipattern. The dashboard asks for `application/problem+json` errors and shows the message in the active language (v0.4.0).",
     },
     {
       icon: "check",
@@ -65,6 +65,8 @@ The shared request layer owns credentials, CSRF, errors, cluster selection, and 
     },
   ]}
 />
+
+Monaco ships inside the dashboard image instead of loading from a CDN, and the dashboard is served with a Content-Security-Policy and security headers (v0.4.0). New third-party script, style or font loads need to fit that policy.
 
 ## Develop and verify
 
@@ -94,6 +96,17 @@ Use strict build, lint, Vitest/MSW, and the appropriate Playwright mode; UI chan
 ### Dev server
 
 Run **`make web-dev`** from the repo root to start the Vite dev server with a proxy to the in-cluster API (requires `make dev-up` first). The dev server hot-reloads on save; CSS changes apply instantly, component changes reload with state preserved.
+
+### Translatable text
+
+Every user-visible string goes through `intl` from `useOptionalIntl` (`@/lib/i18n/format`), with literal `id`, `defaultMessage` and `description` values. Do not put English text straight into JSX. Dashboard ids use `web.<path>.<slug>`. Ids for API and operator text (`server.*`, `notify.*`, `condition.*`) come from those components, so do not invent them in the dashboard.
+
+- After you change text, run `npm run i18n:extract` in `web/` and commit `i18n/locales/en/app.json` in the same commit as the code.
+- `npm run i18n:migrate -- --dry-run <paths>` shows which literal JSX text it would wrap before you run it for real.
+- ESLint (`eslint-plugin-formatjs`) checks `web/src`, except tests. CI fails on extraction drift and on reference ids that no code uses.
+- Build with `VITE_I18N_PSEUDO=1` to see the pseudo-language `en-XA` for layout checks. It exists for maintainers and is never released.
+
+See [Languages & Translations](../languages/) and the [translating guide on GitHub](https://github.com/GameplanePanel/Gameplane/blob/master/docs/translating.md).
 
 ### Design and PRs
 

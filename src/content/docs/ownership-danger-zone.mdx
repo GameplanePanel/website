@@ -15,7 +15,7 @@ import DocsSectionList from "../../components/docs/DocsSectionList.astro";
 import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
 
 <DocsCallout icon="shield-alert" title="Since v0.3.0: owner-or-admin tightening">
-  Ownership, collaborators, transfer, wipe, and delete are available in v0.2.0-beta.8, where operator-role users can also run them on servers they don't own. From v0.3.0, transferring ownership, editing collaborators, wiping data and deleting a server need the server's owner or an admin. Servers with no recorded owner (for example created with kubectl or GitOps) can then be transferred, wiped or deleted only by an admin.
+  Transferring ownership, editing collaborators, wiping data and deleting a server need the server's owner or an admin. Servers with no recorded owner (for example created with kubectl or GitOps) can be transferred, wiped or deleted only by an admin. In v0.2.0-beta.8 and earlier, operator-role users could also run these on servers they don't own.
 </DocsCallout>
 
 Ownership controls accountability and destructive authority; collaboration grants operator access to one server. Both require explicit owner decisions before irreversible actions like data wiping and server deletion.
@@ -62,7 +62,7 @@ Wipe keeps configuration and resets world data; Delete removes the GameServer, w
 
 Both operations require a verified backup and an explicit owner decision:
 
-- **Wipe data** — Suspends the server, empties the persistent volume (retaining configuration and game templates), and restarts the server with a clean world. Use this when you want to reset the game world but keep your server's name, settings, and template configuration.
+- **Wipe data** — Suspends the server, empties the persistent volume (retaining configuration and game templates), and restarts the server with a clean world. Use this when you want to reset the game world but keep your server's name, settings, and template configuration. A wipe and any backup or restore of the same server take one lifecycle ownership, so a backup or restore never reads the volume while a wipe changes it (v0.4.0).
 - **Delete server** — Removes the entire GameServer Kubernetes resource, stops the workload pod, and deletes the data PersistentVolumeClaim (PVC). All game data, configuration, and deployment state are destroyed. Use this only when you no longer need the server.
 
 <DocsQuickReference

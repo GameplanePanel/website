@@ -1,0 +1,259 @@
+---
+title: Standalone panel
+description: Run the Gameplane dashboard and API on a host without Kubernetes, register remote game clusters, and manage their credentials, access and recovery.
+section: platform
+group: cluster-storage
+order: 4
+icon: server
+sidebarLabel: Standalone panel
+eyebrow: PLATFORM
+readTime: 14 MIN
+covers: ["Docker Compose", "Registration", "Keys", "Recovery"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+
+Run the dashboard and API on a host with no Kubernetes installation. Remote game clusters run their own operator and game server agents. The central host is never registered as a `local` cluster and cannot host games itself.
+
+<DocsCallout icon="milestone" title="Available since v0.4.0">
+  A standalone panel is an explicit choice for a fresh central panel. The default Helm install stays a combined panel and operator installation. This guide does not migrate an existing installation's Kubernetes Secrets or `Cluster` resources into SQL storage.
+</DocsCallout>
+
+<DocsCallout icon="shield-alert" title="Restrict remote destinations before registering clusters">
+  Set `GAMEPLANE_REMOTE_ALLOWED_CIDRS` to the networks that host your Kubernetes APIs and agent gateways. Without it, registration can reach any permitted public or private address the panel host can reach, so a registration administrator can direct requests into private networks. Verified TLS and blocked address classes do not isolate unrelated private services, so add host or network firewall rules where needed.
+</DocsCallout>
+
+## Run with Docker Compose
+
+Install Git and Docker with the Compose plugin. Check out a release or commit that contains standalone support, then start the stack. The Compose file builds the API and web images from that checkout. Replace `<ref>` with the tag or commit you want, and set the CIDRs to your own Kubernetes API and gateway networks:
+
+```sh
+git clone https://github.com/GameplanePanel/Gameplane.git
+cd Gameplane
+git checkout <ref>
+export GAMEPLANE_REMOTE_ALLOWED_CIDRS=10.20.0.0/16,10.30.0.0/16
+docker compose -f deploy/standalone/compose.yaml up -d --build
+docker compose -f deploy/standalone/compose.yaml logs gameplane-api
+```
+
+Only two services run: `gameplane-api` and `web`. They need no host Kubernetes installation and no Docker socket mount. The API is reachable only on the Compose network, and nginx forwards requests to it. The dashboard binds to `127.0.0.1:8080`; set `GAMEPLANE_PORT` to change the port. Use `http://localhost:8080` locally. For remote access, put an HTTPS reverse proxy in front of the loopback port and forward WebSocket upgrades and streaming responses. Login cookies require a secure browser context, so an ordinary remote HTTP origin will not work.
+
+Run exactly one `gameplane-api` container. Do not scale it, and do not start a second API process against the same database, including PostgreSQL.
+
+Create the first administrator against the same database volume. This Bash example reads the password without putting it in shell history or process arguments:
+
+```sh
+read -r -s -p 'Admin password: ' PANEL_PASSWORD
+printf '\n'
+printf '%s\n' "$PANEL_PASSWORD" | docker compose -f deploy/standalone/compose.yaml \
+  exec -T gameplane-api /api bootstrap-admin --username admin --password-stdin
+unset PANEL_PASSWORD
+```
+
+Use a password of at least 12 characters, then sign in to the dashboard. A new panel has no clusters. Sign-in, users, roles, settings and registration all work before any remote cluster exists, but game operations need a registered remote cluster.
+
+## Keep the database and key apart
+
+The Compose volume `panel-data` holds `/data/gameplane.db`, and a separate `panel-keys` volume holds `/keys/panel.key`. With the supplied Compose project name, Docker names them `gameplane-panel_panel-data` and `gameplane-panel_panel-keys`. Inspect both before backing them up, especially if you changed the project name.
+
+Standalone settings and remote credentials are stored in SQL and encrypted with the persistent key. Recovery needs both halves:
+
+- Back up the database and its WAL files after stopping the services.
+- Back up the key separately, with restricted access and encrypted storage. A database backup should not automatically include the decryption key.
+- Restore generated volumes with ownership `65532:65532`.
+- A new key cannot decrypt existing credentials. Restore the original key that matches the database.
+
+`docker compose down` keeps both volumes; `down --volumes` deletes them. A key must be a regular file of exactly 32 raw bytes, owned by the API user or root, with no access for other users and no extended file ACLs. Generated keys use mode `0600`. Keys are validated at startup, and the API fails closed when it cannot inspect a key's permissions.
+
+### Provision the key outside the database storage
+
+Set `GAMEPLANE_PANEL_KEY_PROVISIONED=true` (or `--panel-key-provisioned`) to require an existing key at startup. This mode never generates a missing key. Provision 32 random bytes through your secret manager or a protected file, then mount it read-only. On a Linux Docker host:
+
+```sh
+sudo install -d -m 0700 /etc/gameplane/keys
+sudo sh -c 'set -C; umask 077; openssl rand 32 > /etc/gameplane/keys/panel.key'
+sudo chown 65532:65532 /etc/gameplane/keys/panel.key
+export GAMEPLANE_PANEL_KEY_SOURCE_FILE=/etc/gameplane/keys/panel.key
+docker compose -f deploy/standalone/compose.yaml \
+  -f deploy/standalone/compose.provisioned-key.yaml up -d --build
+```
+
+Use the same two Compose files for later commands. Keep the key file out of database backup jobs. The API does not upload keys or place key values in environment variables. Protecting the key separately guards against database and backup disclosure; it does not protect against a compromised API or a host that can read both files.
+
+### Move an existing key to separate storage
+
+Installations created before separate key volumes keep the key at `/data/panel.key`. Stop the API and keep a protected backup of that exact file. Copy it unchanged into the key volume as `/keys/panel.key`, preserving ownership and mode `0600`, or provision it through the read-only option above. Start the API on the new path and confirm existing registrations load. Only then remove the old copy from the database volume and exclude it from future database backups. Do not generate a new key as a migration step; it cannot decrypt existing records.
+
+### Rotate the encryption key
+
+Stop every API process that uses the database. Then take a database backup and a separately protected backup of the current key. The rotation command takes file paths and never prints key material. It reads database settings from `GAMEPLANE_DB_DSN` and does not accept `--db-dsn`, so passwords stay out of shell history. Run `rotate-panel-key --help` for the options without connecting to the database.
+
+```sh
+docker compose -f deploy/standalone/compose.yaml stop gameplane-api
+docker compose -f deploy/standalone/compose.yaml run --rm --no-deps \
+  --entrypoint /api gameplane-api rotate-panel-key \
+  --old-key-file /keys/panel.key --new-key-file /keys/panel-2026-10.key
+export GAMEPLANE_PANEL_KEY_FILE=/keys/panel-2026-10.key
+docker compose -f deploy/standalone/compose.yaml up -d --no-build gameplane-api
+```
+
+Persist the new key path in your Compose environment before future restarts. Check login, cluster health and credential-backed operations, and back up the new key separately. Keep the old key while older database backups still need it, and retire it only after those backups expire under your retention policy.
+
+The new key is durably published before one database transaction re-encrypts all management credentials. If the command is interrupted or its result is uncertain, keep both files and retry with the same old and new pair. Do not create another new key, and do not restore only one half of a database and key backup.
+
+On Kubernetes, scale the API Deployment to zero, run a maintenance Job with the same database and key volumes, and rotate into a new file under `/keys`. Then set `api.panelKey.fileName` to that file and upgrade. For a read-only Secret, durably provision the new 32-byte key first, add `--new-key-provisioned` to the command, and switch `api.panelKey.existingSecret` or its `secretKey` after success. Keep the old Secret for retained backups. Changing the mounted key without running the rotation command cannot decrypt existing records.
+
+## Run the central panel on Kubernetes
+
+The panel can run in a Kubernetes cluster without using that cluster for games or giving the API Kubernetes access. From the checkout:
+
+```sh
+helm upgrade --install gameplane charts/gameplane \
+  --namespace gameplane-system --create-namespace \
+  --values charts/gameplane/examples/standalone-panel-values.yaml
+```
+
+Use images built from the matching version by setting `image.registry` and `image.tag`. The example sets `api.standalone` and `operator.enabled=false`, and leaves ingress disabled until you set a hostname and TLS. Expose the web Service through HTTPS ingress or a local port forward. Bootstrap the admin with `/api bootstrap-admin` in the API pod, as in the [combined installation guide](https://github.com/GameplanePanel/Gameplane/blob/master/docs/install.md#first-time-setup).
+
+The profile creates no operator, agent certificates, game namespace, module source, game network policies, operator monitors or API Kubernetes RBAC, and its API pod disables service account token mounting. It leaves any CRDs already on the cluster in place. Do not switch an existing combined release to these values as a migration.
+
+For an externally managed key, set `api.panelKey.existingSecret` to a Secret in the release namespace and `api.panelKey.secretKey` to its 32-byte entry (default `panel.key`). The chart mounts it read-only at `/keys/panel.key` and enables provisioned-key mode. Never put key bytes in Helm values, command arguments or source control. Apply separate RBAC, encryption-at-rest and backup policies to the key Secret or PVC.
+
+## Register a remote game cluster
+
+Each target still needs Kubernetes, the Gameplane CRDs, an operator and storage for games. From the same checkout, install the chart with credentials for the remote cluster, using images that cluster can pull:
+
+```sh
+helm --kubeconfig remote-admin.yaml upgrade --install gameplane charts/gameplane \
+  --namespace gameplane-system --create-namespace \
+  --set api.enabled=false --set api.standalone=false --set operator.enabled=true \
+  --set image.registry=<image-registry> --set image.tag=<matching-tag>
+```
+
+Enable the optional [private gateway](../remote-agent-gateway/) for console, file and player management. Without a gateway, Kubernetes resource operations still work, but agent-backed operations are unavailable.
+
+Kubeconfig requirements:
+
+- The central API must reach each target's Kubernetes API directly. The gateway does not tunnel Kubernetes traffic.
+- Use HTTPS with certificate verification. HTTP, `insecure-skip-tls-verify`, custom kubeconfig proxies and redirects are rejected, and environment forward proxies are not used for workload connections. Embed CA data for a private CA.
+- Use credentials that work from the central host. Kubeconfigs that need local files or interactive credential plugins are not supported.
+- Grant the identity access to the Gameplane resources, plus the [streaming](https://github.com/GameplanePanel/Gameplane/blob/master/docs/install.md#pod-logs-and-pty-console-permissions) and [inventory](https://github.com/GameplanePanel/Gameplane/blob/master/docs/gateway-install.md#remote-inventory-permissions) permissions for the features you use. Module management needs the cluster-scoped `modules`, `modulesources` and `gametemplates` resources; bundle uploads also need ConfigMap access in the operator namespace.
+- Use the same operator namespace on each target as the API's `--namespace` setting (default `gameplane-system`).
+
+Register the target with an authenticated administrator session. In the example, `cookies.txt` is a private cookie jar for that session, `CSRF_TOKEN` is its `gameplane_csrf` cookie value, and `PANEL_URL` is the HTTPS dashboard origin. The API expects the kubeconfig YAML as a JSON string:
+
+```sh
+jq -n --rawfile kubeconfig remote-kubeconfig.yaml \
+  '{name:"remote-1",displayName:"Remote games",kubeconfig:$kubeconfig}' |
+  curl --fail-with-body --cookie cookies.txt \
+    --header "X-Gameplane-CSRF: $CSRF_TOKEN" \
+    --header 'Content-Type: application/json' \
+    --data-binary @- "$PANEL_URL/clusters"
+```
+
+The panel stores the registration and credentials in its database. There is no `Cluster` resource or Kubernetes Secret to create. It polls remote Kubernetes connectivity every 30 seconds. Selecting a registration routes game operations to that target and never falls back to the central host.
+
+Destinations are checked when they are dialled. Loopback, link-local, cloud metadata, unspecified, multicast and address-translation bypass addresses are refused; private workload addresses remain supported. To narrow the allowed networks, set `api.remoteAllowedCIDRs` in Helm, or `GAMEPLANE_REMOTE_ALLOWED_CIDRS` (or `--remote-allowed-cidrs`) for the API. The policy covers Kubernetes API and gateway destinations, cannot override the blocked classes, requires DNS names to resolve entirely inside the allowed ranges, and takes effect after an API restart.
+
+Remote observations are size-capped: version responses to 64 KiB, other finite Kubernetes responses to 8 MiB after decompression, and individual watch frames to 1 MiB.
+
+## Rotate a registered kubeconfig
+
+Create a replacement credential on the remote cluster, then update the existing registration. This requires central `cluster:manage` permission:
+
+```sh
+jq -n --rawfile kubeconfig replacement-kubeconfig.yaml '{kubeconfig:$kubeconfig}' |
+  curl --fail-with-body --request PUT --cookie cookies.txt \
+    --header "X-Gameplane-CSRF: $CSRF_TOKEN" \
+    --header 'Content-Type: application/json' \
+    --data-binary @- "$PANEL_URL/clusters/remote-1/kubeconfig"
+```
+
+A successful request returns 204. It keeps the registration identity, gateway settings and user grants, and reloads the workload client. The API checks the configuration before storing it, but success does not confirm connectivity or remote RBAC. Verify the cluster and its required operations before revoking the old credential. Requests already in flight can finish with the old client. Overlapping rotations return a conflict, so reload before retrying. Do not delete and re-register a cluster just to replace its kubeconfig.
+
+## Grant workload access
+
+Registration grants no workload access, including to the bootstrap admin. Its initial role administers the central panel, so do not remove it to add remote access. In **Users**, open the **Roles** tab and create a custom role with the target permissions you need:
+
+- `cluster:read` for node inventory.
+- `modules:read` and `modules:manage` for the catalog, sources and module installation.
+- `templates:read` and `templates:write` for game templates.
+- The server, backup and other namespace permissions your workloads need.
+
+Open the user in the **Users** tab. Under **Cluster & namespace grants**, select the remote cluster and the role. Choose a game namespace for a namespace grant, or **All namespaces** for a role that should apply across that cluster, then click **Add**.
+
+Inventory, module and template permissions need an **All namespaces** grant on that target; a grant limited to one namespace does not authorize them. Adding a grant ends that user's sessions, so they must sign in again. Remote grants cannot include central administration permissions or the built-in admin wildcard, so use a custom workload role rather than the built-in admin role. Wait for the registration to connect before adding a target grant, because registration metadata can appear before its client loads.
+
+On **Modules**, select the remote cluster before installing a module or opening **Manage sources**. Under **Admin settings → Backup destinations**, select the workload cluster before adding a repository. Credentials stay in that cluster's game namespace, and creating a destination also requires `destinations:manage` on the target namespace.
+
+<DocsCallout icon="shield-alert" title="Upgrading from v0.3.0: remote catalog access is per cluster">
+  In combined and standalone installations, module and template access on a remote cluster requires a cluster-wide grant on that cluster. A grant on `local` keeps local access but no longer authorizes a remote catalog. Before upgrading, grant `modules:read`, `modules:manage`, `templates:read` and/or `templates:write` on each remote cluster those users need, selecting **All namespaces**.
+</DocsCallout>
+
+## Configure remote agent access
+
+For a configured remote gateway, store the central client's dedicated mTLS credentials through the registration API:
+
+```sh
+jq -n --rawfile caCert gateway-ca.crt \
+  --rawfile clientCert central-client.crt --rawfile clientKey central-client.key \
+  '{url:"https://remote-1-gateway.internal:8443",caCert:$caCert,clientCert:$clientCert,clientKey:$clientKey}' |
+  curl --fail-with-body --request PUT --cookie cookies.txt \
+    --header "X-Gameplane-CSRF: $CSRF_TOKEN" \
+    --header 'Content-Type: application/json' \
+    --data-binary @- "$PANEL_URL/clusters/remote-1/gateway"
+```
+
+The gateway's `clusterID` must equal the registration name (`remote-1`), and its `peerURI` must match the client certificate's URI SAN. The server certificate must match the endpoint hostname. Use a trust root separate from the target's local agent CA. Repeat `PUT` to rotate credentials. `DELETE` on the same endpoint removes gateway access and keeps the registration. Responses never return private keys. See the [remote agent gateway guide](../remote-agent-gateway/) for network and certificate requirements.
+
+## Upgrade
+
+Stop the Compose services and back up the database and key separately before upgrading. From the repository root, check out the new release or commit and rebuild both panel images:
+
+```sh
+docker compose -f deploy/standalone/compose.yaml stop
+# Back up gameplane-panel_panel-data and protect a separate panel-key backup.
+git checkout <new-ref>
+docker compose -f deploy/standalone/compose.yaml up -d --build
+docker compose -f deploy/standalone/compose.yaml logs gameplane-api
+```
+
+Keep the same Compose project name, data volume and selected key. The API applies database migrations at startup, so keep the pre-upgrade backup if you may need to restore an older version. Upgrade remote operators, gateways and agents to matching versions using their Helm values. Games keep running during a panel restart, but a remote operator upgrade can roll game Pods.
+
+For a panel-only Helm release, repeat the install command with the updated chart, matching images and your standalone values. Keep `api.replicas=1` and your existing key storage, including with PostgreSQL. Helm API deployments use the `Recreate` strategy and accept a brief panel outage during rollout.
+
+## Recovery
+
+For database loss, key loss, authorization reconciliation, or restoring the panel while games keep running, follow the [panel recovery runbook](https://github.com/GameplanePanel/Gameplane/blob/master/docs/panel-recovery.md). A game-volume backup cannot rebuild panel users, roles and grants, sessions, configuration, audit history, cluster registrations or encrypted credentials. Restoring the panel does not require deleting or recreating live games.
+
+## Troubleshoot
+
+| Symptom | Check |
+|---|---|
+| Login succeeds but returns to the login page | Use HTTPS for remote access, or `localhost` locally. The session cookie is `Secure`. |
+| API cannot write `/data` | Restore volume ownership to `65532:65532`. A host bind mount needs those permissions too. |
+| API reports a missing key or credential authentication failure | Restore the original `panel.key` with its database. A new key cannot decrypt existing credentials. |
+| Registered cluster is unhealthy | Check the Kubernetes API address from the panel's network, the kubeconfig's embedded credentials and CA data, and the target RBAC. Health polling runs every 30 seconds. |
+| Cluster appears, but workload requests return 403 | Add the user's remote cluster and namespace grant, then sign in again. Also check the kubeconfig identity's Kubernetes permissions. |
+| Inventory works, but files or RCON do not | Check gateway routing, its cluster ID, certificate hostname and the central client URI SAN. Kubernetes health does not test the gateway. |
+| Module uploads fail | Check ConfigMap permissions and the matching operator namespace on the panel and the target. |
+
+Standalone panel logs come from the container runtime: `docker compose -f deploy/standalone/compose.yaml logs gameplane-api web`. Use the remote cluster's Kubernetes tools for operator and game logs.
+
+<DocsQuickReference
+  label="STANDALONE"
+  items={[
+    "Compose: set GAMEPLANE_REMOTE_ALLOWED_CIDRS, run one API, bootstrap the admin",
+    "Back up the database and the panel key separately; restore both or neither",
+    "Register remote clusters with POST /clusters; grant All namespaces per cluster",
+    "Rotate kubeconfigs with PUT /clusters/NAME/kubeconfig; verify before revoking",
+  ]}
+/>
+
+## Related topics
+
+- [Multi-cluster topology](../multi-cluster/) — What works across clusters and how grants apply per cluster.
+- [Remote agent gateway](../remote-agent-gateway/) — Install, route and troubleshoot the optional per-cluster gateway.
+- [Cluster Nodes & Kubeconfig](../cluster-nodes-kubeconfig/) — Node inventory and kubeconfig handling.
+- [Platform Disaster Recovery](../platform-disaster-recovery/) — Rebuild the platform from a recovery set.

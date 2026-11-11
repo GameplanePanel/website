@@ -62,13 +62,17 @@ ModuleSource indexes a module catalog (OCI registry, git repo, HTTP archive, or 
 | `status.lastSync` | time | read-only | Timestamp of most recent successful index |
 | `status.modules` | array | read-only | Cached catalog: each module includes `name`, `displayName`, `summary`, `game`, `categories`, `icon`, `reference`, `versions`, `latestVersion`, `digest` |
 
-<DocsCallout icon="info" title="OCI signature verification in beta.8">
-  Module signature verification (cosign keyed and keyless) is available in beta.8. Set `spec.verify.key` or `spec.verify.keyless` to enforce signing on pull. Keyless verification requires connectivity to the Fulcio OIDC endpoint; keyed verification works offline.
+<DocsCallout icon="info" title="OCI signature verification">
+  Module signature verification (cosign keyed and keyless) is available since v0.2.0-beta.8. Set `spec.verify.key` or `spec.verify.keyless` to enforce signing on pull. Keyless verification requires connectivity to the Fulcio OIDC endpoint; keyed verification works offline.
 </DocsCallout>
+
+A module bundle can also ship translations as `locales/<tag>.json` files next to `module.yaml` (v0.4.0). The OCI layer type is `application/vnd.gameplane.module.locale.v1+json`, and the same files are accepted from every other source. The operator validates them on install and reports problems in the GameTemplate `LocalesValid` condition. A translation problem never fails the install. Each file is read up to 900 KiB, and a bundle's files together up to 4 MiB. See [Module Authoring](../module-authoring/).
 
 ## Cluster registration
 
 The Cluster CRD registers a remote Kubernetes cluster for multi-cluster deployments. Each Cluster holds a kubeconfig Secret reference, optionally a reference to a private agent gateway (v0.3.0), and reports Kubernetes connectivity health. The `metadata.name` must equal the gateway's configured cluster ID.
+
+Registrations can be maintained through the API without re-creating them (v0.4.0): `PUT /clusters/{name}/kubeconfig` replaces the kubeconfig and keeps the registration identity and grants, and `PUT` or `DELETE /clusters/{name}/gateway` sets or removes the gateway credentials. See the [REST API Reference](../rest-api-reference/).
 
 | Field | Type | Required | Purpose |
 |---|---|---|---|

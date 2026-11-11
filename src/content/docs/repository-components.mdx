@@ -49,12 +49,14 @@ The repository joins runtime components, shared libraries, optional services, pa
 
 | Module | Purpose |
 |--------|---------|
-| `operator/` | controller-runtime Kubernetes operator; reconciles 9 CRDs in v0.3.0 (GameServer, GameTemplate, Cluster, Backup, BackupSchedule, Restore, Module, ModuleSource, NetworkCapture) |
+| `operator/` | controller-runtime Kubernetes operator; reconciles 9 CRDs (GameServer, GameTemplate, Cluster, Backup, BackupSchedule, Restore, Module, ModuleSource, NetworkCapture) |
 | `api/` | REST and WebSocket gateway; authentication, RBAC, audit logging; SQLite or PostgreSQL backend |
 | `agent/` | In-pod sidecar managing console (RCON/PTY), files, logs, and heartbeats |
 | `netguard/` | SSRF dial-guard protecting against injection attacks |
 | `gameaction/` | Console-injection guard and command renderer |
 | `gameproto/` | Minecraft and Terraria wire protocol parser for handshake filtering |
+| `telemetryschema/` | Shared telemetry report contract: types, strict decoder, official module catalog and report signing, used by the API and the telemetry receiver |
+| `i18n/` | Shared language packs (embedded in the binaries), an ICU MessageFormat subset, the pack validator and the `i18n-check` tool, used by the API, dashboard, operator and gp-module |
 | `gp-module/` | Module authoring CLI: scaffold, validate, preview, package |
 | `svcutil/` | Shared environment parsing and graceful shutdown helpers |
 | `tunnel/` | Relay client supervisor (frp, Tailscale, playit) |
@@ -70,7 +72,7 @@ The repository joins runtime components, shared libraries, optional services, pa
 - **`web/`** — React 19 + TypeScript + Vite dashboard with TanStack Router, Query, and Tailwind CSS. Routes are defined in `src/routes/` and compiled into the API's static file server.
 - **`charts/`** — Helm chart for production installations; includes Kubernetes manifests generated from operator CRDs.
 - **`deploy/kind/`** — Local Kind cluster scripts for development.
-- **`modules/`** — Submodule linking to `GameplanePanel/module` repository; contains 29 game templates on master: 16 shipped in v0.2.0-beta.8 and 14 more in v0.3.0, of which Hell Let Loose was later withdrawn.
+- **`modules/`** — Submodule linking to `GameplanePanel/module` repository; contains 29 official game modules in v0.4.0: 16 shipped in v0.2.0-beta.8 and 14 were added in v0.3.0. Hell Let Loose was withdrawn in v0.4.0.
 - **`website/`** — Submodule linking to `GameplanePanel/website` repository; Astro-based marketing and documentation site.
 
 ## Runtime request path

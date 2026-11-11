@@ -12,24 +12,36 @@ readTime: 5 MIN
 import DocsCallout from "../../components/docs/DocsCallout.astro";
 import ChangeEntry from "../../components/docs/ChangeEntry.astro";
 
-<DocsCallout icon="package" title="Coming in v0.3.0">
-  The changes below (Unreleased) include v0.3.0-rc.1 (tagged 2026-09-23, not published) and v0.3.0-rc.2 (in development). They will be available in v0.3.0 GA when it ships.
-</DocsCallout>
-
 <div class="flex flex-col">
-  <ChangeEntry version="Unreleased" date="in development" highlight>
+  <ChangeEntry version="v0.4.0" date="2026-11-10" highlight>
+    **Independent central panel:** Docker Compose or a standalone Helm profile runs the API and dashboard without a local game cluster, while games run on registered clusters, each with its own operator and agents.
+    **Languages:** the dashboard can be shown in other languages, set per account or as the instance default. French is the first pack, and a language is listed once it is at least 80% translated.
+    **Extended telemetry tier:** a second, separately consented tier with a random install ID and fixed-set categories, signed reports, and a receiver dashboard with an optional public summary.
+    **Credential maintenance:** standalone key custody, the offline `rotate-panel-key` command, and kubeconfig and gateway credential update endpoints.
+    **Fleet-wide node inventory:** a Nodes page lists the nodes of every cluster you can see.
+    **Optional Steam display names:** player lists can show Steam display names through a Steam Web API key.
+    **Hell Let Loose withdrawn:** the module is removed from the official catalog, leaving 29 modules.
+    **Security hardening:** a pre-release audit pass covering dial-guarded OIDC and registry requests, share-link traffic on its own Ingress, and a Content-Security-Policy in the dashboard.
+    **Upgrade: admin-level grants:** `users:manage`, `roles:manage`, `config:manage` and `cluster:manage` no longer grant admin-level permissions unless the holder also has `*`.
+    **Upgrade: kubelet probes:** a new per-server NetworkPolicy admits kubelet traffic only to probe ports; set `networkPolicies.probeIngress.enabled` to `false` for the old rule.
+    **Upgrade: remote catalogs:** module and template catalog access on a remote cluster needs a cluster-wide grant there.
+    **Upgrade: telemetry:** on by default for new installs after a first-login notice, an empty `api.telemetry.endpoint` now means the project receiver, and receiver `DASHBOARD_TOKEN` values must be at least 32 characters.
+    **Upgrade: API singleton:** `api.replicas` other than 1 is rejected in every database mode.
+  </ChangeEntry>
+
+  <ChangeEntry version="v0.3.0" date="2026-10-05">
     **Multicluster gateways and unified server management:** an optional private mTLS agent gateway lets one dashboard and API manage authorized game servers across independent clusters, with optional location filters and routed console, files, players, mods and captures.
     **User theme customization:** Settings → Theme & Appearance offers preset themes (Modern Pink, Legacy Orange) and custom color selection with live WCAG AA contrast validation.
     **Network capture:** admin-only, on-demand packet capture from running game pods as ephemeral sidecars, exported as PCAPNG (Wireshark-compatible).
     **Module authoring toolkit:** gp-module CLI and web dashboard for scaffolding, validating, previewing, and packaging custom game modules.
-    **PostgreSQL end-to-end support:** the PostgreSQL driver now works end to end, with its own migration set, placeholder rebinding, and database tests in CI. It remains experimental: keep a single API replica.
+    **PostgreSQL end-to-end support:** the PostgreSQL driver works end to end, with its own migration set, placeholder rebinding, and database tests in CI. It was experimental: keep a single API replica.
     **Install-time configuration:** Helm-seeded OIDC role mappings and default StorageClass for game-data PVCs.
     **Share link expiry options:** no-expiry, 15/30/60/90-day presets, or custom date picker.
     **Security audit remediation:** share link isolation, permission checks on GameServer mutations, Secret/ConfigMap reference validation, and symlink/zip-slip guards hardened across mod extraction.
-    **Servers page multi-namespace support:** the Servers list now shows servers from every namespace the viewer may read, not only the default games namespace.
-    **Playit tunnel improvements:** NetworkPolicy egress widened to reach relay, and playit-assigned addresses now show in status.
+    **Servers page multi-namespace support:** the Servers list shows servers from every namespace the viewer may read, not only the default games namespace.
+    **Playit tunnel improvements:** NetworkPolicy egress widened to reach relay, and playit-assigned addresses show in status.
     **REST and CLI console protocols** for games with HTTP admin APIs (FiveM) and PTY-only games (Terraria).
-    **14 new game modules** (FiveM, Farming Simulator 25, Euro Truck Simulator 2, Mount & Blade Bannerlord, tModLoader, Team Fortress 2, BeamMP, Left 4 Dead 2, The Isle, ARK: Survival Evolved, Arma Reforger, Hell Let Loose, Squad and Nuclear Option), for 30 in total (16 in v0.2.0-beta.8).
+    **14 new game modules** added in v0.3.0 (FiveM, Farming Simulator 25, Euro Truck Simulator 2, Mount & Blade Bannerlord, tModLoader, Team Fortress 2, BeamMP, Left 4 Dead 2, The Isle, ARK: Survival Evolved, Arma Reforger, Hell Let Loose, Squad and Nuclear Option), for 30 at the time of v0.3.0 with the 16 from v0.2.0-beta.8. Hell Let Loose was withdrawn in v0.4.0, leaving 29.
   </ChangeEntry>
 
   <ChangeEntry version="v0.2.0-beta.8" date="2026-08-22">

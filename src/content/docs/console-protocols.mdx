@@ -8,7 +8,7 @@ icon: terminal
 sidebarLabel: Console protocols
 ---
 
-## One console, seven protocols
+## One console, many protocols
 
 A `GameTemplate`'s `spec.rcon.protocol` selects the wire protocol the agent sidecar speaks to a game's console port. The dashboard's Console tab — and every RCON-backed capability, from player moderation to the quiesce step a backup runs before snapshotting — uses whichever protocol the template declares.
 
@@ -20,7 +20,14 @@ A `GameTemplate`'s `spec.rcon.protocol` selects the wire protocol the agent side
 | `battleye` | DayZ | BattlEye RCon (UDP) | 2305 | `passwordEnv` |
 | `satisfactory` | Satisfactory | HTTPS function-call API | 7777 | `passwordFile` (admin password is claimed in-game, not injected) |
 | `palworld` | Palworld | REST admin API (HTTP Basic) | 8212 | `passwordEnv` |
+| `nuclearoption` | Nuclear Option | Length-prefixed JSON request/response, pod-local port | 7779 (module example) | None (`authentication: false`) |
+| `rest` | FiveM (txAdmin), Farming Simulator 25 | Generic HTTP/JSON admin API | Per template | Bearer token or HTTP Basic (`passwordEnv`) |
+| `cli` | Per template | — (stdin / pty) | — | — |
 | `none` | Terraria, Don't Starve Together | — (stdin / pty) | — | — |
+
+## Unauthenticated consoles (v0.4.0)
+
+A template can declare a console that needs no password by setting `rcon.authentication: false` (default `true`). The operator then mints no per-server `<gameserver>-rcon` Secret, mounts nothing for the agent and injects no password environment variable. The option cannot be combined with `passwordSecretRef`, `passwordEnv` or `passwordFile`. Nuclear Option's loopback-only remote-command port is the example.
 
 ## Stdin consoles
 

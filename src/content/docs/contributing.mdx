@@ -45,6 +45,10 @@ UI changes start in design.pen — the designed screens are the source of truth 
 5. Sign your commits (`git commit -s`).
 6. Check that the PR carries at least one `type:` label and one `area:` label (CodeRabbit applies them; you verify them). Breaking CRD, API or chart-value changes also take `breaking`.
 
+## Translations
+
+Language packs live in `i18n/locales/<tag>/` and need no code changes. A pack is two JSON files, and a language appears in the dashboard picker once at least 80% of its messages are translated. See [Languages & Translations](../languages/) for how users and admins see languages, and the [translating guide on GitHub](https://github.com/GameplanePanel/Gameplane/blob/master/docs/translating.md) for the folder layout, message rules and checker. A PR that touches only `i18n/locales/**` and has no type prefix in its title is labelled `type: docs` and `area: shared`.
+
 ## Game modules and submodules
 
 Game-module changes belong in the separate `GameplanePanel/module` repository, vendored here as the `modules/` submodule. Open the module PR there; once it merges, bump the submodule pointer in a follow-up PR.

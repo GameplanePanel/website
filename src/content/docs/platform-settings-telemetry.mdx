@@ -44,7 +44,7 @@ Keep instance name, canonical external URL, and default namespace stable and env
 
 ## Telemetry and privacy
 
-Usage telemetry is on by default for new installs and is not a substitute for operational metrics and logs. Reports go to the project's provider at `telemetry.gameplane.net` unless the operator chose another destination or disabled telemetry. The project's [data-handling statement](../../telemetry/) lists exactly what is collected and how long it is kept.
+Usage telemetry is on by default for new installs and is not a substitute for operational metrics and logs. Reports go to the project's provider at `telemetry.gameplane.net` unless the operator chose another destination or disabled telemetry. An empty `api.telemetry.endpoint` means that project default, so the admin switches take effect on a stock install; a custom endpoint replaces it. The project's [data-handling statement](../../telemetry/) lists exactly what is collected and how long it is kept.
 
 On a new install the first admin to sign in sees a notice naming the destination and both tiers; nothing is sent until an admin has seen it. Admin Settings > Telemetry then shows the destination, a preview of the next report, the last attempt, separate switches for the basic and extended tiers, and an install-ID reset. Turning basic off turns extended off with it.
 
@@ -65,7 +65,7 @@ On a new install the first admin to sign in sees a notice naming the destination
     {
       icon: "check",
       label: "Recheck the saved choice after upgrades",
-      text: "Installs that never saved a choice stay off after an upgrade; installs that had basic on keep basic and get extended only when an admin turns it on. After updating, confirm the setting matches your policy.",
+      text: "Installs that never saved a choice stay off after an upgrade; installs that had basic on keep basic and get extended only when an admin turns it on. An install that saved basic while no destination was configured starts sending basic reports to telemetry.gameplane.net after upgrading to v0.4.0; set `api.telemetry.enabled=false` before upgrading to prevent it. After updating, confirm the setting matches your policy.",
     },
     {
       icon: "check",

@@ -75,6 +75,10 @@ Then create the sink row in **Admin Settings → Notifications** with `configRef
 
 For SMTP, `username` + `password` use AUTH PLAIN and require `tls: starttls` or `implicit`; `tls: none` works only for unauthenticated relays.
 
+## Set the language per destination (v0.4.0)
+
+Each sink can have its own `language`. Discord, email and webhook messages, and test sends to them, are rendered in that language. A sink without one uses the instance default (Admin Settings → Language), which falls back to English. A tag this release does not offer is rejected with `400`. The headline and fixed sentences are translated; the Kubernetes `reason` and `message` of an event stay in English. See [Languages & Translations](../languages/).
+
 ## Select events and test delivery
 
 Choose which events trigger the sink, then send a test message to verify the real delivery path works end-to-end.

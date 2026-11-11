@@ -38,7 +38,7 @@ Platform identity and settings live in the database while desired infrastructure
     {
       icon: "code",
       label: "Embedded migration SQL runs in filename order at startup",
-      text: "Each .sql file in api/internal/db/migrations/ executes once per database.",
+      text: "Each shared .sql file in api/internal/db/migrations/common/ runs once per database, after the frozen per-driver sets (sqlite/ or postgres/, versions 001-012).",
     },
   ]}
 />
@@ -69,7 +69,7 @@ Add one portable, immutable, zero-padded SQL file and use a transaction that rec
 
 ### Migration file format
 
-Create a file named `api/internal/db/migrations/<NNN>_<description>.sql` where `<NNN>` is the next three-digit zero-padded number. For example, if the latest migration is `011_user_theme_preferences.sql`, the next file is `012_your_change.sql`.
+Create a file named `api/internal/db/migrations/common/<NNN>_<description>.sql` where `<NNN>` is the next three-digit zero-padded number. The shared set starts at `013` and currently ends at `019_session_epoch.sql`, so the next file is `020_your_change.sql`.
 
 Each migration is automatically wrapped in a database transaction by the framework (the `api/internal/db` package calls `BeginTx` before executing your migration and `Commit` when all statements succeed). Do not include explicit `BEGIN TRANSACTION;` or `COMMIT;` in your SQL file.
 
@@ -79,7 +79,7 @@ Separate statements with a semicolon and newline (`;\n`). For example:
 -- Describe the change
 CREATE TABLE example_table (
   id TEXT PRIMARY KEY,
-  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+  created_at TEXT NOT NULL
 );
 
 CREATE INDEX idx_example_table_created_at ON example_table(created_at);
@@ -170,7 +170,7 @@ Run the following after every schema change:
 
 Before committing a migration file:
 
-- [ ] File is named with the next zero-padded number (e.g., `012_feature.sql`)
+- [ ] File is in `api/internal/db/migrations/common/` with the next zero-padded number (e.g., `020_feature.sql`)
 - [ ] SQL does NOT include explicit `BEGIN TRANSACTION;`/`COMMIT;` (the framework wraps each migration in a transaction automatically)
 - [ ] All SQL is portable across SQLite and PostgreSQL (no dialect-specific syntax)
 - [ ] New tables use only standard constraints and TEXT primary keys
@@ -181,7 +181,7 @@ Before committing a migration file:
 <DocsQuickReference
   label="MIGRATION LOOP"
   items={[
-    "api/internal/db/migrations/012_<description>.sql",
+    "api/internal/db/migrations/common/020_<description>.sql",
     "cd api && go test ./internal/db",
     "cd api && go test -tags postgres ./internal/db",
   ]}

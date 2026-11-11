@@ -3,7 +3,7 @@ title: "Platform Disaster Recovery"
 description: "Rebuild Gameplane on a clean cluster from a tested recovery set, then restore platform identity and worlds in a controlled sequence."
 section: platform
 group: cluster-storage
-order: 7
+order: 8
 icon: life-buoy
 eyebrow: RECOVERY
 readTime: 22 MIN
@@ -47,13 +47,14 @@ Capture every versioned artifact, platform state source, credential, trust root,
 
 A disaster recovery manifest should document and preserve:
 
-- **Release and configuration:** Gameplane version (e.g., `v0.3.0`), Helm values (including `api.db.driver`, ingress hostname, OIDC settings, storage class defaults), cluster Kubernetes version, and all base-image versions (restic, busybox, kubectl).
+- **Release and configuration:** Gameplane version (e.g., `v0.4.0`), Helm values (including `api.db.driver`, ingress hostname, OIDC settings, storage class defaults), cluster Kubernetes version, and all base-image versions (restic, busybox, kubectl).
 - **CRD and operator state:** All GameServer, GameTemplate, Module, ModuleSource, and Cluster CRD definitions; the operator's RBAC role and ClusterRole; and the operator's audit/observability configuration.
 - **Platform database:** SQLite file or PostgreSQL backup dump, including all tables for users, roles, permissions, audit logs, RBAC overrides, and platform settings.
 - **Secrets and certificates:** All platform Secrets (backup repository credentials, OIDC client secrets, API signing keys, TLS certificates, image registry credentials, database credentials, webhook auth tokens), stored securely off-cluster with access controls.
 - **Module sources and registry credentials:** Module source configurations (Git URLs, OCI registries, local paths), registry pull secrets, and Cosign public keys for verification.
 - **Cluster trust roots:** DNS provider credentials (if dynamic), TLS certificate private keys, OIDC IdP certificates, and any custom CA certificates.
 - **Ownership records:** A mapping of GameServer/GameTemplate names to their owners, stored in the database; also any external ownership tracking (e.g., team/permission matrix) kept outside Gameplane.
+- **Standalone panels:** the panel SQL database (cluster registrations, settings and encrypted remote credentials) and the matching panel key, kept in a separately protected backup. A database restored without its key cannot decrypt those credentials. Follow the [panel recovery runbook](https://github.com/GameplanePanel/Gameplane/blob/master/docs/panel-recovery.md).
 
 <DocsCallout icon="info" title="Test restoration procedures with a subset first.">
   Before a crisis, rehearse the recovery plan with synthetic or replica data on a staging cluster. A manifest that hasn't been validated is just a hope.

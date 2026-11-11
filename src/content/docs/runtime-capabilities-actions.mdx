@@ -47,7 +47,7 @@ Choose RCON or PTY, authoritative game logs, safe credentials, and bounded stop/
     {
       icon: "check",
       label: "Never hard-code an RCON or console password.",
-      text: "Use spec.rcon.passwordSecretRef to reference a Secret, spec.rcon.passwordEnv to inject it as an env var, or spec.rcon.passwordFile for game-managed password files.",
+      text: "Use spec.rcon.passwordSecretRef to reference a Secret, spec.rcon.passwordEnv to inject it as an env var, or spec.rcon.passwordFile for game-managed password files. For a console with no password at all, such as Nuclear Option's loopback-only remote-command port, set spec.rcon.authentication to false (default true, v0.4.0); the operator then creates no RCON Secret, mounts nothing for the agent and injects no password env var. It cannot be combined with passwordSecretRef, passwordEnv or passwordFile.",
     },
     {
       icon: "check",

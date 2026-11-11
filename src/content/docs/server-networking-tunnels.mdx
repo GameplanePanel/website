@@ -18,6 +18,10 @@ Route player connections through an external relay when you lack a public IP, po
   Each tunnel-enabled server gets its own always-on tunnel pod (a separate `<server>-tunnel` Deployment, not a sidecar in the game pod). It keeps running while the game sleeps so it can hold the public address. Budget for this when planning idle auto-sleep.
 </DocsCallout>
 
+<DocsCallout icon="milestone" title="Changes in v0.4.0">
+  Each frp client now has its own identity: the GameServer UID is its frp `user`, and each proxy registers as `<UID>.<port-name>`. Upgrading renames existing proxies, so stop the old client and wait for frps to release the old public ports before expecting readiness. Tailscale forwards every advertised TCP and UDP port and keeps active UDP sessions. Readiness now depends on relay confirmation; the pinned Playit client cannot confirm its connection (see Playit below).
+</DocsCallout>
+
 <DocsCallout icon="milestone" title="Changes in v0.3.0">
   Tunnels, the `TunnelReady` condition and the `:tunnel-credentials` API are available in v0.2.0-beta.8. From v0.3.0 the operator refuses a credentials Secret that is not owned by its GameServer, the playit-assigned address appears in `status.endpoints`, and the playit tunnel's NetworkPolicy lets it reach its relay. In v0.2.0-beta.8 a playit tunnel cannot reach its relay while the chart's NetworkPolicies are enabled (the default).
 </DocsCallout>
@@ -61,6 +65,10 @@ Self-hosted relay. You deploy `frps` on a VPS you control, configure a shared to
 
 Setup time is longer because you must provision and configure a VPS, but you get full control and a production-grade solution.
 
+Each GameServer registers on frps under its own identity. The generated client uses the GameServer's UID as its frp `user` and registers each proxy as `<UID>.<port-name>`, so two servers never share a registration on one frps, and a server deleted and recreated under the same name gets a new identity. Port names come from the template (`remotePorts[].name` in the tunnel spec). Pod and container restarts reuse the UID. (v0.4.0)
+
+Upgrading from an earlier release renames existing unprefixed proxies. Stop the old client and wait for frps to unregister them and release their public ports; readiness stays false while a port is still occupied. Do not remove another GameServer's registration to make the upgrade succeed. Upgrade the operator and the tunnel image together.
+
 ### Tailscale
 
 **Use case:** Private networks — friends and family on your Tailscale tailnet.
@@ -69,11 +77,15 @@ No VPS needed. The tunnel pod joins your Tailscale network and becomes a device 
 
 Ideal for private play: no VPS, and setup needs only an auth key.
 
+The embedded Tailscale node forwards every advertised TCP and UDP port to the GameServer's backing Service and keeps active UDP sessions. It does not provide a subnet route or expose unadvertised ports. `TunnelReady` requires an online device and active forwarding listeners. (v0.4.0)
+
 ### playit.gg
 
 **Use case:** Free public relay for casual play and quick testing.
 
 No VPS needed. Sign up, get a secret key, and Gameplane writes it to a config file. The tunnel pod connects and playit assigns a public address at runtime. From v0.3.0 the address appears in `status.endpoints` once the tunnel pod reports it; the pod re-checks every 30 seconds, so a changed address shows up without a restart.
+
+The pinned playit client cannot report live relay connectivity. From v0.4.0, `TunnelReady` reports `RelayConnectionUnknown` once an address is assigned (and `AwaitingAddress` before that). The assigned address is still shown, and the tunnel keeps forwarding while the connection is unknown. Kubernetes does not restart the tunnel for this state alone.
 
 The tunnel pod matches each playit tunnel to a game port by the **local port** the tunnel forwards to, so set each tunnel's local port in the playit dashboard to the game's container port (for example `25565` for Minecraft Java). If the template advertises a single port and the account has a single enabled tunnel, they are paired even when the ports differ.
 
@@ -234,10 +246,7 @@ If the reason is `TunnelCredentialRefused`, the Secret lacks an ownerReference o
 
 If you set `spec.networking.tunnel.tailscale.tags`, the tunnel pod requests those tags when registering with your tailnet. **Your tailnet's ACL must grant `tagOwners` for those tags to the auth key's owner**, otherwise Tailscale refuses the request.
 
-If the ACL doesn't grant the tags:
-1. The tunnel pod logs the error.
-2. It tries again without tags.
-3. If the auth key is single-use, this fallback fails and the device stays logged out.
+If the ACL doesn't grant the tags, the tunnel pod logs the error and the tunnel stays not ready. It never falls back to an untagged device, so no untagged device serves traffic. Restore the permitted tags (or the `tagOwners` grant) and re-register to recover.
 
 Configure `tagOwners` in your Tailscale ACL before setting tags on the GameServer.
 
@@ -249,7 +258,7 @@ A tunnel pod runs 24/7 to hold the public address, even when the game server is 
 
 - **Running game:** You pay for 2 pods (game + tunnel).
 - **Idle game:** You pay for 1 pod (tunnel only).
-- **Tunnel resources:** ~50 MiB memory, negligible CPU — small but not free.
+- **Tunnel resources:** by default each tunnel pod requests 25m CPU and 64Mi memory, with no limits (`operator.tunnelResources` overrides this). These are scheduling reservations, not a capacity guarantee.
 
 To minimize idle costs:
 
@@ -319,6 +328,10 @@ To avoid reconnects on wake:
    kubectl -n gameplane-games get networkpolicy
    kubectl -n gameplane-games exec <tunnel-pod> -- nc -zv <relay-address> <relay-port>
    ```
+
+### Relay health metrics
+
+Each tunnel pod exports `gameplane_tunnel_ready`, `gameplane_tunnel_connection_supported`, `gameplane_tunnel_connection_known`, `gameplane_tunnel_connected`, `gameplane_tunnel_forwards_registered`, `gameplane_tunnel_endpoint_assigned` and `gameplane_tunnel_observation_timestamp_seconds`. Readiness and registration values mean confirmed, so a zero does not by itself mean a disconnected provider. The bundled `GameplaneRelayUnavailable` warning and the info-level `GameplaneRelayHealthUnknown` rules use them; the info rule covers providers that can report health and excludes Playit. See [Metrics, alerts & dashboards](../metrics-alerts-dashboards/).
 
 ### Address keeps changing (playit.gg)
 

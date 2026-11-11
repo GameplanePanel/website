@@ -57,7 +57,7 @@ Backup specifies the source server and repository; BackupSchedule adds a cron sc
 
 ## Restore and status
 
-Restore specifies the source Backup and target GameServer. Status fields track progress, snapshot references, and readiness.
+Restore specifies the source Backup and target GameServer. Status fields track progress, snapshot references, and readiness. Backups, restores and wipes of the same server share one lifecycle ownership (v0.4.0), so a backup never reads a filesystem that a restore or wipe is changing.
 
 | Field / Kind | Type | Default | Description |
 |---|---|---|---|
@@ -89,6 +89,8 @@ Restic runs inside the backup pod and incrementally uploads encrypted snapshots 
 - The target server must already exist at restore time.
 - Restore is slower (downloads and re-writes data via restic).
 - Requires agent support for quiesce (game save-all before snapshot).
+
+A stopped server with several data volumes can be recovered from its Restic backups (v0.4.0).
 
 ### Volume-snapshot (CSI)
 

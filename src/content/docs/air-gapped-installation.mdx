@@ -3,7 +3,7 @@ title: Air-gapped and private-registry installation
 description: Mirror every required artifact and trust root, then install and upgrade without hidden public-network dependencies.
 section: platform
 group: cluster-storage
-order: 9
+order: 10
 icon: shield-off
 eyebrow: INSTALL
 readTime: 20 MIN
@@ -68,7 +68,7 @@ Collect **all of the following by digest** (immutable hash references, not mutab
 - **Game modules** — all bundles from `ghcr.io/gameplanepanel/gameplane-modules`, versioned per your module source config
 - **CRD manifests** — the CRD schemas (bundled in the chart)
 - **CRD-apply hook image** — the `kubectl` image behind `crds.autoApply.image` (default `registry.k8s.io/kubectl:v1.36.3`). The hook runs on every `helm upgrade`, and also on a `helm install` over Gameplane CRDs that an earlier, uninstalled release left behind. A genuinely fresh first install does not run it. Any image with `kubectl` on its `PATH` works.
-- **Cosign public keys** — `cosign.pub` (current key, ECDSA P-256) and `cosign-legacy.pub` (pre-rotation, Ed25519)
+- **Cosign public keys** — `cosign.pub` (current key, ECDSA P-256) and `2026-07-24-cosign-legacy.pub` (pre-rotation, Ed25519, from `signing/`)
 - **Signatures** — Cosign signatures (recorded in Rekor for v0.2.0-beta.8 onward) and SBOMs, available as separate OCI artifacts in the same registry namespace
 
 ### Verify by digest
@@ -89,7 +89,7 @@ cosign verify --key cosign.pub \
   ghcr.io/gameplanepanel/gameplane-modules/minecraft:1.20.4
 ```
 
-Extract the digest from the verified signature and record it. On pre-rotation releases (v0.2.0-beta.7 and earlier), use `cosign-legacy.pub` with `--insecure-ignore-tlog=true` instead.
+Extract the digest from the verified signature and record it. On pre-rotation releases (v0.2.0-beta.7 and earlier), use `2026-07-24-cosign-legacy.pub` with `--insecure-ignore-tlog=true` instead.
 
 ### Mirror to internal registry
 
@@ -332,7 +332,7 @@ Confirm the operator and API pods roll with the new image digest, and re-run Gam
 
 ### Disable usage telemetry
 
-New installs send anonymous usage reports to the project's provider at `telemetry.gameplane.net` unless told otherwise. An air-gapped cluster cannot reach it, and the reporter would retry for nothing. Turn telemetry off at install time so the API never attempts the connection, whatever an admin later toggles:
+New installs send anonymous usage reports to the project's provider at `telemetry.gameplane.net` unless told otherwise. An air-gapped cluster cannot reach it, and the reporter would retry for nothing. An empty `api.telemetry.endpoint` also means that default receiver, so leaving the endpoint empty does not keep reports inside the cluster. Turn telemetry off at install time so the API never attempts the connection, whatever an admin later toggles:
 
 ```yaml
 # values-offline.yaml

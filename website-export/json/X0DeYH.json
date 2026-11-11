@@ -2,7 +2,7 @@
   "type": "frame",
   "id": "X0DeYH",
   "x": 0,
-  "y": 30628,
+  "y": 30770,
   "name": "Screen/Docs — Dashboard Tour",
   "theme": {
     "semantic": "dark"
@@ -124,7 +124,7 @@
                       "name": "Meta Chip 1",
                       "descendants": {
                         "yb6zz": {
-                          "content": "v0.2"
+                          "content": "v0.4"
                         }
                       }
                     },
@@ -175,7 +175,7 @@
                       "fill": "$accent/soft-foreground",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "In v0.2.0-beta.8, a cluster selector scopes everything. From v0.3.0, the dashboard combines every authorized cluster with an optional Location filter.",
+                      "content": "The dashboard, Servers, Backups and Search combine every registered cluster you can access, and an optional Location filter narrows them (since v0.3.0; v0.2.0-beta.8 used a top-bar cluster selector that scoped everything to one cluster).",
                       "fontFamily": "Geist",
                       "fontSize": 12.5,
                       "fontWeight": "normal"
@@ -325,6 +325,38 @@
                               "fontWeight": "normal"
                             }
                           ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Gxcze",
+                          "name": "Section 1 Item 3",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "UgjGo",
+                              "name": "Section 1 Item Icon 3",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "check",
+                              "library": "lucide",
+                              "fill": "$accent/accent"
+                            },
+                            {
+                              "type": "text",
+                              "id": "Q7nAm5",
+                              "name": "Section 1 Item Text 3",
+                              "fill": "$default/foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Pick the dashboard language in Settings, saved to your account or browser (v0.4.0).",
+                              "fontFamily": "Geist",
+                              "fontSize": 12.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
                         }
                       ]
                     }
@@ -435,7 +467,7 @@
                               "fill": "$default/foreground",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
-                              "content": "Cluster health shows node readiness and allocatable CPU and memory.",
+                              "content": "Cluster health shows node readiness and allocatable CPU and memory; the Nodes page spans every visible cluster (v0.4.0).",
                               "fontFamily": "Geist",
                               "fontSize": 12.5,
                               "fontWeight": "normal"

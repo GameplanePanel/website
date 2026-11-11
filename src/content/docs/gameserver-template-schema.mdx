@@ -30,7 +30,7 @@ The GameServer spec has two layers: **identity** (which template and version to 
 
 | FIELD | TYPE | DEFAULT | DESCRIPTION |
 |---|---|---|---|
-| `spec.resources` | object | template defaults | CPU and memory requests and limits (Kubernetes ResourceRequirements). |
+| `spec.resources` | object | template defaults | CPU and memory requests and limits (Kubernetes ResourceRequirements). Requests may be lower than limits (Burstable QoS); the dashboard offers this from Resources and Create Server (v0.4.0). |
 | `spec.storage` | object | template defaults | PVC class, size, volume mount path, and additional data volumes. |
 | `spec.env` | []EnvVar | (template env) | Appended to (and overrides) the template's env vars. |
 | `spec.probes` | object | template probes | Overrides the template's readiness/liveness/startup probes. |
@@ -88,7 +88,7 @@ A GameTemplate defines the reusable container image, ports, console protocol, an
 | `spec.ports` | []GamePort | Exposed ports: name, container port, protocol (TCP/UDP), advertise flag, wake protocol. |
 | `spec.storage` | object | Default persistent storage layout: size, storage class, mount path, extra volumes. |
 | `spec.resources` | object | Default compute resources (requests and limits). |
-| `spec.rcon` | object | Remote-console protocol: "source" (Minecraft/Valve), "telnet", "websocket", "battleye", "satisfactory", "palworld", "nuclearoption", "rest", "cli", or "none". |
+| `spec.rcon` | object | Remote-console protocol: "source" (Minecraft/Valve), "telnet", "websocket", "battleye", "satisfactory", "palworld", "nuclearoption", "rest", "cli", or "none". `authentication` (v0.4.0, default `true`) set to `false` declares a console with no password; no RCON Secret is created. |
 | `spec.consoleMode` | string | How the Console tab attaches: "rcon" (line-based commands), "pty" (stdin/stdout), or "none". |
 | `spec.logPath` | string | File holding the game's primary log, as seen from inside the pod (e.g., "/data/logs/latest.log"). Must live under the data volume so the agent can tail it. |
 | `spec.probes` | object | Default readiness/liveness/startup probes for the game container. |
@@ -107,6 +107,7 @@ The operator populates `status` fields after reconciliation:
 | `status.phase` | string | High-level state: Pending, Starting, Running, Stopping, Stopped, Suspended, or Failed. |
 | `status.observedGeneration` | int64 | The generation of spec that the operator last observed (for detecting stale status). |
 | `status.conditions` | []Condition | Detailed state transitions. Standard Ready, Progressing, and Healthy conditions are surfaced in the UI. |
+| `status.conditionArgs` | map[string]map[string]string | (v0.4.0) Per condition type, the values interpolated into that condition's English message, so the dashboard can show a translated message for the current reason. The English `message` is unchanged. Present only while the current reason has arguments. |
 | `status.endpoints` | []GameServerEndpoint | Externally reachable addresses (host, port, protocol, pool) once the Service is reconciled. |
 | `status.tunnelEndpoints` | []GameServerEndpoint | Per-port addresses reported by the tunnel pod when `spec.networking.tunnel.enabled` is true (frp/tailscale computed at reconcile time; playit populated asynchronously). |
 | `status.agent` | AgentStatus | Runtime info from the in-pod sidecar: version, heartbeat time, players online, CPU/memory usage, disk usage. |
@@ -183,7 +184,7 @@ When `spec.idle.enabled` is true, the operator scales the server down once it re
 | `enabled` | bool | false | Turns idle auto-sleep on for this server. |
 | `afterMinutes` | int | 30 | Minutes of continuous zero players before sleep (5–1440). |
 | `wakeWindows` | []string | (none) | Cron expressions (cluster timezone) at which a sleeping server wakes up. Max 8 entries. |
-| `wakeOnConnect` | bool | false | Arms the wake sentinel: while asleep, a small pod holds the advertised ports and wakes the server on a genuine join attempt. |
+| `wakeOnConnect` | bool | false | Arms the wake sentinel: while asleep, a small pod holds the advertised ports and wakes the server on a genuine join attempt. Also switched on from the server's Lifecycle settings in the dashboard (v0.4.0). |
 
 <DocsCallout icon="rocket" title="Available since v0.3.0">
 `spec.capture` / `status.capture` and the packet-capture sidecar are available since v0.3.0.

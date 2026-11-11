@@ -2,14 +2,14 @@
   "type": "frame",
   "id": "D4SNhN",
   "x": 0,
-  "y": 46588,
+  "y": 44490,
   "name": "Screen/Docs — Upgrades & Migrations",
   "theme": {
     "semantic": "dark"
   },
   "clip": true,
   "width": 1440,
-  "height": 1000,
+  "height": 1050,
   "fill": "$background/background",
   "children": [
     {
@@ -124,7 +124,7 @@
                       "name": "Meta Chip 1",
                       "descendants": {
                         "yb6zz": {
-                          "content": "v0.2"
+                          "content": "v0.4"
                         }
                       }
                     },
@@ -603,6 +603,39 @@
                 },
                 {
                   "type": "frame",
+                  "id": "FKsn6",
+                  "name": "Guide Section v0.4.0 notes",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "ovaZH",
+                      "name": "Section Title 3",
+                      "fill": "$foreground/foreground",
+                      "content": "Upgrade notes for v0.4.0",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 17,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "CP6zr",
+                      "name": "Section Body 3",
+                      "fill": "$muted",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Breaking: admin-level grants need `*`, and probes reach only probe ports. Telemetry is on by default for new installs. Password reset ends all sessions. Full list in the CHANGELOG.",
+                      "lineHeight": 1.45,
+                      "fontFamily": "Geist",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
                   "id": "w2Xb8",
                   "name": "Guide Section 5",
                   "width": "fill_container",
@@ -844,6 +877,36 @@
                           "name": "TOC Text 2",
                           "fill": "$muted",
                           "content": "CRD updates",
+                          "fontFamily": "Geist",
+                          "fontSize": 12.5,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "BEmWD",
+                      "name": "TOC Row v0.4.0 notes",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "s6dx7",
+                          "name": "TOC Icon 2",
+                          "width": 12,
+                          "height": 12,
+                          "icon": "hash",
+                          "library": "lucide",
+                          "fill": "$field/placeholder"
+                        },
+                        {
+                          "type": "text",
+                          "id": "SflIS",
+                          "name": "TOC Text v0.4.0 notes",
+                          "fill": "$muted",
+                          "content": "v0.4.0 notes",
                           "fontFamily": "Geist",
                           "fontSize": 12.5,
                           "fontWeight": "normal"

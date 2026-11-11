@@ -30,11 +30,11 @@ A dashboard action cascades: API → Operator → StatefulSet → Agent → hear
 
 ## Module system
 
-ModuleSource CRs declare where templates come from — OCI registry, git, HTTP, local, or dashboard upload.
+ModuleSource CRs declare where templates come from — OCI registry, git, HTTP, local, or dashboard upload. Combined panels manage the local module catalog; standalone panels require an explicit registered cluster for module and source operations.
 
 ## Multiple clusters and the gateway
 
-One central API and dashboard can manage independent clusters registered as `Cluster` resources. Each target cluster runs its own operator, and optionally a private gateway built from the API image. The gateway has no database, no user login and no browser or admin routes. Users authenticate only to the central API, which stays the authorization authority.
+One central API and dashboard can manage independent clusters registered with the panel: as `Cluster` resources in a combined installation, or in the database of a [standalone panel](../standalone-panel/), which runs without a local cluster. A combined installation runs the panel and a local operator in one cluster. Each target cluster runs its own operator, and optionally a private gateway built from the API image. The gateway has no database, no user login and no browser or admin routes. Users authenticate only to the central API, which stays the authorization authority.
 
 <ArchFlow
   nodes={[
@@ -52,7 +52,7 @@ One central API and dashboard can manage independent clusters registered as `Clu
 - **Capture downloads and cleanup** use a separate gateway route bound to both the GameServer and NetworkCapture UIDs; the sidecar verifies a persisted file identity.
 - **Existing local installs** keep direct API-to-agent connections. Remote gateway access needs both private gateway reachability and direct Kubernetes API access from the central API; it does not tunnel Kubernetes operations or replicate game storage.
 
-The `Cluster` health phase reports Kubernetes connectivity and does not probe the gateway. See the [remote agent gateway guide](../remote-agent-gateway/) for installation and the [multi-cluster guide](../multi-cluster/) for what works across clusters. The gateway ships in v0.3.0.
+In a combined installation, the `Cluster` health phase reports Kubernetes connectivity and does not probe the gateway; a standalone panel polls remote Kubernetes health from the API every 30 seconds. See the [remote agent gateway guide](../remote-agent-gateway/) for installation and the [multi-cluster guide](../multi-cluster/) for what works across clusters. The gateway ships in v0.3.0.
 
 ## Optional components
 

@@ -24,7 +24,7 @@ serviceMonitors:
   labels: {}  # labels for Prometheus selector matching
 ```
 
-This creates ServiceMonitors for the operator, API, and telemetry-receiver components, plus PodMonitors for agent sidecars. Each scrapes plain HTTP metrics on port `9090` (the control port `8090` stays mTLS-only).
+This creates ServiceMonitors for the operator and API, plus PodMonitors for agent sidecars and relay tunnel pods. Agent metrics are plain HTTP on port `9090`; tunnel metrics share the health listener on `8091`. Neither uses the mTLS control port `8090`. The telemetry receiver gets a ServiceMonitor only when its dashboard token is configured. Its `/metrics` moved to the dashboard port `8081` in v0.4.0 and requires `Authorization: Bearer` with the dashboard token.
 
 ## Operator metrics
 
@@ -69,6 +69,19 @@ Each game server's agent sidecar reports per-server observability on port `9090`
 
 All agent metrics include the source server name, namespace, template, and game identifiers. Metrics are emitted only when readable (e.g., players_max is absent if RCON fails or capacity is unknown).
 
+## Game performance and relay metrics (v0.4.0)
+
+Modules can declare numeric game measurements by reusing a read-only `capabilities.status.metrics[]` entry with a `performance` block (`signal` is `tick_rate`, `tick_duration` or `frame_rate`; `degradedThreshold` is optional). The agent polls these in the background, so scrapes never run RCON. Samples expire 75 seconds after the command completed. Supported declarations emit:
+
+- `gameplane_agent_performance_value`, the measurement in its base unit (hertz or seconds)
+- `gameplane_agent_performance_available`, `0` when a supported declaration fails (the value series is then absent)
+- `gameplane_agent_performance_sample_timestamp_seconds`
+- `gameplane_agent_performance_degraded_threshold` (optional), with a `direction` label of `below` or `above`
+
+Labels are bounded: the metric ID, the signal and the base unit. Display strings, commands, responses and errors never become labels. No external module opts in by default.
+
+Relay health is exported from each tunnel pod (`gameplane_tunnel_ready`, `gameplane_tunnel_connection_supported`, `gameplane_tunnel_connection_known`, `gameplane_tunnel_connected`, `gameplane_tunnel_forwards_registered`, `gameplane_tunnel_endpoint_assigned`, `gameplane_tunnel_observation_timestamp_seconds`). Readiness and registration gauges read zero until the relay confirms them. The `connected` gauge and the observation timestamp are absent while their evidence is unknown or stale.
+
 ## Alert rules
 
 Enable PrometheusRules in Helm values to activate recommended alerts:
@@ -86,6 +99,18 @@ prometheusRules:
 | **GameplaneOperatorReconcileErrors** | Reconciliation errors sustained per controller | 10m | Check operator logs; inspect the failing controller |
 | **GameplaneOperatorWorkqueueBacklog** | Work queue has 50+ items | 15m | Operator is falling behind — check throttling or dependencies |
 | **GameplaneOperatorReconcileStuck** | Single reconcile running >5 minutes | 10m | Wedged controller — inspect the longest-running task |
+
+### Scrape, relay and performance alerts
+
+| Alert | Signal | Duration | Severity |
+|---|---|---|---|
+| **GameplaneScrapeUnavailable** | An agent or tunnel metrics target cannot be scraped | 5m | warning |
+| **GameplaneRelayUnavailable** | A tunnel's relay connection or forwards are unavailable | 2m | warning |
+| **GameplaneRelayHealthUnknown** | A provider that can report health cannot confirm it (excludes Playit) | 5m | info |
+| **GameplanePerformanceUnknown** | A declared game measurement is unavailable | 5m | warning |
+| **GameplanePerformanceDegraded** | A game measurement crossed its module-declared threshold | 5m | warning |
+
+Container pressure rules (**GameplaneCPUThrottled**, **GameplaneMemoryPressure**, **GameplaneContainerOOM**, **GameplanePodPending**, **GameplaneNodePressure**) need kubelet/cAdvisor and kube-state-metrics. A missing collector leaves those series absent; it does not mean zero pressure.
 
 ### Fleet alerts
 
@@ -115,6 +140,7 @@ The dashboard visualizes:
 - Operator reconcile latency and error trends
 - Workqueue depth and longest-running reconciles
 - System resource usage across the control plane
+- Relay readiness and known state, supported game measurements, container pressure, restarts and Pending Pods (Workloads dashboard, v0.4.0)
 
 <DocsCallout icon="shield-alert" title="ServiceMonitors, PrometheusRules, and Grafana dashboards are disabled by default">
 You must explicitly enable these in your Helm values to activate metrics collection, alert rules, and dashboard imports. This prevents unexpected Prometheus and Grafana dependencies in disconnected or minimal clusters.
@@ -124,7 +150,7 @@ You must explicitly enable these in your Helm values to activate metrics collect
 
 For production environments, integrate your own observability stack:
 
-1. **Create or modify ServiceMonitor/PodMonitor resources** to target the metrics ports (`9090` for agents and telemetry-receiver, a separate port for the API) with your custom Prometheus relabeling and authentication.
+1. **Create or modify ServiceMonitor/PodMonitor resources** to target the metrics ports (`9090` for agents, `8091` for relay tunnel pods, the API's own port, and the telemetry receiver's dashboard port `8081` with a bearer token) with your custom Prometheus relabeling and authentication.
 2. **Wire alerts into your alertmanager** by deploying additional PrometheusRule resources that scrape the same metrics or combine them with your own signals.
 3. **Build dashboards** using the bundled Grafana dashboard as a starting point — export it from Grafana or adapt the ConfigMap YAML in `charts/gameplane/dashboards/`.
 

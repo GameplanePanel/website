@@ -2,7 +2,7 @@
   "type": "frame",
   "id": "QHFdH",
   "x": 0,
-  "y": 118088,
+  "y": 107260,
   "name": "Screen/Docs — Remote Agent Gateway",
   "theme": {
     "semantic": "dark"
@@ -124,7 +124,7 @@
                       "name": "Meta Chip 1",
                       "descendants": {
                         "yb6zz": {
-                          "content": "v0.2"
+                          "content": "v0.4"
                         }
                       }
                     },
@@ -175,7 +175,7 @@
                       "fill": "$accent/soft-foreground",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "The gateway ships in v0.3.0 and is not available in v0.2.0-beta.8.",
+                      "content": "The agent gateway is available since v0.3.0.",
                       "fontFamily": "Geist",
                       "fontSize": 12.5,
                       "fontWeight": "normal"
@@ -544,7 +544,7 @@
                       "fill": "$muted",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "Create a credential Secret in the central API namespace, then add the gateway reference to the existing Cluster resource with URL and tlsSecretRef.",
+                      "content": "Combined installs: create a labeled credential Secret in the central API namespace and add the gateway reference to the Cluster resource. Standalone panels: PUT /clusters/<name>/gateway.",
                       "lineHeight": 1.45,
                       "fontFamily": "Geist",
                       "fontSize": 13,
@@ -692,7 +692,7 @@
                       "fill": "$muted",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "Confirm the gateway Pod is Ready, the Cluster resource shows Healthy, and test console, file manager and players on a test server.",
+                      "content": "Confirm the gateway Pod is Ready, the cluster reports healthy, and test console, file manager and players on a test server.",
                       "lineHeight": 1.45,
                       "fontFamily": "Geist",
                       "fontSize": 13,
@@ -748,7 +748,7 @@
                           "id": "Rzlo6",
                           "name": "Quick Reference Line 3",
                           "fill": "$foreground/foreground",
-                          "content": "03  Central: labeled credential Secret + Cluster spec.agentGateway",
+                          "content": "03  Central: labeled Secret + Cluster agentGateway, or panel API",
                           "fontFamily": "JetBrains Mono",
                           "fontSize": 11.5,
                           "fontWeight": "normal"

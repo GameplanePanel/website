@@ -29,7 +29,8 @@ modules/<name>/
 ├── module.yaml      # Module metadata (name, display name, game, version, categories)
 ├── template.yaml    # GameTemplate spec (pod config, ports, volumes, env)
 ├── README.md        # Rendered in the catalog detail drawer
-└── icon.png         # Optional (256×256 recommended)
+├── icon.png         # Optional (256×256 recommended)
+└── locales/         # Optional translations, one <tag>.json per language (v0.4.0)
 ```
 
 <DocsSectionList
@@ -139,7 +140,7 @@ make module-validate MODULE=minecraft-java
 bin/gp-module validate modules/minecraft-java --strict
 ```
 
-This checks metadata syntax, CRD schema compliance, image digests, port ranges, and configuration types.
+This checks metadata syntax, CRD schema compliance, image digests, port ranges, and configuration types. If the module ships `locales/<tag>.json` translations, it also checks them against the English reference `locales/en.json` (v0.4.0).
 
 <DocsCallout icon="check" title="Available since v0.3.0">
   The `gp-module validate` tool provides instant offline linting with source-line diagnostics. On v0.2.0-beta.8 and earlier, review your YAML files against the [GameTemplate schema](../gametemplate-schema/) and [module.yaml spec](../module-authoring/) manually.

@@ -17,7 +17,7 @@ import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
 The dashboard brings every server you are authorized to see into one view. Start from the fleet overview, narrow it with filters, and open a server to work on it.
 
 <DocsCallout icon="milestone" title="Multi-cluster view in v0.3.0">
-  In v0.2.0-beta.8 a top-bar cluster selector scopes every list, metric, and action to one cluster. From v0.3.0 the dashboard, Servers, Backups and Search combine every registered cluster you can access, and an optional Location filter narrows them.
+  The dashboard, Servers, Backups and Search combine every registered cluster you can access, and an optional Location filter narrows them (since v0.3.0; v0.2.0-beta.8 used a top-bar cluster selector that scoped everything to one cluster).
 </DocsCallout>
 
 ## Orientation
@@ -41,6 +41,11 @@ Opening a server pins it to its own cluster and namespace, so changing a list fi
       label: "Notifications",
       text: "Surface failed reconciliations and completed jobs.",
     },
+    {
+      icon: "info",
+      label: "Language",
+      text: "Pick the dashboard language in Settings. The choice is saved to your account, or to the browser when signed out (v0.4.0).",
+    },
   ]}
 />
 
@@ -58,7 +63,7 @@ The home view combines live infrastructure health with product activity so you c
     {
       icon: "cpu",
       label: "Cluster health",
-      text: "Shows node readiness and allocatable CPU and memory.",
+      text: "Shows node readiness and allocatable CPU and memory. The Nodes page lists the nodes of every cluster you can see, with the same search and filters as Backups (v0.4.0).",
     },
     {
       icon: "history",

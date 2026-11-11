@@ -93,6 +93,10 @@ Each entry declares:
   Fields with `type: password` are stored in a per-GameServer Secret and never exposed in the pod spec or status.
 </DocsCallout>
 
+### Translations (v0.4.0)
+
+A module can ship translations as `locales/<tag>.json` files next to `module.yaml`. The operator validates them on install, stores the valid entries in a `<template>-locales` ConfigMap, and reports problems in the GameTemplate `LocalesValid` condition under `status.conditions`. A translation problem never fails the install. Each file is read up to 900 KiB, and all of a bundle's files together up to 4 MiB. See [Module Authoring](../module-authoring/).
+
 ## Runtime and storage
 
 Align ports, resources, security, probes, volumes, backups, files, mods, logs, RCON, and graceful stop around the same paths.
@@ -138,6 +142,7 @@ Align ports, resources, security, probes, volumes, backups, files, mods, logs, R
 - `protocol` — Wire protocol: `"source"` (Valve/Minecraft RCON), `"telnet"` (raw line-based TCP), `"websocket"` (Rust WebRcon), `"battleye"` (DayZ/Arma UDP), `"satisfactory"` (HTTPS API), `"palworld"` (REST API), `"nuclearoption"` (JSON-RPC 2.0), `"rest"` (generic HTTP/JSON), `"cli"` (stdin/PTY), `"none"` (no console). Defaults to `"source"`.
 - `port` — TCP/UDP port the RCON protocol listens on (optional; varies by protocol).
 - `passwordSecretRef` / `passwordEnv` / `passwordFile` — How the operator sources and injects the RCON password for the agent.
+- `authentication` — Whether the console requires a password (v0.4.0). Defaults to `true`. Set `false` for a console with no password, such as Nuclear Option's loopback-only remote-command port: the operator then creates no per-server `<gameserver>-rcon` Secret and injects no password. It cannot be combined with `passwordSecretRef`, `passwordEnv` or `passwordFile`.
 
 `spec.consoleMode` — Controls how the dashboard's Console tab attaches to the running game:
 

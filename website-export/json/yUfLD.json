@@ -2,14 +2,14 @@
   "type": "frame",
   "id": "yUfLD",
   "x": 0,
-  "y": 81928,
+  "y": 75700,
   "name": "Screen/Docs — Notification Sinks",
   "theme": {
     "semantic": "dark"
   },
   "clip": true,
   "width": 1440,
-  "height": 900,
+  "height": 1000,
   "fill": "$background/background",
   "children": [
     {
@@ -124,7 +124,7 @@
                       "name": "Meta Chip 1",
                       "descendants": {
                         "yb6zz": {
-                          "content": "v0.2"
+                          "content": "v0.4"
                         }
                       }
                     },
@@ -320,6 +320,154 @@
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
                               "content": "Grant only the event and provider scope required.",
+                              "fontFamily": "Geist",
+                              "fontSize": 12.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "iFA89",
+                  "name": "Guide Section 1b Language",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "MYCYJ",
+                      "name": "Section Title Language",
+                      "fill": "$foreground/foreground",
+                      "content": "Set the language per destination (v0.4.0)",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 17,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "S5glg1",
+                      "name": "Section Body Language",
+                      "fill": "$muted",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Each sink can have its own language. Its messages and test sends use it; sinks without one use the instance default, which falls back to English.",
+                      "lineHeight": 1.45,
+                      "fontFamily": "Geist",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "jyeyF",
+                      "name": "Section List 2",
+                      "width": "fill_container",
+                      "fill": "$surface/surface",
+                      "cornerRadius": "$radius/2xl",
+                      "stroke": "$border/border",
+                      "strokeWidth": 1,
+                      "strokeAlignment": "inner",
+                      "layout": "vertical",
+                      "gap": 5,
+                      "padding": [
+                        8,
+                        10
+                      ],
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "M9gdl",
+                          "name": "Section 2 Item 0",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "vLR4T",
+                              "name": "Section 2 Item Icon 0",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "check",
+                              "library": "lucide",
+                              "fill": "$accent/accent"
+                            },
+                            {
+                              "type": "text",
+                              "id": "UbvjT",
+                              "name": "Section 2 Item Text 0",
+                              "fill": "$default/foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Discord, email and webhook messages follow the sink's language.",
+                              "fontFamily": "Geist",
+                              "fontSize": 12.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "s6Dp9",
+                          "name": "Section 2 Item 1",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "z07t6",
+                              "name": "Section 2 Item Icon 1",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "check",
+                              "library": "lucide",
+                              "fill": "$accent/accent"
+                            },
+                            {
+                              "type": "text",
+                              "id": "GRzec",
+                              "name": "Section 2 Item Text 1",
+                              "fill": "$default/foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Unsupported language tags are rejected with 400.",
+                              "fontFamily": "Geist",
+                              "fontSize": 12.5,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "KBC7p",
+                          "name": "Section 2 Item 2",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "E8rmHM",
+                              "name": "Section 2 Item Icon 2",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "check",
+                              "library": "lucide",
+                              "fill": "$accent/accent"
+                            },
+                            {
+                              "type": "text",
+                              "id": "p2f0GY",
+                              "name": "Section 2 Item Text 2",
+                              "fill": "$default/foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Kubernetes reason and message stay in English.",
                               "fontFamily": "Geist",
                               "fontSize": 12.5,
                               "fontWeight": "normal"

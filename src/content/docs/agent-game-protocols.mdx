@@ -63,7 +63,7 @@ Adapters normalize RCON, PTY, log files, moderation, status, and graceful stop a
   items={[
     { icon: "activity", label: "RCON Protocols", text: "Source (Valve/Minecraft), Telnet (7DtD), WebSocket (Rust), BattlEye (DayZ/Arma), Satisfactory, Palworld, NuclearOption, REST (generic HTTP/JSON), CLI (container stdin/PTY)." },
     { icon: "history", label: "Authoritative Logs", text: "Separate authoritative game logs from container stdout. Log streaming supports live-tail or full backlog replay." },
-    { icon: "shield", label: "Console Mode & Secrets", text: "Model console mode and credentials without hard-coding secrets. Each game declares its RCON protocol in the module's capabilities." },
+    { icon: "shield", label: "Console Mode & Secrets", text: "Model console mode and credentials without hard-coding secrets. Each game declares its RCON protocol in the module's capabilities. A console with no password sets spec.rcon.authentication to false (v0.4.0), and the operator then mounts no password for the agent." },
     { icon: "lock", label: "Capability Gates", text: "Hide unsupported status, players, actions, and mods. Every game-specific handler reads its config from the module's declared capabilities; new games require no agent code changes." },
   ]}
 />

@@ -13,7 +13,7 @@ import DocsCallout from "../../components/docs/DocsCallout.astro";
 import DocsSectionList from "../../components/docs/DocsSectionList.astro";
 import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
 
-Gameplane runs on Kubernetes and deploys via Helm. This guide walks through preparing a cluster, configuring the Helm chart, installing Gameplane, and verifying a working control plane.
+Gameplane runs on Kubernetes and deploys via Helm. This guide walks through preparing a cluster, configuring the Helm chart, installing Gameplane, and verifying a working control plane. To run the central dashboard and API without a local game cluster, see [Standalone panel](../standalone-panel/).
 
 Releases from v0.4.0 are published under `ghcr.io/gameplanepanel`, which this page uses; v0.3.0 and earlier releases stay under `ghcr.io/valgulnecron`.
 
@@ -95,10 +95,9 @@ api:
 
 ### Optional: OIDC authentication at install time
 
-If you use OIDC (OpenID Connect) for single sign-on, the chart can configure the provider at install time. In v0.2.0-beta.8 the chart accepts only the connection settings; map IdP groups to roles per provider under **Admin Settings → Authentication** after install:
+If you use OIDC (OpenID Connect) for single sign-on, the chart can configure the provider at install time, including its display name and the IdP group to role mappings (Helm-seeded mappings since v0.3.0). An admin can override them later under **Admin Settings → Authentication**:
 
 ```yaml
-# v0.2.0-beta.8
 api:
   oidc:
     enabled: true
@@ -107,14 +106,6 @@ api:
     clientSecretRef:
       name: "oidc-client-secret"    # k8s Secret with 'clientSecret' key
     redirectURL: "https://gameplane.your-domain.test/auth/oidc/callback"
-```
-
-From v0.3.0 the chart can also seed the provider's display name and role mappings. Add these keys only when installing a v0.3.0 or later chart:
-
-```yaml
-# v0.3.0 and later (in addition to the keys above)
-api:
-  oidc:
     displayName: "My SSO Provider"
     groupsClaim: "groups"           # which OIDC claim to read (empty = "groups"); does not turn mapping on or off
     defaultRole: "viewer"           # Default role when group mapping doesn't match
@@ -155,9 +146,23 @@ networkPolicies:
       - { protocol: TCP, port: 80 }
 ```
 
+<DocsCallout icon="shield-alert" title="Changed in v0.4.0">
+  Kubelet probes reach only the probe ports of each game server. `networkPolicies.probeIngress.enabled` (default `true`) creates a per-server `<server>-probes` NetworkPolicy. Set it to `false` to restore the older chart-wide rule that opens every game-pod port to `networkPolicies.kubeletCIDRs`. Extra probe ports go in `networkPolicies.probePorts`.
+</DocsCallout>
+
+### Telemetry
+
+Telemetry is on by default for new installs with a destination in effect, starting in v0.4.0. Nothing is sent until the first admin to sign in sees a first-login notice that lists every field and names the destination. Basic reports carry `version`, `servers` and `templates`. Extended reports add a random install ID, environment bands, server counts per official module, feature flags and the UI language. Admins control each tier in **Admin Settings → Telemetry**.
+
+- Set `api.telemetry.enabled: false` for a hard off, for air-gapped or privacy-sensitive clusters. It overrides the endpoint, the bundled receiver and the admin toggles, and hides the notice.
+- An empty `api.telemetry.endpoint` means the project's default receiver, `https://telemetry.gameplane.net/ingest`.
+- Existing installs upgrading from v0.3.0 that had saved **Send anonymous usage metrics** with no destination configured start sending basic reports to the default receiver after the upgrade. Set `api.telemetry.enabled: false` before upgrading to prevent this.
+
+Full field lists and the data-handling statement are in the [telemetry section of the install guide](https://github.com/GameplanePanel/Gameplane/blob/master/docs/install.md#telemetry).
+
 ### Module sources and catalog
 
-By default, Gameplane ships with the official game catalog (16 modules in v0.2.0, 29 in v0.3.0):
+By default, Gameplane ships with the official catalog of 29 game modules in v0.4.0. Hell Let Loose was withdrawn in v0.4.0; 16 modules shipped in v0.2.0-beta.8 and 14 were added in v0.3.0:
 
 ```yaml
 defaultModuleSource:
@@ -166,7 +171,7 @@ defaultModuleSource:
   oci:
     url: ghcr.io/gameplanepanel/gameplane-modules
     verify:
-      enabled: true                 # Verify cosign signatures on official modules
+      enabled: true                 # Verify cosign signatures on official modules (chart default: false)
 ```
 
 To manage sources via GitOps instead of letting Helm create the default, set `enabled: false` and apply `ModuleSource` resources manually.
@@ -268,14 +273,14 @@ Create a simple test GameServer to verify the operator is reconciling correctly:
 
 ## Verifying image signatures
 
-Every published image (tagged releases and `:edge`), the Helm chart, and official module bundles are signed with the project's cosign key, [`cosign.pub`](https://github.com/GameplanePanel/Gameplane/blob/master/cosign.pub), and recorded in the public Sigstore Rekor transparency log:
+Every published image (tagged releases and `:edge`), the Helm chart, and official module bundles are signed with the project's cosign key, [`signing/cosign.pub`](https://github.com/GameplanePanel/Gameplane/blob/master/signing/cosign.pub), and recorded in the public Sigstore Rekor transparency log:
 
 ```bash
-cosign verify --key cosign.pub \
+cosign verify --key signing/cosign.pub \
   ghcr.io/gameplanepanel/gameplane/operator:0.4.0
 ```
 
-Pre-rotation releases (v0.2.0-beta.7 and earlier) used the retired Ed25519 key and lack transparency log entries — verify those with `cosign-legacy.pub` and `--insecure-ignore-tlog=true`.
+Pre-rotation releases (v0.2.0-beta.7 and earlier) used the retired Ed25519 key and lack transparency log entries — verify those with `signing/2026-07-24-cosign-legacy.pub` and `--insecure-ignore-tlog=true`.
 
 ## Troubleshooting
 
@@ -301,7 +306,7 @@ kubectl -n gameplane-system logs deploy/gameplane-api
 
 Common issues:
 
-- **SQLite database locked**: SQLite is single-writer on a ReadWriteOnce volume, so running multiple API replicas is not supported. Keep `api.replicas: 1`. PostgreSQL is experimental and does not make extra replicas safe either: the user-management lock and audit hash chain remain per-process.
+- **SQLite database locked**: SQLite is single-writer on a ReadWriteOnce volume, so running multiple API replicas is not supported. Keep `api.replicas: 1`; the chart rejects any other value. PostgreSQL is experimental and does not make extra replicas safe either: the user-management lock and audit hash chain remain per-process.
 - **Missing default StorageClass**: The API needs a PVC for the SQLite database. Verify with `kubectl get sc`.
 
 ### Ingress / TLS not working

@@ -67,7 +67,7 @@ Test every core workflow after the upgrade completes:
 - Check audit logs are being recorded.
 - Run at least one complete login → server create → player join → graceful stop cycle.
 
-Roll back only if validation fails and the release-specific downgrade window permits it. CHANGELOG.md currently documents upgrade-impacting changes only under the "Upgrade Notes" section of `[Unreleased]`; released versions do not yet carry a per-release rollback-window annotation. If you must rollback:
+Roll back only if validation fails and the release-specific downgrade window permits it. CHANGELOG.md documents upgrade-impacting changes under an "Upgrade Notes" section in each release, for example `[0.4.0]`. Released sections do not yet carry a per-release rollback-window annotation. If you must rollback:
 
 1. Note the last-known-good version before the upgrade.
 2. Until a per-release rollback-window convention exists, treat any CRD field removal or required-field addition as rollback-unsafe by default. Confirm compatibility by diffing `operator/api/v1alpha1/*_types.go` between your source and target tags before attempting a downgrade.
