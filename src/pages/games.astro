@@ -9,7 +9,7 @@ import { withBase } from "../lib/url";
 const games = [
   {
     icon: "box",
-    version: "2.8.1",
+    version: "2.9.1",
     title: "Minecraft (Java Edition)",
     blurb: "Vanilla, Paper, Fabric, Forge & more with a version+loader picker and Modrinth browse.",
   },
@@ -21,7 +21,7 @@ const games = [
   },
   {
     icon: "pickaxe",
-    version: "2.2.0",
+    version: "2.2.3",
     title: "Terraria",
     blurb: "Vanilla + tModLoader with a version picker and a ModPacks volume.",
   },
@@ -103,28 +103,90 @@ const games = [
     title: "V Rising",
     blurb: "Source RCON with a safe shutdown sequence.",
   },
-];
-
-const v030Games = [
-  { icon: "car", title: "FiveM", blurb: "Bundled txAdmin with embedded MariaDB supervision and REST controls." },
-  { icon: "leaf", title: "Farming Simulator 25", blurb: "Headless Wine runtime with a supervised web management portal and REST admin." },
-  { icon: "truck", title: "Euro Truck Simulator 2", blurb: "PTY console with diagnostic idle when the server logon token is missing." },
-  { icon: "shield", title: "Mount & Blade II: Bannerlord", blurb: "PTY console with skirmish, captain, and siege match hosting." },
-  { icon: "blocks", title: "tModLoader", blurb: "Modded Terraria with a .tmod mod manager and interactive PTY console." },
-  { icon: "target", title: "Team Fortress 2", blurb: "Source RCON console with SourceMod/MetaMod addon support." },
-  { icon: "gauge", title: "BeamMP", blurb: "PTY console with custom vehicle/map mods and diagnostic idle." },
-  { icon: "skull", title: "Left 4 Dead 2", blurb: "Source RCON console with SourceMod/MetaMod addon support." },
-  { icon: "paw-print", title: "The Isle", blurb: "Source RCON administration with persistent world save management." },
-  { icon: "bone", title: "ARK: Survival Evolved", blurb: "Source RCON console with cluster travel support and persistent world state." },
-  { icon: "crosshair", title: "Arma Reforger", blurb: "PTY console with persistent saves and Steam Workshop mod support." },
-  { icon: "users", title: "Squad", blurb: "Source-family RCON with match rotation and Steam Workshop modding." },
-  { icon: "radiation", title: "Nuclear Option", blurb: "Remote-command console, runtime-installed via SteamCMD on first boot." },
+  {
+    icon: "car",
+    version: "1.0.0",
+    title: "FiveM",
+    blurb: "Bundled txAdmin with embedded MariaDB supervision and REST controls.",
+  },
+  {
+    icon: "leaf",
+    version: "1.0.0",
+    title: "Farming Simulator 25",
+    blurb: "Headless Wine runtime with a supervised web management portal and REST admin.",
+  },
+  {
+    icon: "truck",
+    version: "1.0.0",
+    title: "Euro Truck Simulator 2",
+    blurb: "PTY console with diagnostic idle when the server logon token is missing.",
+  },
+  {
+    icon: "shield",
+    version: "1.1.0",
+    title: "Mount & Blade II: Bannerlord",
+    blurb: "PTY console with skirmish, captain, and siege match hosting.",
+  },
+  {
+    icon: "blocks",
+    version: "1.0.2",
+    title: "tModLoader",
+    blurb: "Modded Terraria with a .tmod mod manager and interactive PTY console.",
+  },
+  {
+    icon: "target",
+    version: "1.0.0",
+    title: "Team Fortress 2",
+    blurb: "Source RCON console with SourceMod/MetaMod addon support.",
+  },
+  {
+    icon: "gauge",
+    version: "1.0.0",
+    title: "BeamMP",
+    blurb: "PTY console with custom vehicle/map mods and diagnostic idle.",
+  },
+  {
+    icon: "skull",
+    version: "1.0.0",
+    title: "Left 4 Dead 2",
+    blurb: "Source RCON console with SourceMod/MetaMod addon support.",
+  },
+  {
+    icon: "paw-print",
+    version: "1.1.0",
+    title: "The Isle",
+    blurb: "Source RCON administration with persistent world save management.",
+  },
+  {
+    icon: "bone",
+    version: "1.1.0",
+    title: "ARK: Survival Evolved",
+    blurb: "Source RCON console with cluster travel support and persistent world state.",
+  },
+  {
+    icon: "crosshair",
+    version: "1.1.0",
+    title: "Arma Reforger",
+    blurb: "PTY console with persistent saves and Steam Workshop mod support.",
+  },
+  {
+    icon: "users",
+    version: "1.1.0",
+    title: "Squad",
+    blurb: "Source-family RCON with match rotation and Steam Workshop modding.",
+  },
+  {
+    icon: "radiation",
+    version: "1.1.0",
+    title: "Nuclear Option",
+    blurb: "Remote-command console, runtime-installed via SteamCMD on first boot.",
+  },
 ];
 ---
 
 <MarketingLayout
   title="Supported games — Gameplane"
-  description="Sixteen game servers ship out of the box as versioned OCI modules, and the open template format lets you bring any containerized game."
+  description="Twenty-nine game servers ship out of the box as versioned OCI modules, and the open template format lets you bring any containerized game."
 >
   <section
     class="flex flex-col items-center gap-8 px-6 pb-16 pt-12 md:gap-12 md:px-20 md:pb-24 md:pt-20"
@@ -132,7 +194,7 @@ const v030Games = [
     <SectionHeader
       eyebrow="SUPPORTED GAMES"
       title="Deploy the games your community plays"
-      subtitle="Sixteen game servers ship out of the box — and the module format is open, so more are just a template away. Fourteen more arrive in v0.3.0."
+      subtitle="Twenty-nine game servers ship out of the box — and the module format is open, so more are just a template away."
     />
 
     <div class="grid w-full max-w-[1280px] grid-cols-1 gap-4 md:grid-cols-3 md:gap-6">
@@ -152,33 +214,6 @@ const v030Games = [
       }
     </div>
 
-    <div class="flex w-full flex-col items-center gap-6">
-      <SectionHeader
-        eyebrow="COMING IN V0.3.0"
-        title="Fourteen more modules land in the next release"
-        subtitle="Not yet shipped in v0.2.0-beta.8 — these templates are staged for the v0.3.0 release."
-      />
-
-      <div class="grid w-full max-w-[1280px] grid-cols-1 gap-4 md:grid-cols-3 md:gap-6">
-        {
-          v030Games.map((game) => (
-            <div class="flex flex-col gap-4 rounded-2xl border border-border bg-card p-6">
-              <div class="flex items-center justify-between">
-                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-secondary">
-                  <Icon name={game.icon} class="h-[22px] w-[22px] text-primary" />
-                </div>
-                <span class="inline-flex items-center rounded-2xl bg-accent-soft px-2 py-0.5 text-[11px] font-medium text-accent-soft-foreground">
-                  v0.3.0
-                </span>
-              </div>
-              <h3 class="font-primary text-lg font-semibold text-foreground">{game.title}</h3>
-              <p class="text-[13px] leading-normal text-muted-foreground">{game.blurb}</p>
-            </div>
-          ))
-        }
-      </div>
-    </div>
-
     <div
       class="flex w-full max-w-[840px] flex-col gap-6 rounded-2xl border border-border bg-card p-6 md:flex-row md:p-8"
     >
@@ -188,7 +223,7 @@ const v030Games = [
       <div class="flex flex-col gap-2">
         <h2 class="font-primary text-lg font-semibold text-foreground">Bring your own game</h2>
         <p class="text-sm leading-relaxed text-muted-foreground">
-          Every module — including all sixteen above — is just an OCI bundle: a template.yaml describing
+          Every module — including all twenty-nine above — is just an OCI bundle: a template.yaml describing
           the container, config schema, and capabilities, plus a module.yaml with metadata. If a
           game runs in a container and takes a config file, it can become a Gameplane module.
         </p>

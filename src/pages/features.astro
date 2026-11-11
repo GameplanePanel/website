@@ -8,12 +8,12 @@ const features = [
   {
     icon: "boxes",
     title: "Kubernetes-native by design",
-    body: "Eight purpose-built Custom Resource Definitions — GameServer, GameTemplate, Cluster, Backup, BackupSchedule, Restore, Module, and ModuleSource — are reconciled by a single controller-runtime operator. Whether you create a server through the dashboard or with kubectl apply, the outcome is identical: the operator is the single source of truth.",
+    body: "Nine purpose-built Custom Resource Definitions — GameServer, GameTemplate, Cluster, Backup, BackupSchedule, Restore, Module, ModuleSource, and NetworkCapture — are reconciled by a single controller-runtime operator. Whether you create a server through the dashboard or with kubectl apply, the outcome is identical: the operator is the single source of truth.",
   },
   {
     icon: "layers",
     title: "Scales from homelab to production",
-    body: "The exact same CRDs, controllers, and Helm chart that run on a single-node k3s homelab also run on a multi-node production cluster. There's no separate 'production mode' to migrate to — StatefulSets, PVCs, and rolling upgrades from day one.",
+    body: "The exact same CRDs, controllers, and Helm chart that run on a single-node k3s homelab also run on a multi-node production cluster. There's no separate 'production mode' to migrate to — StatefulSets, PVCs, and rolling upgrades from day one. The dashboard and API can also run on a host without Kubernetes with standalone Docker Compose; game servers still run on registered clusters. (v0.4.0)",
   },
   {
     icon: "terminal",
@@ -28,17 +28,17 @@ const features = [
   {
     icon: "archive-restore",
     title: "Backups & one-click restore",
-    body: "Scheduled or on-demand snapshots are pushed to any S3-compatible storage backend using restic, giving you deduplicated, encrypted, incremental backups. Restoring is a single click from the dashboard's Backups tab.",
+    body: "Scheduled or on-demand snapshots are pushed to any S3-compatible storage backend using restic, giving you deduplicated, encrypted, incremental backups. Restoring is a single click from the dashboard's Backups tab. A stopped server with several data volumes can be recovered from its restic backups. (v0.4.0)",
   },
   {
     icon: "puzzle",
     title: "Game module system",
-    body: "Game server templates are versioned, signed OCI bundles — the same distribution model as container images. Sixteen games ship out of the box, and the open template format supports any game with a config file and a start command.",
+    body: "Game server templates are versioned, signed OCI bundles — the same distribution model as container images. Twenty-nine games ship out of the box, and the open template format supports any game with a config file and a start command.",
   },
   {
     icon: "shield-check",
     title: "RBAC + OIDC auth",
-    body: "Authenticate with local accounts or federate through OIDC — Keycloak, Google, or GitHub. Three built-in roles (admin, operator, viewer) scope access per namespace, so a shared cluster can host multiple teams safely.",
+    body: "Authenticate with local accounts or federate through OIDC — Keycloak, Authentik, Google, Okta, or Entra ID. Three built-in roles (admin, operator, viewer) scope access per namespace, so a shared cluster can host multiple teams safely. Only full administrators can grant admin-level permissions. (v0.4.0)",
   },
   {
     icon: "activity",
