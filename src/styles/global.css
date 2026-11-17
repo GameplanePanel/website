@@ -274,3 +274,32 @@
   line-height: 1.6;
   overflow-x: auto;
 }
+
+/* Mermaid diagrams (src/scripts/mermaid-diagrams.ts). The fence stays a
+   terminal-styled code block until the script swaps in the SVG. */
+.docs-prose pre:has(> code.language-mermaid),
+.mermaid-diagram {
+  background-color: var(--terminal);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-m);
+  padding: 16px;
+  overflow-x: auto;
+}
+
+.docs-prose pre:has(> code.language-mermaid) {
+  font-family: var(--font-primary);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--muted-foreground);
+}
+
+.mermaid-diagram {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.mermaid-diagram svg {
+  max-width: 100%;
+  height: auto;
+}
