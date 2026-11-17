@@ -53,6 +53,18 @@ unset PANEL_PASSWORD
 
 Use a password of at least 12 characters, then sign in to the dashboard. A new panel has no clusters. Sign-in, users, roles, settings and registration all work before any remote cluster exists, but game operations need a registered remote cluster.
 
+The topology below shows how the dashboard, the standalone API, and the registered clusters connect.
+
+```mermaid
+flowchart LR
+    browser["Browser over HTTPS reverse proxy"] --> web["web (nginx, 127.0.0.1:8080)"]
+    web -- "API_UPSTREAM :8000" --> api["gameplane-api (one replica)"]
+    api --> db[("panel-data: /data/gameplane.db")]
+    api --> key[("panel-keys: /keys/panel.key")]
+    api -- "Direct Kubernetes API" --> k8s["Registered cluster Kubernetes API"]
+    api -- "mTLS gateway" --> gw["Registered cluster gateway"]
+```
+
 ## Keep the database and key apart
 
 The Compose volume `panel-data` holds `/data/gameplane.db`, and a separate `panel-keys` volume holds `/keys/panel.key`. With the supplied Compose project name, Docker names them `gameplane-panel_panel-data` and `gameplane-panel_panel-keys`. Inspect both before backing them up, especially if you changed the project name.

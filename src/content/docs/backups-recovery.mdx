@@ -48,6 +48,31 @@ Use per-server or global views to start snapshots, filter phases, and inspect de
 - **Succeeded** — snapshot completed and verified
 - **Failed** — snapshot did not complete; check logs for errors
 
+The sequence below shows how a backup request moves from the dashboard to a Succeeded phase.
+
+```mermaid
+sequenceDiagram
+  participant D as Dashboard
+  participant A as API
+  participant O as Operator
+  participant G as Agent
+  participant J as restic Job
+  participant R as restic repository
+  D->>A: POST /backups (inline spec)
+  A->>O: create Backup CR
+  opt spec.quiesce
+    O->>G: quiesce (save, auto-save off)
+  end
+  O->>J: create Job, mount PVC
+  J->>R: restic backup /data
+  J-->>O: Job complete
+  O->>O: read snapshot id from Job pod logs
+  O->>O: Backup.status.snapshotID, phase Succeeded
+  opt quiesced
+    O->>G: unquiesce (retried until it lands)
+  end
+```
+
 ## Schedules, destinations, and retention
 
 Backups combine a cron schedule with a restic repository, credentials, and explicit retention policy.
@@ -102,7 +127,7 @@ Retention rules apply after the backup completes. Restic supports overlapping po
 - **keep-monthly N** — keep N monthly backups (1st day)
 - **keep-yearly N** — keep N yearly backups (1st day)
 
-Leave all empty to keep everything (not recommended in production). A schedule with no retention policy trims nothing, so backups with retention disabled are kept. When a policy is set, the operator deletes `Backup` resources that fall outside every bucket. It does not run `restic forget` or `prune` against the repository, so repository storage is not reclaimed automatically; see [Backup Repository Operations](../backup-repository-operations/). (v0.4.0)
+Leave all empty to keep everything (not recommended in production). A schedule with no retention policy trims nothing, so backups with retention disabled are kept. When a policy is set, the operator deletes `Backup` resources that fall outside every bucket. Deleting a restic `Backup` also runs `restic forget --prune` for its snapshot, so repository storage is reclaimed; see [Backup Repository Operations](../backup-repository-operations/). (v0.4.0)
 
 ## Restore safely
 
@@ -133,6 +158,27 @@ Restore into a new server for verification, or overwrite only after stopping wri
    - **Succeeded** — data in place; verify world and player data
    - **Failed** — check events and logs for errors
 5. **Verify the restored data** by starting the server, checking player data, and testing critical gameplay features.
+
+The flowchart below shows how the operator handles a restore request for each backup strategy.
+
+```mermaid
+flowchart TD
+  req["POST /restores"] --> cr["Restore CR"]
+  cr --> src{"Source Backup present<br/>and not Failed?"}
+  src -- no --> fail["Restore Failed"]
+  src -- "yes, no snapshotID yet" --> pend["Pending, requeue 15s"] --> src
+  src -- "yes, snapshotID set" --> pin["Pin snapshotID into Restore.status"]
+  pin --> strat{"Backup strategy"}
+  strat -- "restic snapshot" --> susp["Suspend target GameServer"]
+  susp --> job["restic restore --target / --delete Job"]
+  job --> resume["Resume GameServer"]
+  strat -- "volume snapshot" --> own{"Original server owns every<br/>referenced Secret and ConfigMap?"}
+  own -- no --> fail
+  own -- yes --> newgs["Create new GameServer from CSI snapshot,<br/>copy owned Secrets and ConfigMaps"]
+  newgs --> ready{"Running within<br/>10 minutes?"}
+  ready -- yes --> ok["Restore Succeeded"]
+  ready -- no --> fail
+```
 
 ### Best practices
 

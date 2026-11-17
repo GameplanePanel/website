@@ -28,6 +28,63 @@ The Operator reconciles CRDs declaratively; the API layer handles sessions, RBAC
 
 A dashboard action cascades: API → Operator → StatefulSet → Agent → heartbeat → status → browser refresh.
 
+The component map below shows which services run in the panel namespace and the games namespace, and how they talk to each other.
+
+```mermaid
+flowchart TB
+  browser["Browser<br/>web/ (React, TanStack Router/Query,<br/>xterm.js, Monaco, Tailwind)"]
+  subgraph panel["gameplane namespace"]
+    web["gameplane-web<br/>nginx: SPA + reverse proxy"]
+    api["API (api/)<br/>REST + WebSocket + SSE gateway<br/>local + OIDC auth, RBAC, audit log<br/>SQLite or PostgreSQL [experimental]"]
+    operator["Operator (operator/)<br/>controller-runtime reconcilers"]
+    sats["audit-syslog-bridge,<br/>telemetry-receiver [optional]"]
+    mcp["mcp-server [optional]<br/>read-only, stdio via kubectl exec"]
+  end
+  kube[("Kubernetes API<br/>Gameplane CRDs")]
+  subgraph games["gameplane-games namespace"]
+    sts["StatefulSet + Service + PVC"]
+    pod["Game pod<br/>game container + agent sidecar<br/>(RCON, files, logs, console, heartbeat)"]
+    extras["Per-server extras [optional]<br/>sentinel Deployment, tunnel Deployment,<br/>capture-sidecar ephemeral container"]
+    jobs["restic Jobs<br/>backup, restore, forget"]
+  end
+  browser -- "HTTPS / WSS (same origin)" --> web
+  web -- "proxied API, WS, SSE" --> api
+  api -- "CRD reads and writes" --> kube
+  api -- "mTLS :8090" --> pod
+  operator -- "watch and reconcile" --> kube
+  operator --> sts
+  operator --> extras
+  operator --> jobs
+  sts --> pod
+  pod -- "status.agent heartbeat" --> kube
+  api -. "audit webhook, daily report" .-> sats
+  mcp -. "get / list / watch" .-> kube
+```
+
+The sequence below traces a Start action from the dashboard to a Running status.
+
+```mermaid
+sequenceDiagram
+  autonumber
+  actor U as User
+  participant D as Dashboard
+  participant A as API
+  participant K as Kubernetes API
+  participant O as Operator
+  participant P as Game pod (game + agent)
+  U->>D: Start
+  D->>A: POST /servers/foo:start
+  A->>K: patch GameServer spec.suspend=false
+  K-->>O: GameServer changed
+  O->>K: scale StatefulSet to 1
+  K->>P: schedule pod
+  P->>K: agent patches status.agent.lastHeartbeat
+  K-->>O: GameServer status changed
+  O->>K: status.phase=Running (pod Ready, heartbeat fresh)
+  K-->>A: watch event
+  A-->>D: SSE event or poll result
+```
+
 ## Module system
 
 ModuleSource CRs declare where templates come from — OCI registry, git, HTTP, local, or dashboard upload. Combined panels manage the local module catalog; standalone panels require an explicit registered cluster for module and source operations.

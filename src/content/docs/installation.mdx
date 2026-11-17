@@ -197,6 +197,25 @@ helm upgrade --install gameplane oci://ghcr.io/gameplanepanel/charts/gameplane \
 
 The chart is OCI-packaged — no `helm repo add` is needed. The `appVersion` field pins matching component images, so no image overrides are required for a released version.
 
+The flowchart below shows which resources a default chart install renders, and which ones are opt-in.
+
+```mermaid
+flowchart TD
+  release["helm install or upgrade gameplane"] --> opq{"operator.enabled"}
+  release --> apiq{"api.enabled"}
+  release --> monq{"serviceMonitors, prometheusRules or grafanaDashboards"}
+  opq -- "true (default)" --> crds["gameplane-crds subchart (Helm crds/ phase)"]
+  opq -- "true (default)" --> op["Operator Deployment, RBAC and NetworkPolicies"]
+  opq -- "true (default)" --> vap["Admission policies and default ModuleSource"]
+  apiq -- "true (default)" --> api["API Deployment, Service and data PVC"]
+  apiq -- "web.enabled (default)" --> web["Web dashboard"]
+  apiq -- "ingress.enabled" --> ing["Ingress"]
+  release -- "not api.standalone and crds.autoApply.enabled" --> hook["CRD apply hook Job"]
+  apiq -- "api.telemetry.receiver.enabled and empty endpoint" --> tr["Telemetry receiver"]
+  apiq -- "syslogBridge.enabled and empty webhook URL" --> asb["Audit syslog bridge"]
+  monq -- "opt-in" --> mon["ServiceMonitor, PodMonitor, PrometheusRule and dashboard ConfigMap"]
+```
+
 **Edge channel (latest development):** To track rolling `:edge` images from the `main` branch instead of a released version:
 
 ```bash

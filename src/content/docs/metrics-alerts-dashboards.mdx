@@ -26,6 +26,23 @@ serviceMonitors:
 
 This creates ServiceMonitors for the operator and API, plus PodMonitors for agent sidecars and relay tunnel pods. Agent metrics are plain HTTP on port `9090`; tunnel metrics share the health listener on `8091`. Neither uses the mTLS control port `8090`. The telemetry receiver gets a ServiceMonitor only when its dashboard token is configured. Its `/metrics` moved to the dashboard port `8081` in v0.4.0 and requires `Authorization: Bearer` with the dashboard token.
 
+The diagram below shows how each metrics endpoint reaches Prometheus, the alert rules, and the Grafana dashboards.
+
+```mermaid
+flowchart LR
+  agent["Agent sidecar :9090 metrics"] --> pma["PodMonitor gameplane-agent"]
+  tunnel["Tunnel relay :8091 health and metrics"] --> pmt["PodMonitor gameplane-tunnel"]
+  op["Operator :8080 metrics"] --> smo["ServiceMonitor gameplane-operator"]
+  api["API metrics listener"] --> sma["ServiceMonitor gameplane-api"]
+  pma --> prom["Prometheus"]
+  pmt --> prom
+  smo --> prom
+  sma --> prom
+  prom --> rules["PrometheusRule alerts (operator, scrape, relay, workload)"]
+  cm["Dashboard ConfigMap (label grafana_dashboard=1)"] --> graf["Grafana sidecar"]
+  graf -- "queries" --> prom
+```
+
 ## Operator metrics
 
 The operator exports **controller-runtime** standard metrics plus fleet gauges. Aggregate fleet metrics with `max by (phase) (...)` when you have 2+ operator replicas — each replica reports the same cache-derived counts.

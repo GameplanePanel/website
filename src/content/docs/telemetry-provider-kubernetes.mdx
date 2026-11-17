@@ -280,6 +280,34 @@ When the peer is inside `TRUSTED_PROXY_CIDRS`, the receiver takes the right-most
 
 A client outside Cloudflare's ranges cannot choose its source address. Anything it puts in `X-Forwarded-For` stays to the left of the real entry and is ignored, and proof-of-work still applies to every request. A request that bypasses Cloudflare reaches Traefik from an untrusted address, so Traefik drops its `X-Forwarded-For`. An unparsable header falls back to the peer address. The address is used only in memory for rate limiting and is never stored; see [Source addresses and `TRUSTED_PROXY_CIDRS`](https://github.com/GameplanePanel/Gameplane/blob/master/docs/telemetry-provider.md#source-addresses-and-trusted_proxy_cidrs).
 
+The flowchart below shows how the receiver handles each report or challenge request after it reaches the ingest listener.
+
+```mermaid
+flowchart TD
+    subgraph Install["Install (API telemetry reporter)"]
+        TK["Tick: basic consent on and send slot due"] --> BD["Build report: basic, plus extended when enabled"]
+        BD --> SG["Extended report: sign body"]
+        SG --> PW["Solve proof-of-work when the endpoint asks"]
+    end
+    PW --> IN["POST /ingest on public listener"]
+    IN --> AU{"AUTH_TOKEN set and matched?"}
+    AU -- no --> E1["401"]
+    AU -- yes --> POW{"INGEST_POW off, or challenge solved?"}
+    POW -- no --> E2["428"]
+    POW -- busy --> E2b["503, Retry-After 60"]
+    POW -- yes --> DC["Decode and validate report"]
+    DC --> EX{"Extended part?"}
+    EX -- yes --> VS["Verify signature and install ID claim"]
+    EX -- no --> RL
+    VS -- refused --> E4["403 replay, 409 install ID claimed"]
+    VS -- ok --> RL{"Within INGEST_SOURCE_DAILY_LIMIT?"}
+    RL -- no --> E3["429"]
+    RL -- yes --> AG["Daily aggregates in SQLite"]
+    AG --> DB["Dashboard listener: /api/v1/views, /metrics"]
+    AG --> SM["GET /v1/summary: snapshot, refreshed at most every 5 min"]
+    LC["Hourly lifecycle sweep"] --> AG
+```
+
 For a provider without a CDN, trust only the ingress controller's pod CIDR.
 
 ## 6. Verify

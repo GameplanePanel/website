@@ -78,6 +78,33 @@ Kubernetes credentials and dashboard grants are separate. The registered kubecon
 
 Document the supported relationship between control plane, database, namespace scope, target cluster, and audit history.
 
+The topology below shows the central control plane, the registry, and the target clusters this boundary covers.
+
+```mermaid
+flowchart LR
+  browser["Browser"] --> api
+  subgraph central["Central panel (combined or standalone)"]
+    api["API<br/>client pool keyed by cluster,<br/>?cluster= selector, /fleet/* fan-out"]
+    reg[("Registry<br/>Cluster CRs + kubeconfig Secrets,<br/>or SQL in standalone")]
+    api --- reg
+  end
+  subgraph local["local cluster (combined mode only)"]
+    lop["Operator"]
+    lagent["Agents"]
+  end
+  subgraph remote["Registered remote cluster"]
+    rkube["Kubernetes API"]
+    rop["Operator"]
+    gw["Gateway [optional]"]
+    ragent["Agents"]
+    rop --> rkube
+    gw -- "agent mTLS,<br/>UID-bound routes" --> ragent
+  end
+  api -- "direct mTLS" --> lagent
+  api -- "kubeconfig: CRDs, pod logs, attach" --> rkube
+  api -- "central mTLS peer:<br/>RCON, files, logs, players" --> gw
+```
+
 <DocsSectionList
   items={[
     {
