@@ -130,7 +130,27 @@ Restic's retention policies are defined in `BackupSchedule.spec.retention`. Game
 - `keepMonthly: 12` — keep the latest snapshot from each month (12 monthly snapshots)
 - `keepYearly: 3` — keep the latest snapshot from each year (3 yearly snapshots)
 
-The operator trims retention by deleting old `Backup` custom resources once they fall outside every configured `keep-*` bucket (surfaced via the `RetentionTrimmed` condition on the `BackupSchedule`). It does not run `restic forget`/`prune` against the repository itself, so repository storage is not automatically reclaimed. If you need to reclaim space, run `restic forget --prune` yourself on a schedule that matches your retention policy, and monitor that job's own logs for bytes freed and errors.
+The operator trims retention by deleting old `Backup` custom resources once they fall outside every configured `keep-*` bucket (surfaced via the `RetentionTrimmed` condition on the `BackupSchedule`). Deleting a restic `Backup`, whether by retention, the dashboard or `kubectl delete`, runs a one-shot `<backup>-forget` Job that executes `restic forget <snapshotID> --prune`, so retention reclaims repository space. A repository the Secret's credentials cannot prune (for example an append-only rest-server) ends every delete in a `SnapshotForgetAbandoned` warning; prune it externally and monitor that job's logs for bytes freed and errors.
+
+A deleted Backup goes through these steps before its finalizer is released:
+
+```mermaid
+flowchart TD
+  del["Backup deleted"] --> uq{"Quiesced and not<br/>yet released?"}
+  uq -- yes --> unq["Send unquiesce first"] --> vs
+  uq -- no --> vs{"volume-snapshot Backup<br/>or no repoRef?"}
+  vs -- yes --> gc["No finalizer: VolumeSnapshot is<br/>garbage-collected by owner ref"]
+  vs -- no --> idq{"Failed, or no<br/>status.snapshotID?"}
+  idq -- yes --> rel["Release finalizer at once"]
+  idq -- no --> run{"Own backup Job<br/>still running?"}
+  run -- yes --> kill["Delete Job, await pods"] --> idq
+  run -- no --> rs{"Non-terminal Restore<br/>uses this Backup?"}
+  rs -- yes --> waitr["Wait"] --> rs
+  rs -- no --> forget["Job &lt;backup&gt;-forget:<br/>restic forget id --prune"]
+  forget --> ok{"Succeeded within<br/>45 minute cap?"}
+  ok -- yes --> done["SnapshotForgotten=True,<br/>release finalizer"]
+  ok -- "no, or Secret or<br/>namespace gone" --> ab["SnapshotForgetAbandoned warning,<br/>release finalizer"]
+```
 
 ### Credentials and certificate rotation
 

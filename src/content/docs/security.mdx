@@ -13,6 +13,24 @@ import DocsCallout from "../../components/docs/DocsCallout.astro";
 
 The dashboard is deliberately internet-exposed — treat login as enumerable and game images as low-trust.
 
+The diagram below shows the trust boundaries between the browser, the API, the agents, the gateway, and the operator.
+
+```mermaid
+flowchart LR
+  B["Browser"] -- "HTTPS, session cookie + CSRF,<br/>local or OIDC login" --> API
+  API -- "mTLS, operator-managed CA" --> AG["Local agent"]
+  API -- "dedicated mTLS, enrolled URI SAN" --> GW["Remote gateway"]
+  GW -- "agent mTLS, UID-bound routes" --> RAG["Remote agent"]
+  AG -- "ServiceAccount: own GameServer status" --> K["Kubernetes API"]
+  OP["Operator"] -- "ClusterRole reads,<br/>namespaced Role writes" --> K
+  OP -- "netguard IsAllowed" --> SRC["Module sources"]
+  AG -- "netguard IsPublic" --> DL["Mod downloads"]
+  AG -- "gameaction checks" --> GAME["Game console (RCON)"]
+  API -- "gameaction checks, pod attach" --> GAME
+  API -- "HTTP JSON webhook" --> SB["audit-syslog-bridge"] --> SYS["Syslog collector"]
+  API -- "daily report" --> TR["telemetry-receiver"]
+```
+
 ## Authentication
 
 Local accounts with argon2id hashing, or OIDC (Keycloak, Google, GitHub) with JWT validation.

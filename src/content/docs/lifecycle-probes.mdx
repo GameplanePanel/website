@@ -146,6 +146,25 @@ spec:
 
 If you enable idle auto-sleep (`spec.idle.enabled: true`), the operator scales the server down automatically after it reports zero players for the configured idle period. The graceful termination sequence still runs — the template's stop sequence executes with the same grace period, and data is preserved.
 
+The flowchart below shows how the operator decides that an idle server should sleep, and what wakes it.
+
+```mermaid
+flowchart TD
+  hb["Agent heartbeat"] --> fresh{"Heartbeat fresh and<br/>phase Running?"}
+  fresh -- no --> freeze["Idle clock frozen<br/>(reason on status.idle)"]
+  fresh -- yes --> zero{"playersOnline == 0?"}
+  zero -- "unknown" --> freeze
+  zero -- "more than 0" --> reset["Clear status.idle.emptySince"]
+  zero -- "exactly 0" --> stamp["Stamp status.idle.emptySince"]
+  stamp --> long{"Older than<br/>spec.idle.afterMinutes?"}
+  long -- no --> wait["Keep waiting"]
+  long -- yes --> mark["Write idle-asleep-since annotation"]
+  mark --> soft["softStop: module stop sequence,<br/>wait for not-ready, scale to 0"]
+  soft --> asleep["Phase Suspended,<br/>reason IdleAsleep, PVC kept"]
+  asleep --> wake{"wakeWindows tick,<br/>POST :wake, or sentinel<br/>connection?"}
+  wake -- yes --> clear["Clear marker, pod returns"]
+```
+
 To wake a sleeping server when a player connects, turn on **Wake on connect** in the server's Lifecycle settings (v0.4.0). It is off by default (`spec.idle.wakeOnConnect`, default `false`). While the server sleeps, a small pod holds its ports, which costs one extra pod per sleeping server. For UDP-only games the first join attempt only wakes the server, so the player joins on retry.
 
 For more details, see the [`spec.idle` configuration in the architecture docs](../architecture/).

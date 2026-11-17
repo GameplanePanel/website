@@ -45,6 +45,18 @@ Do **not** use a tunnel if:
 
 Three relay providers are supported, each with different trade-offs:
 
+The topology below shows how players reach a tunnel-enabled server through each relay type.
+
+```mermaid
+flowchart LR
+    P["Players"] -->|"public address or tailnet name"| R["Relay: frps, Tailscale tailnet or playit.gg"]
+    T["Tunnel pod: gameplane-tunnel"] -->|"outbound session"| R
+    T -->|"dials server.namespace.svc"| S["Backing Service"]
+    S -->|"running"| G["Game pod"]
+    S -->|"asleep: routed to sentinel"| W["Wake sentinel"]
+    W -->|"wakes, then dials game-direct Service"| G
+```
+
 | Feature | frp | Tailscale | playit.gg |
 |---|---|---|---|
 | **Exposure** | Public internet | Private (tailnet only) | Public internet |
@@ -282,6 +294,31 @@ When a server enters idle sleep:
 - **Tunnel pod stays running** — it holds the relay connection and keeps the public address advertised.
 - **Game pod sleeps** — the game container is scaled down.
 - **Wake-on-connect works** — if a player connects to the public address while asleep, the relay wakes the game pod (if `spec.idle.wakeOnConnect` is enabled). Depending on the relay provider, the player may need to reconnect once after the game wakes.
+
+The sequence below shows how a connection to a sleeping server wakes the game pod through the sentinel.
+
+```mermaid
+sequenceDiagram
+    participant Player
+    participant Relay
+    participant Tunnel as Tunnel pod
+    participant GS as Backing Service
+    participant Sentinel as Wake sentinel
+    participant API as Kubernetes API
+    participant Op as Operator
+    participant Game as Game pod
+
+    Player->>Relay: connect to public address
+    Relay->>Tunnel: forward over outbound session
+    Tunnel->>GS: dial backing Service
+    GS->>Sentinel: route (server asleep)
+    Sentinel->>API: patch wake-requested token
+    API->>Op: GameServer change
+    Op->>API: clear sleep marker, ack token
+    Op->>Game: scale game StatefulSet up
+    Sentinel->>Game: poll game-direct Service until it accepts
+    Sentinel-->>Player: hold connection, then proxy after handoff
+```
 
 To avoid reconnects on wake:
 

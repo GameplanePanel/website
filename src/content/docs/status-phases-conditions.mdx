@@ -23,12 +23,25 @@ A GameServer's phase reflects its readiness for players and the operator's curre
 | **Pending** | Awaiting cluster capacity | → Starting | Schedules the underlying StatefulSet pod |
 | **Starting** | Pod is coming up | → Running | Waits for readiness probe + agent heartbeat |
 | **Running** | Ready for players | → Stopping | Maintains pod health and heartbeat monitoring |
-| **Stopping** | Graceful shutdown in progress | → Stopped | Runs template's stop sequence, waits for exit |
-| **Stopped** | Pod is terminated, data preserved | → Starting | (awaiting explicit resume) |
-| **Suspended** | Intentionally paused | → Starting | Preserves both pod and intent (vs. Stopped) |
-| **Failed** | Terminal error (no retry scheduled) | — | Surfaces detailed reason in conditions |
+| **Stopping** | Stop or idle sleep requested, pod still ready | → Suspended | Runs template's stop sequence, scales to zero |
+| **Suspended** | Stopped by the user or asleep; data preserved | → Starting | Awaits start or wake (an idle sleep shows reason `IdleAsleep`) |
+| **Failed** | Invalid spec, policy rejection or terminal startup failure | → Running | Surfaces detailed reason in conditions; re-evaluated on every reconcile |
 
-Transitions are driven by reconciliation logic. A manual retry or wakeup (via dashboard or API) re-triggers the → Starting transition.
+The operator derives the phase again on every reconcile, so a phase is a reading, not a stored state: a server whose startup failure clears returns to `Running` without intervention. The API type also lists `Stopped`, but the current operator never sets it; a stopped server reads `Suspended`. A start or wake (via dashboard or API) re-triggers the → Starting transition.
+
+```mermaid
+stateDiagram-v2
+  [*] --> Pending: GameServer created
+  Pending --> Starting: StatefulSet exists
+  Starting --> Running: pod Ready and heartbeat fresh
+  Running --> Starting: pod not Ready or heartbeat stale
+  Starting --> Failed: terminal startup failure
+  Failed --> Running: recovers
+  Running --> Stopping: spec.suspend or idle sleep, pod still Ready
+  Stopping --> Suspended: no ready replica left
+  Suspended --> Starting: resumed or woken
+  Pending --> Failed: invalid spec or workload policy rejection
+```
 
 ### Standard Conditions
 

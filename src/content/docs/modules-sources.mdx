@@ -52,6 +52,20 @@ The dashboard's **Modules** page displays the merged catalog across all configur
 - **Failed** — install or signature verification failed (shown as a generic failed status; check the source's verification policy and the Module's error reason).
 - **Update** — the pinned version is unavailable but a newer one exists; upgrade is offered.
 
+The state diagram below shows the phases of a Module resource while the operator pulls and applies a version.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Pending: WaitingForCatalog or NoVersionAvailable
+    Pending --> Pulling: catalog entry and version found
+    Pulling --> Ready: bundle verified and GameTemplate applied
+    Pending --> Failed: SourceNotFound, SourceConfig, VerifyConfig, VersionUnavailable
+    Ready --> Failed: SourceNotFound, SourceConfig, VerifyConfig, VersionUnavailable
+    Pulling --> Failed: PullFailed, SignatureInvalid, DigestMismatch, IncompatibleOperator, ApplyTemplate
+    Failed --> Pulling: spec change (retries at the same generation stay Failed)
+    Ready --> Pulling: spec.version or spec.digest changed
+```
+
 ## Configure module sources
 
 Sources can represent OCI, Git, archive, upload, or registry-backed discovery with sync status and credentials.
@@ -81,6 +95,29 @@ A **ModuleSource** is a cluster-scoped CRD that points to one module store and d
 The chart's `defaultModuleSource` picks one of two backends via `type`: OCI registry (pull pre-built, cosign-signed bundles — recommended for production) or Git repository (index the `GameplanePanel/module` repo directly for rapid iteration). A separate `uploadModuleSource` block (enabled by default) accepts modules uploaded through the dashboard, stored as ConfigMaps in the operator namespace.
 
 Disable the default if you manage ModuleSource resources via GitOps, or create additional sources to index private registries or custom catalogs. The ModuleSource CRD also supports HTTP (tar.gz/zip archives) and local directory backends for specialized use cases.
+
+The flowchart below shows how a module moves from its store, through the catalog, into a GameTemplate and a GameServer.
+
+```mermaid
+flowchart LR
+  author["Module author<br/>gp-module init / validate / package"] --> store
+  subgraph store["Module stores"]
+    oci["OCI registry"]
+    git["git repository"]
+    http["HTTP archive"]
+    local["local directory"]
+    upload["upload ConfigMaps"]
+  end
+  store --> ms["ModuleSource controller<br/>modsrc.Fetcher indexes,<br/>status.modules + digests"]
+  ms --> catalog["Dashboard catalog<br/>(API /modules)"]
+  catalog -- install --> mod["Module CR"]
+  mod --> mc["Module controller<br/>pulls bundle"]
+  mc --> gt["GameTemplate<br/>(managed-by=Module)"]
+  mc --> loc["&lt;template&gt;-locales ConfigMap"]
+  kubectl["kubectl apply"] --> gt
+  gt --> gs["GameServer"]
+  gs --> agent["Agent sidecar<br/>GAMEPLANE_CAPABILITIES"]
+```
 
 ## Author and publish modules
 

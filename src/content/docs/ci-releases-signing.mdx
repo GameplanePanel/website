@@ -22,6 +22,22 @@ import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
 
 CI covers Go modules, envtest, web build/coverage, browser tests, Helm rendering, and disjoint Kind E2E buckets.
 
+The flowchart below shows how a pull request moves from its push to merge, and which CI jobs run.
+
+```mermaid
+flowchart TD
+    A["Push branch and open PR"] --> B["auto-label: adds missing type: and area: labels (every 15 min)"]
+    A --> C["ci workflow: detect changes job (hack/ci_scope.py)"]
+    C --> D{"Selection error, unmapped path or ci: full-run label?"}
+    D -- yes --> E["Every CI job runs"]
+    D -- no --> F["Only the jobs the change affects run"]
+    E --> G["ci report job (needs the CI jobs)"]
+    F --> G
+    G --> H["CodeRabbit advisory review"]
+    H --> I["Human approval (master ruleset)"]
+    I --> J["Merge; a push to master runs the full suite"]
+```
+
 <DocsSectionList
   items={[
     {
@@ -70,6 +86,21 @@ Changes on master publish rolling `:edge` images and immutable `sha-<short>` tag
 
 A `v` tag builds and signs images, packages the OCI chart, creates release notes, and publishes official modules.
 
+The flowchart below shows the jobs that a release tag starts and the order of the image and chart steps.
+
+```mermaid
+flowchart TD
+    T["Tag v* pushed"] --> IM["images: one leg per component (12)"]
+    T --> MO["modules: push and sign official bundles"]
+    IM --> P["Push image by digest"]
+    P --> S["Trivy scan, then cosign sign (keyed)"]
+    S --> V["Verify signature; check signing/cosign.pub matches the key"]
+    V --> TG["oras tag: attach release tags"]
+    TG --> CH["chart: helm push, cosign sign, verify"]
+    CH --> Q["consumer: qualify-release.yaml as anonymous pull"]
+    Q --> GR["github-release: CHANGELOG section as notes"]
+```
+
 <DocsQuickReference
   label="RELEASE PATH"
   items={[
@@ -80,6 +111,17 @@ A `v` tag builds and signs images, packages the OCI chart, creates release notes
 />
 
 Release images carry Cosign signatures recorded in the public Sigstore Rekor transparency log. Verify any released or edge image with the `signing/cosign.pub` key. Pre-rotation releases (v0.2.0-beta.7 and earlier) used the retired Ed25519 key and require `signing/2026-07-24-cosign-legacy.pub` with the `--insecure-ignore-tlog=true` flag (see [Key Rotation](../credential-rotation/) for trust continuity).
+
+The flowchart below shows how the retired legacy key and the current key vouch for releases.
+
+```mermaid
+flowchart LR
+  Legacy["Retired Ed25519 key<br/>signing/2026-07-24-cosign-legacy.pub"]
+  Current["Current ECDSA P-256 key<br/>signing/cosign.pub"]
+  Legacy -->|"cross-signature over cosign.pub<br/>cosign.pub.legacy-sig"| Current
+  Legacy -->|"verifies releases before rotation"| Old["Pre-rotation artifacts (keyed, unlogged)"]
+  Current -->|"verifies releases from rotation onward"| New["Post-rotation artifacts (recorded in Rekor)"]
+```
 
 Signing is mandatory and fail-closed: without `COSIGN_PRIVATE_KEY` the release job fails before anything is pushed. Every signing job (`release.yaml`, `publish-edge.yaml`, `images.yaml` and `republish-modules.yaml`) runs in the `release-signing` environment, whose deployment policy admits only `master` and `v*` tags, so a run on any other ref never receives the key. Images are pushed by digest, signed and verified, and only then tagged, so a published tag always names a signed image.
 

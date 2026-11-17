@@ -112,7 +112,29 @@ Add OIDC providers under **Admin Settings → Authentication → Add provider**.
 
 Supported providers include Keycloak, Authentik, Google, GitHub, and any RFC-7519 compliant OpenID Connect provider. Detailed setup guides for Keycloak, Authentik, Google, and GitHub follow the same issuer/client ID/secret pattern.
 
-When a user logs in via OIDC for the first time, Gameplane creates a user row with the `viewer` role. Admins must promote new OIDC users manually via the dashboard or custom role bindings.
+When a user logs in via OIDC for the first time, Gameplane creates a user row. Without role mappings the role is `viewer` and admins must promote new OIDC users manually via the dashboard or custom role bindings; with role mappings the role comes from the user's IdP groups (see Install-time role mappings below).
+
+The sequence below shows the OIDC sign-in round trip between the browser, the API, and the identity provider.
+
+```mermaid
+sequenceDiagram
+  autonumber
+  participant B as Browser
+  participant A as API (/auth/oidc/NAME)
+  participant I as Identity provider
+  B->>A: GET /start
+  A-->>B: 302 to IdP, sets state and nonce cookies (HttpOnly, Secure)
+  B->>I: Authorize with state and nonce
+  I-->>B: 302 to /callback with code and state
+  B->>A: GET /callback, with state and nonce cookies
+  A->>A: Compare state with state cookie, 400 on mismatch
+  A->>I: Exchange code for tokens
+  I-->>A: id_token
+  A->>A: Verify id_token signature, check nonce cookie
+  A->>A: Read groups claim and compute role
+  A->>A: Create or update user by issuer and subject, audit role
+  A-->>B: Set session and CSRF cookies, 302 to /
+```
 
 ### Install-time role mappings
 
@@ -123,6 +145,24 @@ When a user logs in via OIDC for the first time, Gameplane creates a user row wi
 Helm role mappings eliminate the need for a `bootstrap-admin` account in OIDC-only deployments. Operators configure group mappings at install time, and the first user to log in receives the correct role immediately based on their IdP group membership.
 
 When deploying with Helm, set `api.oidc.enabled=true`, `api.oidc.groupsClaim` to the name of your IdP's groups claim (e.g., `"groups"`), and configure `api.oidc.roleMappings.{admin,operator,viewer}` with a list of group names for each role. On first login, Gameplane matches the user's group membership against the mappings and assigns the highest-privilege matching role.
+
+The flowchart below shows how the API picks a role from the user's groups, including the case where no mapping matches.
+
+```mermaid
+flowchart TD
+  A["Groups from groupsClaim"] --> B{"Role mappings configured?"}
+  B -- no --> V["viewer"]
+  B -- yes --> C{"A group in the admin list?"}
+  C -- yes --> AD["admin"]
+  C -- no --> D{"A group in the operator list?"}
+  D -- yes --> OP["operator"]
+  D -- no --> E{"A group in the viewer list?"}
+  E -- yes --> VW["viewer"]
+  E -- no --> F{"defaultRole"}
+  F -- "deny" --> R["Login refused"]
+  F -- "viewer or empty" --> V2["viewer"]
+  F -- "admin or operator" --> G["defaultRole value"]
+```
 
 After deployment, admins can override role mappings through the dashboard without restarting the API. Helm upgrades preserve dashboard customizations — they do not overwrite group mappings that have already been edited in the UI. For detailed Helm value examples and troubleshooting, see the [OIDC provider setup documentation](https://github.com/GameplanePanel/Gameplane/blob/master/docs/oidc.md#role-mapping-at-install-time-no-bootstrap-admin-required) on GitHub.
 
