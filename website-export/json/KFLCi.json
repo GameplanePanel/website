@@ -1,367 +1,641 @@
 {
-  "type": "frame",
-  "id": "KFLCi",
+  "file": "KFLCi",
+  "id": "1:491",
+  "name": "Screen/Docs — Security",
+  "type": "FRAME",
   "x": 0,
   "y": 6590,
-  "name": "Screen/Docs — Security",
-  "theme": {
-    "semantic": "dark"
-  },
-  "clip": true,
   "width": 1440,
   "height": 900,
-  "fill": "$background/background",
+  "fills": [{"type": "SOLID", "color": "#121114"}],
+  "layout": {
+    "mode": "HORIZONTAL",
+    "gap": 0,
+    "padding": [0, 0, 0, 0],
+    "primary": "MIN",
+    "counter": "MIN",
+    "sizing": ["FIXED", "FIXED"]
+  },
+  "clips": true,
+  "variables": {"fills/0/color": "background/background"},
   "children": [
     {
-      "id": "yjiyt",
-      "type": "ref",
-      "ref": "K2Rt4H",
-      "height": "fill_container",
+      "id": "1:492",
       "name": "DocsSidebar/Expanded",
-      "width": 280
+      "type": "INSTANCE",
+      "x": 0,
+      "y": 0,
+      "width": 280,
+      "height": 900,
+      "component": "Docs/Expanded Sidebar",
+      "componentId": "1:151",
+      "fills": [{"type": "SOLID", "color": "#17151A"}],
+      "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+      "strokeWeight": 1,
+      "layout": {
+        "mode": "VERTICAL",
+        "gap": 0,
+        "padding": [0, 0, 0, 0],
+        "primary": "MIN",
+        "counter": "MIN",
+        "sizing": ["FIXED", "FIXED"]
+      },
+      "layoutAlignSelf": "STRETCH",
+      "variables": {"fills/0/color": "surface/secondary", "strokes/0/color": "border/border"},
+      "texts": [
+        "gameplane",
+        "Back to site",
+        "START HERE",
+        "Overview",
+        "Getting Started",
+        "CORE CONCEPTS",
+        "Architecture",
+        "Security",
+        "OPERATE",
+        "Servers & Config",
+        "Console & Logs",
+        "Files & Backups",
+        "Network & Automation",
+        "PLATFORM",
+        "Cluster & Storage",
+        "Users & Access",
+        "Audit & Observability",
+        "DEVELOP",
+        "Modules & Sources",
+        "API & Reference",
+        "Local Development",
+        "Component Guides",
+        "Testing & Release",
+        "REFERENCE",
+        "Upgrades",
+        "Troubleshooting",
+        "FAQ",
+        "Releases & Roadmap",
+        "Community"
+      ]
     },
     {
-      "type": "frame",
-      "id": "FVDK0",
+      "id": "1:493",
       "name": "Main",
-      "width": "fill_container",
-      "height": "fill_container",
-      "fill": "$background/background",
-      "layout": "vertical",
+      "type": "FRAME",
+      "x": 280,
+      "y": 0,
+      "width": 1160,
+      "height": 900,
+      "fills": [{"type": "SOLID", "color": "#121114"}],
+      "layout": {
+        "mode": "VERTICAL",
+        "gap": 0,
+        "padding": [0, 0, 0, 0],
+        "primary": "MIN",
+        "counter": "MIN",
+        "sizing": ["FIXED", "FIXED"]
+      },
+      "layoutGrow": 1,
+      "layoutAlignSelf": "STRETCH",
+      "variables": {"fills/0/color": "background/background"},
       "children": [
         {
-          "id": "q6PKYR",
-          "type": "ref",
-          "ref": "SOdlr",
+          "id": "1:494",
           "name": "Docs Top Bar",
-          "width": "fill_container",
-          "descendants": {
-            "NImey": {
-              "content": "Concepts"
-            },
-            "ikbi6": {
-              "content": "Security"
-            }
-          }
+          "type": "INSTANCE",
+          "x": 0,
+          "y": 0,
+          "width": 1160,
+          "height": 64,
+          "component": "Docs Top Bar",
+          "componentId": "1:239",
+          "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+          "strokeWeight": 1,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "gap": 0,
+            "padding": [0, 32, 0, 32],
+            "primary": "SPACE_BETWEEN",
+            "counter": "CENTER",
+            "sizing": ["FIXED", "FIXED"]
+          },
+          "layoutAlignSelf": "STRETCH",
+          "variables": {"strokes/0/color": "border/border"},
+          "texts": ["Docs", "/", "Concepts", "/", "Security"]
         },
         {
-          "type": "frame",
-          "id": "xo21q",
+          "id": "1:495",
           "name": "Body",
-          "clip": true,
-          "width": "fill_container",
-          "height": "fill_container",
-          "layout": "vertical",
-          "gap": 24,
-          "padding": 32,
+          "type": "FRAME",
+          "x": 0,
+          "y": 64,
+          "width": 1160,
+          "height": 836,
+          "layout": {
+            "mode": "VERTICAL",
+            "gap": 24,
+            "padding": [32, 32, 32, 32],
+            "primary": "MIN",
+            "counter": "MIN",
+            "sizing": ["FIXED", "FIXED"]
+          },
+          "layoutGrow": 1,
+          "layoutAlignSelf": "STRETCH",
+          "clips": true,
           "children": [
             {
-              "type": "text",
-              "id": "fJnJB",
-              "fill": "$accent/accent",
-              "content": "DOCUMENTATION",
-              "fontFamily": "$typography/font-mono",
-              "fontSize": 12,
-              "fontWeight": "600"
+              "id": "1:496",
+              "name": "text",
+              "type": "TEXT",
+              "x": 32,
+              "y": 32,
+              "width": 94,
+              "height": 16,
+              "fills": [{"type": "SOLID", "color": "#FF4FA3"}],
+              "text": "DOCUMENTATION",
+              "font": ["JetBrains Mono", 600, 12],
+              "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "accent/accent"}
             },
             {
-              "type": "text",
-              "id": "wtTCC",
-              "fill": "$foreground/foreground",
-              "content": "Security",
-              "fontFamily": "$typography/font-mono",
-              "fontSize": 32,
-              "fontWeight": "700"
+              "id": "1:497",
+              "name": "text",
+              "type": "TEXT",
+              "x": 32,
+              "y": 72,
+              "width": 154,
+              "height": 42,
+              "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+              "text": "Security",
+              "font": ["JetBrains Mono", 700, 32],
+              "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
             },
             {
-              "type": "text",
-              "id": "eS1Y6",
-              "fill": "$muted",
-              "textGrowth": "fixed-width",
+              "id": "1:498",
+              "name": "text",
+              "type": "TEXT",
+              "x": 32,
+              "y": 138,
               "width": 640,
-              "content": "Auth, RBAC, mTLS, network policies, and module verification protect against cluster-internal and external threats.",
-              "fontFamily": "$typography/font-sans",
-              "fontSize": 16,
-              "fontWeight": "normal"
+              "height": 42,
+              "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+              "text": "Auth, RBAC, mTLS, network policies, and module verification protect against cluster-internal and external threats.",
+              "font": ["Geist", 400, 16],
+              "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
             },
             {
-              "type": "frame",
-              "id": "u35ueN",
+              "id": "1:499",
               "name": "Threat model",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 6,
-              "children": [
-                {
-                  "type": "text",
-                  "id": "T3WlJA",
-                  "fill": "$foreground/foreground",
-                  "content": "Threat model",
-                  "fontFamily": "$typography/font-mono",
-                  "fontSize": 18,
-                  "fontWeight": "600"
-                },
-                {
-                  "type": "text",
-                  "id": "XliWb",
-                  "fill": "$muted",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "The dashboard is deliberately internet-exposed — treat login as enumerable and game images as low-trust.",
-                  "lineHeight": 1.5,
-                  "fontFamily": "$typography/font-sans",
-                  "fontSize": 14,
-                  "fontWeight": "normal"
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "k93OXP",
-              "name": "Authentication",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 6,
-              "children": [
-                {
-                  "type": "text",
-                  "id": "DyWFz",
-                  "fill": "$foreground/foreground",
-                  "content": "Authentication",
-                  "fontFamily": "$typography/font-mono",
-                  "fontSize": 18,
-                  "fontWeight": "600"
-                },
-                {
-                  "type": "text",
-                  "id": "BZHZ6",
-                  "fill": "$muted",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "Local accounts with argon2id hashing, or OIDC (Keycloak, Google, GitHub) with JWT validation.",
-                  "lineHeight": 1.5,
-                  "fontFamily": "$typography/font-sans",
-                  "fontSize": 14,
-                  "fontWeight": "normal"
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "erdMA",
-              "name": "Authorization",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 6,
-              "children": [
-                {
-                  "type": "text",
-                  "id": "lugET",
-                  "fill": "$foreground/foreground",
-                  "content": "Authorization",
-                  "fontFamily": "$typography/font-mono",
-                  "fontSize": 18,
-                  "fontWeight": "600"
-                },
-                {
-                  "type": "text",
-                  "id": "L4kvz",
-                  "fill": "$muted",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "Permission-based RBAC with admin/operator/viewer roles, scoped per namespace or cluster-wide. Registering a cluster grants no user access by itself, and a global permission union never authorizes another cluster's rows. Admin permissions can be granted only by a `*` holder (v0.4.0).",
-                  "lineHeight": 1.5,
-                  "fontFamily": "$typography/font-sans",
-                  "fontSize": 14,
-                  "fontWeight": "normal"
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "VPAzr",
-              "name": "API ↔ Agent",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 6,
-              "children": [
-                {
-                  "type": "text",
-                  "id": "q4J10h",
-                  "fill": "$foreground/foreground",
-                  "content": "API ↔ Agent",
-                  "fontFamily": "$typography/font-mono",
-                  "fontSize": 18,
-                  "fontWeight": "600"
-                },
-                {
-                  "type": "text",
-                  "id": "MEHxg",
-                  "fill": "$muted",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "mTLS with an operator-managed CA; the agent refuses plain HTTP once TLS material is present.",
-                  "lineHeight": 1.5,
-                  "fontFamily": "$typography/font-sans",
-                  "fontSize": 14,
-                  "fontWeight": "normal"
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "nak8d",
-              "name": "API ↔ remote gateway",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 6,
-              "children": [
-                {
-                  "type": "text",
-                  "id": "EltoE",
-                  "fill": "$foreground/foreground",
-                  "content": "API ↔ remote gateway",
-                  "fontFamily": "$typography/font-mono",
-                  "fontSize": 18,
-                  "fontWeight": "600"
-                },
-                {
-                  "type": "text",
-                  "id": "UYIWs",
-                  "fill": "$muted",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "In v0.3.0, optional agent gateway for remote clusters. Central API reaches it with dedicated mTLS identity, separate trust material from local agent CA. Gateway exposes only allowlisted operations in configured namespaces.",
-                  "lineHeight": 1.5,
-                  "fontFamily": "$typography/font-sans",
-                  "fontSize": 14,
-                  "fontWeight": "normal"
-                }
-              ]
-            },
-            {
-              "id": "jFnN9",
-              "type": "ref",
-              "ref": "TppWF",
-              "name": "disclosureCallout",
-              "width": "fill_container",
-              "descendants": {
-                "egnNg": {
-                  "icon": "shield-alert"
-                },
-                "B9wQP": {
-                  "content": "Found a security issue?"
-                },
-                "TIDXo": {
-                  "content": "Report it privately via GitHub Security Advisories rather than a public issue — we'll coordinate a fix before public disclosure."
-                },
-                "c3uUJ": {
-                  "enabled": false
-                }
-              }
-            },
-            {
-              "type": "frame",
-              "id": "eWgjN",
-              "name": "PrevNext",
-              "width": "fill_container",
-              "stroke": "$border/border",
-              "strokeWidth": {
-                "top": 1
+              "type": "FRAME",
+              "x": 32,
+              "y": 204,
+              "width": 1096,
+              "height": 51,
+              "layout": {
+                "mode": "VERTICAL",
+                "gap": 6,
+                "padding": [0, 0, 0, 0],
+                "primary": "MIN",
+                "counter": "MIN",
+                "sizing": ["HUG", "FIXED"]
               },
-              "strokeAlignment": "inner",
-              "strokeLinejoin": "round",
-              "padding": [
-                16,
-                0,
-                0,
-                0
-              ],
-              "justifyContent": "space_between",
-              "alignItems": "center",
+              "layoutAlignSelf": "STRETCH",
               "children": [
                 {
-                  "type": "frame",
-                  "id": "rG8G4",
-                  "gap": 6,
-                  "alignItems": "center",
+                  "id": "1:500",
+                  "name": "text",
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 0,
+                  "width": 130,
+                  "height": 24,
+                  "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                  "text": "Threat model",
+                  "font": ["JetBrains Mono", 600, 18],
+                  "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
+                },
+                {
+                  "id": "1:501",
+                  "name": "text",
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 30,
+                  "width": 1096,
+                  "height": 21,
+                  "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                  "layoutAlignSelf": "STRETCH",
+                  "text": "The dashboard is deliberately internet-exposed — treat login as enumerable and game images as low-trust.",
+                  "font": ["Geist", 400, 14],
+                  "lineHeight": {"value": 150, "unit": "PERCENT"},
+                  "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
+                }
+              ]
+            },
+            {
+              "id": "1:502",
+              "name": "Authentication",
+              "type": "FRAME",
+              "x": 32,
+              "y": 279,
+              "width": 1096,
+              "height": 51,
+              "layout": {
+                "mode": "VERTICAL",
+                "gap": 6,
+                "padding": [0, 0, 0, 0],
+                "primary": "MIN",
+                "counter": "MIN",
+                "sizing": ["HUG", "FIXED"]
+              },
+              "layoutAlignSelf": "STRETCH",
+              "children": [
+                {
+                  "id": "1:503",
+                  "name": "text",
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 0,
+                  "width": 152,
+                  "height": 24,
+                  "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                  "text": "Authentication",
+                  "font": ["JetBrains Mono", 600, 18],
+                  "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
+                },
+                {
+                  "id": "1:504",
+                  "name": "text",
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 30,
+                  "width": 1096,
+                  "height": 21,
+                  "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                  "layoutAlignSelf": "STRETCH",
+                  "text": "Local accounts with argon2id hashing, or OIDC (Keycloak, Google, GitHub) with JWT validation.",
+                  "font": ["Geist", 400, 14],
+                  "lineHeight": {"value": 150, "unit": "PERCENT"},
+                  "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
+                }
+              ]
+            },
+            {
+              "id": "1:505",
+              "name": "Authorization",
+              "type": "FRAME",
+              "x": 32,
+              "y": 354,
+              "width": 1096,
+              "height": 72,
+              "layout": {
+                "mode": "VERTICAL",
+                "gap": 6,
+                "padding": [0, 0, 0, 0],
+                "primary": "MIN",
+                "counter": "MIN",
+                "sizing": ["HUG", "FIXED"]
+              },
+              "layoutAlignSelf": "STRETCH",
+              "children": [
+                {
+                  "id": "1:506",
+                  "name": "text",
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 0,
+                  "width": 141,
+                  "height": 24,
+                  "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                  "text": "Authorization",
+                  "font": ["JetBrains Mono", 600, 18],
+                  "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
+                },
+                {
+                  "id": "1:507",
+                  "name": "text",
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 30,
+                  "width": 1096,
+                  "height": 42,
+                  "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                  "layoutAlignSelf": "STRETCH",
+                  "text": "Permission-based RBAC with admin/operator/viewer roles, scoped per namespace or cluster-wide. Registering a cluster grants no user access by itself, and a global permission union never authorizes another cluster's rows. Admin permissions can be granted only by a `*` holder (v0.4.0).",
+                  "font": ["Geist", 400, 14],
+                  "lineHeight": {"value": 150, "unit": "PERCENT"},
+                  "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
+                }
+              ]
+            },
+            {
+              "id": "1:508",
+              "name": "API ↔ Agent",
+              "type": "FRAME",
+              "x": 32,
+              "y": 450,
+              "width": 1096,
+              "height": 51,
+              "layout": {
+                "mode": "VERTICAL",
+                "gap": 6,
+                "padding": [0, 0, 0, 0],
+                "primary": "MIN",
+                "counter": "MIN",
+                "sizing": ["HUG", "FIXED"]
+              },
+              "layoutAlignSelf": "STRETCH",
+              "children": [
+                {
+                  "id": "1:509",
+                  "name": "text",
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 0,
+                  "width": 119,
+                  "height": 24,
+                  "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                  "text": "API ↔ Agent",
+                  "font": ["JetBrains Mono", 600, 18],
+                  "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
+                },
+                {
+                  "id": "1:510",
+                  "name": "text",
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 30,
+                  "width": 1096,
+                  "height": 21,
+                  "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                  "layoutAlignSelf": "STRETCH",
+                  "text": "mTLS with an operator-managed CA; the agent refuses plain HTTP once TLS material is present.",
+                  "font": ["Geist", 400, 14],
+                  "lineHeight": {"value": 150, "unit": "PERCENT"},
+                  "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
+                }
+              ]
+            },
+            {
+              "id": "1:511",
+              "name": "API ↔ remote gateway",
+              "type": "FRAME",
+              "x": 32,
+              "y": 525,
+              "width": 1096,
+              "height": 72,
+              "layout": {
+                "mode": "VERTICAL",
+                "gap": 6,
+                "padding": [0, 0, 0, 0],
+                "primary": "MIN",
+                "counter": "MIN",
+                "sizing": ["HUG", "FIXED"]
+              },
+              "layoutAlignSelf": "STRETCH",
+              "children": [
+                {
+                  "id": "1:512",
+                  "name": "text",
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 0,
+                  "width": 216,
+                  "height": 24,
+                  "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                  "text": "API ↔ remote gateway",
+                  "font": ["JetBrains Mono", 600, 18],
+                  "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
+                },
+                {
+                  "id": "1:513",
+                  "name": "text",
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 30,
+                  "width": 1096,
+                  "height": 42,
+                  "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                  "layoutAlignSelf": "STRETCH",
+                  "text": "In v0.3.0, optional agent gateway for remote clusters. Central API reaches it with dedicated mTLS identity, separate trust material from local agent CA. Gateway exposes only allowlisted operations in configured namespaces.",
+                  "font": ["Geist", 400, 14],
+                  "lineHeight": {"value": 150, "unit": "PERCENT"},
+                  "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
+                }
+              ]
+            },
+            {
+              "id": "1:514",
+              "name": "disclosureCallout",
+              "type": "INSTANCE",
+              "x": 32,
+              "y": 621,
+              "width": 1096,
+              "height": 66,
+              "component": "Alert/Warning",
+              "componentId": "1:515",
+              "fills": [{"type": "SOLID", "color": "#1C1A20"}],
+              "effects": [{"type": "DROP_SHADOW", "radius": 4, "visible": true}],
+              "cornerRadius": 24,
+              "layout": {
+                "mode": "HORIZONTAL",
+                "gap": 16,
+                "padding": [12, 16, 12, 16],
+                "primary": "MIN",
+                "counter": "MIN",
+                "sizing": ["FIXED", "HUG"]
+              },
+              "layoutAlignSelf": "STRETCH",
+              "variables": {"cornerRadius": "radius/3xl", "fills/0/color": "surface/surface"},
+              "texts": [
+                "Found a security issue?",
+                "Report it privately via GitHub Security Advisories rather than a public issue — we'll coordinate a fix before public disclosure."
+              ]
+            },
+            {
+              "id": "1:524",
+              "name": "PrevNext",
+              "type": "FRAME",
+              "x": 32,
+              "y": 711,
+              "width": 1096,
+              "height": 48,
+              "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+              "strokeWeight": 1,
+              "layout": {
+                "mode": "HORIZONTAL",
+                "gap": 0,
+                "padding": [16, 0, 0, 0],
+                "primary": "SPACE_BETWEEN",
+                "counter": "CENTER",
+                "sizing": ["FIXED", "HUG"]
+              },
+              "layoutAlignSelf": "STRETCH",
+              "variables": {"strokes/0/color": "border/border"},
+              "children": [
+                {
+                  "id": "1:525",
+                  "name": "frame",
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 16,
+                  "width": 121,
+                  "height": 32,
+                  "layout": {
+                    "mode": "HORIZONTAL",
+                    "gap": 6,
+                    "padding": [0, 0, 0, 0],
+                    "primary": "MIN",
+                    "counter": "CENTER",
+                    "sizing": ["HUG", "HUG"]
+                  },
                   "children": [
                     {
-                      "type": "icon",
-                      "id": "WeG62",
+                      "id": "1:526",
+                      "name": "icon",
+                      "type": "FRAME",
+                      "x": 0,
+                      "y": 9,
                       "width": 14,
                       "height": 14,
-                      "icon": "arrow-left",
-                      "library": "lucide",
-                      "fill": "$muted"
-                    },
-                    {
-                      "type": "frame",
-                      "id": "u2kNHt",
-                      "layout": "vertical",
+                      "variables": {"fills/0/color": "muted"},
                       "children": [
                         {
-                          "type": "text",
-                          "id": "B2PUH",
-                          "fill": "$muted",
-                          "content": "Previous",
-                          "fontFamily": "$typography/font-sans",
-                          "fontSize": 11,
-                          "fontWeight": "normal"
+                          "name": "path",
+                          "type": "VECTOR",
+                          "x": 2.92,
+                          "y": 2.92,
+                          "width": 8.17,
+                          "height": 8.17,
+                          "strokes": [{"type": "SOLID", "color": "#9E98A6"}],
+                          "strokeWeight": 1.17
+                        }
+                      ]
+                    },
+                    {
+                      "id": "1:527",
+                      "name": "frame",
+                      "type": "FRAME",
+                      "x": 20,
+                      "y": 0,
+                      "width": 101,
+                      "height": 32,
+                      "layout": {
+                        "mode": "VERTICAL",
+                        "gap": 0,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "MIN",
+                        "sizing": ["HUG", "HUG"]
+                      },
+                      "children": [
+                        {
+                          "id": "1:528",
+                          "name": "text",
+                          "type": "TEXT",
+                          "x": 0,
+                          "y": 0,
+                          "width": 44,
+                          "height": 14,
+                          "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                          "text": "Previous",
+                          "font": ["Geist", 400, 11],
+                          "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
                         },
                         {
-                          "type": "text",
-                          "id": "y7Ban",
-                          "fill": "$foreground/foreground",
-                          "content": "Architecture",
-                          "fontFamily": "$typography/font-mono",
-                          "fontSize": 14,
-                          "fontWeight": "500"
+                          "id": "1:529",
+                          "name": "text",
+                          "type": "TEXT",
+                          "x": 0,
+                          "y": 14,
+                          "width": 101,
+                          "height": 18,
+                          "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                          "text": "Architecture",
+                          "font": ["JetBrains Mono", 500, 14],
+                          "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
                         }
                       ]
                     }
                   ]
                 },
                 {
-                  "type": "frame",
-                  "id": "Q60w5",
-                  "gap": 6,
-                  "alignItems": "center",
+                  "id": "1:530",
+                  "name": "frame",
+                  "type": "FRAME",
+                  "x": 874,
+                  "y": 16,
+                  "width": 222,
+                  "height": 32,
+                  "layout": {
+                    "mode": "HORIZONTAL",
+                    "gap": 6,
+                    "padding": [0, 0, 0, 0],
+                    "primary": "MIN",
+                    "counter": "CENTER",
+                    "sizing": ["HUG", "HUG"]
+                  },
                   "children": [
                     {
-                      "type": "frame",
-                      "id": "tBtUk",
-                      "layout": "vertical",
-                      "alignItems": "end",
+                      "id": "1:531",
+                      "name": "frame",
+                      "type": "FRAME",
+                      "x": 0,
+                      "y": 0,
+                      "width": 202,
+                      "height": 32,
+                      "layout": {
+                        "mode": "VERTICAL",
+                        "gap": 0,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "MAX",
+                        "sizing": ["HUG", "HUG"]
+                      },
                       "children": [
                         {
-                          "type": "text",
-                          "id": "BUQ78",
-                          "fill": "$muted",
-                          "content": "Next",
-                          "fontFamily": "$typography/font-sans",
-                          "fontSize": 11,
-                          "fontWeight": "normal"
+                          "id": "1:532",
+                          "name": "text",
+                          "type": "TEXT",
+                          "x": 178,
+                          "y": 0,
+                          "width": 24,
+                          "height": 14,
+                          "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                          "text": "Next",
+                          "font": ["Geist", 400, 11],
+                          "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
                         },
                         {
-                          "type": "text",
-                          "id": "Q7UBD",
-                          "fill": "$foreground/foreground",
-                          "content": "Operate the server fleet",
-                          "fontFamily": "$typography/font-mono",
-                          "fontSize": 14,
-                          "fontWeight": "500"
+                          "id": "1:533",
+                          "name": "text",
+                          "type": "TEXT",
+                          "x": 0,
+                          "y": 14,
+                          "width": 202,
+                          "height": 18,
+                          "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                          "text": "Operate the server fleet",
+                          "font": ["JetBrains Mono", 500, 14],
+                          "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
                         }
                       ]
                     },
                     {
-                      "type": "icon",
-                      "id": "lbSl7",
+                      "id": "1:534",
+                      "name": "icon",
+                      "type": "FRAME",
+                      "x": 208,
+                      "y": 9,
                       "width": 14,
                       "height": 14,
-                      "icon": "arrow-right",
-                      "library": "lucide",
-                      "fill": "$muted"
+                      "variables": {"fills/0/color": "muted"},
+                      "children": [
+                        {
+                          "name": "path",
+                          "type": "VECTOR",
+                          "x": 2.92,
+                          "y": 2.92,
+                          "width": 8.17,
+                          "height": 8.17,
+                          "strokes": [{"type": "SOLID", "color": "#9E98A6"}],
+                          "strokeWeight": 1.17
+                        }
+                      ]
                     }
                   ]
                 }

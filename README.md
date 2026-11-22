@@ -6,7 +6,7 @@ Live site: **https://gameplane.net/**
 
 Built with [Astro](https://astro.build), Tailwind CSS 4, and self-hosted JetBrains Mono / Geist fonts. Fully static — no client framework.
 
-This repo is mounted as the `website/` git submodule of the main [Gameplane](https://github.com/GameplanePanel/Gameplane) repo. The visual source of truth is the **Group/Public Website** screens in the main repo's `design.pen` (Pencil); design changes happen there first, then get translated to code here.
+This repo is mounted as the `website/` git submodule of the main [Gameplane](https://github.com/GameplanePanel/Gameplane) repo. The visual source of truth is the **Group/Public Website** screens in the main repo's `design.fig`; design changes happen there first, then get translated to code here.
 
 ## Commands
 

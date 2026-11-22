@@ -1,429 +1,749 @@
 {
-  "type": "frame",
-  "id": "N4TBV",
+  "file": "N4TBV",
+  "id": "1:570",
+  "name": "Screen/Docs — Contributing",
+  "type": "FRAME",
   "x": 0,
   "y": 8550,
-  "name": "Screen/Docs — Contributing",
-  "theme": {
-    "semantic": "dark"
-  },
-  "clip": true,
   "width": 1440,
   "height": 960,
-  "fill": "$background/background",
+  "fills": [{"type": "SOLID", "color": "#121114"}],
+  "layout": {
+    "mode": "HORIZONTAL",
+    "gap": 0,
+    "padding": [0, 0, 0, 0],
+    "primary": "MIN",
+    "counter": "MIN",
+    "sizing": ["FIXED", "FIXED"]
+  },
+  "clips": true,
+  "variables": {"fills/0/color": "background/background"},
   "children": [
     {
-      "id": "i2LOf",
-      "type": "ref",
-      "ref": "K2Rt4H",
-      "height": "fill_container",
+      "id": "1:571",
       "name": "DocsSidebar/Expanded",
-      "width": 280
+      "type": "INSTANCE",
+      "x": 0,
+      "y": 0,
+      "width": 280,
+      "height": 960,
+      "component": "Docs/Expanded Sidebar",
+      "componentId": "1:151",
+      "fills": [{"type": "SOLID", "color": "#17151A"}],
+      "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+      "strokeWeight": 1,
+      "layout": {
+        "mode": "VERTICAL",
+        "gap": 0,
+        "padding": [0, 0, 0, 0],
+        "primary": "MIN",
+        "counter": "MIN",
+        "sizing": ["FIXED", "FIXED"]
+      },
+      "layoutAlignSelf": "STRETCH",
+      "variables": {"fills/0/color": "surface/secondary", "strokes/0/color": "border/border"},
+      "texts": [
+        "gameplane",
+        "Back to site",
+        "START HERE",
+        "Overview",
+        "Getting Started",
+        "CORE CONCEPTS",
+        "Architecture",
+        "Security",
+        "OPERATE",
+        "Servers & Config",
+        "Console & Logs",
+        "Files & Backups",
+        "Network & Automation",
+        "PLATFORM",
+        "Cluster & Storage",
+        "Users & Access",
+        "Audit & Observability",
+        "DEVELOP",
+        "Modules & Sources",
+        "API & Reference",
+        "Local Development",
+        "Component Guides",
+        "Testing & Release",
+        "REFERENCE",
+        "Upgrades",
+        "Troubleshooting",
+        "FAQ",
+        "Releases & Roadmap",
+        "Community"
+      ]
     },
     {
-      "type": "frame",
-      "id": "fJ7wu",
+      "id": "1:572",
       "name": "Main",
-      "width": "fill_container",
-      "height": "fill_container",
-      "fill": "$background/background",
-      "layout": "vertical",
+      "type": "FRAME",
+      "x": 280,
+      "y": 0,
+      "width": 1160,
+      "height": 960,
+      "fills": [{"type": "SOLID", "color": "#121114"}],
+      "layout": {
+        "mode": "VERTICAL",
+        "gap": 0,
+        "padding": [0, 0, 0, 0],
+        "primary": "MIN",
+        "counter": "MIN",
+        "sizing": ["FIXED", "FIXED"]
+      },
+      "layoutGrow": 1,
+      "layoutAlignSelf": "STRETCH",
+      "variables": {"fills/0/color": "background/background"},
       "children": [
         {
-          "id": "VT92h",
-          "type": "ref",
-          "ref": "SOdlr",
+          "id": "1:573",
           "name": "Docs Top Bar",
-          "width": "fill_container",
-          "descendants": {
-            "NImey": {
-              "content": "Develop"
-            },
-            "ikbi6": {
-              "content": "Contributing"
-            }
-          }
+          "type": "INSTANCE",
+          "x": 0,
+          "y": 0,
+          "width": 1160,
+          "height": 64,
+          "component": "Docs Top Bar",
+          "componentId": "1:239",
+          "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+          "strokeWeight": 1,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "gap": 0,
+            "padding": [0, 32, 0, 32],
+            "primary": "SPACE_BETWEEN",
+            "counter": "CENTER",
+            "sizing": ["FIXED", "FIXED"]
+          },
+          "layoutAlignSelf": "STRETCH",
+          "variables": {"strokes/0/color": "border/border"},
+          "texts": ["Docs", "/", "Develop", "/", "Contributing"]
         },
         {
-          "type": "frame",
-          "id": "fQVmI",
+          "id": "1:574",
           "name": "Body",
-          "clip": true,
-          "width": "fill_container",
-          "height": "fill_container",
-          "layout": "vertical",
-          "gap": 24,
-          "padding": 32,
+          "type": "FRAME",
+          "x": 0,
+          "y": 64,
+          "width": 1160,
+          "height": 896,
+          "layout": {
+            "mode": "VERTICAL",
+            "gap": 24,
+            "padding": [32, 32, 32, 32],
+            "primary": "MIN",
+            "counter": "MIN",
+            "sizing": ["FIXED", "FIXED"]
+          },
+          "layoutGrow": 1,
+          "layoutAlignSelf": "STRETCH",
+          "clips": true,
           "children": [
             {
-              "type": "text",
-              "id": "ILOk5",
-              "fill": "$accent/accent",
-              "content": "DOCUMENTATION",
-              "fontFamily": "$typography/font-mono",
-              "fontSize": 12,
-              "fontWeight": "600"
+              "id": "1:575",
+              "name": "text",
+              "type": "TEXT",
+              "x": 32,
+              "y": 32,
+              "width": 94,
+              "height": 16,
+              "fills": [{"type": "SOLID", "color": "#FF4FA3"}],
+              "text": "DOCUMENTATION",
+              "font": ["JetBrains Mono", 600, 12],
+              "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "accent/accent"}
             },
             {
-              "type": "text",
-              "id": "NmzyR",
-              "fill": "$foreground/foreground",
-              "content": "Contributing",
-              "fontFamily": "$typography/font-mono",
-              "fontSize": 32,
-              "fontWeight": "700"
+              "id": "1:576",
+              "name": "text",
+              "type": "TEXT",
+              "x": 32,
+              "y": 72,
+              "width": 231,
+              "height": 42,
+              "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+              "text": "Contributing",
+              "font": ["JetBrains Mono", 700, 32],
+              "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
             },
             {
-              "type": "text",
-              "id": "GzemK",
-              "fill": "$muted",
-              "textGrowth": "fixed-width",
+              "id": "1:577",
+              "name": "text",
+              "type": "TEXT",
+              "x": 32,
+              "y": 138,
               "width": 640,
-              "content": "Follow the dev loop, the design-first workflow, and code style standards before opening a pull request.",
-              "fontFamily": "$typography/font-sans",
-              "fontSize": 16,
-              "fontWeight": "normal"
+              "height": 42,
+              "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+              "text": "Follow the dev loop, the design-first workflow, and code style standards before opening a pull request.",
+              "font": ["Geist", 400, 16],
+              "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
             },
             {
-              "type": "frame",
-              "id": "BWtZq",
+              "id": "1:578",
               "name": "Dev loop",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 6,
-              "children": [
-                {
-                  "type": "text",
-                  "id": "CxrNQ",
-                  "fill": "$foreground/foreground",
-                  "content": "Dev loop",
-                  "fontFamily": "$typography/font-mono",
-                  "fontSize": 18,
-                  "fontWeight": "600"
-                },
-                {
-                  "type": "text",
-                  "id": "cmuWn",
-                  "fill": "$muted",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "make dev-up spins up a local kind cluster with images and the Helm chart already installed.",
-                  "lineHeight": 1.5,
-                  "fontFamily": "$typography/font-sans",
-                  "fontSize": 14,
-                  "fontWeight": "normal"
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "GkqQq",
-              "name": "CodeBlock",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 8,
-              "children": [
-                {
-                  "type": "text",
-                  "id": "haIEP",
-                  "fill": "$muted",
-                  "content": "DEV LOOP",
-                  "fontFamily": "$typography/font-mono",
-                  "fontSize": 11,
-                  "fontWeight": "600"
-                },
-                {
-                  "type": "frame",
-                  "id": "edyEp",
-                  "width": "fill_container",
-                  "fill": "$surface/tertiary",
-                  "cornerRadius": "$radius/2xl",
-                  "stroke": "$border/border",
-                  "strokeWidth": 1,
-                  "strokeAlignment": "inner",
-                  "layout": "vertical",
-                  "gap": 2,
-                  "padding": 16,
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "xaVbL",
-                      "fill": "$foreground/foreground",
-                      "content": "$ make dev-up      # kind cluster + images + Helm chart",
-                      "fontFamily": "$typography/font-mono",
-                      "fontSize": 13,
-                      "fontWeight": "normal"
-                    },
-                    {
-                      "type": "text",
-                      "id": "m3laq",
-                      "fill": "$foreground/foreground",
-                      "content": "$ make web-dev     # Vite dev server, proxied to the API",
-                      "fontFamily": "$typography/font-mono",
-                      "fontSize": 13,
-                      "fontWeight": "normal"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "sfdOv",
-              "name": "Design first",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 6,
-              "children": [
-                {
-                  "type": "text",
-                  "id": "iDCMa",
-                  "fill": "$foreground/foreground",
-                  "content": "Design first",
-                  "fontFamily": "$typography/font-mono",
-                  "fontSize": 18,
-                  "fontWeight": "600"
-                },
-                {
-                  "type": "text",
-                  "id": "A10Rpe",
-                  "fill": "$muted",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "UI changes start in design.pen — the designed screens are the source of truth — then get translated to React.",
-                  "lineHeight": 1.5,
-                  "fontFamily": "$typography/font-sans",
-                  "fontSize": 14,
-                  "fontWeight": "normal"
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "KPkld",
-              "name": "Code standards",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 6,
-              "children": [
-                {
-                  "type": "text",
-                  "id": "URZD9",
-                  "fill": "$foreground/foreground",
-                  "content": "Code standards",
-                  "fontFamily": "$typography/font-mono",
-                  "fontSize": 18,
-                  "fontWeight": "600"
-                },
-                {
-                  "type": "text",
-                  "id": "EsqRx",
-                  "fill": "$muted",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "Indentation: tabs in Go, 2 spaces elsewhere. Go: gofmt, vet, golangci-lint. TypeScript: strict with ESLint + Prettier. Comments only when why isn't obvious.",
-                  "lineHeight": 1.5,
-                  "fontFamily": "$typography/font-sans",
-                  "fontSize": 14,
-                  "fontWeight": "normal"
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "bZQPI",
-              "name": "Submitting a change",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 6,
-              "children": [
-                {
-                  "type": "text",
-                  "id": "NhhOO",
-                  "fill": "$foreground/foreground",
-                  "content": "Submitting a change",
-                  "fontFamily": "$typography/font-mono",
-                  "fontSize": 18,
-                  "fontWeight": "600"
-                },
-                {
-                  "type": "text",
-                  "id": "vcqC2",
-                  "fill": "$muted",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "Fork the repository and create a feature branch. Run only quick compile checks locally. For UI work, include Pencil node IDs in PR description. Sign your commits. Verify PR labels: type: and area:.",
-                  "lineHeight": 1.5,
-                  "fontFamily": "$typography/font-sans",
-                  "fontSize": 14,
-                  "fontWeight": "normal"
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "SQjeX",
-              "name": "Translations section",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 6,
-              "children": [
-                {
-                  "type": "text",
-                  "id": "xsjAd",
-                  "fill": "$foreground/foreground",
-                  "content": "Translations",
-                  "fontFamily": "$typography/font-mono",
-                  "fontSize": 18,
-                  "fontWeight": "600"
-                },
-                {
-                  "type": "text",
-                  "id": "HaW1z",
-                  "fill": "$muted",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "Language packs live in i18n/locales/<tag>/ and need no code changes. A language appears in the picker once 80% of its messages are translated.",
-                  "lineHeight": 1.5,
-                  "fontFamily": "$typography/font-sans",
-                  "fontSize": 14,
-                  "fontWeight": "normal"
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "ceKhm",
-              "name": "Game modules and submodules",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 6,
-              "children": [
-                {
-                  "type": "text",
-                  "id": "Od21k",
-                  "fill": "$foreground/foreground",
-                  "content": "Game modules and submodules",
-                  "fontFamily": "$typography/font-mono",
-                  "fontSize": 18,
-                  "fontWeight": "600"
-                },
-                {
-                  "type": "text",
-                  "id": "yIzMh",
-                  "fill": "$muted",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "Game-module changes belong in gameplane-module repository. Open the module PR there; once it merges, bump the submodule pointer. Repoint submodules locally without committing.",
-                  "lineHeight": 1.5,
-                  "fontFamily": "$typography/font-sans",
-                  "fontSize": 14,
-                  "fontWeight": "normal"
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "k9kRA",
-              "name": "PrevNext",
-              "width": "fill_container",
-              "stroke": "$border/border",
-              "strokeWidth": {
-                "top": 1
+              "type": "FRAME",
+              "x": 32,
+              "y": 204,
+              "width": 1096,
+              "height": 51,
+              "layout": {
+                "mode": "VERTICAL",
+                "gap": 6,
+                "padding": [0, 0, 0, 0],
+                "primary": "MIN",
+                "counter": "MIN",
+                "sizing": ["HUG", "FIXED"]
               },
-              "strokeAlignment": "inner",
-              "strokeLinejoin": "round",
-              "padding": [
-                16,
-                0,
-                0,
-                0
-              ],
-              "justifyContent": "space_between",
-              "alignItems": "center",
+              "layoutAlignSelf": "STRETCH",
               "children": [
                 {
-                  "type": "frame",
-                  "id": "iTF9s",
-                  "gap": 6,
-                  "alignItems": "center",
+                  "id": "1:579",
+                  "name": "text",
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 0,
+                  "width": 87,
+                  "height": 24,
+                  "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                  "text": "Dev loop",
+                  "font": ["JetBrains Mono", 600, 18],
+                  "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
+                },
+                {
+                  "id": "1:580",
+                  "name": "text",
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 30,
+                  "width": 1096,
+                  "height": 21,
+                  "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                  "layoutAlignSelf": "STRETCH",
+                  "text": "make dev-up spins up a local kind cluster with images and the Helm chart already installed.",
+                  "font": ["Geist", 400, 14],
+                  "lineHeight": {"value": 150, "unit": "PERCENT"},
+                  "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
+                }
+              ]
+            },
+            {
+              "id": "1:581",
+              "name": "CodeBlock",
+              "type": "FRAME",
+              "x": 32,
+              "y": 279,
+              "width": 1096,
+              "height": 91,
+              "layout": {
+                "mode": "VERTICAL",
+                "gap": 8,
+                "padding": [0, 0, 0, 0],
+                "primary": "MIN",
+                "counter": "MIN",
+                "sizing": ["HUG", "FIXED"]
+              },
+              "layoutAlignSelf": "STRETCH",
+              "children": [
+                {
+                  "id": "1:582",
+                  "name": "text",
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 0,
+                  "width": 53,
+                  "height": 15,
+                  "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                  "text": "DEV LOOP",
+                  "font": ["JetBrains Mono", 600, 11],
+                  "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "muted"}
+                },
+                {
+                  "id": "1:583",
+                  "name": "frame",
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 23,
+                  "width": 1096,
+                  "height": 68,
+                  "fills": [{"type": "SOLID", "color": "#141317"}],
+                  "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+                  "strokeWeight": 1,
+                  "cornerRadius": 16,
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "gap": 2,
+                    "padding": [16, 16, 16, 16],
+                    "primary": "MIN",
+                    "counter": "MIN",
+                    "sizing": ["HUG", "FIXED"]
+                  },
+                  "layoutAlignSelf": "STRETCH",
+                  "variables": {
+                    "cornerRadius": "radius/2xl",
+                    "fills/0/color": "surface/tertiary",
+                    "strokes/0/color": "border/border"
+                  },
                   "children": [
                     {
-                      "type": "icon",
-                      "id": "EPUp8",
-                      "width": 14,
-                      "height": 14,
-                      "icon": "arrow-left",
-                      "library": "lucide",
-                      "fill": "$muted"
+                      "id": "1:584",
+                      "name": "text",
+                      "type": "TEXT",
+                      "x": 16,
+                      "y": 16,
+                      "width": 429,
+                      "height": 17,
+                      "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                      "text": "$ make dev-up      # kind cluster + images + Helm chart",
+                      "font": ["JetBrains Mono", 400, 13],
+                      "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
                     },
                     {
-                      "type": "frame",
-                      "id": "JpOGP",
-                      "layout": "vertical",
+                      "id": "1:585",
+                      "name": "text",
+                      "type": "TEXT",
+                      "x": 16,
+                      "y": 35,
+                      "width": 437,
+                      "height": 17,
+                      "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                      "text": "$ make web-dev     # Vite dev server, proxied to the API",
+                      "font": ["JetBrains Mono", 400, 13],
+                      "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "1:586",
+              "name": "Design first",
+              "type": "FRAME",
+              "x": 32,
+              "y": 394,
+              "width": 1096,
+              "height": 51,
+              "layout": {
+                "mode": "VERTICAL",
+                "gap": 6,
+                "padding": [0, 0, 0, 0],
+                "primary": "MIN",
+                "counter": "MIN",
+                "sizing": ["HUG", "FIXED"]
+              },
+              "layoutAlignSelf": "STRETCH",
+              "children": [
+                {
+                  "id": "1:587",
+                  "name": "text",
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 0,
+                  "width": 130,
+                  "height": 24,
+                  "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                  "text": "Design first",
+                  "font": ["JetBrains Mono", 600, 18],
+                  "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
+                },
+                {
+                  "id": "1:588",
+                  "name": "text",
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 30,
+                  "width": 1096,
+                  "height": 21,
+                  "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                  "layoutAlignSelf": "STRETCH",
+                  "text": "UI changes start in design.pen — the designed screens are the source of truth — then get translated to React.",
+                  "font": ["Geist", 400, 14],
+                  "lineHeight": {"value": 150, "unit": "PERCENT"},
+                  "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
+                }
+              ]
+            },
+            {
+              "id": "1:589",
+              "name": "Code standards",
+              "type": "FRAME",
+              "x": 32,
+              "y": 469,
+              "width": 1096,
+              "height": 51,
+              "layout": {
+                "mode": "VERTICAL",
+                "gap": 6,
+                "padding": [0, 0, 0, 0],
+                "primary": "MIN",
+                "counter": "MIN",
+                "sizing": ["HUG", "FIXED"]
+              },
+              "layoutAlignSelf": "STRETCH",
+              "children": [
+                {
+                  "id": "1:590",
+                  "name": "text",
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 0,
+                  "width": 152,
+                  "height": 24,
+                  "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                  "text": "Code standards",
+                  "font": ["JetBrains Mono", 600, 18],
+                  "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
+                },
+                {
+                  "id": "1:591",
+                  "name": "text",
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 30,
+                  "width": 1096,
+                  "height": 21,
+                  "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                  "layoutAlignSelf": "STRETCH",
+                  "text": "Indentation: tabs in Go, 2 spaces elsewhere. Go: gofmt, vet, golangci-lint. TypeScript: strict with ESLint + Prettier. Comments only when why isn't obvious.",
+                  "font": ["Geist", 400, 14],
+                  "lineHeight": {"value": 150, "unit": "PERCENT"},
+                  "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
+                }
+              ]
+            },
+            {
+              "id": "1:592",
+              "name": "Submitting a change",
+              "type": "FRAME",
+              "x": 32,
+              "y": 544,
+              "width": 1096,
+              "height": 72,
+              "layout": {
+                "mode": "VERTICAL",
+                "gap": 6,
+                "padding": [0, 0, 0, 0],
+                "primary": "MIN",
+                "counter": "MIN",
+                "sizing": ["HUG", "FIXED"]
+              },
+              "layoutAlignSelf": "STRETCH",
+              "children": [
+                {
+                  "id": "1:593",
+                  "name": "text",
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 0,
+                  "width": 206,
+                  "height": 24,
+                  "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                  "text": "Submitting a change",
+                  "font": ["JetBrains Mono", 600, 18],
+                  "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
+                },
+                {
+                  "id": "1:594",
+                  "name": "text",
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 30,
+                  "width": 1096,
+                  "height": 42,
+                  "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                  "layoutAlignSelf": "STRETCH",
+                  "text": "Fork the repository and create a feature branch. Run only quick compile checks locally. For UI work, include Pencil node IDs in PR description. Sign your commits. Verify PR labels: type: and area:.",
+                  "font": ["Geist", 400, 14],
+                  "lineHeight": {"value": 150, "unit": "PERCENT"},
+                  "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
+                }
+              ]
+            },
+            {
+              "id": "1:595",
+              "name": "Translations section",
+              "type": "FRAME",
+              "x": 32,
+              "y": 640,
+              "width": 1096,
+              "height": 51,
+              "layout": {
+                "mode": "VERTICAL",
+                "gap": 6,
+                "padding": [0, 0, 0, 0],
+                "primary": "MIN",
+                "counter": "MIN",
+                "sizing": ["HUG", "FIXED"]
+              },
+              "layoutAlignSelf": "STRETCH",
+              "children": [
+                {
+                  "id": "1:596",
+                  "name": "text",
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 0,
+                  "width": 130,
+                  "height": 24,
+                  "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                  "text": "Translations",
+                  "font": ["JetBrains Mono", 600, 18],
+                  "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
+                },
+                {
+                  "id": "1:597",
+                  "name": "text",
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 30,
+                  "width": 1096,
+                  "height": 21,
+                  "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                  "layoutAlignSelf": "STRETCH",
+                  "text": "Language packs live in i18n/locales/<tag>/ and need no code changes. A language appears in the picker once 80% of its messages are translated.",
+                  "font": ["Geist", 400, 14],
+                  "lineHeight": {"value": 150, "unit": "PERCENT"},
+                  "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
+                }
+              ]
+            },
+            {
+              "id": "1:598",
+              "name": "Game modules and submodules",
+              "type": "FRAME",
+              "x": 32,
+              "y": 715,
+              "width": 1096,
+              "height": 72,
+              "layout": {
+                "mode": "VERTICAL",
+                "gap": 6,
+                "padding": [0, 0, 0, 0],
+                "primary": "MIN",
+                "counter": "MIN",
+                "sizing": ["HUG", "FIXED"]
+              },
+              "layoutAlignSelf": "STRETCH",
+              "children": [
+                {
+                  "id": "1:599",
+                  "name": "text",
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 0,
+                  "width": 292,
+                  "height": 24,
+                  "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                  "text": "Game modules and submodules",
+                  "font": ["JetBrains Mono", 600, 18],
+                  "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
+                },
+                {
+                  "id": "1:600",
+                  "name": "text",
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 30,
+                  "width": 1096,
+                  "height": 42,
+                  "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                  "layoutAlignSelf": "STRETCH",
+                  "text": "Game-module changes belong in gameplane-module repository. Open the module PR there; once it merges, bump the submodule pointer. Repoint submodules locally without committing.",
+                  "font": ["Geist", 400, 14],
+                  "lineHeight": {"value": 150, "unit": "PERCENT"},
+                  "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
+                }
+              ]
+            },
+            {
+              "id": "1:601",
+              "name": "PrevNext",
+              "type": "FRAME",
+              "x": 32,
+              "y": 811,
+              "width": 1096,
+              "height": 48,
+              "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+              "strokeWeight": 1,
+              "layout": {
+                "mode": "HORIZONTAL",
+                "gap": 0,
+                "padding": [16, 0, 0, 0],
+                "primary": "SPACE_BETWEEN",
+                "counter": "CENTER",
+                "sizing": ["FIXED", "HUG"]
+              },
+              "layoutAlignSelf": "STRETCH",
+              "variables": {"strokes/0/color": "border/border"},
+              "children": [
+                {
+                  "id": "1:602",
+                  "name": "frame",
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 16,
+                  "width": 214,
+                  "height": 32,
+                  "layout": {
+                    "mode": "HORIZONTAL",
+                    "gap": 6,
+                    "padding": [0, 0, 0, 0],
+                    "primary": "MIN",
+                    "counter": "CENTER",
+                    "sizing": ["HUG", "HUG"]
+                  },
+                  "children": [
+                    {
+                      "id": "1:603",
+                      "name": "icon",
+                      "type": "FRAME",
+                      "x": 0,
+                      "y": 9,
+                      "width": 14,
+                      "height": 14,
+                      "variables": {"fills/0/color": "muted"},
                       "children": [
                         {
-                          "type": "text",
-                          "id": "mzcbL",
-                          "fill": "$muted",
-                          "content": "Previous",
-                          "fontFamily": "$typography/font-sans",
-                          "fontSize": 11,
-                          "fontWeight": "normal"
+                          "name": "path",
+                          "type": "VECTOR",
+                          "x": 2.92,
+                          "y": 2.92,
+                          "width": 8.17,
+                          "height": 8.17,
+                          "strokes": [{"type": "SOLID", "color": "#9E98A6"}],
+                          "strokeWeight": 1.17
+                        }
+                      ]
+                    },
+                    {
+                      "id": "1:604",
+                      "name": "frame",
+                      "type": "FRAME",
+                      "x": 20,
+                      "y": 0,
+                      "width": 194,
+                      "height": 32,
+                      "layout": {
+                        "mode": "VERTICAL",
+                        "gap": 0,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "MIN",
+                        "sizing": ["HUG", "HUG"]
+                      },
+                      "children": [
+                        {
+                          "id": "1:605",
+                          "name": "text",
+                          "type": "TEXT",
+                          "x": 0,
+                          "y": 0,
+                          "width": 44,
+                          "height": 14,
+                          "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                          "text": "Previous",
+                          "font": ["Geist", 400, 11],
+                          "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
                         },
                         {
-                          "type": "text",
-                          "id": "dXLka",
-                          "fill": "$foreground/foreground",
-                          "content": "Local development setup",
-                          "fontFamily": "$typography/font-mono",
-                          "fontSize": 14,
-                          "fontWeight": "500"
+                          "id": "1:606",
+                          "name": "text",
+                          "type": "TEXT",
+                          "x": 0,
+                          "y": 14,
+                          "width": 194,
+                          "height": 18,
+                          "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                          "text": "Local development setup",
+                          "font": ["JetBrains Mono", 500, 14],
+                          "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
                         }
                       ]
                     }
                   ]
                 },
                 {
-                  "type": "frame",
-                  "id": "g1nn6",
-                  "gap": 6,
-                  "alignItems": "center",
+                  "id": "1:607",
+                  "name": "frame",
+                  "type": "FRAME",
+                  "x": 824,
+                  "y": 16,
+                  "width": 272,
+                  "height": 32,
+                  "layout": {
+                    "mode": "HORIZONTAL",
+                    "gap": 6,
+                    "padding": [0, 0, 0, 0],
+                    "primary": "MIN",
+                    "counter": "CENTER",
+                    "sizing": ["HUG", "HUG"]
+                  },
                   "children": [
                     {
-                      "type": "frame",
-                      "id": "MZxVB",
-                      "layout": "vertical",
-                      "alignItems": "end",
+                      "id": "1:608",
+                      "name": "frame",
+                      "type": "FRAME",
+                      "x": 0,
+                      "y": 0,
+                      "width": 252,
+                      "height": 32,
+                      "layout": {
+                        "mode": "VERTICAL",
+                        "gap": 0,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "MAX",
+                        "sizing": ["HUG", "HUG"]
+                      },
                       "children": [
                         {
-                          "type": "text",
-                          "id": "HdvO5",
-                          "fill": "$muted",
-                          "content": "Next",
-                          "fontFamily": "$typography/font-sans",
-                          "fontSize": 11,
-                          "fontWeight": "normal"
+                          "id": "1:609",
+                          "name": "text",
+                          "type": "TEXT",
+                          "x": 228,
+                          "y": 0,
+                          "width": 24,
+                          "height": 14,
+                          "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                          "text": "Next",
+                          "font": ["Geist", 400, 11],
+                          "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
                         },
                         {
-                          "type": "text",
-                          "id": "A2zon",
-                          "fill": "$foreground/foreground",
-                          "content": "Contribution & Design Workflow",
-                          "fontFamily": "$typography/font-mono",
-                          "fontSize": 14,
-                          "fontWeight": "500"
+                          "id": "1:610",
+                          "name": "text",
+                          "type": "TEXT",
+                          "x": 0,
+                          "y": 14,
+                          "width": 252,
+                          "height": 18,
+                          "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                          "text": "Contribution & Design Workflow",
+                          "font": ["JetBrains Mono", 500, 14],
+                          "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
                         }
                       ]
                     },
                     {
-                      "type": "icon",
-                      "id": "knnkZ",
+                      "id": "1:611",
+                      "name": "icon",
+                      "type": "FRAME",
+                      "x": 258,
+                      "y": 9,
                       "width": 14,
                       "height": 14,
-                      "icon": "arrow-right",
-                      "library": "lucide",
-                      "fill": "$muted"
+                      "variables": {"fills/0/color": "muted"},
+                      "children": [
+                        {
+                          "name": "path",
+                          "type": "VECTOR",
+                          "x": 2.92,
+                          "y": 2.92,
+                          "width": 8.17,
+                          "height": 8.17,
+                          "strokes": [{"type": "SOLID", "color": "#9E98A6"}],
+                          "strokeWeight": 1.17
+                        }
+                      ]
                     }
                   ]
                 }

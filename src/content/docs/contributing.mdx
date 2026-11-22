@@ -26,7 +26,7 @@ make web-dev     # Vite dev server, proxied to the API
 
 ## Design first
 
-UI changes start in design.pen — the designed screens are the source of truth — then get translated to React.
+UI changes start in design.fig — the designed screens are the source of truth — then get translated to React.
 
 ## Code standards
 
@@ -41,7 +41,7 @@ UI changes start in design.pen — the designed screens are the source of truth 
 1. Fork the repository and create a feature branch.
 2. Run only quick compile checks locally (`go build ./...`, `npx tsc --noEmit`). The full test and lint suites run on CI, where they are gated; see [Testing, coverage, and E2E](../testing-coverage-e2e/).
 3. If you change `.github/workflows/` or `.github/actions/`, run the static workflow checks before pushing: `actionlint .github/workflows/*.yaml` and `zizmor .github/workflows/ .github/actions/`. Pin every external action to a full 40-character commit SHA with a `# vX.Y.Z` comment (Dependabot keeps the pins current), and give every job an explicit least-privilege `permissions` block and a `timeout-minutes`.
-4. For UI work, include the Pencil node IDs you touched in the PR description.
+4. For UI work, include the `design.fig` screen IDs you touched in the PR description.
 5. Sign your commits (`git commit -s`).
 6. Check that the PR carries at least one `type:` label and one `area:` label (CodeRabbit applies them; you verify them). Breaking CRD, API or chart-value changes also take `breaking`.
 
