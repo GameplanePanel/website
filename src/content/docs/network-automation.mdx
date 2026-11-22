@@ -93,6 +93,44 @@ When expose mode is LoadBalancer, optionally request a specific address pool or 
 
 The operator translates these to your load-balancer flavor's annotations or labels. See the [Ingress, TLS & External Access](../ingress-tls-access/) guide for full details.
 
+### A hostname as the server's address (v0.4.2)
+
+Set `spec.networking.hostname` to the DNS name players use. The operator adds it to the Service as an external-dns hint. On a LoadBalancer server, once the load balancer has published an address, `status.endpoints` and the dashboard report the hostname in place of that address. A ClusterIP server keeps reporting its cluster address.
+
+The operator does not create the DNS record. With external-dns watching Services, the record is created from the hint and follows the load balancer if it gets a new IP. A record you manage yourself must be updated by hand when that happens, or players reach the old address. The load balancer's address stays in `status.endpoints[].serviceAddress`, and address-conflict checks for `spec.networking.address` still compare against it.
+
+This applies to every LoadBalancer server with a hostname, including servers created before the upgrade that introduced it. Before upgrading, check that each such hostname resolves to its server, or clear it where it is not the name players use.
+
+### Choosing a load-balancer implementation (v0.4.2)
+
+A cluster can run more than one load-balancer implementation, each handling Services of its own class. Set `spec.networking.loadBalancerClass` on a LoadBalancer server to pick one; it becomes the Service's `spec.loadBalancerClass`. When the field is unset, the operator does not manage the class. A new Service has none, so the cluster's default implementation handles it, and an existing Service keeps any class something else gave it.
+
+Kubernetes does not allow changing a Service's class, or adding one to a LoadBalancer Service that has none. So when the field is set or changes, the operator deletes the Service and creates it again with the new class. The server keeps running, but its Service gets a new cluster IP and usually a new external address, so players reconnect. Removing the field leaves the class as it is until the Service is next replaced.
+
+The class is a Kubernetes qualified name, such as `example.com/games`, and the part after the slash is at most 63 characters. The dashboard does not edit the class, and keeps it when you save other networking settings, so set it through the API or `kubectl`. Leave `addressPool` and `address` unset when the class belongs to another implementation, because the address manager does not control that Service.
+
+### Port pools (v0.4.2)
+
+Some installs reach every game server through one public address, such as a relay or edge that forwards a range of ports to the cluster's load balancer. Most games send no hostname, so behind one address each server needs ports of its own. A port pool hands them out. Name the pool for its endpoint, and list the templates whose servers draw from it with the Helm value `operator.portPools`:
+
+```yaml
+operator:
+  portPools:
+    - name: edge
+      ports: "2456-2499"
+      templates: [valheim, factorio]
+```
+
+Each server of those templates gets a contiguous block of the pool, one port per advertised port, in template order. A port goes to one server whatever its template, and ports are reserved per protocol, so TCP 2456 and UDP 2456 are two ports. A template draws from at most one pool. The operator records each server's ports in the `gameplane.local/pool-ports` annotation and keeps them for the server's life, so saved addresses keep working. The `PortAllocation` condition lists them, and relays (frp, Tailscale, Playit) forward to those ports too.
+
+When no block is free, a new server reports `PoolExhausted` and gets no Service or address until a block frees up. A server that already has ports keeps them. When you shrink a pool, existing servers keep their ports, even ones outside the new range, and report `AllocatedOutsideRange`. Keep forwarding those ports until you move those servers, and forward the whole range at the relay or edge to the cluster's load balancer.
+
+### Connecting to a NodePort server (v0.4.2)
+
+The dashboard's **External Address** shows and copies the game host and the NodePort Kubernetes assigned, for example `play.example.net:31042`. Set **Settings → Networking → Hostname** (`spec.networking.hostname`) to a name that players can resolve and reach on that port. With no hostname, Gameplane uses a Kubernetes `ExternalIP` on the node serving the game or its wake proxy. IPv6 addresses appear in brackets, as in `[2001:db8::42]:31042`.
+
+If no external IP is available, set the game hostname to publish an address. On a cluster behind a router, point that name at the router and forward the advertised NodePort. If the router exposes a different public port, players need that port from the router configuration.
+
 ## Automate routine operations
 
 Schedules can run backups and maintenance while probes and restart policy handle unexpected failures.

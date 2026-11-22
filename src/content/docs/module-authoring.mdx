@@ -222,6 +222,13 @@ Translations never fail an install. The operator keeps the valid entries in a `<
 
 Each translation file is read up to 900 KiB. A language that would take a bundle's translation files past 4 MiB in total is skipped; languages count in file-name order, and the skipped language shows `LocalesTooLarge`.
 
+## What's new for module authors (v0.4.1–v0.4.2)
+
+- **[`spec.requiredNodeArchitecture`](../gametemplate-schema/)** — pin a GameTemplate to one worker architecture when every supported game version needs it.
+- **[`applyOnRestart`](../gametemplate-schema/)** — stage config edits for the next container start instead of rolling the game Pod on every change.
+- **[`envName`](../gametemplate-schema/)** — export a config field under a different environment variable name without renaming the key.
+- **[`capabilities.players.query`](../gametemplate-schema/)** — read the online player count from a Steam A2S_INFO query instead of the console.
+
 ## Next steps
 
 - **[Module Authoring Quickstart](../module-authoring-quickstart/)** — scaffold and author your first module using `gp-module` and the web dashboard.

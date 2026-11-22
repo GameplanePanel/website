@@ -219,6 +219,30 @@ helm install gameplane charts/gameplane -n gameplane-system --create-namespace -
 The Helm 4 field-manager behavior and the hook-on-reinstall behavior above are part of v0.3.0.
 </DocsCallout>
 
+## Upgrading to v0.4.1 and later
+
+Read the notes for every release between your current version and your target. The full lists are in the [CHANGELOG](../changelog/).
+
+### Release 0.4.1
+
+- **Breaking: native credential boundary (Kubernetes 1.30+).** The chart needs Kubernetes 1.30 or later with ValidatingAdmissionPolicy and PodSecurity admission enabled. Before upgrading, migrate existing credentials, uploads and module locale ConfigMaps, remove legacy service-account token Secrets, and bind each private HTTP or Git module credential to its exact source URL with the `gameplane.local/http-source-url` or `gameplane.local/git-source-url` annotation. Fresh installs enforce Restricted Pod Security on game namespaces; releases upgraded with `--reuse-values` can keep `podSecurity.enforceRestricted=false`. See [native credential upgrade instructions](https://github.com/GameplanePanel/Gameplane/blob/v0.4.1/docs/install.md#upgrading-native-api-credentials).
+- **Breaking: game probes are pod-local.** GameServer and GameTemplate HTTP and TCP probes now reject an explicit host. Remove the host from existing probes before the next rollout. See [CHANGELOG 0.4.1](https://github.com/GameplanePanel/Gameplane/blob/v0.4.1/CHANGELOG.md#041--2026-11-17).
+- **Breaking: ARK: Survival Evolved module 2.x.** The module runs the community image `hermsi/ark-server` (module 2.0.0) instead of a Gameplane-built image. The data volume moves to `/app`, and cluster transfers move to a second 1 GiB volume at `/cluster`. Schedule downtime and move existing worlds before adopting 2.x, rename `MAP_NAME` to `SERVER_MAP`, and remove `RCON_PASSWORD`. Use 2.0.1 or later. The image starts as root, so it does not run with `podSecurity.enforceRestricted: true`. See [module upgrade steps](https://github.com/GameplanePanel/module/tree/main/ark-survival-evolved#upgrading-from-1x).
+- **SteamCMD games need amd64 workers.** The SteamCMD base image is built for `linux/amd64` only. ARK: Survival Evolved, Mount & Blade II: Bannerlord, Nuclear Option, Squad and The Isle now require amd64 workers. On mixed clusters, set the `kubernetes.io/arch: amd64` node selector on affected GameServers that still use older templates. See [affected games and upgrade steps](https://github.com/GameplanePanel/Gameplane/blob/v0.4.1/containers/README.md#platform-support).
+- **Live Minecraft Java backups.** Before upgrading agents that only support the v1 backup endpoint, let active live backups finish and check their `Unquiesced` condition. See [operator upgrade guidance](https://github.com/GameplanePanel/Gameplane/blob/v0.4.1/docs/operator-operations.md#shared-operation-ownership).
+- **Game worker policy takes over legacy games.** When the new placement and resource policy takes over an existing game, the operator drains its Pod before applying placement and resource changes. A verified running revision uses its saved stop sequence; an unversioned game uses its Pod termination grace. See [CHANGELOG 0.4.1](https://github.com/GameplanePanel/Gameplane/blob/v0.4.1/CHANGELOG.md#041--2026-11-17).
+- **PostgreSQL high availability rollout.** To run more than one API replica, first roll out the HA-capable API with one replica and a Secret-backed DSN. After the singleton is ready, enable `api.postgresHA.enabled` and set `api.replicas` to at least `2`. SQLite and standalone installations keep one API replica. See [Helm upgrade instructions](https://github.com/GameplanePanel/Gameplane/blob/v0.4.1/docs/install.md#api-rollout-and-postgresql-availability).
+- **SSO usernames are refreshed on login.** Each OIDC login refreshes an existing user's email and display name. SSO users whose username is still the raw subject ID are renamed to their `preferred_username` (or email) on their next login. See [CHANGELOG 0.4.1](https://github.com/GameplanePanel/Gameplane/blob/v0.4.1/CHANGELOG.md#041--2026-11-17).
+
+### Release 0.4.2
+
+- **Breaking: LoadBalancer servers show their hostname as their address.** After upgrading, every LoadBalancer server that already has `spec.networking.hostname` set reports that hostname as its address, in place of the load balancer's IP, once the load balancer has published one. Check that each such hostname resolves to its server before upgrading, or clear it where it does not. See [A hostname as the server's address](https://github.com/GameplanePanel/Gameplane/blob/v0.4.2/docs/networking.md#a-hostname-as-the-servers-address).
+- **Breaking: default git module source moves to the v0.4.1 module tag.** This only affects installs that set `defaultModuleSource.type: git`. A git source serves one version per module, so ark-survival-ascended, ark-survival-evolved, minecraft-java, mount-and-blade-2-bannerlord, nuclear-option, palworld, project-zomboid, squad and the-isle change version. Before upgrading the chart, repin each installed Module of these games to the new version, or it goes `Failed` with `VersionUnavailable`. See [CHANGELOG 0.4.2](https://github.com/GameplanePanel/Gameplane/blob/v0.4.2/CHANGELOG.md#042--2026-11-20).
+
+### Release 0.4.3
+
+v0.4.3 is the first published 0.4.2 build. The v0.4.2 tag was pushed, but its release stopped when the image scan found a HIGH vulnerability in the dashboard image, so no 0.4.2 release was published. v0.4.3 ships every 0.4.2 change plus a libxml2 update to the dashboard image. Read the [0.4.2 upgrade notes](https://github.com/GameplanePanel/Gameplane/blob/v0.4.3/CHANGELOG.md#042--2026-11-20) before you upgrade from 0.4.1.
+
 ## Upgrade notes for v0.4.0
 
 Read these before upgrading from v0.3.0. The breaking changes come first. The full list is in the [CHANGELOG](../changelog/) under `[0.4.0]`.
