@@ -21,7 +21,7 @@ Desired state belongs in CRD spec; observed state and conditions belong to contr
 
 ## Workspace map
 
-The workspace joins runtime components, shared libraries, optional services, packaging, e2e infrastructure, and two submodules.
+The workspace joins runtime components, shared libraries, optional services, packaging, e2e infrastructure, and submodules.
 
 <DocsSectionList
   items={[
@@ -42,6 +42,8 @@ The workspace joins runtime components, shared libraries, optional services, pac
     },
   ]}
 />
+
+After cloning, run `git submodule update --init modules`. The split components (`mcp-server/`, `audit-syslog-bridge/`, `tunnel/` and `capture-sidecar/`) are initialised separately with `hack/submodules.sh init`. `make images` and `make dev-up` also initialise them on demand.
 
 ## Cluster development loop
 
@@ -100,7 +102,7 @@ Keep host and cluster registry addresses, kube context, namespaces, image tags, 
 <DocsQuickReference
   label="LOCAL LOOP"
   items={[
-    "git submodule update --init --recursive",
+    "git submodule update --init modules && hack/submodules.sh init",
     "make dev-up && make web-dev",
     "make dev-down   # or CLUSTER=remote make dev-up",
   ]}

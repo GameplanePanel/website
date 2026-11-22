@@ -27,6 +27,7 @@ Online is live capacity; whitelist and ban totals are persistent access state.
 - Compare unusual counts with console and game logs. A disconnect flood (players vanishing between heartbeats) or a ban/kick in progress may explain mismatches.
 - Do not treat whitelist or ban totals as current connections. These are *access* flags, not *presence* — a banned player offline still shows in the count.
 - Resolve the exact identity before applying an access change. Display names may be ambiguous across games and identity modes (UUID, username, IP, SteamID, etc.).
+- Minecraft Java operators (v0.4.2): the Players tab also lists the configured operators, including offline operators. The list is read from the server's `ops.json` file, so it does not depend on a live RCON query. If the file cannot be read, the tab shows a failed read rather than an empty list.
 - Steam display names (v0.4.0): when the installation has a Steam Web API key configured, player lists show a public Steam display name next to each Steam ID. Without a key, or when Steam is slow or unreachable, the list shows the raw Steam ID. Kick, ban and unban still act on the Steam ID, never on the display name. See [installation](../installation/) for the key setup and the [security model](https://github.com/GameplanePanel/Gameplane/blob/master/docs/security.md#steam-display-name-lookup).
 
 ## Manage whitelist and bans
@@ -57,6 +58,8 @@ Broadcast and save before maintenance, then verify player count, reconnect behav
 ## Capabilities and game support
 
 Moderation endpoints (kick, ban, unban, whitelist) are available only if the template declares them via `capabilities.players`. Most Minecraft variants (vanilla, Paper, Spigot, Forge) and Source-engine servers support all four; some games support subsets or none.
+
+Player counts can also come from Valve's A2S query over UDP instead of the console, when a module sets `capabilities.players.query` with `protocol: a2s`. This suits games with no console that lists players, such as Valheim, which has no RCON. With this query, those servers can show a player count and sleep when empty.
 
 When a capability is unavailable, the dashboard reports it in the Capabilities row and returns HTTP 501 Not Implemented if you attempt to use it.
 

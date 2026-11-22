@@ -13,7 +13,37 @@ import DocsCallout from "../../components/docs/DocsCallout.astro";
 import ChangeEntry from "../../components/docs/ChangeEntry.astro";
 
 <div class="flex flex-col">
-  <ChangeEntry version="v0.4.0" date="2026-11-10" highlight>
+  <ChangeEntry version="v0.4.3" date="2026-11-21" highlight>
+    **Publishes 0.4.2:** the 0.4.2 release stopped at a HIGH image scan finding, so 0.4.3 ships every 0.4.2 change plus a libxml2 update in the dashboard image (CVE-2026-86144).
+  </ChangeEntry>
+
+  <ChangeEntry version="v0.4.2" date="2026-11-20">
+    **Port pools:** `operator.portPools` lets servers share one public address, with each server keeping its own block of ports.
+    **Load-balancer class:** a LoadBalancer server can set `spec.networking.loadBalancerClass` to choose which implementation handles its Service.
+    **Hostname endpoints:** a LoadBalancer server with a hostname shows that hostname as its address once the load balancer has published one.
+    **Player counts over Steam A2S:** a module can read its player count from the Valve query with `capabilities.players.query`.
+    **Separate CRD chart:** `gameplane-crds` is published as its own OCI chart at the same version as `gameplane`.
+    **Minecraft operators in Players:** the Players tab lists configured Minecraft Java operators, including offline ones.
+    **OpenEBS capacity:** cluster inventory can read an administrator-selected OpenEBS LVM thin pool instead of the node's system disk.
+    **Components in their own repos:** the MCP server, audit-syslog bridge, tunnel clients and capture sidecar moved to their own repositories and are checked out as submodules.
+    **Upgrade: hostname addresses:** LoadBalancer servers with `spec.networking.hostname` set now report that hostname as their address. Check that each hostname resolves to its server first.
+    **Upgrade: git module source:** the default git module ref moves to the v0.4.1 module tag, which changes several module versions. Repin installed modules on git-source installs before upgrading.
+  </ChangeEntry>
+
+  <ChangeEntry version="v0.4.1" date="2026-11-17">
+    **Server file manager:** expand folders, edit files with autosave, and download, archive or delete a selection.
+    **Earlier log history:** the Logs tab pages back through earlier game-file output and container logs while the live stream stays connected.
+    **Staged settings:** template fields with `applyOnRestart` save without replacing the running Pod, and take effect on the next start.
+    **PostgreSQL high availability:** two or more API replicas on separate nodes can share one writable PostgreSQL primary.
+    **Worker placement and limits:** reserve game workers with a node label and taint, bound CPU and memory per server, and set per-namespace quotas.
+    **Tenant network isolation:** the opt-in `networkPolicies.tenantIsolation` profile restricts traffic between game workloads in managed namespaces.
+    **Upgrade: credential boundary:** the chart requires Kubernetes 1.30+ with ValidatingAdmissionPolicy and PodSecurity admission. Migrate existing credentials before upgrading.
+    **Upgrade: pod-local probes:** remove the explicit host from HTTP and TCP probes on GameServers and GameTemplates.
+    **Upgrade: ARK module 2.x:** the module moves to the community image `hermsi/ark-server`, with the data volume at `/app`. Schedule downtime and move existing worlds before adopting 2.x.
+    **Upgrade: amd64 workers:** ARK: Survival Evolved, Bannerlord, Nuclear Option, Squad and The Isle need amd64 workers. Set the `kubernetes.io/arch: amd64` selector on older GameServers.
+  </ChangeEntry>
+
+  <ChangeEntry version="v0.4.0" date="2026-11-10">
     **Independent central panel:** Docker Compose or a standalone Helm profile runs the API and dashboard without a local game cluster, while games run on registered clusters, each with its own operator and agents.
     **Languages:** the dashboard can be shown in other languages, set per account or as the instance default. French is the first pack, and a language is listed once it is at least 80% translated.
     **Extended telemetry tier:** a second, separately consented tier with a random install ID and fixed-set categories, signed reports, and a receiver dashboard with an optional public summary.

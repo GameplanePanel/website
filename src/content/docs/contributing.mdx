@@ -53,7 +53,9 @@ Language packs live in `i18n/locales/<tag>/` and need no code changes. A pack is
 
 Game-module changes belong in the separate `GameplanePanel/module` repository, vendored here as the `modules/` submodule. Open the module PR there; once it merges, bump the submodule pointer in a follow-up PR.
 
-`.gitmodules` points both submodules (`modules/`, `website/`) at the upstream GitHub URLs, so a fork clones them without forking them too. To work on your own fork of a submodule, repoint it locally and don't commit the change:
+The split components `mcp-server/`, `audit-syslog-bridge/`, `tunnel/` and `capture-sidecar/` also live in their own repositories (`GameplanePanel/mcp`, `GameplanePanel/audit-syslog-bridge`, `GameplanePanel/tunnel` and `GameplanePanel/capture-sidecar`). Open the change as a PR there, then bump the pointer in a follow-up PR here.
+
+`.gitmodules` points all submodules (`modules/`, `website/` and the component submodules) at the upstream GitHub URLs, so a fork clones them without forking them too. To work on your own fork of a submodule, repoint it locally and don't commit the change:
 
 ```sh
 git submodule set-url modules https://github.com/<you>/module.git

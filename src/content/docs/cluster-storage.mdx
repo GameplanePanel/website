@@ -58,6 +58,19 @@ Match access modes, reclaim policy, expansion, topology, and backup strategy to 
 
 **Backup and storage lifecycle:** Backups are created on-demand or via schedule; they are stored in a backup destination (S3, Azure Blob, local restic repository, etc.), not on the PVC. Restoration creates a new GameServer with a new PVC and restores world data from the backup; the original PVC remains untouched until explicitly deleted.
 
+### OpenEBS thin-pool capacity (v0.4.2)
+
+By default, cluster and fleet inventory reports each node's ephemeral-storage capacity and the capacity of Bound PVs. An administrator can opt in to report a separate OpenEBS LVM thin pool as game-data capacity instead. Clusters that are not configured keep the existing calculation.
+
+To opt in:
+
+- Annotate each participating Node with `gameplane.local/storage-pool`. Name the provider, the namespace, the volume group, the thin pool (exactly `<volumeGroup>_thinpool`) and the storage classes. Only one pool per Node is supported.
+- Use storage classes dedicated to OpenEBS LVM with `thinProvision: "yes"` on the selected volume group and pool. Changing the StorageClass does not migrate volumes that already exist.
+- Verify this prerequisite yourself. PV metadata does not show the thin pool or the thin-provisioning mode.
+- Create a namespace-scoped Role in the annotation's namespace. It grants `get` on the same-name LVMNode and nothing else. Bind it to the identity that inventory uses.
+
+If the pool lookup fails, the capacity shows as unavailable. Inventory does not fall back to the node's system disk or report zero. Bound PV sizes are provisioned allocation, not physical usage.
+
 ## Placement and multi-node fleets
 
 Use scheduler defaults first, then add affinity, tolerations, GPU selectors, or pinning only for a clear constraint.

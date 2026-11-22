@@ -56,6 +56,8 @@ Every GameTemplate declares a `spec.versions[]` catalog (optional — when empty
 - `default` — Marks the wizard's pre-selected entry. At most one entry should set it; if none or several do, the first entry is the default.
 - `gameVersion` — Optional upstream game-version token (e.g., `"1.21.4"`) the dashboard passes to external mod registries. Distinct from `id` — `id` is a Gameplane selector, `gameVersion` is the registry's own version facet. Leave empty when unset or when the template declares no mod registries.
 
+`spec.requiredNodeArchitecture` — Set this when every supported game version needs one worker architecture. For example, use `amd64` for a game that needs the Gameplane SteamCMD base. Verify the actual installer and server on that architecture. Kubernetes intersects the resulting `kubernetes.io/arch` requirement with the server's placement and the operator's worker policy. Set the module's `gameplaneMinVersion` to a release that enforces the field, so older operators reject the bundle.
+
 ## Configuration and files
 
 Map typed inputs to environment, args, or rendered files without exposing secrets in status.
@@ -77,6 +79,18 @@ Each entry in `spec.configSchema[]` declares:
 - `autoFromMemoryLimit` — Auto-compute the field's value from the game container's effective memory limit. Lets templates size JVM heaps or similar to whatever resources the server was given. An explicit user value or a template without a memory limit overrides it.
 - `min` / `max` — Bounds for int-typed fields (inclusive; ignored for non-int).
 - `minLength` / `maxLength` — String length bounds for string and password-typed fields (inclusive; ignored for non-string).
+- `applyOnRestart` — On an environment field, set `true` to stage edits and clears for the next container start. By default, changing a config value rolls the game Pod. Update the Gameplane CRDs and operator before installing a template that sets it.
+- `envName` — Export the field under another environment variable name. The value stays under `name`; only the container variable changes. Two env fields may not export the same variable when either one sets `envName`.
+
+For example, this field keeps its value under `WHITELIST_ENABLED` and exports it as `ENABLE_WHITELIST`, which the itzg image reads:
+
+```yaml
+- name: WHITELIST_ENABLED      # config key, unchanged
+  displayName: Enforce whitelist
+  type: bool
+  default: "false"
+  envName: ENABLE_WHITELIST    # what the itzg image reads
+```
 
 ### Config files
 
@@ -161,11 +175,22 @@ Align ports, resources, security, probes, volumes, backups, files, mods, logs, R
 Key sub-specs:
 
 - `players` — Moderation actions (`kick`, `ban`, `unban`, `banList`, `whitelist`, `list`). Each is a Go text/template rendered with `.Player` and `.Reason`.
+- `players.query` — Reads the online player count from a server query protocol instead of the console, for games whose console cannot list players or has none. `protocol: a2s` is Valve's Steam server query (A2S_INFO), which most Steam dedicated servers answer. `port` is the UDP query port and must be declared in `spec.ports`. The agent sends the query inside the pod, so the port does not need to be advertised. The count drives the dashboard's player count and idle sleep: a server with no player count never sleeps. Bots are not counted. When `query` is set, it is the only source of the count. The Players tab's list and moderation still use the console.
 - `quiesce` — Pause and resume game writes around a backup: `quiesce[]` runs before snapshot, `unquiesce[]` runs after.
 - `lifecycle.stop` — Graceful shutdown sequence (e.g., `["save-off", "save-all flush"]` for Minecraft). The operator runs this before scaling the server down, so the world is saved cleanly instead of relying on container SIGTERM.
 - `actions[]` — Named operator actions surfaced as buttons on the server detail page. Each runs a templated console command.
 - `status` — Game-specific live metrics shown on the Overview tab, read via RCON command and parsed by named-group regex.
 - `mods` — Declares the mod/plugin directory and install policy. Supports a single shared path, per-(version+loader) mod volumes, or ID-based mods (where the server downloads its own).
+
+Example for `players.query`, modelled on Valheim (no RCON; it answers A2S on the game port plus one):
+
+```yaml
+capabilities:
+  players:
+    query:
+      protocol: a2s
+      port: 2457
+```
 
 <DocsQuickReference
   label="TEMPLATE MODEL"
