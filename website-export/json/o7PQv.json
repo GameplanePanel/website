@@ -1,933 +1,1594 @@
 {
-  "type": "frame",
-  "id": "o7PQv",
+  "file": "o7PQv",
+  "id": "1:4863",
+  "name": "Screen/Docs — Lifecycle & Health Probes",
+  "type": "FRAME",
   "x": 0,
   "y": 67860,
-  "name": "Screen/Docs — Lifecycle & Health Probes",
-  "theme": {
-    "semantic": "dark"
-  },
-  "clip": true,
   "width": 1440,
   "height": 900,
-  "fill": "$background/background",
+  "fills": [{"type": "SOLID", "color": "#121114"}],
+  "layout": {
+    "mode": "HORIZONTAL",
+    "gap": 0,
+    "padding": [0, 0, 0, 0],
+    "primary": "MIN",
+    "counter": "MIN",
+    "sizing": ["FIXED", "FIXED"]
+  },
+  "clips": true,
+  "variables": {"fills/0/color": "background/background"},
   "children": [
     {
-      "id": "DteCM",
-      "type": "ref",
-      "ref": "K2Rt4H",
-      "height": "fill_container",
+      "id": "1:4864",
       "name": "DocsSidebar/Expanded",
-      "width": 280
+      "type": "INSTANCE",
+      "x": 0,
+      "y": 0,
+      "width": 280,
+      "height": 900,
+      "component": "Docs/Expanded Sidebar",
+      "componentId": "1:151",
+      "fills": [{"type": "SOLID", "color": "#17151A"}],
+      "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+      "strokeWeight": 1,
+      "layout": {
+        "mode": "VERTICAL",
+        "gap": 0,
+        "padding": [0, 0, 0, 0],
+        "primary": "MIN",
+        "counter": "MIN",
+        "sizing": ["FIXED", "FIXED"]
+      },
+      "layoutAlignSelf": "STRETCH",
+      "variables": {"fills/0/color": "surface/secondary", "strokes/0/color": "border/border"},
+      "texts": [
+        "gameplane",
+        "Back to site",
+        "START HERE",
+        "Overview",
+        "Getting Started",
+        "CORE CONCEPTS",
+        "Architecture",
+        "Security",
+        "OPERATE",
+        "Servers & Config",
+        "Console & Logs",
+        "Files & Backups",
+        "Network & Automation",
+        "PLATFORM",
+        "Cluster & Storage",
+        "Users & Access",
+        "Audit & Observability",
+        "DEVELOP",
+        "Modules & Sources",
+        "API & Reference",
+        "Local Development",
+        "Component Guides",
+        "Testing & Release",
+        "REFERENCE",
+        "Upgrades",
+        "Troubleshooting",
+        "FAQ",
+        "Releases & Roadmap",
+        "Community"
+      ]
     },
     {
-      "type": "frame",
-      "id": "s3nCal",
+      "id": "1:4865",
       "name": "Docs Main",
-      "width": "fill_container",
-      "height": "fill_container",
-      "fill": "$background/background",
-      "layout": "vertical",
+      "type": "FRAME",
+      "x": 280,
+      "y": 0,
+      "width": 1160,
+      "height": 900,
+      "fills": [{"type": "SOLID", "color": "#121114"}],
+      "layout": {
+        "mode": "VERTICAL",
+        "gap": 0,
+        "padding": [0, 0, 0, 0],
+        "primary": "MIN",
+        "counter": "MIN",
+        "sizing": ["FIXED", "FIXED"]
+      },
+      "layoutGrow": 1,
+      "layoutAlignSelf": "STRETCH",
+      "variables": {"fills/0/color": "background/background"},
       "children": [
         {
-          "id": "g0X5Rh",
-          "type": "ref",
-          "ref": "SOdlr",
+          "id": "1:4866",
           "name": "Docs Top Bar",
-          "width": "fill_container",
-          "descendants": {
-            "NImey": {
-              "content": "Operate"
-            },
-            "ikbi6": {
-              "content": "Lifecycle & Probes"
-            }
-          }
+          "type": "INSTANCE",
+          "x": 0,
+          "y": 0,
+          "width": 1160,
+          "height": 64,
+          "component": "Docs Top Bar",
+          "componentId": "1:239",
+          "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+          "strokeWeight": 1,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "gap": 0,
+            "padding": [0, 32, 0, 32],
+            "primary": "SPACE_BETWEEN",
+            "counter": "CENTER",
+            "sizing": ["FIXED", "FIXED"]
+          },
+          "layoutAlignSelf": "STRETCH",
+          "variables": {"strokes/0/color": "border/border"},
+          "texts": ["Docs", "/", "Operate", "/", "Lifecycle & Probes"]
         },
         {
-          "type": "frame",
-          "id": "CYHCr",
+          "id": "1:4867",
           "name": "Docs Article Body",
-          "clip": true,
-          "width": "fill_container",
-          "height": "fill_container",
-          "gap": 32,
-          "padding": 32,
+          "type": "FRAME",
+          "x": 0,
+          "y": 64,
+          "width": 1160,
+          "height": 836,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "gap": 32,
+            "padding": [32, 32, 32, 32],
+            "primary": "MIN",
+            "counter": "MIN",
+            "sizing": ["FIXED", "FIXED"]
+          },
+          "layoutGrow": 1,
+          "layoutAlignSelf": "STRETCH",
+          "clips": true,
           "children": [
             {
-              "type": "frame",
-              "id": "gFzTV",
+              "id": "1:4868",
               "name": "Docs Article",
+              "type": "FRAME",
+              "x": 32,
+              "y": 32,
               "width": 780,
-              "layout": "vertical",
-              "gap": 14,
+              "height": 696,
+              "layout": {
+                "mode": "VERTICAL",
+                "gap": 14,
+                "padding": [0, 0, 0, 0],
+                "primary": "MIN",
+                "counter": "MIN",
+                "sizing": ["HUG", "FIXED"]
+              },
               "children": [
                 {
-                  "type": "text",
-                  "id": "RxErr",
+                  "id": "1:4869",
                   "name": "Article Eyebrow",
-                  "fill": "$accent/accent",
-                  "content": "CONFIGURE",
-                  "fontFamily": "JetBrains Mono",
-                  "fontSize": 11,
-                  "fontWeight": "600",
-                  "letterSpacing": 0.8
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 0,
+                  "width": 66,
+                  "height": 15,
+                  "fills": [{"type": "SOLID", "color": "#FF4FA3"}],
+                  "text": "CONFIGURE",
+                  "font": ["JetBrains Mono", 600, 11],
+                  "variables": {"fills/0/color": "accent/accent"}
                 },
                 {
-                  "type": "text",
-                  "id": "YnSmG",
+                  "id": "1:4870",
                   "name": "Article Title",
-                  "fill": "$foreground/foreground",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "Lifecycle and health probes",
-                  "lineHeight": 1.1,
-                  "fontFamily": "JetBrains Mono",
-                  "fontSize": 30,
-                  "fontWeight": "700"
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 29,
+                  "width": 780,
+                  "height": 33,
+                  "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                  "layoutAlignSelf": "STRETCH",
+                  "text": "Lifecycle and health probes",
+                  "font": ["JetBrains Mono", 700, 30],
+                  "lineHeight": {"value": 110.00000238418579, "unit": "PERCENT"},
+                  "variables": {"fills/0/color": "foreground/foreground"}
                 },
                 {
-                  "type": "text",
-                  "id": "N65pMS",
+                  "id": "1:4871",
                   "name": "Article Lead",
-                  "fill": "$muted",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "Control desired running state, graceful shutdown, and probe timing so slow games recover without restart loops or data loss.",
-                  "lineHeight": 1.45,
-                  "fontFamily": "Geist",
-                  "fontSize": 15,
-                  "fontWeight": "normal"
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 76,
+                  "width": 780,
+                  "height": 44,
+                  "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                  "layoutAlignSelf": "STRETCH",
+                  "text": "Control desired running state, graceful shutdown, and probe timing so slow games recover without restart loops or data loss.",
+                  "font": ["Geist", 400, 15],
+                  "lineHeight": {"value": 145.00000476837158, "unit": "PERCENT"},
+                  "variables": {"fills/0/color": "muted"}
                 },
                 {
-                  "type": "frame",
-                  "id": "PKnhn",
+                  "id": "1:4872",
                   "name": "Article Metadata",
-                  "gap": 8,
-                  "alignItems": "center",
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 134,
+                  "width": 193,
+                  "height": 17,
+                  "layout": {
+                    "mode": "HORIZONTAL",
+                    "gap": 8,
+                    "padding": [0, 0, 0, 0],
+                    "primary": "MIN",
+                    "counter": "CENTER",
+                    "sizing": ["HUG", "HUG"]
+                  },
                   "children": [
                     {
-                      "id": "GCUbX",
-                      "type": "ref",
-                      "ref": "NZPtq",
+                      "id": "1:4873",
                       "name": "Meta Chip 0",
-                      "descendants": {
-                        "NLG8t": {
-                          "content": "CONFIGURATION"
-                        }
-                      }
+                      "type": "INSTANCE",
+                      "x": 0,
+                      "y": 0,
+                      "width": 100,
+                      "height": 17,
+                      "component": "Chip/Soft/Accent/SM",
+                      "componentId": "1:1583",
+                      "fills": [{"type": "SOLID", "color": "#331525"}],
+                      "cornerRadius": 16,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 2,
+                        "padding": [2, 4, 2, 4],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["HUG", "HUG"]
+                      },
+                      "variables": {"cornerRadius": "radius/2xl", "fills/0/color": "accent/soft"},
+                      "texts": ["CONFIGURATION"]
                     },
                     {
-                      "id": "vbVN3",
-                      "type": "ref",
-                      "ref": "EbSsA",
+                      "id": "1:4874",
                       "name": "Meta Chip 1",
-                      "descendants": {
-                        "yb6zz": {
-                          "content": "v0.4"
-                        }
-                      }
+                      "type": "INSTANCE",
+                      "x": 108,
+                      "y": 0,
+                      "width": 32,
+                      "height": 17,
+                      "component": "Chip/Soft/Default/SM",
+                      "componentId": "1:1586",
+                      "fills": [{"type": "SOLID", "color": "#232128"}],
+                      "cornerRadius": 16,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 2,
+                        "padding": [2, 4, 2, 4],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["HUG", "HUG"]
+                      },
+                      "variables": {"cornerRadius": "radius/2xl", "fills/0/color": "default/default"},
+                      "texts": ["v0.4"]
                     },
                     {
-                      "id": "L7LSzy",
-                      "type": "ref",
-                      "ref": "EbSsA",
+                      "id": "1:4875",
                       "name": "Meta Chip 2",
-                      "descendants": {
-                        "yb6zz": {
-                          "content": "14 MIN"
-                        }
-                      }
+                      "type": "INSTANCE",
+                      "x": 148,
+                      "y": 0,
+                      "width": 45,
+                      "height": 17,
+                      "component": "Chip/Soft/Default/SM",
+                      "componentId": "1:1586",
+                      "fills": [{"type": "SOLID", "color": "#232128"}],
+                      "cornerRadius": 16,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 2,
+                        "padding": [2, 4, 2, 4],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["HUG", "HUG"]
+                      },
+                      "variables": {"cornerRadius": "radius/2xl", "fills/0/color": "default/default"},
+                      "texts": ["14 MIN"]
                     }
                   ]
                 },
                 {
-                  "type": "frame",
-                  "id": "Wers7",
+                  "id": "1:4876",
                   "name": "Article Callout",
-                  "width": "fill_container",
-                  "fill": "$accent/soft",
-                  "cornerRadius": "$radius/xl",
-                  "stroke": "$border/border",
-                  "strokeWidth": 1,
-                  "strokeAlignment": "inner",
-                  "gap": 10,
-                  "padding": [
-                    10,
-                    12
-                  ],
-                  "alignItems": "center",
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 165,
+                  "width": 780,
+                  "height": 36,
+                  "fills": [{"type": "SOLID", "color": "#331525"}],
+                  "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+                  "strokeWeight": 1,
+                  "cornerRadius": 12,
+                  "layout": {
+                    "mode": "HORIZONTAL",
+                    "gap": 10,
+                    "padding": [10, 12, 10, 12],
+                    "primary": "MIN",
+                    "counter": "CENTER",
+                    "sizing": ["FIXED", "HUG"]
+                  },
+                  "layoutAlignSelf": "STRETCH",
+                  "variables": {"cornerRadius": "radius/xl", "fills/0/color": "accent/soft", "strokes/0/color": "border/border"},
                   "children": [
                     {
-                      "type": "icon",
-                      "id": "N56lj2",
+                      "id": "1:4877",
                       "name": "Article Callout Icon",
+                      "type": "FRAME",
+                      "x": 12,
+                      "y": 10,
                       "width": 16,
                       "height": 16,
-                      "icon": "heart-pulse",
-                      "library": "lucide",
-                      "fill": "$accent/soft-foreground"
+                      "variables": {"fills/0/color": "accent/soft-foreground"},
+                      "children": [
+                        {
+                          "name": "path",
+                          "type": "VECTOR",
+                          "x": 1.33,
+                          "y": 2.66,
+                          "width": 13.33,
+                          "height": 11.34,
+                          "strokes": [{"type": "SOLID", "color": "#FF8AC4"}],
+                          "strokeWeight": 1.33
+                        },
+                        {
+                          "name": "path",
+                          "type": "VECTOR",
+                          "x": 2.15,
+                          "y": 6.33,
+                          "width": 11.7,
+                          "height": 4.67,
+                          "strokes": [{"type": "SOLID", "color": "#FF8AC4"}],
+                          "strokeWeight": 1.33
+                        }
+                      ]
                     },
                     {
-                      "type": "text",
-                      "id": "IvlYB",
+                      "id": "1:4878",
                       "name": "Article Callout Text",
-                      "fill": "$accent/soft-foreground",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "Use intentional Stop or Suspend for maintenance; do not weaken probes to hide a real process failure.",
-                      "fontFamily": "Geist",
-                      "fontSize": 12.5,
-                      "fontWeight": "normal"
+                      "type": "TEXT",
+                      "x": 38,
+                      "y": 10,
+                      "width": 730,
+                      "height": 16,
+                      "fills": [{"type": "SOLID", "color": "#FF8AC4"}],
+                      "layoutGrow": 1,
+                      "text": "Use intentional Stop or Suspend for maintenance; do not weaken probes to hide a real process failure.",
+                      "font": ["Geist", 400, 12.5],
+                      "variables": {"fills/0/color": "accent/soft-foreground"}
                     }
                   ]
                 },
                 {
-                  "type": "frame",
-                  "id": "sA3jJ",
+                  "id": "1:4879",
                   "name": "Guide Section 1",
-                  "width": "fill_container",
-                  "layout": "vertical",
-                  "gap": 6,
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "X8b0qD",
-                      "name": "Section Title 1",
-                      "fill": "$foreground/foreground",
-                      "content": "Running, suspended, and restart behavior",
-                      "fontFamily": "JetBrains Mono",
-                      "fontSize": 17,
-                      "fontWeight": "600"
-                    },
-                    {
-                      "type": "text",
-                      "id": "DGj6O",
-                      "name": "Section Body 1",
-                      "fill": "$muted",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "Desired state determines whether Kubernetes maintains a running replica or scales the StatefulSet to zero.",
-                      "lineHeight": 1.45,
-                      "fontFamily": "Geist",
-                      "fontSize": 13,
-                      "fontWeight": "normal"
-                    },
-                    {
-                      "type": "frame",
-                      "id": "fXP1h",
-                      "name": "Section List 1",
-                      "width": "fill_container",
-                      "fill": "$surface/surface",
-                      "cornerRadius": "$radius/2xl",
-                      "stroke": "$border/border",
-                      "strokeWidth": 1,
-                      "strokeAlignment": "inner",
-                      "layout": "vertical",
-                      "gap": 5,
-                      "padding": [
-                        8,
-                        10
-                      ],
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "fj3UH",
-                          "name": "Section 1 Item 0",
-                          "width": "fill_container",
-                          "gap": 8,
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "icon",
-                              "id": "oYQ9U",
-                              "name": "Section 1 Item Icon 0",
-                              "width": 13,
-                              "height": 13,
-                              "icon": "check",
-                              "library": "lucide",
-                              "fill": "$accent/accent"
-                            },
-                            {
-                              "type": "text",
-                              "id": "eFejw",
-                              "name": "Section 1 Item Text 0",
-                              "fill": "$default/foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Auto-restart on maintains Running after failures.",
-                              "fontFamily": "Geist",
-                              "fontSize": 12.5,
-                              "fontWeight": "normal"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "frame",
-                          "id": "kLCeT",
-                          "name": "Section 1 Item 1",
-                          "width": "fill_container",
-                          "gap": 8,
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "icon",
-                              "id": "w6c6eN",
-                              "name": "Section 1 Item Icon 1",
-                              "width": 13,
-                              "height": 13,
-                              "icon": "check",
-                              "library": "lucide",
-                              "fill": "$accent/accent"
-                            },
-                            {
-                              "type": "text",
-                              "id": "Pfv2N",
-                              "name": "Section 1 Item Text 1",
-                              "fill": "$default/foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Turning it off reports Suspended and preserves persistent data.",
-                              "fontFamily": "Geist",
-                              "fontSize": 12.5,
-                              "fontWeight": "normal"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "frame",
-                          "id": "w5THi",
-                          "name": "Section 1 Item 2",
-                          "width": "fill_container",
-                          "gap": 8,
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "icon",
-                              "id": "X8Mtg",
-                              "name": "Section 1 Item Icon 2",
-                              "width": 13,
-                              "height": 13,
-                              "icon": "check",
-                              "library": "lucide",
-                              "fill": "$accent/accent"
-                            },
-                            {
-                              "type": "text",
-                              "id": "tQNAB",
-                              "name": "Section 1 Item Text 2",
-                              "fill": "$default/foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Use Stop or Suspend intentionally for maintenance.",
-                              "fontFamily": "Geist",
-                              "fontSize": 12.5,
-                              "fontWeight": "normal"
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "t1D95",
-                  "name": "Guide Section 2",
-                  "width": "fill_container",
-                  "layout": "vertical",
-                  "gap": 6,
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "RypEU",
-                      "name": "Section Title 2",
-                      "fill": "$foreground/foreground",
-                      "content": "Graceful termination",
-                      "fontFamily": "JetBrains Mono",
-                      "fontSize": 17,
-                      "fontWeight": "600"
-                    },
-                    {
-                      "type": "text",
-                      "id": "hPfQn",
-                      "name": "Section Body 2",
-                      "fill": "$muted",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "The operator waits for the template stop sequence within the configured 0–600 second grace window.",
-                      "lineHeight": 1.45,
-                      "fontFamily": "Geist",
-                      "fontSize": 13,
-                      "fontWeight": "normal"
-                    },
-                    {
-                      "type": "frame",
-                      "id": "T0qoQ",
-                      "name": "Section List 2",
-                      "width": "fill_container",
-                      "fill": "$surface/surface",
-                      "cornerRadius": "$radius/2xl",
-                      "stroke": "$border/border",
-                      "strokeWidth": 1,
-                      "strokeAlignment": "inner",
-                      "layout": "vertical",
-                      "gap": 5,
-                      "padding": [
-                        8,
-                        10
-                      ],
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "J0UJcE",
-                          "name": "Section 2 Item 0",
-                          "width": "fill_container",
-                          "gap": 8,
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "icon",
-                              "id": "K9qdW",
-                              "name": "Section 2 Item Icon 0",
-                              "width": 13,
-                              "height": 13,
-                              "icon": "check",
-                              "library": "lucide",
-                              "fill": "$accent/accent"
-                            },
-                            {
-                              "type": "text",
-                              "id": "NKoat",
-                              "name": "Section 2 Item Text 0",
-                              "fill": "$default/foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Default grace is 30 seconds; large worlds may need more.",
-                              "fontFamily": "Geist",
-                              "fontSize": 12.5,
-                              "fontWeight": "normal"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "frame",
-                          "id": "XlUnc",
-                          "name": "Section 2 Item 1",
-                          "width": "fill_container",
-                          "gap": 8,
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "icon",
-                              "id": "Q7xu3O",
-                              "name": "Section 2 Item Icon 1",
-                              "width": 13,
-                              "height": 13,
-                              "icon": "check",
-                              "library": "lucide",
-                              "fill": "$accent/accent"
-                            },
-                            {
-                              "type": "text",
-                              "id": "rJlw2",
-                              "name": "Section 2 Item Text 1",
-                              "fill": "$default/foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "The value matters only when the template declares a stop sequence.",
-                              "fontFamily": "Geist",
-                              "fontSize": 12.5,
-                              "fontWeight": "normal"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "frame",
-                          "id": "RcqI8",
-                          "name": "Section 2 Item 2",
-                          "width": "fill_container",
-                          "gap": 8,
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "icon",
-                              "id": "C1xpk",
-                              "name": "Section 2 Item Icon 2",
-                              "width": 13,
-                              "height": 13,
-                              "icon": "check",
-                              "library": "lucide",
-                              "fill": "$accent/accent"
-                            },
-                            {
-                              "type": "text",
-                              "id": "nNuXP",
-                              "name": "Section 2 Item Text 2",
-                              "fill": "$default/foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Verify the final save through console and logs.",
-                              "fontFamily": "Geist",
-                              "fontSize": 12.5,
-                              "fontWeight": "normal"
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "PqfmD",
-                  "name": "Guide Section 3",
-                  "width": "fill_container",
-                  "layout": "vertical",
-                  "gap": 6,
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "l6R7Q",
-                      "name": "Section Title 3",
-                      "fill": "$foreground/foreground",
-                      "content": "Tune readiness, liveness, and startup",
-                      "fontFamily": "JetBrains Mono",
-                      "fontSize": 17,
-                      "fontWeight": "600"
-                    },
-                    {
-                      "type": "text",
-                      "id": "t8oyJ",
-                      "name": "Section Body 3",
-                      "fill": "$muted",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "Override timing one probe family at a time; startup protects boot, readiness gates traffic, and liveness triggers recovery.",
-                      "lineHeight": 1.45,
-                      "fontFamily": "Geist",
-                      "fontSize": 13,
-                      "fontWeight": "normal"
-                    },
-                    {
-                      "type": "frame",
-                      "id": "QAXdX",
-                      "name": "Quick Reference",
-                      "width": "fill_container",
-                      "fill": "$surface/tertiary",
-                      "cornerRadius": "$radius/xl",
-                      "stroke": "$border/border",
-                      "strokeWidth": 1,
-                      "strokeAlignment": "inner",
-                      "layout": "vertical",
-                      "gap": 3,
-                      "padding": 12,
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "XLH3O",
-                          "name": "Quick Reference Label",
-                          "fill": "$accent/accent",
-                          "content": "PROBE MODEL",
-                          "fontFamily": "JetBrains Mono",
-                          "fontSize": 9,
-                          "fontWeight": "600",
-                          "letterSpacing": 0.6
-                        },
-                        {
-                          "type": "text",
-                          "id": "st6Qu",
-                          "name": "Quick Reference Line 1",
-                          "fill": "$foreground/foreground",
-                          "content": "01  Auto-restart off → zero replicas, Suspended, data preserved",
-                          "fontFamily": "JetBrains Mono",
-                          "fontSize": 11.5,
-                          "fontWeight": "normal"
-                        },
-                        {
-                          "type": "text",
-                          "id": "GqOCM",
-                          "name": "Quick Reference Line 2",
-                          "fill": "$foreground/foreground",
-                          "content": "02  Grace 0–600s; requires a template stop sequence",
-                          "fontFamily": "JetBrains Mono",
-                          "fontSize": 11.5,
-                          "fontWeight": "normal"
-                        },
-                        {
-                          "type": "text",
-                          "id": "zWPyS",
-                          "name": "Quick Reference Line 3",
-                          "fill": "$foreground/foreground",
-                          "content": "03  Startup protects boot; readiness gates traffic; liveness recovers",
-                          "fontFamily": "JetBrains Mono",
-                          "fontSize": 11.5,
-                          "fontWeight": "normal"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "jgimj",
-                  "name": "Article Next Link",
-                  "width": "fill_container",
-                  "stroke": "$border/border",
-                  "strokeWidth": {
-                    "top": 1
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 215,
+                  "width": 780,
+                  "height": 127,
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "gap": 6,
+                    "padding": [0, 0, 0, 0],
+                    "primary": "MIN",
+                    "counter": "MIN",
+                    "sizing": ["HUG", "FIXED"]
                   },
-                  "strokeAlignment": "inner",
-                  "strokeLinejoin": "round",
-                  "padding": [
-                    10,
-                    0,
-                    0,
-                    0
-                  ],
-                  "justifyContent": "space_between",
-                  "alignItems": "center",
+                  "layoutAlignSelf": "STRETCH",
                   "children": [
                     {
-                      "type": "frame",
-                      "id": "IXBs4",
-                      "name": "Next Link Text",
-                      "layout": "vertical",
-                      "gap": 2,
+                      "id": "1:4880",
+                      "name": "Section Title 1",
+                      "type": "TEXT",
+                      "x": 0,
+                      "y": 0,
+                      "width": 408,
+                      "height": 22,
+                      "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                      "text": "Running, suspended, and restart behavior",
+                      "font": ["JetBrains Mono", 600, 17],
+                      "variables": {"fills/0/color": "foreground/foreground"}
+                    },
+                    {
+                      "id": "1:4881",
+                      "name": "Section Body 1",
+                      "type": "TEXT",
+                      "x": 0,
+                      "y": 28,
+                      "width": 780,
+                      "height": 19,
+                      "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                      "layoutAlignSelf": "STRETCH",
+                      "text": "Desired state determines whether Kubernetes maintains a running replica or scales the StatefulSet to zero.",
+                      "font": ["Geist", 400, 13],
+                      "lineHeight": {"value": 145.00000476837158, "unit": "PERCENT"},
+                      "variables": {"fills/0/color": "muted"}
+                    },
+                    {
+                      "id": "1:4882",
+                      "name": "Section List 1",
+                      "type": "FRAME",
+                      "x": 0,
+                      "y": 53,
+                      "width": 780,
+                      "height": 74,
+                      "fills": [{"type": "SOLID", "color": "#1C1A20"}],
+                      "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+                      "strokeWeight": 1,
+                      "cornerRadius": 16,
+                      "layout": {
+                        "mode": "VERTICAL",
+                        "gap": 5,
+                        "padding": [8, 10, 8, 10],
+                        "primary": "MIN",
+                        "counter": "MIN",
+                        "sizing": ["HUG", "FIXED"]
+                      },
+                      "layoutAlignSelf": "STRETCH",
+                      "variables": {
+                        "cornerRadius": "radius/2xl",
+                        "fills/0/color": "surface/surface",
+                        "strokes/0/color": "border/border"
+                      },
                       "children": [
                         {
-                          "type": "text",
-                          "id": "zVViy",
-                          "name": "Next Link Eyebrow",
-                          "fill": "$field/placeholder",
-                          "content": "NEXT GUIDE",
-                          "fontFamily": "Geist",
-                          "fontSize": 10,
-                          "fontWeight": "normal"
+                          "id": "1:4883",
+                          "name": "Section 1 Item 0",
+                          "type": "FRAME",
+                          "x": 10,
+                          "y": 8,
+                          "width": 760,
+                          "height": 16,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 8,
+                            "padding": [0, 0, 0, 0],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "HUG"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
+                          "children": [
+                            {
+                              "id": "1:4884",
+                              "name": "Section 1 Item Icon 0",
+                              "type": "FRAME",
+                              "x": 0,
+                              "y": 1.5,
+                              "width": 13,
+                              "height": 13,
+                              "variables": {"fills/0/color": "accent/accent"},
+                              "children": [
+                                {
+                                  "name": "path",
+                                  "type": "VECTOR",
+                                  "x": 2.17,
+                                  "y": 3.25,
+                                  "width": 8.67,
+                                  "height": 5.96,
+                                  "strokes": [{"type": "SOLID", "color": "#FF4FA3"}],
+                                  "strokeWeight": 1.08
+                                }
+                              ]
+                            },
+                            {
+                              "id": "1:4885",
+                              "name": "Section 1 Item Text 0",
+                              "type": "TEXT",
+                              "x": 21,
+                              "y": 0,
+                              "width": 739,
+                              "height": 16,
+                              "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                              "layoutGrow": 1,
+                              "text": "Auto-restart on maintains Running after failures.",
+                              "font": ["Geist", 400, 12.5],
+                              "variables": {"fills/0/color": "default/foreground"}
+                            }
+                          ]
                         },
                         {
-                          "type": "text",
-                          "id": "GcFnz",
+                          "id": "1:4886",
+                          "name": "Section 1 Item 1",
+                          "type": "FRAME",
+                          "x": 10,
+                          "y": 29,
+                          "width": 760,
+                          "height": 16,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 8,
+                            "padding": [0, 0, 0, 0],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "HUG"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
+                          "children": [
+                            {
+                              "id": "1:4887",
+                              "name": "Section 1 Item Icon 1",
+                              "type": "FRAME",
+                              "x": 0,
+                              "y": 1.5,
+                              "width": 13,
+                              "height": 13,
+                              "variables": {"fills/0/color": "accent/accent"},
+                              "children": [
+                                {
+                                  "name": "path",
+                                  "type": "VECTOR",
+                                  "x": 2.17,
+                                  "y": 3.25,
+                                  "width": 8.67,
+                                  "height": 5.96,
+                                  "strokes": [{"type": "SOLID", "color": "#FF4FA3"}],
+                                  "strokeWeight": 1.08
+                                }
+                              ]
+                            },
+                            {
+                              "id": "1:4888",
+                              "name": "Section 1 Item Text 1",
+                              "type": "TEXT",
+                              "x": 21,
+                              "y": 0,
+                              "width": 739,
+                              "height": 16,
+                              "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                              "layoutGrow": 1,
+                              "text": "Turning it off reports Suspended and preserves persistent data.",
+                              "font": ["Geist", 400, 12.5],
+                              "variables": {"fills/0/color": "default/foreground"}
+                            }
+                          ]
+                        },
+                        {
+                          "id": "1:4889",
+                          "name": "Section 1 Item 2",
+                          "type": "FRAME",
+                          "x": 10,
+                          "y": 50,
+                          "width": 760,
+                          "height": 16,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 8,
+                            "padding": [0, 0, 0, 0],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "HUG"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
+                          "children": [
+                            {
+                              "id": "1:4890",
+                              "name": "Section 1 Item Icon 2",
+                              "type": "FRAME",
+                              "x": 0,
+                              "y": 1.5,
+                              "width": 13,
+                              "height": 13,
+                              "variables": {"fills/0/color": "accent/accent"},
+                              "children": [
+                                {
+                                  "name": "path",
+                                  "type": "VECTOR",
+                                  "x": 2.17,
+                                  "y": 3.25,
+                                  "width": 8.67,
+                                  "height": 5.96,
+                                  "strokes": [{"type": "SOLID", "color": "#FF4FA3"}],
+                                  "strokeWeight": 1.08
+                                }
+                              ]
+                            },
+                            {
+                              "id": "1:4891",
+                              "name": "Section 1 Item Text 2",
+                              "type": "TEXT",
+                              "x": 21,
+                              "y": 0,
+                              "width": 739,
+                              "height": 16,
+                              "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                              "layoutGrow": 1,
+                              "text": "Use Stop or Suspend intentionally for maintenance.",
+                              "font": ["Geist", 400, 12.5],
+                              "variables": {"fills/0/color": "default/foreground"}
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "1:4892",
+                  "name": "Guide Section 2",
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 356,
+                  "width": 780,
+                  "height": 127,
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "gap": 6,
+                    "padding": [0, 0, 0, 0],
+                    "primary": "MIN",
+                    "counter": "MIN",
+                    "sizing": ["HUG", "FIXED"]
+                  },
+                  "layoutAlignSelf": "STRETCH",
+                  "children": [
+                    {
+                      "id": "1:4893",
+                      "name": "Section Title 2",
+                      "type": "TEXT",
+                      "x": 0,
+                      "y": 0,
+                      "width": 204,
+                      "height": 22,
+                      "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                      "text": "Graceful termination",
+                      "font": ["JetBrains Mono", 600, 17],
+                      "variables": {"fills/0/color": "foreground/foreground"}
+                    },
+                    {
+                      "id": "1:4894",
+                      "name": "Section Body 2",
+                      "type": "TEXT",
+                      "x": 0,
+                      "y": 28,
+                      "width": 780,
+                      "height": 19,
+                      "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                      "layoutAlignSelf": "STRETCH",
+                      "text": "The operator waits for the template stop sequence within the configured 0–600 second grace window.",
+                      "font": ["Geist", 400, 13],
+                      "lineHeight": {"value": 145.00000476837158, "unit": "PERCENT"},
+                      "variables": {"fills/0/color": "muted"}
+                    },
+                    {
+                      "id": "1:4895",
+                      "name": "Section List 2",
+                      "type": "FRAME",
+                      "x": 0,
+                      "y": 53,
+                      "width": 780,
+                      "height": 74,
+                      "fills": [{"type": "SOLID", "color": "#1C1A20"}],
+                      "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+                      "strokeWeight": 1,
+                      "cornerRadius": 16,
+                      "layout": {
+                        "mode": "VERTICAL",
+                        "gap": 5,
+                        "padding": [8, 10, 8, 10],
+                        "primary": "MIN",
+                        "counter": "MIN",
+                        "sizing": ["HUG", "FIXED"]
+                      },
+                      "layoutAlignSelf": "STRETCH",
+                      "variables": {
+                        "cornerRadius": "radius/2xl",
+                        "fills/0/color": "surface/surface",
+                        "strokes/0/color": "border/border"
+                      },
+                      "children": [
+                        {
+                          "id": "1:4896",
+                          "name": "Section 2 Item 0",
+                          "type": "FRAME",
+                          "x": 10,
+                          "y": 8,
+                          "width": 760,
+                          "height": 16,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 8,
+                            "padding": [0, 0, 0, 0],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "HUG"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
+                          "children": [
+                            {
+                              "id": "1:4897",
+                              "name": "Section 2 Item Icon 0",
+                              "type": "FRAME",
+                              "x": 0,
+                              "y": 1.5,
+                              "width": 13,
+                              "height": 13,
+                              "variables": {"fills/0/color": "accent/accent"},
+                              "children": [
+                                {
+                                  "name": "path",
+                                  "type": "VECTOR",
+                                  "x": 2.17,
+                                  "y": 3.25,
+                                  "width": 8.67,
+                                  "height": 5.96,
+                                  "strokes": [{"type": "SOLID", "color": "#FF4FA3"}],
+                                  "strokeWeight": 1.08
+                                }
+                              ]
+                            },
+                            {
+                              "id": "1:4898",
+                              "name": "Section 2 Item Text 0",
+                              "type": "TEXT",
+                              "x": 21,
+                              "y": 0,
+                              "width": 739,
+                              "height": 16,
+                              "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                              "layoutGrow": 1,
+                              "text": "Default grace is 30 seconds; large worlds may need more.",
+                              "font": ["Geist", 400, 12.5],
+                              "variables": {"fills/0/color": "default/foreground"}
+                            }
+                          ]
+                        },
+                        {
+                          "id": "1:4899",
+                          "name": "Section 2 Item 1",
+                          "type": "FRAME",
+                          "x": 10,
+                          "y": 29,
+                          "width": 760,
+                          "height": 16,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 8,
+                            "padding": [0, 0, 0, 0],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "HUG"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
+                          "children": [
+                            {
+                              "id": "1:4900",
+                              "name": "Section 2 Item Icon 1",
+                              "type": "FRAME",
+                              "x": 0,
+                              "y": 1.5,
+                              "width": 13,
+                              "height": 13,
+                              "variables": {"fills/0/color": "accent/accent"},
+                              "children": [
+                                {
+                                  "name": "path",
+                                  "type": "VECTOR",
+                                  "x": 2.17,
+                                  "y": 3.25,
+                                  "width": 8.67,
+                                  "height": 5.96,
+                                  "strokes": [{"type": "SOLID", "color": "#FF4FA3"}],
+                                  "strokeWeight": 1.08
+                                }
+                              ]
+                            },
+                            {
+                              "id": "1:4901",
+                              "name": "Section 2 Item Text 1",
+                              "type": "TEXT",
+                              "x": 21,
+                              "y": 0,
+                              "width": 739,
+                              "height": 16,
+                              "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                              "layoutGrow": 1,
+                              "text": "The value matters only when the template declares a stop sequence.",
+                              "font": ["Geist", 400, 12.5],
+                              "variables": {"fills/0/color": "default/foreground"}
+                            }
+                          ]
+                        },
+                        {
+                          "id": "1:4902",
+                          "name": "Section 2 Item 2",
+                          "type": "FRAME",
+                          "x": 10,
+                          "y": 50,
+                          "width": 760,
+                          "height": 16,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 8,
+                            "padding": [0, 0, 0, 0],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "HUG"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
+                          "children": [
+                            {
+                              "id": "1:4903",
+                              "name": "Section 2 Item Icon 2",
+                              "type": "FRAME",
+                              "x": 0,
+                              "y": 1.5,
+                              "width": 13,
+                              "height": 13,
+                              "variables": {"fills/0/color": "accent/accent"},
+                              "children": [
+                                {
+                                  "name": "path",
+                                  "type": "VECTOR",
+                                  "x": 2.17,
+                                  "y": 3.25,
+                                  "width": 8.67,
+                                  "height": 5.96,
+                                  "strokes": [{"type": "SOLID", "color": "#FF4FA3"}],
+                                  "strokeWeight": 1.08
+                                }
+                              ]
+                            },
+                            {
+                              "id": "1:4904",
+                              "name": "Section 2 Item Text 2",
+                              "type": "TEXT",
+                              "x": 21,
+                              "y": 0,
+                              "width": 739,
+                              "height": 16,
+                              "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                              "layoutGrow": 1,
+                              "text": "Verify the final save through console and logs.",
+                              "font": ["Geist", 400, 12.5],
+                              "variables": {"fills/0/color": "default/foreground"}
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "1:4905",
+                  "name": "Guide Section 3",
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 497,
+                  "width": 780,
+                  "height": 143,
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "gap": 6,
+                    "padding": [0, 0, 0, 0],
+                    "primary": "MIN",
+                    "counter": "MIN",
+                    "sizing": ["HUG", "FIXED"]
+                  },
+                  "layoutAlignSelf": "STRETCH",
+                  "children": [
+                    {
+                      "id": "1:4906",
+                      "name": "Section Title 3",
+                      "type": "TEXT",
+                      "x": 0,
+                      "y": 0,
+                      "width": 378,
+                      "height": 22,
+                      "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                      "text": "Tune readiness, liveness, and startup",
+                      "font": ["JetBrains Mono", 600, 17],
+                      "variables": {"fills/0/color": "foreground/foreground"}
+                    },
+                    {
+                      "id": "1:4907",
+                      "name": "Section Body 3",
+                      "type": "TEXT",
+                      "x": 0,
+                      "y": 28,
+                      "width": 780,
+                      "height": 19,
+                      "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                      "layoutAlignSelf": "STRETCH",
+                      "text": "Override timing one probe family at a time; startup protects boot, readiness gates traffic, and liveness triggers recovery.",
+                      "font": ["Geist", 400, 13],
+                      "lineHeight": {"value": 145.00000476837158, "unit": "PERCENT"},
+                      "variables": {"fills/0/color": "muted"}
+                    },
+                    {
+                      "id": "1:4908",
+                      "name": "Quick Reference",
+                      "type": "FRAME",
+                      "x": 0,
+                      "y": 53,
+                      "width": 780,
+                      "height": 90,
+                      "fills": [{"type": "SOLID", "color": "#141317"}],
+                      "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+                      "strokeWeight": 1,
+                      "cornerRadius": 12,
+                      "layout": {
+                        "mode": "VERTICAL",
+                        "gap": 3,
+                        "padding": [12, 12, 12, 12],
+                        "primary": "MIN",
+                        "counter": "MIN",
+                        "sizing": ["HUG", "FIXED"]
+                      },
+                      "layoutAlignSelf": "STRETCH",
+                      "variables": {
+                        "cornerRadius": "radius/xl",
+                        "fills/0/color": "surface/tertiary",
+                        "strokes/0/color": "border/border"
+                      },
+                      "children": [
+                        {
+                          "id": "1:4909",
+                          "name": "Quick Reference Label",
+                          "type": "TEXT",
+                          "x": 12,
+                          "y": 12,
+                          "width": 66,
+                          "height": 12,
+                          "fills": [{"type": "SOLID", "color": "#FF4FA3"}],
+                          "text": "PROBE MODEL",
+                          "font": ["JetBrains Mono", 600, 9],
+                          "variables": {"fills/0/color": "accent/accent"}
+                        },
+                        {
+                          "id": "1:4910",
+                          "name": "Quick Reference Line 1",
+                          "type": "TEXT",
+                          "x": 12,
+                          "y": 27,
+                          "width": 435,
+                          "height": 15,
+                          "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                          "text": "01  Auto-restart off → zero replicas, Suspended, data preserved",
+                          "font": ["JetBrains Mono", 400, 11.5],
+                          "variables": {"fills/0/color": "foreground/foreground"}
+                        },
+                        {
+                          "id": "1:4911",
+                          "name": "Quick Reference Line 2",
+                          "type": "TEXT",
+                          "x": 12,
+                          "y": 45,
+                          "width": 352,
+                          "height": 15,
+                          "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                          "text": "02  Grace 0–600s; requires a template stop sequence",
+                          "font": ["JetBrains Mono", 400, 11.5],
+                          "variables": {"fills/0/color": "foreground/foreground"}
+                        },
+                        {
+                          "id": "1:4912",
+                          "name": "Quick Reference Line 3",
+                          "type": "TEXT",
+                          "x": 12,
+                          "y": 63,
+                          "width": 477,
+                          "height": 15,
+                          "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                          "text": "03  Startup protects boot; readiness gates traffic; liveness recovers",
+                          "font": ["JetBrains Mono", 400, 11.5],
+                          "variables": {"fills/0/color": "foreground/foreground"}
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "1:4913",
+                  "name": "Article Next Link",
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 654,
+                  "width": 780,
+                  "height": 42,
+                  "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+                  "strokeWeight": 1,
+                  "layout": {
+                    "mode": "HORIZONTAL",
+                    "gap": 0,
+                    "padding": [10, 0, 0, 0],
+                    "primary": "SPACE_BETWEEN",
+                    "counter": "CENTER",
+                    "sizing": ["FIXED", "HUG"]
+                  },
+                  "layoutAlignSelf": "STRETCH",
+                  "variables": {"strokes/0/color": "border/border"},
+                  "children": [
+                    {
+                      "id": "1:4914",
+                      "name": "Next Link Text",
+                      "type": "FRAME",
+                      "x": 0,
+                      "y": 10,
+                      "width": 320,
+                      "height": 32,
+                      "layout": {
+                        "mode": "VERTICAL",
+                        "gap": 2,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "MIN",
+                        "sizing": ["HUG", "HUG"]
+                      },
+                      "children": [
+                        {
+                          "id": "1:4915",
+                          "name": "Next Link Eyebrow",
+                          "type": "TEXT",
+                          "x": 0,
+                          "y": 0,
+                          "width": 57,
+                          "height": 13,
+                          "fills": [{"type": "SOLID", "color": "#7B7584"}],
+                          "text": "NEXT GUIDE",
+                          "font": ["Geist", 400, 10],
+                          "variables": {"fills/0/color": "field/placeholder"}
+                        },
+                        {
+                          "id": "1:4916",
                           "name": "Next Link Title",
-                          "fill": "$foreground/foreground",
-                          "content": "Ownership, collaborators, and danger zone",
-                          "fontFamily": "JetBrains Mono",
-                          "fontSize": 13,
-                          "fontWeight": "500"
+                          "type": "TEXT",
+                          "x": 0,
+                          "y": 15,
+                          "width": 320,
+                          "height": 17,
+                          "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                          "text": "Ownership, collaborators, and danger zone",
+                          "font": ["JetBrains Mono", 500, 13],
+                          "variables": {"fills/0/color": "foreground/foreground"}
                         }
                       ]
                     },
                     {
-                      "type": "icon",
-                      "id": "m65VKL",
+                      "id": "1:4917",
                       "name": "Next Link Icon",
+                      "type": "FRAME",
+                      "x": 765,
+                      "y": 18.5,
                       "width": 15,
                       "height": 15,
-                      "icon": "arrow-right",
-                      "library": "lucide",
-                      "fill": "$muted"
+                      "variables": {"fills/0/color": "muted"},
+                      "children": [
+                        {
+                          "name": "path",
+                          "type": "VECTOR",
+                          "x": 3.13,
+                          "y": 3.13,
+                          "width": 8.75,
+                          "height": 8.75,
+                          "strokes": [{"type": "SOLID", "color": "#9E98A6"}],
+                          "strokeWeight": 1.25
+                        }
+                      ]
                     }
                   ]
                 }
               ]
             },
             {
-              "type": "frame",
-              "id": "HYnJO",
+              "id": "1:4918",
               "name": "Docs Page Aside",
+              "type": "FRAME",
+              "x": 844,
+              "y": 32,
               "width": 250,
-              "layout": "vertical",
-              "gap": 16,
+              "height": 353,
+              "layout": {
+                "mode": "VERTICAL",
+                "gap": 16,
+                "padding": [0, 0, 0, 0],
+                "primary": "MIN",
+                "counter": "MIN",
+                "sizing": ["HUG", "FIXED"]
+              },
               "children": [
                 {
-                  "type": "frame",
-                  "id": "l1Xfyq",
+                  "id": "1:4919",
                   "name": "Docs Table of Contents",
-                  "width": "fill_container",
-                  "fill": "$surface/secondary",
-                  "cornerRadius": "$radius/2xl",
-                  "stroke": "$border/border",
-                  "strokeWidth": 1,
-                  "strokeAlignment": "inner",
-                  "layout": "vertical",
-                  "gap": 10,
-                  "padding": 16,
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 0,
+                  "width": 250,
+                  "height": 233,
+                  "fills": [{"type": "SOLID", "color": "#17151A"}],
+                  "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+                  "strokeWeight": 1,
+                  "cornerRadius": 16,
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "gap": 10,
+                    "padding": [16, 16, 16, 16],
+                    "primary": "MIN",
+                    "counter": "MIN",
+                    "sizing": ["HUG", "FIXED"]
+                  },
+                  "layoutAlignSelf": "STRETCH",
+                  "variables": {
+                    "cornerRadius": "radius/2xl",
+                    "fills/0/color": "surface/secondary",
+                    "strokes/0/color": "border/border"
+                  },
                   "children": [
                     {
-                      "type": "text",
-                      "id": "HDrTV",
+                      "id": "1:4920",
                       "name": "TOC Label",
-                      "fill": "$field/placeholder",
-                      "content": "ON THIS PAGE",
-                      "fontFamily": "JetBrains Mono",
-                      "fontSize": 9,
-                      "fontWeight": "600",
-                      "letterSpacing": 0.7
+                      "type": "TEXT",
+                      "x": 16,
+                      "y": 16,
+                      "width": 73,
+                      "height": 12,
+                      "fills": [{"type": "SOLID", "color": "#7B7584"}],
+                      "text": "ON THIS PAGE",
+                      "font": ["JetBrains Mono", 600, 9],
+                      "variables": {"fills/0/color": "field/placeholder"}
                     },
                     {
-                      "type": "frame",
-                      "id": "aKshP",
+                      "id": "1:4921",
                       "name": "TOC Row 0",
-                      "width": "fill_container",
-                      "gap": 8,
-                      "alignItems": "center",
+                      "type": "FRAME",
+                      "x": 16,
+                      "y": 38,
+                      "width": 218,
+                      "height": 16,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 8,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["FIXED", "HUG"]
+                      },
+                      "layoutAlignSelf": "STRETCH",
                       "children": [
                         {
-                          "type": "icon",
-                          "id": "MMVAV",
+                          "id": "1:4922",
                           "name": "TOC Icon 0",
+                          "type": "FRAME",
+                          "x": 0,
+                          "y": 2,
                           "width": 12,
                           "height": 12,
-                          "icon": "hash",
-                          "library": "lucide",
-                          "fill": "$accent/accent"
+                          "variables": {"fills/0/color": "accent/accent"},
+                          "children": [
+                            {
+                              "name": "path",
+                              "type": "VECTOR",
+                              "x": 2,
+                              "y": 1.5,
+                              "width": 8,
+                              "height": 9,
+                              "strokes": [{"type": "SOLID", "color": "#FF4FA3"}],
+                              "strokeWeight": 1
+                            }
+                          ]
                         },
                         {
-                          "type": "text",
-                          "id": "pVLPc",
+                          "id": "1:4923",
                           "name": "TOC Text 0",
-                          "fill": "$foreground/foreground",
-                          "content": "Desired state",
-                          "fontFamily": "Geist",
-                          "fontSize": 12.5,
-                          "fontWeight": "500"
+                          "type": "TEXT",
+                          "x": 20,
+                          "y": 0,
+                          "width": 78,
+                          "height": 16,
+                          "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                          "text": "Desired state",
+                          "font": ["Geist", 500, 12.5],
+                          "variables": {"fills/0/color": "foreground/foreground"}
                         }
                       ]
                     },
                     {
-                      "type": "frame",
-                      "id": "dGjlS",
+                      "id": "1:4924",
                       "name": "TOC Row 1",
-                      "width": "fill_container",
-                      "gap": 8,
-                      "alignItems": "center",
+                      "type": "FRAME",
+                      "x": 16,
+                      "y": 64,
+                      "width": 218,
+                      "height": 16,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 8,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["FIXED", "HUG"]
+                      },
+                      "layoutAlignSelf": "STRETCH",
                       "children": [
                         {
-                          "type": "icon",
-                          "id": "TXkdT",
+                          "id": "1:4925",
                           "name": "TOC Icon 1",
+                          "type": "FRAME",
+                          "x": 0,
+                          "y": 2,
                           "width": 12,
                           "height": 12,
-                          "icon": "hash",
-                          "library": "lucide",
-                          "fill": "$field/placeholder"
+                          "variables": {"fills/0/color": "field/placeholder"},
+                          "children": [
+                            {
+                              "name": "path",
+                              "type": "VECTOR",
+                              "x": 2,
+                              "y": 1.5,
+                              "width": 8,
+                              "height": 9,
+                              "strokes": [{"type": "SOLID", "color": "#7B7584"}],
+                              "strokeWeight": 1
+                            }
+                          ]
                         },
                         {
-                          "type": "text",
-                          "id": "R50JcZ",
+                          "id": "1:4926",
                           "name": "TOC Text 1",
-                          "fill": "$muted",
-                          "content": "Termination",
-                          "fontFamily": "Geist",
-                          "fontSize": 12.5,
-                          "fontWeight": "normal"
+                          "type": "TEXT",
+                          "x": 20,
+                          "y": 0,
+                          "width": 67,
+                          "height": 16,
+                          "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                          "text": "Termination",
+                          "font": ["Geist", 400, 12.5],
+                          "variables": {"fills/0/color": "muted"}
                         }
                       ]
                     },
                     {
-                      "type": "frame",
-                      "id": "SVaEh",
+                      "id": "1:4927",
                       "name": "TOC Row 2",
-                      "width": "fill_container",
-                      "gap": 8,
-                      "alignItems": "center",
+                      "type": "FRAME",
+                      "x": 16,
+                      "y": 90,
+                      "width": 218,
+                      "height": 16,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 8,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["FIXED", "HUG"]
+                      },
+                      "layoutAlignSelf": "STRETCH",
                       "children": [
                         {
-                          "type": "icon",
-                          "id": "JyTmz",
+                          "id": "1:4928",
                           "name": "TOC Icon 2",
+                          "type": "FRAME",
+                          "x": 0,
+                          "y": 2,
                           "width": 12,
                           "height": 12,
-                          "icon": "hash",
-                          "library": "lucide",
-                          "fill": "$field/placeholder"
+                          "variables": {"fills/0/color": "field/placeholder"},
+                          "children": [
+                            {
+                              "name": "path",
+                              "type": "VECTOR",
+                              "x": 2,
+                              "y": 1.5,
+                              "width": 8,
+                              "height": 9,
+                              "strokes": [{"type": "SOLID", "color": "#7B7584"}],
+                              "strokeWeight": 1
+                            }
+                          ]
                         },
                         {
-                          "type": "text",
-                          "id": "REzNL",
+                          "id": "1:4929",
                           "name": "TOC Text 2",
-                          "fill": "$muted",
-                          "content": "Probes",
-                          "fontFamily": "Geist",
-                          "fontSize": 12.5,
-                          "fontWeight": "normal"
+                          "type": "TEXT",
+                          "x": 20,
+                          "y": 0,
+                          "width": 40,
+                          "height": 16,
+                          "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                          "text": "Probes",
+                          "font": ["Geist", 400, 12.5],
+                          "variables": {"fills/0/color": "muted"}
                         }
                       ]
                     },
                     {
-                      "type": "rectangle",
-                      "id": "gTKQ2",
+                      "id": "1:4930",
                       "name": "TOC Divider",
-                      "fill": "$border/border",
-                      "width": "fill_container",
-                      "height": 1
+                      "type": "RECTANGLE",
+                      "x": 16,
+                      "y": 116,
+                      "width": 218,
+                      "height": 1,
+                      "fills": [{"type": "SOLID", "color": "#2C2932"}],
+                      "layoutAlignSelf": "STRETCH",
+                      "variables": {"fills/0/color": "border/border"}
                     },
                     {
-                      "type": "text",
-                      "id": "WOiZy",
+                      "id": "1:4931",
                       "name": "Coverage Label",
-                      "fill": "$field/placeholder",
-                      "content": "COVERS",
-                      "fontFamily": "JetBrains Mono",
-                      "fontSize": 9,
-                      "fontWeight": "600",
-                      "letterSpacing": 0.7
+                      "type": "TEXT",
+                      "x": 16,
+                      "y": 127,
+                      "width": 36,
+                      "height": 12,
+                      "fills": [{"type": "SOLID", "color": "#7B7584"}],
+                      "text": "COVERS",
+                      "font": ["JetBrains Mono", 600, 9],
+                      "variables": {"fills/0/color": "field/placeholder"}
                     },
                     {
-                      "type": "frame",
-                      "id": "l10YF8",
+                      "id": "1:4932",
                       "name": "Coverage Row 0",
-                      "width": "fill_container",
-                      "gap": 7,
-                      "alignItems": "center",
+                      "type": "FRAME",
+                      "x": 16,
+                      "y": 149,
+                      "width": 218,
+                      "height": 16,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 7,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["FIXED", "HUG"]
+                      },
+                      "layoutAlignSelf": "STRETCH",
                       "children": [
                         {
-                          "type": "icon",
-                          "id": "ljxgL",
+                          "id": "1:4933",
                           "name": "Coverage Icon 0",
+                          "type": "FRAME",
+                          "x": 0,
+                          "y": 2,
                           "width": 12,
                           "height": 12,
-                          "icon": "book-open",
-                          "library": "lucide",
-                          "fill": "$field/placeholder"
+                          "variables": {"fills/0/color": "field/placeholder"},
+                          "children": [
+                            {
+                              "name": "path",
+                              "type": "VECTOR",
+                              "x": 1,
+                              "y": 1.5,
+                              "width": 10,
+                              "height": 9,
+                              "strokes": [{"type": "SOLID", "color": "#7B7584"}],
+                              "strokeWeight": 1
+                            }
+                          ]
                         },
                         {
-                          "type": "text",
-                          "id": "Wp3ru",
+                          "id": "1:4934",
                           "name": "Coverage Text 0",
-                          "fill": "$muted",
-                          "content": "Suspend",
-                          "fontFamily": "Geist",
-                          "fontSize": 12,
-                          "fontWeight": "normal"
+                          "type": "TEXT",
+                          "x": 19,
+                          "y": 0,
+                          "width": 49,
+                          "height": 16,
+                          "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                          "text": "Suspend",
+                          "font": ["Geist", 400, 12],
+                          "variables": {"fills/0/color": "muted"}
                         }
                       ]
                     },
                     {
-                      "type": "frame",
-                      "id": "PLMjM",
+                      "id": "1:4935",
                       "name": "Coverage Row 1",
-                      "width": "fill_container",
-                      "gap": 7,
-                      "alignItems": "center",
+                      "type": "FRAME",
+                      "x": 16,
+                      "y": 175,
+                      "width": 218,
+                      "height": 16,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 7,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["FIXED", "HUG"]
+                      },
+                      "layoutAlignSelf": "STRETCH",
                       "children": [
                         {
-                          "type": "icon",
-                          "id": "ApL3s",
+                          "id": "1:4936",
                           "name": "Coverage Icon 1",
+                          "type": "FRAME",
+                          "x": 0,
+                          "y": 2,
                           "width": 12,
                           "height": 12,
-                          "icon": "book-open",
-                          "library": "lucide",
-                          "fill": "$field/placeholder"
+                          "variables": {"fills/0/color": "field/placeholder"},
+                          "children": [
+                            {
+                              "name": "path",
+                              "type": "VECTOR",
+                              "x": 1,
+                              "y": 1.5,
+                              "width": 10,
+                              "height": 9,
+                              "strokes": [{"type": "SOLID", "color": "#7B7584"}],
+                              "strokeWeight": 1
+                            }
+                          ]
                         },
                         {
-                          "type": "text",
-                          "id": "Z2jEO",
+                          "id": "1:4937",
                           "name": "Coverage Text 1",
-                          "fill": "$muted",
-                          "content": "Graceful stop",
-                          "fontFamily": "Geist",
-                          "fontSize": 12,
-                          "fontWeight": "normal"
+                          "type": "TEXT",
+                          "x": 19,
+                          "y": 0,
+                          "width": 74,
+                          "height": 16,
+                          "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                          "text": "Graceful stop",
+                          "font": ["Geist", 400, 12],
+                          "variables": {"fills/0/color": "muted"}
                         }
                       ]
                     },
                     {
-                      "type": "frame",
-                      "id": "EZYU9",
+                      "id": "1:4938",
                       "name": "Coverage Row 2",
-                      "width": "fill_container",
-                      "gap": 7,
-                      "alignItems": "center",
+                      "type": "FRAME",
+                      "x": 16,
+                      "y": 201,
+                      "width": 218,
+                      "height": 16,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 7,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["FIXED", "HUG"]
+                      },
+                      "layoutAlignSelf": "STRETCH",
                       "children": [
                         {
-                          "type": "icon",
-                          "id": "vvtn6",
+                          "id": "1:4939",
                           "name": "Coverage Icon 2",
+                          "type": "FRAME",
+                          "x": 0,
+                          "y": 2,
                           "width": 12,
                           "height": 12,
-                          "icon": "book-open",
-                          "library": "lucide",
-                          "fill": "$field/placeholder"
+                          "variables": {"fills/0/color": "field/placeholder"},
+                          "children": [
+                            {
+                              "name": "path",
+                              "type": "VECTOR",
+                              "x": 1,
+                              "y": 1.5,
+                              "width": 10,
+                              "height": 9,
+                              "strokes": [{"type": "SOLID", "color": "#7B7584"}],
+                              "strokeWeight": 1
+                            }
+                          ]
                         },
                         {
-                          "type": "text",
-                          "id": "S9bXC",
+                          "id": "1:4940",
                           "name": "Coverage Text 2",
-                          "fill": "$muted",
-                          "content": "Health",
-                          "fontFamily": "Geist",
-                          "fontSize": 12,
-                          "fontWeight": "normal"
+                          "type": "TEXT",
+                          "x": 19,
+                          "y": 0,
+                          "width": 36,
+                          "height": 16,
+                          "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                          "text": "Health",
+                          "font": ["Geist", 400, 12],
+                          "variables": {"fills/0/color": "muted"}
                         }
                       ]
                     }
                   ]
                 },
                 {
-                  "type": "frame",
-                  "id": "FVN4l",
+                  "id": "1:4941",
                   "name": "Edit Page Card",
-                  "width": "fill_container",
-                  "fill": "$background/background",
-                  "cornerRadius": "$radius/3xl",
-                  "stroke": "$border/border",
-                  "strokeWidth": 1,
-                  "strokeAlignment": "inner",
-                  "layout": "vertical",
-                  "gap": 6,
-                  "padding": 14,
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 249,
+                  "width": 250,
+                  "height": 104,
+                  "fills": [{"type": "SOLID", "color": "#121114"}],
+                  "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+                  "strokeWeight": 1,
+                  "cornerRadius": 24,
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "gap": 6,
+                    "padding": [14, 14, 14, 14],
+                    "primary": "MIN",
+                    "counter": "MIN",
+                    "sizing": ["HUG", "FIXED"]
+                  },
+                  "layoutAlignSelf": "STRETCH",
+                  "variables": {
+                    "cornerRadius": "radius/3xl",
+                    "fills/0/color": "background/background",
+                    "strokes/0/color": "border/border"
+                  },
                   "children": [
                     {
-                      "type": "text",
-                      "id": "O85MiD",
+                      "id": "1:4942",
                       "name": "Edit Page Title",
-                      "fill": "$foreground/foreground",
-                      "content": "Improve this page",
-                      "fontFamily": "JetBrains Mono",
-                      "fontSize": 12,
-                      "fontWeight": "600"
+                      "type": "TEXT",
+                      "x": 14,
+                      "y": 14,
+                      "width": 123,
+                      "height": 16,
+                      "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                      "text": "Improve this page",
+                      "font": ["JetBrains Mono", 600, 12],
+                      "variables": {"fills/0/color": "foreground/foreground"}
                     },
                     {
-                      "type": "text",
-                      "id": "LhVZW",
+                      "id": "1:4943",
                       "name": "Edit Page Body",
-                      "fill": "$muted",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "Found a gap? Open a docs issue or suggest an edit on GitHub.",
-                      "lineHeight": 1.4,
-                      "fontFamily": "Geist",
-                      "fontSize": 11.5,
-                      "fontWeight": "normal"
+                      "type": "TEXT",
+                      "x": 14,
+                      "y": 36,
+                      "width": 222,
+                      "height": 32,
+                      "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                      "layoutAlignSelf": "STRETCH",
+                      "text": "Found a gap? Open a docs issue or suggest an edit on GitHub.",
+                      "font": ["Geist", 400, 11.5],
+                      "lineHeight": {"value": 139.9999976158142, "unit": "PERCENT"},
+                      "variables": {"fills/0/color": "muted"}
                     },
                     {
-                      "type": "frame",
-                      "id": "l7OLC",
+                      "id": "1:4944",
                       "name": "Edit Page Link",
-                      "gap": 6,
-                      "alignItems": "center",
+                      "type": "FRAME",
+                      "x": 14,
+                      "y": 74,
+                      "width": 95,
+                      "height": 16,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 6,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["HUG", "HUG"]
+                      },
                       "children": [
                         {
-                          "type": "text",
-                          "id": "D1YtV",
+                          "id": "1:4945",
                           "name": "Edit Page Link Text",
-                          "fill": "$accent/soft-foreground",
-                          "content": "Edit this page",
-                          "fontFamily": "Geist",
-                          "fontSize": 12,
-                          "fontWeight": "500"
+                          "type": "TEXT",
+                          "x": 0,
+                          "y": 0,
+                          "width": 77,
+                          "height": 16,
+                          "fills": [{"type": "SOLID", "color": "#FF8AC4"}],
+                          "text": "Edit this page",
+                          "font": ["Geist", 500, 12],
+                          "variables": {"fills/0/color": "accent/soft-foreground"}
                         },
                         {
-                          "type": "icon",
-                          "id": "yv9Ii",
+                          "id": "1:4946",
                           "name": "Edit Page Link Icon",
+                          "type": "FRAME",
+                          "x": 83,
+                          "y": 2,
                           "width": 12,
                           "height": 12,
-                          "icon": "external-link",
-                          "library": "lucide",
-                          "fill": "$accent/accent"
+                          "variables": {"fills/0/color": "accent/accent"},
+                          "children": [
+                            {
+                              "name": "path",
+                              "type": "VECTOR",
+                              "x": 1.5,
+                              "y": 1.5,
+                              "width": 9,
+                              "height": 9,
+                              "strokes": [{"type": "SOLID", "color": "#FF4FA3"}],
+                              "strokeWeight": 1
+                            }
+                          ]
                         }
                       ]
                     }

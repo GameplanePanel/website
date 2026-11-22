@@ -1,6 +1,6 @@
 ---
 title: "Contribution & Design Workflow"
-description: "Move a change from issue to reviewed code while keeping Pencil, generated artifacts, submodules, and evidence synchronized."
+description: "Move a change from issue to reviewed code while keeping the design file, generated artifacts, submodules, and evidence synchronized."
 section: develop
 group: local-development
 order: 4
@@ -15,8 +15,8 @@ import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
 
 Gameplane contributions flow through a design-first cycle for UI changes, a code-only path for backend work, and synchronized submodule updates. This guide covers the complete workflow from planning through PR review.
 
-<DocsCallout icon="git-pull-request" title="UI work begins in design.pen before code.">
-  Dashboard changes start in `design.pen` (Pencil) with maintainer review, then translate to React. Module and public-site work originates in their own repositories before a submodule bump.
+<DocsCallout icon="git-pull-request" title="UI work begins in design.fig before code.">
+  Dashboard changes start in `design.fig` (OpenPencil or Figma) with maintainer review, then translate to React. Module and public-site work originates in their own repositories before a submodule bump.
 </DocsCallout>
 
 ## Plan the change
@@ -32,8 +32,8 @@ Identify component ownership, public contracts, security boundaries, design impa
     },
     {
       icon: "check",
-      label: "Pencil pass for UI",
-      text: "Dashboard changes require a design review in design.pen; backend work does not.",
+      label: "Design pass for UI",
+      text: "Dashboard changes require a design review in design.fig; backend work does not.",
     },
     {
       icon: "github",
@@ -56,8 +56,8 @@ Update and validate the shared visual system first, then translate the approved 
     },
     {
       icon: "list",
-      label: "Capture Pencil IDs",
-      text: "Record exact Pencil node IDs for the implementation handoff and PR description.",
+      label: "Capture design screen IDs",
+      text: "Record the exact `design.fig` screen IDs for the implementation handoff and PR description.",
     },
     {
       icon: "activity",
@@ -72,7 +72,7 @@ Update and validate the shared visual system first, then translate the approved 
 Compile and commit focused changes with sign-off; CI verifies the full test, lint, and integration suite.
 
 <DocsCallout icon="check" title="Every PR requires signed commits.">
-  Use `git commit -s` to add the Developer Certificate of Origin footer. Include risk, affected test tiers, new tests, docs, and Pencil node IDs in the PR description.
+  Use `git commit -s` to add the Developer Certificate of Origin footer. Include risk, affected test tiers, new tests, docs, and `design.fig` screen IDs in the PR description.
 </DocsCallout>
 
 <DocsQuickReference
@@ -81,7 +81,7 @@ Compile and commit focused changes with sign-off; CI verifies the full test, lin
     "Compilation checks (go build ./..., npx tsc --noEmit) — run locally",
     "make generate && make manifests — if CRD/schema changes",
     "Full test, lint, e2e suite runs in CI after push",
-    "Pencil exports synced; submodule changes committed separately",
+    "Design exports synced; submodule changes committed separately",
   ]}
 />
 

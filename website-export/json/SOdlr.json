@@ -1,126 +1,178 @@
 {
-  "type": "frame",
-  "id": "SOdlr",
+  "file": "SOdlr",
+  "id": "1:239",
+  "name": "Docs Top Bar",
+  "type": "COMPONENT",
   "x": 0,
   "y": -2116,
-  "name": "Docs Top Bar",
-  "reusable": true,
   "width": 1160,
   "height": 64,
-  "stroke": "$border/border",
-  "strokeWidth": {
-    "bottom": 1
+  "strokes": [{"type": "SOLID", "color": "#EFC3D6"}],
+  "strokeWeight": 1,
+  "layout": {
+    "mode": "HORIZONTAL",
+    "gap": 0,
+    "padding": [0, 32, 0, 32],
+    "primary": "SPACE_BETWEEN",
+    "counter": "CENTER",
+    "sizing": ["FIXED", "FIXED"]
   },
-  "strokeAlignment": "inner",
-  "strokeLinejoin": "round",
-  "padding": [
-    0,
-    32
-  ],
-  "justifyContent": "space_between",
-  "alignItems": "center",
+  "variables": {"strokes/0/color": "border/border"},
   "children": [
     {
-      "type": "frame",
-      "id": "Cc0ye",
+      "id": "1:245",
       "name": "Docs Breadcrumb",
-      "gap": 6,
-      "alignItems": "center",
+      "type": "FRAME",
+      "x": 32,
+      "y": 23.5,
+      "width": 226,
+      "height": 17,
+      "layout": {
+        "mode": "HORIZONTAL",
+        "gap": 6,
+        "padding": [0, 0, 0, 0],
+        "primary": "MIN",
+        "counter": "CENTER",
+        "sizing": ["HUG", "HUG"]
+      },
       "children": [
         {
-          "type": "text",
-          "id": "W7pzB",
+          "id": "1:246",
           "name": "Breadcrumb Root",
-          "fill": "$muted",
-          "content": "Docs",
-          "fontFamily": "Geist",
-          "fontSize": 13,
-          "fontWeight": "normal"
+          "type": "TEXT",
+          "x": 0,
+          "y": 0,
+          "width": 31,
+          "height": 17,
+          "fills": [{"type": "SOLID", "color": "#6E5262"}],
+          "text": "Docs",
+          "font": ["Geist", 400, 13],
+          "variables": {"fills/0/color": "muted"}
         },
         {
-          "type": "text",
-          "id": "IE9jp",
+          "id": "1:247",
           "name": "Breadcrumb Slash One",
-          "fill": "$field/placeholder",
-          "content": "/",
-          "fontFamily": "Geist",
-          "fontSize": 13,
-          "fontWeight": "normal"
+          "type": "TEXT",
+          "x": 37,
+          "y": 0,
+          "width": 7,
+          "height": 17,
+          "fills": [{"type": "SOLID", "color": "#8A6C7B"}],
+          "text": "/",
+          "font": ["Geist", 400, 13],
+          "variables": {"fills/0/color": "field/placeholder"}
         },
         {
-          "type": "text",
-          "id": "NImey",
+          "id": "1:240",
           "name": "Breadcrumb Section",
-          "fill": "$muted",
-          "content": "Start Here",
-          "fontFamily": "Geist",
-          "fontSize": 13,
-          "fontWeight": "normal"
+          "type": "TEXT",
+          "x": 50,
+          "y": 0,
+          "width": 61,
+          "height": 17,
+          "fills": [{"type": "SOLID", "color": "#6E5262"}],
+          "text": "Start Here",
+          "font": ["Geist", 400, 13],
+          "variables": {"fills/0/color": "muted"}
         },
         {
-          "type": "text",
-          "id": "PcJTv",
+          "id": "1:248",
           "name": "Breadcrumb Slash Two",
-          "fill": "$field/placeholder",
-          "content": "/",
-          "fontFamily": "Geist",
-          "fontSize": 13,
-          "fontWeight": "normal"
+          "type": "TEXT",
+          "x": 117,
+          "y": 0,
+          "width": 7,
+          "height": 17,
+          "fills": [{"type": "SOLID", "color": "#8A6C7B"}],
+          "text": "/",
+          "font": ["Geist", 400, 13],
+          "variables": {"fills/0/color": "field/placeholder"}
         },
         {
-          "type": "text",
-          "id": "ikbi6",
+          "id": "1:241",
           "name": "Breadcrumb Page",
-          "fill": "$foreground/foreground",
-          "content": "Dashboard Tour",
-          "fontFamily": "Geist",
-          "fontSize": 13,
-          "fontWeight": "500"
+          "type": "TEXT",
+          "x": 130,
+          "y": 0,
+          "width": 96,
+          "height": 17,
+          "fills": [{"type": "SOLID", "color": "#2A0F1E"}],
+          "text": "Dashboard Tour",
+          "font": ["Geist", 500, 13],
+          "variables": {"fills/0/color": "foreground/foreground"}
         }
       ]
     },
     {
-      "type": "frame",
-      "id": "TSu9a",
+      "id": "1:249",
       "name": "Docs Header Actions",
-      "gap": 8,
-      "alignItems": "center",
+      "type": "FRAME",
+      "x": 1048,
+      "y": 14,
+      "width": 80,
+      "height": 36,
+      "layout": {
+        "mode": "HORIZONTAL",
+        "gap": 8,
+        "padding": [0, 0, 0, 0],
+        "primary": "MIN",
+        "counter": "CENTER",
+        "sizing": ["HUG", "HUG"]
+      },
       "children": [
         {
-          "id": "DdJ4c",
-          "type": "ref",
-          "ref": "nAPNn",
+          "id": "1:242",
           "name": "Docs Search Action",
-          "descendants": {
-            "YPCgO": {
-              "icon": "search",
-              "library": "lucide",
-              "fill": "$muted"
-            }
-          }
-        },
-        {
-          "type": "frame",
-          "id": "wyy5w",
-          "name": "Docs GitHub Action",
+          "type": "INSTANCE",
+          "x": 0,
+          "y": 0,
           "width": 36,
           "height": 36,
-          "cornerRadius": "$radius/md",
-          "stroke": "$border/border",
-          "strokeWidth": 1,
-          "strokeAlignment": "inner",
-          "justifyContent": "center",
-          "alignItems": "center",
+          "component": "Button/Outline/Icon/MD",
+          "componentId": "1:8584",
+          "strokes": [{"type": "SOLID", "color": "#DEDEE0"}],
+          "strokeWeight": 1,
+          "cornerRadius": 24,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "gap": 0,
+            "padding": [0, 0, 0, 0],
+            "primary": "CENTER",
+            "counter": "CENTER",
+            "sizing": ["FIXED", "FIXED"]
+          },
+          "variables": {"cornerRadius": "radius/3xl", "strokes/0/color": "border"}
+        },
+        {
+          "id": "1:250",
+          "name": "Docs GitHub Action",
+          "type": "FRAME",
+          "x": 44,
+          "y": 0,
+          "width": 36,
+          "height": 36,
+          "strokes": [{"type": "SOLID", "color": "#EFC3D6"}],
+          "strokeWeight": 1,
+          "cornerRadius": 6,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "gap": 0,
+            "padding": [0, 0, 0, 0],
+            "primary": "CENTER",
+            "counter": "CENTER",
+            "sizing": ["FIXED", "FIXED"]
+          },
+          "variables": {"cornerRadius": "radius/md", "strokes/0/color": "border/border"},
           "children": [
             {
-              "type": "icon",
-              "id": "pOOSM",
+              "id": "1:244",
               "name": "Docs GitHub Icon",
+              "type": "INSTANCE",
+              "x": 10,
+              "y": 10,
               "width": 16,
               "height": 16,
-              "icon": "github",
-              "library": "lucide",
-              "fill": "#FFFFFF"
+              "component": "lucide/github/16x16"
             }
           ]
         }

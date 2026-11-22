@@ -1,343 +1,598 @@
 {
-  "type": "frame",
-  "id": "Znh8i",
+  "file": "Znh8i",
+  "id": "1:738",
+  "name": "Screen/Docs — FAQ",
+  "type": "FRAME",
   "x": 0,
   "y": 11930,
-  "name": "Screen/Docs — FAQ",
-  "theme": {
-    "semantic": "dark"
-  },
-  "clip": true,
   "width": 1440,
   "height": 900,
-  "fill": "$background/background",
+  "fills": [{"type": "SOLID", "color": "#121114"}],
+  "layout": {
+    "mode": "HORIZONTAL",
+    "gap": 0,
+    "padding": [0, 0, 0, 0],
+    "primary": "MIN",
+    "counter": "MIN",
+    "sizing": ["FIXED", "FIXED"]
+  },
+  "clips": true,
+  "variables": {"fills/0/color": "background/background"},
   "children": [
     {
-      "id": "vZ7kK",
-      "type": "ref",
-      "ref": "K2Rt4H",
-      "height": "fill_container",
+      "id": "1:739",
       "name": "DocsSidebar/Expanded",
-      "width": 280
+      "type": "INSTANCE",
+      "x": 0,
+      "y": 0,
+      "width": 280,
+      "height": 900,
+      "component": "Docs/Expanded Sidebar",
+      "componentId": "1:151",
+      "fills": [{"type": "SOLID", "color": "#17151A"}],
+      "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+      "strokeWeight": 1,
+      "layout": {
+        "mode": "VERTICAL",
+        "gap": 0,
+        "padding": [0, 0, 0, 0],
+        "primary": "MIN",
+        "counter": "MIN",
+        "sizing": ["FIXED", "FIXED"]
+      },
+      "layoutAlignSelf": "STRETCH",
+      "variables": {"fills/0/color": "surface/secondary", "strokes/0/color": "border/border"},
+      "texts": [
+        "gameplane",
+        "Back to site",
+        "START HERE",
+        "Overview",
+        "Getting Started",
+        "CORE CONCEPTS",
+        "Architecture",
+        "Security",
+        "OPERATE",
+        "Servers & Config",
+        "Console & Logs",
+        "Files & Backups",
+        "Network & Automation",
+        "PLATFORM",
+        "Cluster & Storage",
+        "Users & Access",
+        "Audit & Observability",
+        "DEVELOP",
+        "Modules & Sources",
+        "API & Reference",
+        "Local Development",
+        "Component Guides",
+        "Testing & Release",
+        "REFERENCE",
+        "Upgrades",
+        "Troubleshooting",
+        "FAQ",
+        "Releases & Roadmap",
+        "Community"
+      ]
     },
     {
-      "type": "frame",
-      "id": "d9nRU1",
+      "id": "1:740",
       "name": "Main",
-      "width": "fill_container",
-      "height": "fill_container",
-      "fill": "$background/background",
-      "layout": "vertical",
+      "type": "FRAME",
+      "x": 280,
+      "y": 0,
+      "width": 1160,
+      "height": 900,
+      "fills": [{"type": "SOLID", "color": "#121114"}],
+      "layout": {
+        "mode": "VERTICAL",
+        "gap": 0,
+        "padding": [0, 0, 0, 0],
+        "primary": "MIN",
+        "counter": "MIN",
+        "sizing": ["FIXED", "FIXED"]
+      },
+      "layoutGrow": 1,
+      "layoutAlignSelf": "STRETCH",
+      "variables": {"fills/0/color": "background/background"},
       "children": [
         {
-          "id": "cBBSQ",
-          "type": "ref",
-          "ref": "SOdlr",
+          "id": "1:741",
           "name": "Docs Top Bar",
-          "width": "fill_container",
-          "descendants": {
-            "NImey": {
-              "content": "Reference"
-            },
-            "ikbi6": {
-              "content": "FAQ"
-            }
-          }
+          "type": "INSTANCE",
+          "x": 0,
+          "y": 0,
+          "width": 1160,
+          "height": 64,
+          "component": "Docs Top Bar",
+          "componentId": "1:239",
+          "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+          "strokeWeight": 1,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "gap": 0,
+            "padding": [0, 32, 0, 32],
+            "primary": "SPACE_BETWEEN",
+            "counter": "CENTER",
+            "sizing": ["FIXED", "FIXED"]
+          },
+          "layoutAlignSelf": "STRETCH",
+          "variables": {"strokes/0/color": "border/border"},
+          "texts": ["Docs", "/", "Reference", "/", "FAQ"]
         },
         {
-          "type": "frame",
-          "id": "Rmjt1",
+          "id": "1:742",
           "name": "Body",
-          "clip": true,
-          "width": "fill_container",
-          "height": "fill_container",
-          "layout": "vertical",
-          "gap": 16,
-          "padding": 32,
+          "type": "FRAME",
+          "x": 0,
+          "y": 64,
+          "width": 1160,
+          "height": 836,
+          "layout": {
+            "mode": "VERTICAL",
+            "gap": 16,
+            "padding": [32, 32, 32, 32],
+            "primary": "MIN",
+            "counter": "MIN",
+            "sizing": ["FIXED", "FIXED"]
+          },
+          "layoutGrow": 1,
+          "layoutAlignSelf": "STRETCH",
+          "clips": true,
           "children": [
             {
-              "type": "text",
-              "id": "czwgP",
-              "fill": "$accent/accent",
-              "content": "DOCUMENTATION",
-              "fontFamily": "$typography/font-mono",
-              "fontSize": 12,
-              "fontWeight": "600"
+              "id": "1:743",
+              "name": "text",
+              "type": "TEXT",
+              "x": 32,
+              "y": 32,
+              "width": 94,
+              "height": 16,
+              "fills": [{"type": "SOLID", "color": "#FF4FA3"}],
+              "text": "DOCUMENTATION",
+              "font": ["JetBrains Mono", 600, 12],
+              "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "accent/accent"}
             },
             {
-              "type": "text",
-              "id": "ygXf4",
-              "fill": "$foreground/foreground",
-              "content": "Frequently Asked Questions",
-              "fontFamily": "$typography/font-mono",
-              "fontSize": 32,
-              "fontWeight": "700"
+              "id": "1:744",
+              "name": "text",
+              "type": "TEXT",
+              "x": 32,
+              "y": 64,
+              "width": 500,
+              "height": 42,
+              "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+              "text": "Frequently Asked Questions",
+              "font": ["JetBrains Mono", 700, 32],
+              "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
             },
             {
-              "type": "text",
-              "id": "GgJ13",
-              "fill": "$muted",
-              "textGrowth": "fixed-width",
+              "id": "1:745",
+              "name": "text",
+              "type": "TEXT",
+              "x": 32,
+              "y": 122,
               "width": 700,
-              "content": "Common questions before you deploy Gameplane to your cluster.",
-              "fontFamily": "$typography/font-sans",
-              "fontSize": 16,
-              "fontWeight": "normal"
+              "height": 21,
+              "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+              "text": "Common questions before you deploy Gameplane to your cluster.",
+              "font": ["Geist", 400, 16],
+              "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
             },
             {
-              "type": "frame",
-              "id": "d9OBmF",
-              "width": "fill_container",
-              "gap": 32,
+              "id": "1:746",
+              "name": "frame",
+              "type": "FRAME",
+              "x": 32,
+              "y": 159,
+              "width": 1096,
+              "height": 496,
+              "layout": {
+                "mode": "HORIZONTAL",
+                "gap": 32,
+                "padding": [0, 0, 0, 0],
+                "primary": "MIN",
+                "counter": "MIN",
+                "sizing": ["FIXED", "HUG"]
+              },
+              "layoutAlignSelf": "STRETCH",
               "children": [
                 {
-                  "type": "frame",
-                  "id": "jfw6L",
-                  "width": "fill_container",
-                  "layout": "vertical",
-                  "gap": 16,
+                  "id": "1:747",
+                  "name": "frame",
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 0,
+                  "width": 532,
+                  "height": 377,
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "gap": 16,
+                    "padding": [0, 0, 0, 0],
+                    "primary": "MIN",
+                    "counter": "MIN",
+                    "sizing": ["HUG", "FIXED"]
+                  },
+                  "layoutGrow": 1,
                   "children": [
                     {
-                      "id": "EDHQA",
-                      "type": "ref",
-                      "ref": "v9zjax",
+                      "id": "1:748",
                       "name": "FAQ Item",
-                      "width": "fill_container",
-                      "descendants": {
-                        "C2FCOL": {
-                          "icon": "circle-help"
-                        },
-                        "XvFxz": {
-                          "content": "Do I need to know Kubernetes?"
-                        },
-                        "tne6e": {
-                          "content": "One-time cluster setup benefits from basic Helm familiarity. Day-to-day server management — console, files, backups, players — is entirely dashboard-driven; kubectl is optional."
-                        }
-                      }
+                      "type": "INSTANCE",
+                      "x": 0,
+                      "y": 0,
+                      "width": 532,
+                      "height": 121,
+                      "component": "Accordion/Open",
+                      "componentId": "1:749",
+                      "layout": {
+                        "mode": "VERTICAL",
+                        "gap": 0,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "MIN",
+                        "sizing": ["HUG", "FIXED"]
+                      },
+                      "layoutAlignSelf": "STRETCH",
+                      "texts": [
+                        "Do I need to know Kubernetes?",
+                        "One-time cluster setup benefits from basic Helm familiarity. Day-to-day server management — console, files, backups, players — is entirely dashboard-driven; kubectl is optional."
+                      ]
                     },
                     {
-                      "id": "z5EQrQ",
-                      "type": "ref",
-                      "ref": "v9zjax",
+                      "id": "1:759",
                       "name": "FAQ Item",
-                      "width": "fill_container",
-                      "descendants": {
-                        "C2FCOL": {
-                          "icon": "circle-help"
-                        },
-                        "XvFxz": {
-                          "content": "Is Gameplane production-ready?"
-                        },
-                        "tne6e": {
-                          "content": "It's a pre-v1 release (v0.4.0). Core workflows are feature-complete and tested, but not yet recommended for unattended production — see the Roadmap."
-                        }
-                      }
+                      "type": "INSTANCE",
+                      "x": 0,
+                      "y": 137,
+                      "width": 532,
+                      "height": 121,
+                      "component": "Accordion/Open",
+                      "componentId": "1:749",
+                      "layout": {
+                        "mode": "VERTICAL",
+                        "gap": 0,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "MIN",
+                        "sizing": ["HUG", "FIXED"]
+                      },
+                      "layoutAlignSelf": "STRETCH",
+                      "texts": [
+                        "Is Gameplane production-ready?",
+                        "It's a pre-v1 release (v0.4.0). Core workflows are feature-complete and tested, but not yet recommended for unattended production — see the Roadmap."
+                      ]
                     },
                     {
-                      "id": "fUD5W",
-                      "type": "ref",
-                      "ref": "v9zjax",
+                      "id": "1:760",
                       "name": "FAQ Item",
-                      "width": "fill_container",
-                      "descendants": {
-                        "C2FCOL": {
-                          "icon": "circle-help"
-                        },
-                        "XvFxz": {
-                          "content": "Is it free?"
-                        },
-                        "tne6e": {
-                          "content": "Yes. Gameplane is open-source under AGPL-3.0-or-later, with no paid tiers."
-                        }
-                      }
+                      "type": "INSTANCE",
+                      "x": 0,
+                      "y": 274,
+                      "width": 532,
+                      "height": 103,
+                      "component": "Accordion/Open",
+                      "componentId": "1:749",
+                      "layout": {
+                        "mode": "VERTICAL",
+                        "gap": 0,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "MIN",
+                        "sizing": ["HUG", "FIXED"]
+                      },
+                      "layoutAlignSelf": "STRETCH",
+                      "texts": ["Is it free?", "Yes. Gameplane is open-source under AGPL-3.0-or-later, with no paid tiers."]
                     }
                   ]
                 },
                 {
-                  "type": "frame",
-                  "id": "U5LykJ",
-                  "width": "fill_container",
-                  "layout": "vertical",
-                  "gap": 16,
+                  "id": "1:761",
+                  "name": "frame",
+                  "type": "FRAME",
+                  "x": 564,
+                  "y": 0,
+                  "width": 532,
+                  "height": 496,
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "gap": 16,
+                    "padding": [0, 0, 0, 0],
+                    "primary": "MIN",
+                    "counter": "MIN",
+                    "sizing": ["HUG", "FIXED"]
+                  },
+                  "layoutGrow": 1,
                   "children": [
                     {
-                      "id": "ZHWO8",
-                      "type": "ref",
-                      "ref": "v9zjax",
+                      "id": "1:762",
                       "name": "FAQ Item",
-                      "width": "fill_container",
-                      "descendants": {
-                        "C2FCOL": {
-                          "icon": "circle-help"
-                        },
-                        "XvFxz": {
-                          "content": "What happens to my data if I uninstall?"
-                        },
-                        "tne6e": {
-                          "content": "Depends on your cluster's StorageClass reclaim policy — Gameplane doesn't force-delete PVCs itself. Back up critical data before uninstalling."
-                        }
-                      }
+                      "type": "INSTANCE",
+                      "x": 0,
+                      "y": 0,
+                      "width": 532,
+                      "height": 103,
+                      "component": "Accordion/Open",
+                      "componentId": "1:749",
+                      "layout": {
+                        "mode": "VERTICAL",
+                        "gap": 0,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "MIN",
+                        "sizing": ["HUG", "FIXED"]
+                      },
+                      "layoutAlignSelf": "STRETCH",
+                      "texts": [
+                        "What happens to my data if I uninstall?",
+                        "Depends on your cluster's StorageClass reclaim policy — Gameplane doesn't force-delete PVCs itself. Back up critical data before uninstalling."
+                      ]
                     },
                     {
-                      "id": "tzhXW",
-                      "type": "ref",
-                      "ref": "v9zjax",
+                      "id": "1:763",
                       "name": "FAQ Item",
-                      "width": "fill_container",
-                      "descendants": {
-                        "C2FCOL": {
-                          "icon": "circle-help"
-                        },
-                        "XvFxz": {
-                          "content": "What database does it use?"
-                        },
-                        "tne6e": {
-                          "content": "SQLite by default and is the production-tested driver. The PostgreSQL driver works end to end but is experimental: it needs an API image built with the `postgres` build tag, and the API must stay a single replica."
-                        }
-                      }
+                      "type": "INSTANCE",
+                      "x": 0,
+                      "y": 119,
+                      "width": 532,
+                      "height": 121,
+                      "component": "Accordion/Open",
+                      "componentId": "1:749",
+                      "layout": {
+                        "mode": "VERTICAL",
+                        "gap": 0,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "MIN",
+                        "sizing": ["HUG", "FIXED"]
+                      },
+                      "layoutAlignSelf": "STRETCH",
+                      "texts": [
+                        "What database does it use?",
+                        "SQLite by default and is the production-tested driver. The PostgreSQL driver works end to end but is experimental: it needs an API image built with the `postgres` build tag, and the API must stay a single replica."
+                      ]
                     },
                     {
-                      "id": "QtM65",
-                      "type": "ref",
-                      "ref": "v9zjax",
+                      "id": "1:764",
                       "name": "FAQ Item",
-                      "width": "fill_container",
-                      "descendants": {
-                        "C2FCOL": {
-                          "icon": "circle-help"
-                        },
-                        "XvFxz": {
-                          "content": "Can I manage servers without the dashboard?"
-                        },
-                        "tne6e": {
-                          "content": "Yes. Advanced users can bypass the API entirely and manage everything with kubectl apply — the operator is authoritative, so both stay in sync."
-                        }
-                      }
+                      "type": "INSTANCE",
+                      "x": 0,
+                      "y": 256,
+                      "width": 532,
+                      "height": 103,
+                      "component": "Accordion/Open",
+                      "componentId": "1:749",
+                      "layout": {
+                        "mode": "VERTICAL",
+                        "gap": 0,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "MIN",
+                        "sizing": ["HUG", "FIXED"]
+                      },
+                      "layoutAlignSelf": "STRETCH",
+                      "texts": [
+                        "Can I manage servers without the dashboard?",
+                        "Yes. Advanced users can bypass the API entirely and manage everything with kubectl apply — the operator is authoritative, so both stay in sync."
+                      ]
                     },
                     {
-                      "id": "tLPlD",
-                      "type": "ref",
-                      "ref": "v9zjax",
+                      "id": "1:765",
                       "name": "FAQ Item Dashboard Cluster",
-                      "width": "fill_container",
-                      "descendants": {
-                        "C2FCOL": {
-                          "icon": "circle-help"
-                        },
-                        "XvFxz": {
-                          "content": "Do I need a Kubernetes cluster to run the dashboard?"
-                        },
-                        "tne6e": {
-                          "content": "Not for the panel itself since v0.4.0. Docker Compose or a standalone Helm profile runs the API and dashboard without Kubernetes; games still run on registered clusters, each with its own operator and agents."
-                        }
-                      }
+                      "type": "INSTANCE",
+                      "x": 0,
+                      "y": 375,
+                      "width": 532,
+                      "height": 121,
+                      "component": "Accordion/Open",
+                      "componentId": "1:749",
+                      "layout": {
+                        "mode": "VERTICAL",
+                        "gap": 0,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "MIN",
+                        "sizing": ["HUG", "FIXED"]
+                      },
+                      "layoutAlignSelf": "STRETCH",
+                      "texts": [
+                        "Do I need a Kubernetes cluster to run the dashboard?",
+                        "Not for the panel itself since v0.4.0. Docker Compose or a standalone Helm profile runs the API and dashboard without Kubernetes; games still run on registered clusters, each with its own operator and agents."
+                      ]
                     }
                   ]
                 }
               ]
             },
             {
-              "type": "frame",
-              "id": "wYaZG",
+              "id": "1:766",
               "name": "PrevNext",
-              "width": "fill_container",
-              "stroke": "$border/border",
-              "strokeWidth": {
-                "top": 1
+              "type": "FRAME",
+              "x": 32,
+              "y": 671,
+              "width": 1096,
+              "height": 48,
+              "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+              "strokeWeight": 1,
+              "layout": {
+                "mode": "HORIZONTAL",
+                "gap": 0,
+                "padding": [16, 0, 0, 0],
+                "primary": "SPACE_BETWEEN",
+                "counter": "CENTER",
+                "sizing": ["FIXED", "HUG"]
               },
-              "strokeAlignment": "inner",
-              "strokeLinejoin": "round",
-              "padding": [
-                16,
-                0,
-                0,
-                0
-              ],
-              "justifyContent": "space_between",
-              "alignItems": "center",
+              "layoutAlignSelf": "STRETCH",
+              "variables": {"strokes/0/color": "border/border"},
               "children": [
                 {
-                  "type": "frame",
-                  "id": "uz9ii",
-                  "gap": 6,
-                  "alignItems": "center",
+                  "id": "1:767",
+                  "name": "frame",
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 16,
+                  "width": 79,
+                  "height": 32,
+                  "layout": {
+                    "mode": "HORIZONTAL",
+                    "gap": 6,
+                    "padding": [0, 0, 0, 0],
+                    "primary": "MIN",
+                    "counter": "CENTER",
+                    "sizing": ["HUG", "HUG"]
+                  },
                   "children": [
                     {
-                      "type": "icon",
-                      "id": "cFh5M",
+                      "id": "1:768",
+                      "name": "icon",
+                      "type": "FRAME",
+                      "x": 0,
+                      "y": 9,
                       "width": 14,
                       "height": 14,
-                      "icon": "arrow-left",
-                      "library": "lucide",
-                      "fill": "$muted"
-                    },
-                    {
-                      "type": "frame",
-                      "id": "Mu4bK",
-                      "layout": "vertical",
+                      "variables": {"fills/0/color": "muted"},
                       "children": [
                         {
-                          "type": "text",
-                          "id": "f88ljD",
-                          "fill": "$muted",
-                          "content": "Previous",
-                          "fontFamily": "$typography/font-sans",
-                          "fontSize": 11,
-                          "fontWeight": "normal"
+                          "name": "path",
+                          "type": "VECTOR",
+                          "x": 2.92,
+                          "y": 2.92,
+                          "width": 8.17,
+                          "height": 8.17,
+                          "strokes": [{"type": "SOLID", "color": "#9E98A6"}],
+                          "strokeWeight": 1.17
+                        }
+                      ]
+                    },
+                    {
+                      "id": "1:769",
+                      "name": "frame",
+                      "type": "FRAME",
+                      "x": 20,
+                      "y": 0,
+                      "width": 59,
+                      "height": 32,
+                      "layout": {
+                        "mode": "VERTICAL",
+                        "gap": 0,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "MIN",
+                        "sizing": ["HUG", "HUG"]
+                      },
+                      "children": [
+                        {
+                          "id": "1:770",
+                          "name": "text",
+                          "type": "TEXT",
+                          "x": 0,
+                          "y": 0,
+                          "width": 44,
+                          "height": 14,
+                          "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                          "text": "Previous",
+                          "font": ["Geist", 400, 11],
+                          "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
                         },
                         {
-                          "type": "text",
-                          "id": "wNmbs",
-                          "fill": "$foreground/foreground",
-                          "content": "Roadmap",
-                          "fontFamily": "$typography/font-mono",
-                          "fontSize": 14,
-                          "fontWeight": "500"
+                          "id": "1:771",
+                          "name": "text",
+                          "type": "TEXT",
+                          "x": 0,
+                          "y": 14,
+                          "width": 59,
+                          "height": 18,
+                          "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                          "text": "Roadmap",
+                          "font": ["JetBrains Mono", 500, 14],
+                          "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
                         }
                       ]
                     }
                   ]
                 },
                 {
-                  "type": "frame",
-                  "id": "HHZI8",
-                  "gap": 6,
-                  "alignItems": "center",
+                  "id": "1:772",
+                  "name": "frame",
+                  "type": "FRAME",
+                  "x": 1000,
+                  "y": 16,
+                  "width": 96,
+                  "height": 32,
+                  "layout": {
+                    "mode": "HORIZONTAL",
+                    "gap": 6,
+                    "padding": [0, 0, 0, 0],
+                    "primary": "MIN",
+                    "counter": "CENTER",
+                    "sizing": ["HUG", "HUG"]
+                  },
                   "children": [
                     {
-                      "type": "frame",
-                      "id": "J6yD2",
-                      "layout": "vertical",
-                      "alignItems": "end",
+                      "id": "1:773",
+                      "name": "frame",
+                      "type": "FRAME",
+                      "x": 0,
+                      "y": 0,
+                      "width": 76,
+                      "height": 32,
+                      "layout": {
+                        "mode": "VERTICAL",
+                        "gap": 0,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "MAX",
+                        "sizing": ["HUG", "HUG"]
+                      },
                       "children": [
                         {
-                          "type": "text",
-                          "id": "WsILO",
-                          "fill": "$muted",
-                          "content": "Next",
-                          "fontFamily": "$typography/font-sans",
-                          "fontSize": 11,
-                          "fontWeight": "normal"
+                          "id": "1:774",
+                          "name": "text",
+                          "type": "TEXT",
+                          "x": 52,
+                          "y": 0,
+                          "width": 24,
+                          "height": 14,
+                          "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                          "text": "Next",
+                          "font": ["Geist", 400, 11],
+                          "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
                         },
                         {
-                          "type": "text",
-                          "id": "ohDvL",
-                          "fill": "$foreground/foreground",
-                          "content": "Changelog",
-                          "fontFamily": "$typography/font-mono",
-                          "fontSize": 14,
-                          "fontWeight": "500"
+                          "id": "1:775",
+                          "name": "text",
+                          "type": "TEXT",
+                          "x": 0,
+                          "y": 14,
+                          "width": 76,
+                          "height": 18,
+                          "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                          "text": "Changelog",
+                          "font": ["JetBrains Mono", 500, 14],
+                          "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
                         }
                       ]
                     },
                     {
-                      "type": "icon",
-                      "id": "dA9Nz",
+                      "id": "1:776",
+                      "name": "icon",
+                      "type": "FRAME",
+                      "x": 82,
+                      "y": 9,
                       "width": 14,
                       "height": 14,
-                      "icon": "arrow-right",
-                      "library": "lucide",
-                      "fill": "$muted"
+                      "variables": {"fills/0/color": "muted"},
+                      "children": [
+                        {
+                          "name": "path",
+                          "type": "VECTOR",
+                          "x": 2.92,
+                          "y": 2.92,
+                          "width": 8.17,
+                          "height": 8.17,
+                          "strokes": [{"type": "SOLID", "color": "#9E98A6"}],
+                          "strokeWeight": 1.17
+                        }
+                      ]
                     }
                   ]
                 }

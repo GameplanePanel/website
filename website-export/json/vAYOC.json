@@ -1,354 +1,631 @@
 {
-  "type": "frame",
-  "id": "vAYOC",
+  "file": "vAYOC",
+  "id": "1:535",
+  "name": "Screen/Docs — Module Authoring",
+  "type": "FRAME",
   "x": 0,
   "y": 7570,
-  "name": "Screen/Docs — Module Authoring",
-  "theme": {
-    "semantic": "dark"
-  },
-  "clip": true,
   "width": 1440,
   "height": 900,
-  "fill": "$background/background",
+  "fills": [{"type": "SOLID", "color": "#121114"}],
+  "layout": {
+    "mode": "HORIZONTAL",
+    "gap": 0,
+    "padding": [0, 0, 0, 0],
+    "primary": "MIN",
+    "counter": "MIN",
+    "sizing": ["FIXED", "FIXED"]
+  },
+  "clips": true,
+  "variables": {"fills/0/color": "background/background"},
   "children": [
     {
-      "id": "qu9nv",
-      "type": "ref",
-      "ref": "K2Rt4H",
-      "height": "fill_container",
+      "id": "1:536",
       "name": "DocsSidebar/Expanded",
-      "width": 280
+      "type": "INSTANCE",
+      "x": 0,
+      "y": 0,
+      "width": 280,
+      "height": 900,
+      "component": "Docs/Expanded Sidebar",
+      "componentId": "1:151",
+      "fills": [{"type": "SOLID", "color": "#17151A"}],
+      "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+      "strokeWeight": 1,
+      "layout": {
+        "mode": "VERTICAL",
+        "gap": 0,
+        "padding": [0, 0, 0, 0],
+        "primary": "MIN",
+        "counter": "MIN",
+        "sizing": ["FIXED", "FIXED"]
+      },
+      "layoutAlignSelf": "STRETCH",
+      "variables": {"fills/0/color": "surface/secondary", "strokes/0/color": "border/border"},
+      "texts": [
+        "gameplane",
+        "Back to site",
+        "START HERE",
+        "Overview",
+        "Getting Started",
+        "CORE CONCEPTS",
+        "Architecture",
+        "Security",
+        "OPERATE",
+        "Servers & Config",
+        "Console & Logs",
+        "Files & Backups",
+        "Network & Automation",
+        "PLATFORM",
+        "Cluster & Storage",
+        "Users & Access",
+        "Audit & Observability",
+        "DEVELOP",
+        "Modules & Sources",
+        "API & Reference",
+        "Local Development",
+        "Component Guides",
+        "Testing & Release",
+        "REFERENCE",
+        "Upgrades",
+        "Troubleshooting",
+        "FAQ",
+        "Releases & Roadmap",
+        "Community"
+      ]
     },
     {
-      "type": "frame",
-      "id": "NmG0G",
+      "id": "1:537",
       "name": "Main",
-      "width": "fill_container",
-      "height": "fill_container",
-      "fill": "$background/background",
-      "layout": "vertical",
+      "type": "FRAME",
+      "x": 280,
+      "y": 0,
+      "width": 1160,
+      "height": 900,
+      "fills": [{"type": "SOLID", "color": "#121114"}],
+      "layout": {
+        "mode": "VERTICAL",
+        "gap": 0,
+        "padding": [0, 0, 0, 0],
+        "primary": "MIN",
+        "counter": "MIN",
+        "sizing": ["FIXED", "FIXED"]
+      },
+      "layoutGrow": 1,
+      "layoutAlignSelf": "STRETCH",
+      "variables": {"fills/0/color": "background/background"},
       "children": [
         {
-          "id": "z44ZV1",
-          "type": "ref",
-          "ref": "SOdlr",
+          "id": "1:538",
           "name": "Docs Top Bar",
-          "width": "fill_container",
-          "descendants": {
-            "NImey": {
-              "content": "Extend"
-            },
-            "ikbi6": {
-              "content": "Module Authoring"
-            }
-          }
+          "type": "INSTANCE",
+          "x": 0,
+          "y": 0,
+          "width": 1160,
+          "height": 64,
+          "component": "Docs Top Bar",
+          "componentId": "1:239",
+          "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+          "strokeWeight": 1,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "gap": 0,
+            "padding": [0, 32, 0, 32],
+            "primary": "SPACE_BETWEEN",
+            "counter": "CENTER",
+            "sizing": ["FIXED", "FIXED"]
+          },
+          "layoutAlignSelf": "STRETCH",
+          "variables": {"strokes/0/color": "border/border"},
+          "texts": ["Docs", "/", "Extend", "/", "Module Authoring"]
         },
         {
-          "type": "frame",
-          "id": "ktPmO",
+          "id": "1:539",
           "name": "Body",
-          "clip": true,
-          "width": "fill_container",
-          "height": "fill_container",
-          "layout": "vertical",
-          "gap": 24,
-          "padding": 32,
+          "type": "FRAME",
+          "x": 0,
+          "y": 64,
+          "width": 1160,
+          "height": 836,
+          "layout": {
+            "mode": "VERTICAL",
+            "gap": 24,
+            "padding": [32, 32, 32, 32],
+            "primary": "MIN",
+            "counter": "MIN",
+            "sizing": ["FIXED", "FIXED"]
+          },
+          "layoutGrow": 1,
+          "layoutAlignSelf": "STRETCH",
+          "clips": true,
           "children": [
             {
-              "type": "text",
-              "id": "Wgu6k",
-              "fill": "$accent/accent",
-              "content": "DOCUMENTATION",
-              "fontFamily": "$typography/font-mono",
-              "fontSize": 12,
-              "fontWeight": "600"
+              "id": "1:540",
+              "name": "text",
+              "type": "TEXT",
+              "x": 32,
+              "y": 32,
+              "width": 94,
+              "height": 16,
+              "fills": [{"type": "SOLID", "color": "#FF4FA3"}],
+              "text": "DOCUMENTATION",
+              "font": ["JetBrains Mono", 600, 12],
+              "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "accent/accent"}
             },
             {
-              "type": "text",
-              "id": "y5LTnK",
-              "fill": "$foreground/foreground",
-              "content": "Module Authoring",
-              "fontFamily": "$typography/font-mono",
-              "fontSize": 32,
-              "fontWeight": "700"
+              "id": "1:541",
+              "name": "text",
+              "type": "TEXT",
+              "x": 32,
+              "y": 72,
+              "width": 308,
+              "height": 42,
+              "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+              "text": "Module Authoring",
+              "font": ["JetBrains Mono", 700, 32],
+              "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
             },
             {
-              "type": "text",
-              "id": "Sb7CZ",
-              "fill": "$muted",
-              "textGrowth": "fixed-width",
+              "id": "1:542",
+              "name": "text",
+              "type": "TEXT",
+              "x": 32,
+              "y": 138,
               "width": 640,
-              "content": "Package game server templates as signed, versioned OCI artifacts with metadata, config schema, and capabilities.",
-              "fontFamily": "$typography/font-sans",
-              "fontSize": 16,
-              "fontWeight": "normal"
+              "height": 42,
+              "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+              "text": "Package game server templates as signed, versioned OCI artifacts with metadata, config schema, and capabilities.",
+              "font": ["Geist", 400, 16],
+              "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
             },
             {
-              "type": "frame",
-              "id": "oDcXd",
+              "id": "1:543",
               "name": "Source layout",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 6,
-              "children": [
-                {
-                  "type": "text",
-                  "id": "k1iOOW",
-                  "fill": "$foreground/foreground",
-                  "content": "Source layout",
-                  "fontFamily": "$typography/font-mono",
-                  "fontSize": 18,
-                  "fontWeight": "600"
-                },
-                {
-                  "type": "text",
-                  "id": "kliCr",
-                  "fill": "$muted",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "A module directory holds template.yaml, module.yaml, an optional README, icon, and locales (v0.4.0).",
-                  "lineHeight": 1.5,
-                  "fontFamily": "$typography/font-sans",
-                  "fontSize": 14,
-                  "fontWeight": "normal"
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "Tcl5Q",
-              "name": "Module metadata",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 6,
-              "children": [
-                {
-                  "type": "text",
-                  "id": "bNwUu",
-                  "fill": "$foreground/foreground",
-                  "content": "Module metadata",
-                  "fontFamily": "$typography/font-mono",
-                  "fontSize": 18,
-                  "fontWeight": "600"
-                },
-                {
-                  "type": "text",
-                  "id": "rhX3F",
-                  "fill": "$muted",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "module.yaml declares name, version, game family, and summary — version must match the OCI tag.",
-                  "lineHeight": 1.5,
-                  "fontFamily": "$typography/font-sans",
-                  "fontSize": 14,
-                  "fontWeight": "normal"
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "r6isPE",
-              "name": "CodeBlock",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 8,
-              "children": [
-                {
-                  "type": "text",
-                  "id": "AEtSI",
-                  "fill": "$muted",
-                  "content": "PUSHING A BUNDLE",
-                  "fontFamily": "$typography/font-mono",
-                  "fontSize": 11,
-                  "fontWeight": "600"
-                },
-                {
-                  "type": "frame",
-                  "id": "ZB4Ue",
-                  "width": "fill_container",
-                  "fill": "$surface/tertiary",
-                  "cornerRadius": "$radius/2xl",
-                  "stroke": "$border/border",
-                  "strokeWidth": 1,
-                  "strokeAlignment": "inner",
-                  "layout": "vertical",
-                  "gap": 2,
-                  "padding": 16,
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "sZctg",
-                      "fill": "$foreground/foreground",
-                      "content": "$ oras push \\",
-                      "fontFamily": "$typography/font-mono",
-                      "fontSize": 13,
-                      "fontWeight": "normal"
-                    },
-                    {
-                      "type": "text",
-                      "id": "aRLmq",
-                      "fill": "$foreground/foreground",
-                      "content": "    --artifact-type application/vnd.gameplane.module.v1+json \\",
-                      "fontFamily": "$typography/font-mono",
-                      "fontSize": 13,
-                      "fontWeight": "normal"
-                    },
-                    {
-                      "type": "text",
-                      "id": "klpAX",
-                      "fill": "$foreground/foreground",
-                      "content": "    ghcr.io/gameplanepanel/gameplane-modules/minecraft-java:1.0.0 \\",
-                      "fontFamily": "$typography/font-mono",
-                      "fontSize": 13,
-                      "fontWeight": "normal"
-                    },
-                    {
-                      "type": "text",
-                      "id": "k6a5At",
-                      "fill": "$foreground/foreground",
-                      "content": "    module.yaml template.yaml",
-                      "fontFamily": "$typography/font-mono",
-                      "fontSize": 13,
-                      "fontWeight": "normal"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "af75l",
-              "name": "Bundle format",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 6,
-              "children": [
-                {
-                  "type": "text",
-                  "id": "ErM6t",
-                  "fill": "$foreground/foreground",
-                  "content": "Bundle format",
-                  "fontFamily": "$typography/font-mono",
-                  "fontSize": 18,
-                  "fontWeight": "600"
-                },
-                {
-                  "type": "text",
-                  "id": "m0AwSF",
-                  "fill": "$muted",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "An OCI artifact with named layers, including optional locales (v0.4.0), tagged application/vnd.gameplane.module.v1+json.",
-                  "lineHeight": 1.5,
-                  "fontFamily": "$typography/font-sans",
-                  "fontSize": 14,
-                  "fontWeight": "normal"
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "m0Yh9",
-              "name": "PrevNext",
-              "width": "fill_container",
-              "stroke": "$border/border",
-              "strokeWidth": {
-                "top": 1
+              "type": "FRAME",
+              "x": 32,
+              "y": 204,
+              "width": 1096,
+              "height": 51,
+              "layout": {
+                "mode": "VERTICAL",
+                "gap": 6,
+                "padding": [0, 0, 0, 0],
+                "primary": "MIN",
+                "counter": "MIN",
+                "sizing": ["HUG", "FIXED"]
               },
-              "strokeAlignment": "inner",
-              "strokeLinejoin": "round",
-              "padding": [
-                16,
-                0,
-                0,
-                0
-              ],
-              "justifyContent": "space_between",
-              "alignItems": "center",
+              "layoutAlignSelf": "STRETCH",
               "children": [
                 {
-                  "type": "frame",
-                  "id": "qzkbi",
-                  "gap": 6,
-                  "alignItems": "center",
+                  "id": "1:544",
+                  "name": "text",
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 0,
+                  "width": 141,
+                  "height": 24,
+                  "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                  "text": "Source layout",
+                  "font": ["JetBrains Mono", 600, 18],
+                  "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
+                },
+                {
+                  "id": "1:545",
+                  "name": "text",
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 30,
+                  "width": 1096,
+                  "height": 21,
+                  "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                  "layoutAlignSelf": "STRETCH",
+                  "text": "A module directory holds template.yaml, module.yaml, an optional README, icon, and locales (v0.4.0).",
+                  "font": ["Geist", 400, 14],
+                  "lineHeight": {"value": 150, "unit": "PERCENT"},
+                  "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
+                }
+              ]
+            },
+            {
+              "id": "1:546",
+              "name": "Module metadata",
+              "type": "FRAME",
+              "x": 32,
+              "y": 279,
+              "width": 1096,
+              "height": 51,
+              "layout": {
+                "mode": "VERTICAL",
+                "gap": 6,
+                "padding": [0, 0, 0, 0],
+                "primary": "MIN",
+                "counter": "MIN",
+                "sizing": ["HUG", "FIXED"]
+              },
+              "layoutAlignSelf": "STRETCH",
+              "children": [
+                {
+                  "id": "1:547",
+                  "name": "text",
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 0,
+                  "width": 162,
+                  "height": 24,
+                  "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                  "text": "Module metadata",
+                  "font": ["JetBrains Mono", 600, 18],
+                  "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
+                },
+                {
+                  "id": "1:548",
+                  "name": "text",
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 30,
+                  "width": 1096,
+                  "height": 21,
+                  "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                  "layoutAlignSelf": "STRETCH",
+                  "text": "module.yaml declares name, version, game family, and summary — version must match the OCI tag.",
+                  "font": ["Geist", 400, 14],
+                  "lineHeight": {"value": 150, "unit": "PERCENT"},
+                  "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
+                }
+              ]
+            },
+            {
+              "id": "1:549",
+              "name": "CodeBlock",
+              "type": "FRAME",
+              "x": 32,
+              "y": 354,
+              "width": 1096,
+              "height": 129,
+              "layout": {
+                "mode": "VERTICAL",
+                "gap": 8,
+                "padding": [0, 0, 0, 0],
+                "primary": "MIN",
+                "counter": "MIN",
+                "sizing": ["HUG", "FIXED"]
+              },
+              "layoutAlignSelf": "STRETCH",
+              "children": [
+                {
+                  "id": "1:550",
+                  "name": "text",
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 0,
+                  "width": 106,
+                  "height": 15,
+                  "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                  "text": "PUSHING A BUNDLE",
+                  "font": ["JetBrains Mono", 600, 11],
+                  "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "muted"}
+                },
+                {
+                  "id": "1:551",
+                  "name": "frame",
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 23,
+                  "width": 1096,
+                  "height": 106,
+                  "fills": [{"type": "SOLID", "color": "#141317"}],
+                  "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+                  "strokeWeight": 1,
+                  "cornerRadius": 16,
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "gap": 2,
+                    "padding": [16, 16, 16, 16],
+                    "primary": "MIN",
+                    "counter": "MIN",
+                    "sizing": ["HUG", "FIXED"]
+                  },
+                  "layoutAlignSelf": "STRETCH",
+                  "variables": {
+                    "cornerRadius": "radius/2xl",
+                    "fills/0/color": "surface/tertiary",
+                    "strokes/0/color": "border/border"
+                  },
                   "children": [
                     {
-                      "type": "icon",
-                      "id": "G387k",
-                      "width": 14,
-                      "height": 14,
-                      "icon": "arrow-left",
-                      "library": "lucide",
-                      "fill": "$muted"
+                      "id": "1:552",
+                      "name": "text",
+                      "type": "TEXT",
+                      "x": 16,
+                      "y": 16,
+                      "width": 102,
+                      "height": 17,
+                      "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                      "text": "$ oras push \\",
+                      "font": ["JetBrains Mono", 400, 13],
+                      "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
                     },
                     {
-                      "type": "frame",
-                      "id": "MCSXI",
-                      "layout": "vertical",
+                      "id": "1:553",
+                      "name": "text",
+                      "type": "TEXT",
+                      "x": 16,
+                      "y": 35,
+                      "width": 484,
+                      "height": 17,
+                      "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                      "text": "    --artifact-type application/vnd.gameplane.module.v1+json \\",
+                      "font": ["JetBrains Mono", 400, 13],
+                      "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
+                    },
+                    {
+                      "id": "1:554",
+                      "name": "text",
+                      "type": "TEXT",
+                      "x": 16,
+                      "y": 54,
+                      "width": 523,
+                      "height": 17,
+                      "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                      "text": "    ghcr.io/gameplanepanel/gameplane-modules/minecraft-java:1.0.0 \\",
+                      "font": ["JetBrains Mono", 400, 13],
+                      "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
+                    },
+                    {
+                      "id": "1:555",
+                      "name": "text",
+                      "type": "TEXT",
+                      "x": 16,
+                      "y": 73,
+                      "width": 227,
+                      "height": 17,
+                      "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                      "text": "    module.yaml template.yaml",
+                      "font": ["JetBrains Mono", 400, 13],
+                      "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "1:556",
+              "name": "Bundle format",
+              "type": "FRAME",
+              "x": 32,
+              "y": 507,
+              "width": 1096,
+              "height": 51,
+              "layout": {
+                "mode": "VERTICAL",
+                "gap": 6,
+                "padding": [0, 0, 0, 0],
+                "primary": "MIN",
+                "counter": "MIN",
+                "sizing": ["HUG", "FIXED"]
+              },
+              "layoutAlignSelf": "STRETCH",
+              "children": [
+                {
+                  "id": "1:557",
+                  "name": "text",
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 0,
+                  "width": 141,
+                  "height": 24,
+                  "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                  "text": "Bundle format",
+                  "font": ["JetBrains Mono", 600, 18],
+                  "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
+                },
+                {
+                  "id": "1:558",
+                  "name": "text",
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 30,
+                  "width": 1096,
+                  "height": 21,
+                  "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                  "layoutAlignSelf": "STRETCH",
+                  "text": "An OCI artifact with named layers, including optional locales (v0.4.0), tagged application/vnd.gameplane.module.v1+json.",
+                  "font": ["Geist", 400, 14],
+                  "lineHeight": {"value": 150, "unit": "PERCENT"},
+                  "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
+                }
+              ]
+            },
+            {
+              "id": "1:559",
+              "name": "PrevNext",
+              "type": "FRAME",
+              "x": 32,
+              "y": 582,
+              "width": 1096,
+              "height": 48,
+              "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+              "strokeWeight": 1,
+              "layout": {
+                "mode": "HORIZONTAL",
+                "gap": 0,
+                "padding": [16, 0, 0, 0],
+                "primary": "SPACE_BETWEEN",
+                "counter": "CENTER",
+                "sizing": ["FIXED", "HUG"]
+              },
+              "layoutAlignSelf": "STRETCH",
+              "variables": {"strokes/0/color": "border/border"},
+              "children": [
+                {
+                  "id": "1:560",
+                  "name": "frame",
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 16,
+                  "width": 88,
+                  "height": 32,
+                  "layout": {
+                    "mode": "HORIZONTAL",
+                    "gap": 6,
+                    "padding": [0, 0, 0, 0],
+                    "primary": "MIN",
+                    "counter": "CENTER",
+                    "sizing": ["HUG", "HUG"]
+                  },
+                  "children": [
+                    {
+                      "id": "1:561",
+                      "name": "icon",
+                      "type": "FRAME",
+                      "x": 0,
+                      "y": 9,
+                      "width": 14,
+                      "height": 14,
+                      "variables": {"fills/0/color": "muted"},
                       "children": [
                         {
-                          "type": "text",
-                          "id": "Ic1rQ",
-                          "fill": "$muted",
-                          "content": "Previous",
-                          "fontFamily": "$typography/font-sans",
-                          "fontSize": 11,
-                          "fontWeight": "normal"
+                          "name": "path",
+                          "type": "VECTOR",
+                          "x": 2.92,
+                          "y": 2.92,
+                          "width": 8.17,
+                          "height": 8.17,
+                          "strokes": [{"type": "SOLID", "color": "#9E98A6"}],
+                          "strokeWeight": 1.17
+                        }
+                      ]
+                    },
+                    {
+                      "id": "1:562",
+                      "name": "frame",
+                      "type": "FRAME",
+                      "x": 20,
+                      "y": 0,
+                      "width": 68,
+                      "height": 32,
+                      "layout": {
+                        "mode": "VERTICAL",
+                        "gap": 0,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "MIN",
+                        "sizing": ["HUG", "HUG"]
+                      },
+                      "children": [
+                        {
+                          "id": "1:563",
+                          "name": "text",
+                          "type": "TEXT",
+                          "x": 0,
+                          "y": 0,
+                          "width": 44,
+                          "height": 14,
+                          "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                          "text": "Previous",
+                          "font": ["Geist", 400, 11],
+                          "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
                         },
                         {
-                          "type": "text",
-                          "id": "g9I4GU",
-                          "fill": "$foreground/foreground",
-                          "content": "Security",
-                          "fontFamily": "$typography/font-mono",
-                          "fontSize": 14,
-                          "fontWeight": "500"
+                          "id": "1:564",
+                          "name": "text",
+                          "type": "TEXT",
+                          "x": 0,
+                          "y": 14,
+                          "width": 68,
+                          "height": 18,
+                          "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                          "text": "Security",
+                          "font": ["JetBrains Mono", 500, 14],
+                          "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
                         }
                       ]
                     }
                   ]
                 },
                 {
-                  "type": "frame",
-                  "id": "yPktx",
-                  "gap": 6,
-                  "alignItems": "center",
+                  "id": "1:565",
+                  "name": "frame",
+                  "type": "FRAME",
+                  "x": 975,
+                  "y": 16,
+                  "width": 121,
+                  "height": 32,
+                  "layout": {
+                    "mode": "HORIZONTAL",
+                    "gap": 6,
+                    "padding": [0, 0, 0, 0],
+                    "primary": "MIN",
+                    "counter": "CENTER",
+                    "sizing": ["HUG", "HUG"]
+                  },
                   "children": [
                     {
-                      "type": "frame",
-                      "id": "lQC33",
-                      "layout": "vertical",
-                      "alignItems": "end",
+                      "id": "1:566",
+                      "name": "frame",
+                      "type": "FRAME",
+                      "x": 0,
+                      "y": 0,
+                      "width": 101,
+                      "height": 32,
+                      "layout": {
+                        "mode": "VERTICAL",
+                        "gap": 0,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "MAX",
+                        "sizing": ["HUG", "HUG"]
+                      },
                       "children": [
                         {
-                          "type": "text",
-                          "id": "k9K1C",
-                          "fill": "$muted",
-                          "content": "Next",
-                          "fontFamily": "$typography/font-sans",
-                          "fontSize": 11,
-                          "fontWeight": "normal"
+                          "id": "1:567",
+                          "name": "text",
+                          "type": "TEXT",
+                          "x": 77,
+                          "y": 0,
+                          "width": 24,
+                          "height": 14,
+                          "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                          "text": "Next",
+                          "font": ["Geist", 400, 11],
+                          "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
                         },
                         {
-                          "type": "text",
-                          "id": "oozqD",
-                          "fill": "$foreground/foreground",
-                          "content": "Contributing",
-                          "fontFamily": "$typography/font-mono",
-                          "fontSize": 14,
-                          "fontWeight": "500"
+                          "id": "1:568",
+                          "name": "text",
+                          "type": "TEXT",
+                          "x": 0,
+                          "y": 14,
+                          "width": 101,
+                          "height": 18,
+                          "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                          "text": "Contributing",
+                          "font": ["JetBrains Mono", 500, 14],
+                          "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
                         }
                       ]
                     },
                     {
-                      "type": "icon",
-                      "id": "sNOS0",
+                      "id": "1:569",
+                      "name": "icon",
+                      "type": "FRAME",
+                      "x": 107,
+                      "y": 9,
                       "width": 14,
                       "height": 14,
-                      "icon": "arrow-right",
-                      "library": "lucide",
-                      "fill": "$muted"
+                      "variables": {"fills/0/color": "muted"},
+                      "children": [
+                        {
+                          "name": "path",
+                          "type": "VECTOR",
+                          "x": 2.92,
+                          "y": 2.92,
+                          "width": 8.17,
+                          "height": 8.17,
+                          "strokes": [{"type": "SOLID", "color": "#9E98A6"}],
+                          "strokeWeight": 1.17
+                        }
+                      ]
                     }
                   ]
                 }

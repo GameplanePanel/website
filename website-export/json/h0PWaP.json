@@ -1,933 +1,1584 @@
 {
-  "type": "frame",
-  "id": "h0PWaP",
+  "file": "h0PWaP",
+  "id": "1:3316",
+  "name": "Screen/Docs — Server Overview & Connections",
+  "type": "FRAME",
   "x": 0,
   "y": 49740,
-  "name": "Screen/Docs — Server Overview & Connections",
-  "theme": {
-    "semantic": "dark"
-  },
-  "clip": true,
   "width": 1440,
   "height": 900,
-  "fill": "$background/background",
+  "fills": [{"type": "SOLID", "color": "#121114"}],
+  "layout": {
+    "mode": "HORIZONTAL",
+    "gap": 0,
+    "padding": [0, 0, 0, 0],
+    "primary": "MIN",
+    "counter": "MIN",
+    "sizing": ["FIXED", "FIXED"]
+  },
+  "clips": true,
+  "variables": {"fills/0/color": "background/background"},
   "children": [
     {
-      "id": "JTxK0",
-      "type": "ref",
-      "ref": "K2Rt4H",
-      "height": "fill_container",
+      "id": "1:3317",
       "name": "DocsSidebar/Expanded",
-      "width": 280
+      "type": "INSTANCE",
+      "x": 0,
+      "y": 0,
+      "width": 280,
+      "height": 900,
+      "component": "Docs/Expanded Sidebar",
+      "componentId": "1:151",
+      "fills": [{"type": "SOLID", "color": "#17151A"}],
+      "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+      "strokeWeight": 1,
+      "layout": {
+        "mode": "VERTICAL",
+        "gap": 0,
+        "padding": [0, 0, 0, 0],
+        "primary": "MIN",
+        "counter": "MIN",
+        "sizing": ["FIXED", "FIXED"]
+      },
+      "layoutAlignSelf": "STRETCH",
+      "variables": {"fills/0/color": "surface/secondary", "strokes/0/color": "border/border"},
+      "texts": [
+        "gameplane",
+        "Back to site",
+        "START HERE",
+        "Overview",
+        "Getting Started",
+        "CORE CONCEPTS",
+        "Architecture",
+        "Security",
+        "OPERATE",
+        "Servers & Config",
+        "Console & Logs",
+        "Files & Backups",
+        "Network & Automation",
+        "PLATFORM",
+        "Cluster & Storage",
+        "Users & Access",
+        "Audit & Observability",
+        "DEVELOP",
+        "Modules & Sources",
+        "API & Reference",
+        "Local Development",
+        "Component Guides",
+        "Testing & Release",
+        "REFERENCE",
+        "Upgrades",
+        "Troubleshooting",
+        "FAQ",
+        "Releases & Roadmap",
+        "Community"
+      ]
     },
     {
-      "type": "frame",
-      "id": "fbjnz",
+      "id": "1:3318",
       "name": "Docs Main",
-      "width": "fill_container",
-      "height": "fill_container",
-      "fill": "$background/background",
-      "layout": "vertical",
+      "type": "FRAME",
+      "x": 280,
+      "y": 0,
+      "width": 1160,
+      "height": 900,
+      "fills": [{"type": "SOLID", "color": "#121114"}],
+      "layout": {
+        "mode": "VERTICAL",
+        "gap": 0,
+        "padding": [0, 0, 0, 0],
+        "primary": "MIN",
+        "counter": "MIN",
+        "sizing": ["FIXED", "FIXED"]
+      },
+      "layoutGrow": 1,
+      "layoutAlignSelf": "STRETCH",
+      "variables": {"fills/0/color": "background/background"},
       "children": [
         {
-          "id": "ap7Vm",
-          "type": "ref",
-          "ref": "SOdlr",
+          "id": "1:3319",
           "name": "Docs Top Bar",
-          "width": "fill_container",
-          "descendants": {
-            "NImey": {
-              "content": "Operate"
-            },
-            "ikbi6": {
-              "content": "Server Overview"
-            }
-          }
+          "type": "INSTANCE",
+          "x": 0,
+          "y": 0,
+          "width": 1160,
+          "height": 64,
+          "component": "Docs Top Bar",
+          "componentId": "1:239",
+          "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+          "strokeWeight": 1,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "gap": 0,
+            "padding": [0, 32, 0, 32],
+            "primary": "SPACE_BETWEEN",
+            "counter": "CENTER",
+            "sizing": ["FIXED", "FIXED"]
+          },
+          "layoutAlignSelf": "STRETCH",
+          "variables": {"strokes/0/color": "border/border"},
+          "texts": ["Docs", "/", "Operate", "/", "Server Overview"]
         },
         {
-          "type": "frame",
-          "id": "zuDii",
+          "id": "1:3320",
           "name": "Docs Article Body",
-          "clip": true,
-          "width": "fill_container",
-          "height": "fill_container",
-          "gap": 32,
-          "padding": 32,
+          "type": "FRAME",
+          "x": 0,
+          "y": 64,
+          "width": 1160,
+          "height": 836,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "gap": 32,
+            "padding": [32, 32, 32, 32],
+            "primary": "MIN",
+            "counter": "MIN",
+            "sizing": ["FIXED", "FIXED"]
+          },
+          "layoutGrow": 1,
+          "layoutAlignSelf": "STRETCH",
+          "clips": true,
           "children": [
             {
-              "type": "frame",
-              "id": "h1Ychl",
+              "id": "1:3321",
               "name": "Docs Article",
+              "type": "FRAME",
+              "x": 32,
+              "y": 32,
               "width": 780,
-              "layout": "vertical",
-              "gap": 14,
+              "height": 674,
+              "layout": {
+                "mode": "VERTICAL",
+                "gap": 14,
+                "padding": [0, 0, 0, 0],
+                "primary": "MIN",
+                "counter": "MIN",
+                "sizing": ["HUG", "FIXED"]
+              },
               "children": [
                 {
-                  "type": "text",
-                  "id": "AX3YC",
+                  "id": "1:3322",
                   "name": "Article Eyebrow",
-                  "fill": "$accent/accent",
-                  "content": "OPERATE",
-                  "fontFamily": "JetBrains Mono",
-                  "fontSize": 11,
-                  "fontWeight": "600",
-                  "letterSpacing": 0.8
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 0,
+                  "width": 51,
+                  "height": 15,
+                  "fills": [{"type": "SOLID", "color": "#FF4FA3"}],
+                  "text": "OPERATE",
+                  "font": ["JetBrains Mono", 600, 11],
+                  "variables": {"fills/0/color": "accent/accent"}
                 },
                 {
-                  "type": "text",
-                  "id": "THqpf",
+                  "id": "1:3323",
                   "name": "Article Title",
-                  "fill": "$foreground/foreground",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "Server overview and connections",
-                  "lineHeight": 1.1,
-                  "fontFamily": "JetBrains Mono",
-                  "fontSize": 30,
-                  "fontWeight": "700"
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 29,
+                  "width": 780,
+                  "height": 33,
+                  "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                  "layoutAlignSelf": "STRETCH",
+                  "text": "Server overview and connections",
+                  "font": ["JetBrains Mono", 700, 30],
+                  "lineHeight": {"value": 110.00000238418579, "unit": "PERCENT"},
+                  "variables": {"fills/0/color": "foreground/foreground"}
                 },
                 {
-                  "type": "text",
-                  "id": "d4BlHI",
+                  "id": "1:3324",
                   "name": "Article Lead",
-                  "fill": "$muted",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "Read desired state, health, capacity, connection endpoint, and live game context before taking an action.",
-                  "lineHeight": 1.45,
-                  "fontFamily": "Geist",
-                  "fontSize": 15,
-                  "fontWeight": "normal"
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 76,
+                  "width": 780,
+                  "height": 22,
+                  "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                  "layoutAlignSelf": "STRETCH",
+                  "text": "Read desired state, health, capacity, connection endpoint, and live game context before taking an action.",
+                  "font": ["Geist", 400, 15],
+                  "lineHeight": {"value": 145.00000476837158, "unit": "PERCENT"},
+                  "variables": {"fills/0/color": "muted"}
                 },
                 {
-                  "type": "frame",
-                  "id": "d7fMcI",
+                  "id": "1:3325",
                   "name": "Article Metadata",
-                  "gap": 8,
-                  "alignItems": "center",
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 112,
+                  "width": 196,
+                  "height": 17,
+                  "layout": {
+                    "mode": "HORIZONTAL",
+                    "gap": 8,
+                    "padding": [0, 0, 0, 0],
+                    "primary": "MIN",
+                    "counter": "CENTER",
+                    "sizing": ["HUG", "HUG"]
+                  },
                   "children": [
                     {
-                      "id": "L066Yy",
-                      "type": "ref",
-                      "ref": "NZPtq",
+                      "id": "1:3326",
                       "name": "Meta Chip 0",
-                      "descendants": {
-                        "NLG8t": {
-                          "content": "OPERATOR GUIDE"
-                        }
-                      }
+                      "type": "INSTANCE",
+                      "x": 0,
+                      "y": 0,
+                      "width": 104,
+                      "height": 17,
+                      "component": "Chip/Soft/Accent/SM",
+                      "componentId": "1:1583",
+                      "fills": [{"type": "SOLID", "color": "#331525"}],
+                      "cornerRadius": 16,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 2,
+                        "padding": [2, 4, 2, 4],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["HUG", "HUG"]
+                      },
+                      "variables": {"cornerRadius": "radius/2xl", "fills/0/color": "accent/soft"},
+                      "texts": ["OPERATOR GUIDE"]
                     },
                     {
-                      "id": "VC14j",
-                      "type": "ref",
-                      "ref": "EbSsA",
+                      "id": "1:3327",
                       "name": "Meta Chip 1",
-                      "descendants": {
-                        "yb6zz": {
-                          "content": "v0.4"
-                        }
-                      }
+                      "type": "INSTANCE",
+                      "x": 112,
+                      "y": 0,
+                      "width": 32,
+                      "height": 17,
+                      "component": "Chip/Soft/Default/SM",
+                      "componentId": "1:1586",
+                      "fills": [{"type": "SOLID", "color": "#232128"}],
+                      "cornerRadius": 16,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 2,
+                        "padding": [2, 4, 2, 4],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["HUG", "HUG"]
+                      },
+                      "variables": {"cornerRadius": "radius/2xl", "fills/0/color": "default/default"},
+                      "texts": ["v0.4"]
                     },
                     {
-                      "id": "RZ99D",
-                      "type": "ref",
-                      "ref": "EbSsA",
+                      "id": "1:3328",
                       "name": "Meta Chip 2",
-                      "descendants": {
-                        "yb6zz": {
-                          "content": "10 MIN"
-                        }
-                      }
+                      "type": "INSTANCE",
+                      "x": 152,
+                      "y": 0,
+                      "width": 44,
+                      "height": 17,
+                      "component": "Chip/Soft/Default/SM",
+                      "componentId": "1:1586",
+                      "fills": [{"type": "SOLID", "color": "#232128"}],
+                      "cornerRadius": 16,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 2,
+                        "padding": [2, 4, 2, 4],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["HUG", "HUG"]
+                      },
+                      "variables": {"cornerRadius": "radius/2xl", "fills/0/color": "default/default"},
+                      "texts": ["10 MIN"]
                     }
                   ]
                 },
                 {
-                  "type": "frame",
-                  "id": "dmMq6",
+                  "id": "1:3329",
                   "name": "Article Callout",
-                  "width": "fill_container",
-                  "fill": "$accent/soft",
-                  "cornerRadius": "$radius/xl",
-                  "stroke": "$border/border",
-                  "strokeWidth": 1,
-                  "strokeAlignment": "inner",
-                  "gap": 10,
-                  "padding": [
-                    10,
-                    12
-                  ],
-                  "alignItems": "center",
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 143,
+                  "width": 780,
+                  "height": 36,
+                  "fills": [{"type": "SOLID", "color": "#331525"}],
+                  "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+                  "strokeWeight": 1,
+                  "cornerRadius": 12,
+                  "layout": {
+                    "mode": "HORIZONTAL",
+                    "gap": 10,
+                    "padding": [10, 12, 10, 12],
+                    "primary": "MIN",
+                    "counter": "CENTER",
+                    "sizing": ["FIXED", "HUG"]
+                  },
+                  "layoutAlignSelf": "STRETCH",
+                  "variables": {"cornerRadius": "radius/xl", "fills/0/color": "accent/soft", "strokes/0/color": "border/border"},
                   "children": [
                     {
-                      "type": "icon",
-                      "id": "iXO52",
+                      "id": "1:3330",
                       "name": "Article Callout Icon",
+                      "type": "FRAME",
+                      "x": 12,
+                      "y": 10,
                       "width": 16,
                       "height": 16,
-                      "icon": "gauge",
-                      "library": "lucide",
-                      "fill": "$accent/soft-foreground"
+                      "variables": {"fills/0/color": "accent/soft-foreground"},
+                      "children": [
+                        {
+                          "name": "path",
+                          "type": "VECTOR",
+                          "x": 1.33,
+                          "y": 2.67,
+                          "width": 13.34,
+                          "height": 10,
+                          "strokes": [{"type": "SOLID", "color": "#FF8AC4"}],
+                          "strokeWeight": 1.33
+                        }
+                      ]
                     },
                     {
-                      "type": "text",
-                      "id": "Z3NF7",
+                      "id": "1:3331",
                       "name": "Article Callout Text",
-                      "fill": "$accent/soft-foreground",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "Treat state, conditions, events, and live game status as one story—not four independent indicators.",
-                      "fontFamily": "Geist",
-                      "fontSize": 12.5,
-                      "fontWeight": "normal"
+                      "type": "TEXT",
+                      "x": 38,
+                      "y": 10,
+                      "width": 730,
+                      "height": 16,
+                      "fills": [{"type": "SOLID", "color": "#FF8AC4"}],
+                      "layoutGrow": 1,
+                      "text": "Treat state, conditions, events, and live game status as one story—not four independent indicators.",
+                      "font": ["Geist", 400, 12.5],
+                      "variables": {"fills/0/color": "accent/soft-foreground"}
                     }
                   ]
                 },
                 {
-                  "type": "frame",
-                  "id": "ZlLst",
+                  "id": "1:3332",
                   "name": "Guide Section 1",
-                  "width": "fill_container",
-                  "layout": "vertical",
-                  "gap": 6,
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "OhVyC",
-                      "name": "Section Title 1",
-                      "fill": "$foreground/foreground",
-                      "content": "Read the server header",
-                      "fontFamily": "JetBrains Mono",
-                      "fontSize": 17,
-                      "fontWeight": "600"
-                    },
-                    {
-                      "type": "text",
-                      "id": "XnMFz",
-                      "name": "Section Body 1",
-                      "fill": "$muted",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "Confirm identity and current reconciliation state before opening an action or console.",
-                      "lineHeight": 1.45,
-                      "fontFamily": "Geist",
-                      "fontSize": 13,
-                      "fontWeight": "normal"
-                    },
-                    {
-                      "type": "frame",
-                      "id": "h362M",
-                      "name": "Section List 1",
-                      "width": "fill_container",
-                      "fill": "$surface/surface",
-                      "cornerRadius": "$radius/2xl",
-                      "stroke": "$border/border",
-                      "strokeWidth": 1,
-                      "strokeAlignment": "inner",
-                      "layout": "vertical",
-                      "gap": 5,
-                      "padding": [
-                        8,
-                        10
-                      ],
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "K6mfHz",
-                          "name": "Section 1 Item 0",
-                          "width": "fill_container",
-                          "gap": 8,
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "icon",
-                              "id": "n0bP11",
-                              "name": "Section 1 Item Icon 0",
-                              "width": 13,
-                              "height": 13,
-                              "icon": "check",
-                              "library": "lucide",
-                              "fill": "$accent/accent"
-                            },
-                            {
-                              "type": "text",
-                              "id": "GhAFd",
-                              "name": "Section 1 Item Text 0",
-                              "fill": "$default/foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Check server, cluster, namespace, template, version, loader, and uptime.",
-                              "fontFamily": "Geist",
-                              "fontSize": 12.5,
-                              "fontWeight": "normal"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "frame",
-                          "id": "Kg1ZU",
-                          "name": "Section 1 Item 1",
-                          "width": "fill_container",
-                          "gap": 8,
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "icon",
-                              "id": "Ape9w",
-                              "name": "Section 1 Item Icon 1",
-                              "width": 13,
-                              "height": 13,
-                              "icon": "check",
-                              "library": "lucide",
-                              "fill": "$accent/accent"
-                            },
-                            {
-                              "type": "text",
-                              "id": "XxNk8",
-                              "name": "Section 1 Item Text 1",
-                              "fill": "$default/foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Distinguish Running, Starting, Suspended, Stopped, and Failed.",
-                              "fontFamily": "Geist",
-                              "fontSize": 12.5,
-                              "fontWeight": "normal"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "frame",
-                          "id": "Tr1dS",
-                          "name": "Section 1 Item 2",
-                          "width": "fill_container",
-                          "gap": 8,
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "icon",
-                              "id": "CFNpR",
-                              "name": "Section 1 Item Icon 2",
-                              "width": 13,
-                              "height": 13,
-                              "icon": "check",
-                              "library": "lucide",
-                              "fill": "$accent/accent"
-                            },
-                            {
-                              "type": "text",
-                              "id": "lgB7g",
-                              "name": "Section 1 Item Text 2",
-                              "fill": "$default/foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Check active players before Start, Stop, Restart, or console actions.",
-                              "fontFamily": "Geist",
-                              "fontSize": 12.5,
-                              "fontWeight": "normal"
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "XSXZs",
-                  "name": "Guide Section 2",
-                  "width": "fill_container",
-                  "layout": "vertical",
-                  "gap": 6,
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "e2n7mO",
-                      "name": "Section Title 2",
-                      "fill": "$foreground/foreground",
-                      "content": "Inspect resources and connectivity",
-                      "fontFamily": "JetBrains Mono",
-                      "fontSize": 17,
-                      "fontWeight": "600"
-                    },
-                    {
-                      "type": "text",
-                      "id": "dGX8q",
-                      "name": "Section Body 2",
-                      "fill": "$muted",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "Use resource cards and the displayed endpoint to validate both workload health and the player network path.",
-                      "lineHeight": 1.45,
-                      "fontFamily": "Geist",
-                      "fontSize": 13,
-                      "fontWeight": "normal"
-                    },
-                    {
-                      "type": "frame",
-                      "id": "ZpqzQ",
-                      "name": "Section List 2",
-                      "width": "fill_container",
-                      "fill": "$surface/surface",
-                      "cornerRadius": "$radius/2xl",
-                      "stroke": "$border/border",
-                      "strokeWidth": 1,
-                      "strokeAlignment": "inner",
-                      "layout": "vertical",
-                      "gap": 5,
-                      "padding": [
-                        8,
-                        10
-                      ],
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "n3xnXC",
-                          "name": "Section 2 Item 0",
-                          "width": "fill_container",
-                          "gap": 8,
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "icon",
-                              "id": "NeIaJ",
-                              "name": "Section 2 Item Icon 0",
-                              "width": 13,
-                              "height": 13,
-                              "icon": "check",
-                              "library": "lucide",
-                              "fill": "$accent/accent"
-                            },
-                            {
-                              "type": "text",
-                              "id": "PdnSe",
-                              "name": "Section 2 Item Text 0",
-                              "fill": "$default/foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Compare CPU, memory, and disk use with configured capacity.",
-                              "fontFamily": "Geist",
-                              "fontSize": 12.5,
-                              "fontWeight": "normal"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "frame",
-                          "id": "ff2MN",
-                          "name": "Section 2 Item 1",
-                          "width": "fill_container",
-                          "gap": 8,
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "icon",
-                              "id": "eJ5eO",
-                              "name": "Section 2 Item Icon 1",
-                              "width": 13,
-                              "height": 13,
-                              "icon": "check",
-                              "library": "lucide",
-                              "fill": "$accent/accent"
-                            },
-                            {
-                              "type": "text",
-                              "id": "x8VJp",
-                              "name": "Section 2 Item Text 1",
-                              "fill": "$default/foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Copy host and port together; verify service type and external routing.",
-                              "fontFamily": "Geist",
-                              "fontSize": 12.5,
-                              "fontWeight": "normal"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "frame",
-                          "id": "WrBl8",
-                          "name": "Section 2 Item 2",
-                          "width": "fill_container",
-                          "gap": 8,
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "icon",
-                              "id": "ubtta",
-                              "name": "Section 2 Item Icon 2",
-                              "width": 13,
-                              "height": 13,
-                              "icon": "check",
-                              "library": "lucide",
-                              "fill": "$accent/accent"
-                            },
-                            {
-                              "type": "text",
-                              "id": "r7caF",
-                              "name": "Section 2 Item Text 2",
-                              "fill": "$default/foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Correlate metric changes with recent scheduling, image, probe, and agent events.",
-                              "fontFamily": "Geist",
-                              "fontSize": 12.5,
-                              "fontWeight": "normal"
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "Fdq34",
-                  "name": "Guide Section 3",
-                  "width": "fill_container",
-                  "layout": "vertical",
-                  "gap": 6,
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "xFlOZ",
-                      "name": "Section Title 3",
-                      "fill": "$foreground/foreground",
-                      "content": "Check game state and quick actions",
-                      "fontFamily": "JetBrains Mono",
-                      "fontSize": 17,
-                      "fontWeight": "600"
-                    },
-                    {
-                      "type": "text",
-                      "id": "ktTNk",
-                      "name": "Section Body 3",
-                      "fill": "$muted",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "Save and communicate before changing world state, files, mods, versions, restores, or player-facing rules.",
-                      "lineHeight": 1.45,
-                      "fontFamily": "Geist",
-                      "fontSize": 13,
-                      "fontWeight": "normal"
-                    },
-                    {
-                      "type": "frame",
-                      "id": "rNE3M",
-                      "name": "Quick Reference",
-                      "width": "fill_container",
-                      "fill": "$surface/tertiary",
-                      "cornerRadius": "$radius/xl",
-                      "stroke": "$border/border",
-                      "strokeWidth": 1,
-                      "strokeAlignment": "inner",
-                      "layout": "vertical",
-                      "gap": 3,
-                      "padding": 12,
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "NSq1C",
-                          "name": "Quick Reference Label",
-                          "fill": "$accent/accent",
-                          "content": "OPERATING LOOP",
-                          "fontFamily": "JetBrains Mono",
-                          "fontSize": 9,
-                          "fontWeight": "600",
-                          "letterSpacing": 0.6
-                        },
-                        {
-                          "type": "text",
-                          "id": "RZb0l",
-                          "name": "Quick Reference Line 1",
-                          "fill": "$foreground/foreground",
-                          "content": "01  Identify → cluster, namespace, version, state, and uptime",
-                          "fontFamily": "JetBrains Mono",
-                          "fontSize": 11.5,
-                          "fontWeight": "normal"
-                        },
-                        {
-                          "type": "text",
-                          "id": "O8tg3l",
-                          "name": "Quick Reference Line 2",
-                          "fill": "$foreground/foreground",
-                          "content": "02  Validate → resources, endpoint, events, players, world state",
-                          "fontFamily": "JetBrains Mono",
-                          "fontSize": 11.5,
-                          "fontWeight": "normal"
-                        },
-                        {
-                          "type": "text",
-                          "id": "mamfe",
-                          "name": "Quick Reference Line 3",
-                          "fill": "$foreground/foreground",
-                          "content": "03  Save and broadcast → one action → confirm status and audit",
-                          "fontFamily": "JetBrains Mono",
-                          "fontSize": 11.5,
-                          "fontWeight": "normal"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "FysOL",
-                  "name": "Article Next Link",
-                  "width": "fill_container",
-                  "stroke": "$border/border",
-                  "strokeWidth": {
-                    "top": 1
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 193,
+                  "width": 780,
+                  "height": 127,
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "gap": 6,
+                    "padding": [0, 0, 0, 0],
+                    "primary": "MIN",
+                    "counter": "MIN",
+                    "sizing": ["HUG", "FIXED"]
                   },
-                  "strokeAlignment": "inner",
-                  "strokeLinejoin": "round",
-                  "padding": [
-                    10,
-                    0,
-                    0,
-                    0
-                  ],
-                  "justifyContent": "space_between",
-                  "alignItems": "center",
+                  "layoutAlignSelf": "STRETCH",
                   "children": [
                     {
-                      "type": "frame",
-                      "id": "NAnuf",
-                      "name": "Next Link Text",
-                      "layout": "vertical",
-                      "gap": 2,
+                      "id": "1:3333",
+                      "name": "Section Title 1",
+                      "type": "TEXT",
+                      "x": 0,
+                      "y": 0,
+                      "width": 225,
+                      "height": 22,
+                      "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                      "text": "Read the server header",
+                      "font": ["JetBrains Mono", 600, 17],
+                      "variables": {"fills/0/color": "foreground/foreground"}
+                    },
+                    {
+                      "id": "1:3334",
+                      "name": "Section Body 1",
+                      "type": "TEXT",
+                      "x": 0,
+                      "y": 28,
+                      "width": 780,
+                      "height": 19,
+                      "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                      "layoutAlignSelf": "STRETCH",
+                      "text": "Confirm identity and current reconciliation state before opening an action or console.",
+                      "font": ["Geist", 400, 13],
+                      "lineHeight": {"value": 145.00000476837158, "unit": "PERCENT"},
+                      "variables": {"fills/0/color": "muted"}
+                    },
+                    {
+                      "id": "1:3335",
+                      "name": "Section List 1",
+                      "type": "FRAME",
+                      "x": 0,
+                      "y": 53,
+                      "width": 780,
+                      "height": 74,
+                      "fills": [{"type": "SOLID", "color": "#1C1A20"}],
+                      "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+                      "strokeWeight": 1,
+                      "cornerRadius": 16,
+                      "layout": {
+                        "mode": "VERTICAL",
+                        "gap": 5,
+                        "padding": [8, 10, 8, 10],
+                        "primary": "MIN",
+                        "counter": "MIN",
+                        "sizing": ["HUG", "FIXED"]
+                      },
+                      "layoutAlignSelf": "STRETCH",
+                      "variables": {
+                        "cornerRadius": "radius/2xl",
+                        "fills/0/color": "surface/surface",
+                        "strokes/0/color": "border/border"
+                      },
                       "children": [
                         {
-                          "type": "text",
-                          "id": "UO8RD",
-                          "name": "Next Link Eyebrow",
-                          "fill": "$field/placeholder",
-                          "content": "NEXT GUIDE",
-                          "fontFamily": "Geist",
-                          "fontSize": 10,
-                          "fontWeight": "normal"
+                          "id": "1:3336",
+                          "name": "Section 1 Item 0",
+                          "type": "FRAME",
+                          "x": 10,
+                          "y": 8,
+                          "width": 760,
+                          "height": 16,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 8,
+                            "padding": [0, 0, 0, 0],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "HUG"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
+                          "children": [
+                            {
+                              "id": "1:3337",
+                              "name": "Section 1 Item Icon 0",
+                              "type": "FRAME",
+                              "x": 0,
+                              "y": 1.5,
+                              "width": 13,
+                              "height": 13,
+                              "variables": {"fills/0/color": "accent/accent"},
+                              "children": [
+                                {
+                                  "name": "path",
+                                  "type": "VECTOR",
+                                  "x": 2.17,
+                                  "y": 3.25,
+                                  "width": 8.67,
+                                  "height": 5.96,
+                                  "strokes": [{"type": "SOLID", "color": "#FF4FA3"}],
+                                  "strokeWeight": 1.08
+                                }
+                              ]
+                            },
+                            {
+                              "id": "1:3338",
+                              "name": "Section 1 Item Text 0",
+                              "type": "TEXT",
+                              "x": 21,
+                              "y": 0,
+                              "width": 739,
+                              "height": 16,
+                              "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                              "layoutGrow": 1,
+                              "text": "Check server, cluster, namespace, template, version, loader, and uptime.",
+                              "font": ["Geist", 400, 12.5],
+                              "variables": {"fills/0/color": "default/foreground"}
+                            }
+                          ]
                         },
                         {
-                          "type": "text",
-                          "id": "ZxBTT",
+                          "id": "1:3339",
+                          "name": "Section 1 Item 1",
+                          "type": "FRAME",
+                          "x": 10,
+                          "y": 29,
+                          "width": 760,
+                          "height": 16,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 8,
+                            "padding": [0, 0, 0, 0],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "HUG"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
+                          "children": [
+                            {
+                              "id": "1:3340",
+                              "name": "Section 1 Item Icon 1",
+                              "type": "FRAME",
+                              "x": 0,
+                              "y": 1.5,
+                              "width": 13,
+                              "height": 13,
+                              "variables": {"fills/0/color": "accent/accent"},
+                              "children": [
+                                {
+                                  "name": "path",
+                                  "type": "VECTOR",
+                                  "x": 2.17,
+                                  "y": 3.25,
+                                  "width": 8.67,
+                                  "height": 5.96,
+                                  "strokes": [{"type": "SOLID", "color": "#FF4FA3"}],
+                                  "strokeWeight": 1.08
+                                }
+                              ]
+                            },
+                            {
+                              "id": "1:3341",
+                              "name": "Section 1 Item Text 1",
+                              "type": "TEXT",
+                              "x": 21,
+                              "y": 0,
+                              "width": 739,
+                              "height": 16,
+                              "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                              "layoutGrow": 1,
+                              "text": "Distinguish Running, Starting, Suspended, Stopped, and Failed.",
+                              "font": ["Geist", 400, 12.5],
+                              "variables": {"fills/0/color": "default/foreground"}
+                            }
+                          ]
+                        },
+                        {
+                          "id": "1:3342",
+                          "name": "Section 1 Item 2",
+                          "type": "FRAME",
+                          "x": 10,
+                          "y": 50,
+                          "width": 760,
+                          "height": 16,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 8,
+                            "padding": [0, 0, 0, 0],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "HUG"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
+                          "children": [
+                            {
+                              "id": "1:3343",
+                              "name": "Section 1 Item Icon 2",
+                              "type": "FRAME",
+                              "x": 0,
+                              "y": 1.5,
+                              "width": 13,
+                              "height": 13,
+                              "variables": {"fills/0/color": "accent/accent"},
+                              "children": [
+                                {
+                                  "name": "path",
+                                  "type": "VECTOR",
+                                  "x": 2.17,
+                                  "y": 3.25,
+                                  "width": 8.67,
+                                  "height": 5.96,
+                                  "strokes": [{"type": "SOLID", "color": "#FF4FA3"}],
+                                  "strokeWeight": 1.08
+                                }
+                              ]
+                            },
+                            {
+                              "id": "1:3344",
+                              "name": "Section 1 Item Text 2",
+                              "type": "TEXT",
+                              "x": 21,
+                              "y": 0,
+                              "width": 739,
+                              "height": 16,
+                              "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                              "layoutGrow": 1,
+                              "text": "Check active players before Start, Stop, Restart, or console actions.",
+                              "font": ["Geist", 400, 12.5],
+                              "variables": {"fills/0/color": "default/foreground"}
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "1:3345",
+                  "name": "Guide Section 2",
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 334,
+                  "width": 780,
+                  "height": 127,
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "gap": 6,
+                    "padding": [0, 0, 0, 0],
+                    "primary": "MIN",
+                    "counter": "MIN",
+                    "sizing": ["HUG", "FIXED"]
+                  },
+                  "layoutAlignSelf": "STRETCH",
+                  "children": [
+                    {
+                      "id": "1:3346",
+                      "name": "Section Title 2",
+                      "type": "TEXT",
+                      "x": 0,
+                      "y": 0,
+                      "width": 347,
+                      "height": 22,
+                      "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                      "text": "Inspect resources and connectivity",
+                      "font": ["JetBrains Mono", 600, 17],
+                      "variables": {"fills/0/color": "foreground/foreground"}
+                    },
+                    {
+                      "id": "1:3347",
+                      "name": "Section Body 2",
+                      "type": "TEXT",
+                      "x": 0,
+                      "y": 28,
+                      "width": 780,
+                      "height": 19,
+                      "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                      "layoutAlignSelf": "STRETCH",
+                      "text": "Use resource cards and the displayed endpoint to validate both workload health and the player network path.",
+                      "font": ["Geist", 400, 13],
+                      "lineHeight": {"value": 145.00000476837158, "unit": "PERCENT"},
+                      "variables": {"fills/0/color": "muted"}
+                    },
+                    {
+                      "id": "1:3348",
+                      "name": "Section List 2",
+                      "type": "FRAME",
+                      "x": 0,
+                      "y": 53,
+                      "width": 780,
+                      "height": 74,
+                      "fills": [{"type": "SOLID", "color": "#1C1A20"}],
+                      "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+                      "strokeWeight": 1,
+                      "cornerRadius": 16,
+                      "layout": {
+                        "mode": "VERTICAL",
+                        "gap": 5,
+                        "padding": [8, 10, 8, 10],
+                        "primary": "MIN",
+                        "counter": "MIN",
+                        "sizing": ["HUG", "FIXED"]
+                      },
+                      "layoutAlignSelf": "STRETCH",
+                      "variables": {
+                        "cornerRadius": "radius/2xl",
+                        "fills/0/color": "surface/surface",
+                        "strokes/0/color": "border/border"
+                      },
+                      "children": [
+                        {
+                          "id": "1:3349",
+                          "name": "Section 2 Item 0",
+                          "type": "FRAME",
+                          "x": 10,
+                          "y": 8,
+                          "width": 760,
+                          "height": 16,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 8,
+                            "padding": [0, 0, 0, 0],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "HUG"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
+                          "children": [
+                            {
+                              "id": "1:3350",
+                              "name": "Section 2 Item Icon 0",
+                              "type": "FRAME",
+                              "x": 0,
+                              "y": 1.5,
+                              "width": 13,
+                              "height": 13,
+                              "variables": {"fills/0/color": "accent/accent"},
+                              "children": [
+                                {
+                                  "name": "path",
+                                  "type": "VECTOR",
+                                  "x": 2.17,
+                                  "y": 3.25,
+                                  "width": 8.67,
+                                  "height": 5.96,
+                                  "strokes": [{"type": "SOLID", "color": "#FF4FA3"}],
+                                  "strokeWeight": 1.08
+                                }
+                              ]
+                            },
+                            {
+                              "id": "1:3351",
+                              "name": "Section 2 Item Text 0",
+                              "type": "TEXT",
+                              "x": 21,
+                              "y": 0,
+                              "width": 739,
+                              "height": 16,
+                              "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                              "layoutGrow": 1,
+                              "text": "Compare CPU, memory, and disk use with configured capacity.",
+                              "font": ["Geist", 400, 12.5],
+                              "variables": {"fills/0/color": "default/foreground"}
+                            }
+                          ]
+                        },
+                        {
+                          "id": "1:3352",
+                          "name": "Section 2 Item 1",
+                          "type": "FRAME",
+                          "x": 10,
+                          "y": 29,
+                          "width": 760,
+                          "height": 16,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 8,
+                            "padding": [0, 0, 0, 0],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "HUG"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
+                          "children": [
+                            {
+                              "id": "1:3353",
+                              "name": "Section 2 Item Icon 1",
+                              "type": "FRAME",
+                              "x": 0,
+                              "y": 1.5,
+                              "width": 13,
+                              "height": 13,
+                              "variables": {"fills/0/color": "accent/accent"},
+                              "children": [
+                                {
+                                  "name": "path",
+                                  "type": "VECTOR",
+                                  "x": 2.17,
+                                  "y": 3.25,
+                                  "width": 8.67,
+                                  "height": 5.96,
+                                  "strokes": [{"type": "SOLID", "color": "#FF4FA3"}],
+                                  "strokeWeight": 1.08
+                                }
+                              ]
+                            },
+                            {
+                              "id": "1:3354",
+                              "name": "Section 2 Item Text 1",
+                              "type": "TEXT",
+                              "x": 21,
+                              "y": 0,
+                              "width": 739,
+                              "height": 16,
+                              "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                              "layoutGrow": 1,
+                              "text": "Copy host and port together; verify service type and external routing.",
+                              "font": ["Geist", 400, 12.5],
+                              "variables": {"fills/0/color": "default/foreground"}
+                            }
+                          ]
+                        },
+                        {
+                          "id": "1:3355",
+                          "name": "Section 2 Item 2",
+                          "type": "FRAME",
+                          "x": 10,
+                          "y": 50,
+                          "width": 760,
+                          "height": 16,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 8,
+                            "padding": [0, 0, 0, 0],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "HUG"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
+                          "children": [
+                            {
+                              "id": "1:3356",
+                              "name": "Section 2 Item Icon 2",
+                              "type": "FRAME",
+                              "x": 0,
+                              "y": 1.5,
+                              "width": 13,
+                              "height": 13,
+                              "variables": {"fills/0/color": "accent/accent"},
+                              "children": [
+                                {
+                                  "name": "path",
+                                  "type": "VECTOR",
+                                  "x": 2.17,
+                                  "y": 3.25,
+                                  "width": 8.67,
+                                  "height": 5.96,
+                                  "strokes": [{"type": "SOLID", "color": "#FF4FA3"}],
+                                  "strokeWeight": 1.08
+                                }
+                              ]
+                            },
+                            {
+                              "id": "1:3357",
+                              "name": "Section 2 Item Text 2",
+                              "type": "TEXT",
+                              "x": 21,
+                              "y": 0,
+                              "width": 739,
+                              "height": 16,
+                              "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                              "layoutGrow": 1,
+                              "text": "Correlate metric changes with recent scheduling, image, probe, and agent events.",
+                              "font": ["Geist", 400, 12.5],
+                              "variables": {"fills/0/color": "default/foreground"}
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "1:3358",
+                  "name": "Guide Section 3",
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 475,
+                  "width": 780,
+                  "height": 143,
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "gap": 6,
+                    "padding": [0, 0, 0, 0],
+                    "primary": "MIN",
+                    "counter": "MIN",
+                    "sizing": ["HUG", "FIXED"]
+                  },
+                  "layoutAlignSelf": "STRETCH",
+                  "children": [
+                    {
+                      "id": "1:3359",
+                      "name": "Section Title 3",
+                      "type": "TEXT",
+                      "x": 0,
+                      "y": 0,
+                      "width": 347,
+                      "height": 22,
+                      "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                      "text": "Check game state and quick actions",
+                      "font": ["JetBrains Mono", 600, 17],
+                      "variables": {"fills/0/color": "foreground/foreground"}
+                    },
+                    {
+                      "id": "1:3360",
+                      "name": "Section Body 3",
+                      "type": "TEXT",
+                      "x": 0,
+                      "y": 28,
+                      "width": 780,
+                      "height": 19,
+                      "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                      "layoutAlignSelf": "STRETCH",
+                      "text": "Save and communicate before changing world state, files, mods, versions, restores, or player-facing rules.",
+                      "font": ["Geist", 400, 13],
+                      "lineHeight": {"value": 145.00000476837158, "unit": "PERCENT"},
+                      "variables": {"fills/0/color": "muted"}
+                    },
+                    {
+                      "id": "1:3361",
+                      "name": "Quick Reference",
+                      "type": "FRAME",
+                      "x": 0,
+                      "y": 53,
+                      "width": 780,
+                      "height": 90,
+                      "fills": [{"type": "SOLID", "color": "#141317"}],
+                      "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+                      "strokeWeight": 1,
+                      "cornerRadius": 12,
+                      "layout": {
+                        "mode": "VERTICAL",
+                        "gap": 3,
+                        "padding": [12, 12, 12, 12],
+                        "primary": "MIN",
+                        "counter": "MIN",
+                        "sizing": ["HUG", "FIXED"]
+                      },
+                      "layoutAlignSelf": "STRETCH",
+                      "variables": {
+                        "cornerRadius": "radius/xl",
+                        "fills/0/color": "surface/tertiary",
+                        "strokes/0/color": "border/border"
+                      },
+                      "children": [
+                        {
+                          "id": "1:3362",
+                          "name": "Quick Reference Label",
+                          "type": "TEXT",
+                          "x": 12,
+                          "y": 12,
+                          "width": 84,
+                          "height": 12,
+                          "fills": [{"type": "SOLID", "color": "#FF4FA3"}],
+                          "text": "OPERATING LOOP",
+                          "font": ["JetBrains Mono", 600, 9],
+                          "variables": {"fills/0/color": "accent/accent"}
+                        },
+                        {
+                          "id": "1:3363",
+                          "name": "Quick Reference Line 1",
+                          "type": "TEXT",
+                          "x": 12,
+                          "y": 27,
+                          "width": 421,
+                          "height": 15,
+                          "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                          "text": "01  Identify → cluster, namespace, version, state, and uptime",
+                          "font": ["JetBrains Mono", 400, 11.5],
+                          "variables": {"fills/0/color": "foreground/foreground"}
+                        },
+                        {
+                          "id": "1:3364",
+                          "name": "Quick Reference Line 2",
+                          "type": "TEXT",
+                          "x": 12,
+                          "y": 45,
+                          "width": 442,
+                          "height": 15,
+                          "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                          "text": "02  Validate → resources, endpoint, events, players, world state",
+                          "font": ["JetBrains Mono", 400, 11.5],
+                          "variables": {"fills/0/color": "foreground/foreground"}
+                        },
+                        {
+                          "id": "1:3365",
+                          "name": "Quick Reference Line 3",
+                          "type": "TEXT",
+                          "x": 12,
+                          "y": 63,
+                          "width": 428,
+                          "height": 15,
+                          "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                          "text": "03  Save and broadcast → one action → confirm status and audit",
+                          "font": ["JetBrains Mono", 400, 11.5],
+                          "variables": {"fills/0/color": "foreground/foreground"}
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "1:3366",
+                  "name": "Article Next Link",
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 632,
+                  "width": 780,
+                  "height": 42,
+                  "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+                  "strokeWeight": 1,
+                  "layout": {
+                    "mode": "HORIZONTAL",
+                    "gap": 0,
+                    "padding": [10, 0, 0, 0],
+                    "primary": "SPACE_BETWEEN",
+                    "counter": "CENTER",
+                    "sizing": ["FIXED", "HUG"]
+                  },
+                  "layoutAlignSelf": "STRETCH",
+                  "variables": {"strokes/0/color": "border/border"},
+                  "children": [
+                    {
+                      "id": "1:3367",
+                      "name": "Next Link Text",
+                      "type": "FRAME",
+                      "x": 0,
+                      "y": 10,
+                      "width": 180,
+                      "height": 32,
+                      "layout": {
+                        "mode": "VERTICAL",
+                        "gap": 2,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "MIN",
+                        "sizing": ["HUG", "HUG"]
+                      },
+                      "children": [
+                        {
+                          "id": "1:3368",
+                          "name": "Next Link Eyebrow",
+                          "type": "TEXT",
+                          "x": 0,
+                          "y": 0,
+                          "width": 57,
+                          "height": 13,
+                          "fills": [{"type": "SOLID", "color": "#7B7584"}],
+                          "text": "NEXT GUIDE",
+                          "font": ["Geist", 400, 10],
+                          "variables": {"fills/0/color": "field/placeholder"}
+                        },
+                        {
+                          "id": "1:3369",
                           "name": "Next Link Title",
-                          "fill": "$foreground/foreground",
-                          "content": "General server settings",
-                          "fontFamily": "JetBrains Mono",
-                          "fontSize": 13,
-                          "fontWeight": "500"
+                          "type": "TEXT",
+                          "x": 0,
+                          "y": 15,
+                          "width": 180,
+                          "height": 17,
+                          "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                          "text": "General server settings",
+                          "font": ["JetBrains Mono", 500, 13],
+                          "variables": {"fills/0/color": "foreground/foreground"}
                         }
                       ]
                     },
                     {
-                      "type": "icon",
-                      "id": "OzW0f",
+                      "id": "1:3370",
                       "name": "Next Link Icon",
+                      "type": "FRAME",
+                      "x": 765,
+                      "y": 18.5,
                       "width": 15,
                       "height": 15,
-                      "icon": "arrow-right",
-                      "library": "lucide",
-                      "fill": "$muted"
+                      "variables": {"fills/0/color": "muted"},
+                      "children": [
+                        {
+                          "name": "path",
+                          "type": "VECTOR",
+                          "x": 3.13,
+                          "y": 3.13,
+                          "width": 8.75,
+                          "height": 8.75,
+                          "strokes": [{"type": "SOLID", "color": "#9E98A6"}],
+                          "strokeWeight": 1.25
+                        }
+                      ]
                     }
                   ]
                 }
               ]
             },
             {
-              "type": "frame",
-              "id": "j8Mxq",
+              "id": "1:3371",
               "name": "Docs Page Aside",
+              "type": "FRAME",
+              "x": 844,
+              "y": 32,
               "width": 250,
-              "layout": "vertical",
-              "gap": 16,
+              "height": 353,
+              "layout": {
+                "mode": "VERTICAL",
+                "gap": 16,
+                "padding": [0, 0, 0, 0],
+                "primary": "MIN",
+                "counter": "MIN",
+                "sizing": ["HUG", "FIXED"]
+              },
               "children": [
                 {
-                  "type": "frame",
-                  "id": "Azk80",
+                  "id": "1:3372",
                   "name": "Docs Table of Contents",
-                  "width": "fill_container",
-                  "fill": "$surface/secondary",
-                  "cornerRadius": "$radius/2xl",
-                  "stroke": "$border/border",
-                  "strokeWidth": 1,
-                  "strokeAlignment": "inner",
-                  "layout": "vertical",
-                  "gap": 10,
-                  "padding": 16,
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 0,
+                  "width": 250,
+                  "height": 233,
+                  "fills": [{"type": "SOLID", "color": "#17151A"}],
+                  "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+                  "strokeWeight": 1,
+                  "cornerRadius": 16,
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "gap": 10,
+                    "padding": [16, 16, 16, 16],
+                    "primary": "MIN",
+                    "counter": "MIN",
+                    "sizing": ["HUG", "FIXED"]
+                  },
+                  "layoutAlignSelf": "STRETCH",
+                  "variables": {
+                    "cornerRadius": "radius/2xl",
+                    "fills/0/color": "surface/secondary",
+                    "strokes/0/color": "border/border"
+                  },
                   "children": [
                     {
-                      "type": "text",
-                      "id": "ZS9jn",
+                      "id": "1:3373",
                       "name": "TOC Label",
-                      "fill": "$field/placeholder",
-                      "content": "ON THIS PAGE",
-                      "fontFamily": "JetBrains Mono",
-                      "fontSize": 9,
-                      "fontWeight": "600",
-                      "letterSpacing": 0.7
+                      "type": "TEXT",
+                      "x": 16,
+                      "y": 16,
+                      "width": 73,
+                      "height": 12,
+                      "fills": [{"type": "SOLID", "color": "#7B7584"}],
+                      "text": "ON THIS PAGE",
+                      "font": ["JetBrains Mono", 600, 9],
+                      "variables": {"fills/0/color": "field/placeholder"}
                     },
                     {
-                      "type": "frame",
-                      "id": "OX9wZ",
+                      "id": "1:3374",
                       "name": "TOC Row 0",
-                      "width": "fill_container",
-                      "gap": 8,
-                      "alignItems": "center",
+                      "type": "FRAME",
+                      "x": 16,
+                      "y": 38,
+                      "width": 218,
+                      "height": 16,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 8,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["FIXED", "HUG"]
+                      },
+                      "layoutAlignSelf": "STRETCH",
                       "children": [
                         {
-                          "type": "icon",
-                          "id": "ZIH4j",
+                          "id": "1:3375",
                           "name": "TOC Icon 0",
+                          "type": "FRAME",
+                          "x": 0,
+                          "y": 2,
                           "width": 12,
                           "height": 12,
-                          "icon": "hash",
-                          "library": "lucide",
-                          "fill": "$accent/accent"
+                          "variables": {"fills/0/color": "accent/accent"},
+                          "children": [
+                            {
+                              "name": "path",
+                              "type": "VECTOR",
+                              "x": 2,
+                              "y": 1.5,
+                              "width": 8,
+                              "height": 9,
+                              "strokes": [{"type": "SOLID", "color": "#FF4FA3"}],
+                              "strokeWeight": 1
+                            }
+                          ]
                         },
                         {
-                          "type": "text",
-                          "id": "sorOg",
+                          "id": "1:3376",
                           "name": "TOC Text 0",
-                          "fill": "$foreground/foreground",
-                          "content": "Header",
-                          "fontFamily": "Geist",
-                          "fontSize": 12.5,
-                          "fontWeight": "500"
+                          "type": "TEXT",
+                          "x": 20,
+                          "y": 0,
+                          "width": 43,
+                          "height": 16,
+                          "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                          "text": "Header",
+                          "font": ["Geist", 500, 12.5],
+                          "variables": {"fills/0/color": "foreground/foreground"}
                         }
                       ]
                     },
                     {
-                      "type": "frame",
-                      "id": "H2LN9Q",
+                      "id": "1:3377",
                       "name": "TOC Row 1",
-                      "width": "fill_container",
-                      "gap": 8,
-                      "alignItems": "center",
+                      "type": "FRAME",
+                      "x": 16,
+                      "y": 64,
+                      "width": 218,
+                      "height": 16,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 8,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["FIXED", "HUG"]
+                      },
+                      "layoutAlignSelf": "STRETCH",
                       "children": [
                         {
-                          "type": "icon",
-                          "id": "YD0IS",
+                          "id": "1:3378",
                           "name": "TOC Icon 1",
+                          "type": "FRAME",
+                          "x": 0,
+                          "y": 2,
                           "width": 12,
                           "height": 12,
-                          "icon": "hash",
-                          "library": "lucide",
-                          "fill": "$field/placeholder"
+                          "variables": {"fills/0/color": "field/placeholder"},
+                          "children": [
+                            {
+                              "name": "path",
+                              "type": "VECTOR",
+                              "x": 2,
+                              "y": 1.5,
+                              "width": 8,
+                              "height": 9,
+                              "strokes": [{"type": "SOLID", "color": "#7B7584"}],
+                              "strokeWeight": 1
+                            }
+                          ]
                         },
                         {
-                          "type": "text",
-                          "id": "YBSJG",
+                          "id": "1:3379",
                           "name": "TOC Text 1",
-                          "fill": "$muted",
-                          "content": "Resources and endpoint",
-                          "fontFamily": "Geist",
-                          "fontSize": 12.5,
-                          "fontWeight": "normal"
+                          "type": "TEXT",
+                          "x": 20,
+                          "y": 0,
+                          "width": 139,
+                          "height": 16,
+                          "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                          "text": "Resources and endpoint",
+                          "font": ["Geist", 400, 12.5],
+                          "variables": {"fills/0/color": "muted"}
                         }
                       ]
                     },
                     {
-                      "type": "frame",
-                      "id": "MZFDw",
+                      "id": "1:3380",
                       "name": "TOC Row 2",
-                      "width": "fill_container",
-                      "gap": 8,
-                      "alignItems": "center",
+                      "type": "FRAME",
+                      "x": 16,
+                      "y": 90,
+                      "width": 218,
+                      "height": 16,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 8,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["FIXED", "HUG"]
+                      },
+                      "layoutAlignSelf": "STRETCH",
                       "children": [
                         {
-                          "type": "icon",
-                          "id": "R8GtEQ",
+                          "id": "1:3381",
                           "name": "TOC Icon 2",
+                          "type": "FRAME",
+                          "x": 0,
+                          "y": 2,
                           "width": 12,
                           "height": 12,
-                          "icon": "hash",
-                          "library": "lucide",
-                          "fill": "$field/placeholder"
+                          "variables": {"fills/0/color": "field/placeholder"},
+                          "children": [
+                            {
+                              "name": "path",
+                              "type": "VECTOR",
+                              "x": 2,
+                              "y": 1.5,
+                              "width": 8,
+                              "height": 9,
+                              "strokes": [{"type": "SOLID", "color": "#7B7584"}],
+                              "strokeWeight": 1
+                            }
+                          ]
                         },
                         {
-                          "type": "text",
-                          "id": "IY8n4",
+                          "id": "1:3382",
                           "name": "TOC Text 2",
-                          "fill": "$muted",
-                          "content": "Game state",
-                          "fontFamily": "Geist",
-                          "fontSize": 12.5,
-                          "fontWeight": "normal"
+                          "type": "TEXT",
+                          "x": 20,
+                          "y": 0,
+                          "width": 66,
+                          "height": 16,
+                          "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                          "text": "Game state",
+                          "font": ["Geist", 400, 12.5],
+                          "variables": {"fills/0/color": "muted"}
                         }
                       ]
                     },
                     {
-                      "type": "rectangle",
-                      "id": "qRWfV",
+                      "id": "1:3383",
                       "name": "TOC Divider",
-                      "fill": "$border/border",
-                      "width": "fill_container",
-                      "height": 1
+                      "type": "RECTANGLE",
+                      "x": 16,
+                      "y": 116,
+                      "width": 218,
+                      "height": 1,
+                      "fills": [{"type": "SOLID", "color": "#2C2932"}],
+                      "layoutAlignSelf": "STRETCH",
+                      "variables": {"fills/0/color": "border/border"}
                     },
                     {
-                      "type": "text",
-                      "id": "UkJu1",
+                      "id": "1:3384",
                       "name": "Coverage Label",
-                      "fill": "$field/placeholder",
-                      "content": "COVERS",
-                      "fontFamily": "JetBrains Mono",
-                      "fontSize": 9,
-                      "fontWeight": "600",
-                      "letterSpacing": 0.7
+                      "type": "TEXT",
+                      "x": 16,
+                      "y": 127,
+                      "width": 36,
+                      "height": 12,
+                      "fills": [{"type": "SOLID", "color": "#7B7584"}],
+                      "text": "COVERS",
+                      "font": ["JetBrains Mono", 600, 9],
+                      "variables": {"fills/0/color": "field/placeholder"}
                     },
                     {
-                      "type": "frame",
-                      "id": "gJn3q",
+                      "id": "1:3385",
                       "name": "Coverage Row 0",
-                      "width": "fill_container",
-                      "gap": 7,
-                      "alignItems": "center",
+                      "type": "FRAME",
+                      "x": 16,
+                      "y": 149,
+                      "width": 218,
+                      "height": 16,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 7,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["FIXED", "HUG"]
+                      },
+                      "layoutAlignSelf": "STRETCH",
                       "children": [
                         {
-                          "type": "icon",
-                          "id": "OmAAA",
+                          "id": "1:3386",
                           "name": "Coverage Icon 0",
+                          "type": "FRAME",
+                          "x": 0,
+                          "y": 2,
                           "width": 12,
                           "height": 12,
-                          "icon": "book-open",
-                          "library": "lucide",
-                          "fill": "$field/placeholder"
+                          "variables": {"fills/0/color": "field/placeholder"},
+                          "children": [
+                            {
+                              "name": "path",
+                              "type": "VECTOR",
+                              "x": 1,
+                              "y": 1.5,
+                              "width": 10,
+                              "height": 9,
+                              "strokes": [{"type": "SOLID", "color": "#7B7584"}],
+                              "strokeWeight": 1
+                            }
+                          ]
                         },
                         {
-                          "type": "text",
-                          "id": "ADOcO",
+                          "id": "1:3387",
                           "name": "Coverage Text 0",
-                          "fill": "$muted",
-                          "content": "Health",
-                          "fontFamily": "Geist",
-                          "fontSize": 12,
-                          "fontWeight": "normal"
+                          "type": "TEXT",
+                          "x": 19,
+                          "y": 0,
+                          "width": 36,
+                          "height": 16,
+                          "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                          "text": "Health",
+                          "font": ["Geist", 400, 12],
+                          "variables": {"fills/0/color": "muted"}
                         }
                       ]
                     },
                     {
-                      "type": "frame",
-                      "id": "PyH5J",
+                      "id": "1:3388",
                       "name": "Coverage Row 1",
-                      "width": "fill_container",
-                      "gap": 7,
-                      "alignItems": "center",
+                      "type": "FRAME",
+                      "x": 16,
+                      "y": 175,
+                      "width": 218,
+                      "height": 16,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 7,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["FIXED", "HUG"]
+                      },
+                      "layoutAlignSelf": "STRETCH",
                       "children": [
                         {
-                          "type": "icon",
-                          "id": "g5xo4",
+                          "id": "1:3389",
                           "name": "Coverage Icon 1",
+                          "type": "FRAME",
+                          "x": 0,
+                          "y": 2,
                           "width": 12,
                           "height": 12,
-                          "icon": "book-open",
-                          "library": "lucide",
-                          "fill": "$field/placeholder"
+                          "variables": {"fills/0/color": "field/placeholder"},
+                          "children": [
+                            {
+                              "name": "path",
+                              "type": "VECTOR",
+                              "x": 1,
+                              "y": 1.5,
+                              "width": 10,
+                              "height": 9,
+                              "strokes": [{"type": "SOLID", "color": "#7B7584"}],
+                              "strokeWeight": 1
+                            }
+                          ]
                         },
                         {
-                          "type": "text",
-                          "id": "c5Hau0",
+                          "id": "1:3390",
                           "name": "Coverage Text 1",
-                          "fill": "$muted",
-                          "content": "Endpoint",
-                          "fontFamily": "Geist",
-                          "fontSize": 12,
-                          "fontWeight": "normal"
+                          "type": "TEXT",
+                          "x": 19,
+                          "y": 0,
+                          "width": 50,
+                          "height": 16,
+                          "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                          "text": "Endpoint",
+                          "font": ["Geist", 400, 12],
+                          "variables": {"fills/0/color": "muted"}
                         }
                       ]
                     },
                     {
-                      "type": "frame",
-                      "id": "s86JU",
+                      "id": "1:3391",
                       "name": "Coverage Row 2",
-                      "width": "fill_container",
-                      "gap": 7,
-                      "alignItems": "center",
+                      "type": "FRAME",
+                      "x": 16,
+                      "y": 201,
+                      "width": 218,
+                      "height": 16,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 7,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["FIXED", "HUG"]
+                      },
+                      "layoutAlignSelf": "STRETCH",
                       "children": [
                         {
-                          "type": "icon",
-                          "id": "JmDCs",
+                          "id": "1:3392",
                           "name": "Coverage Icon 2",
+                          "type": "FRAME",
+                          "x": 0,
+                          "y": 2,
                           "width": 12,
                           "height": 12,
-                          "icon": "book-open",
-                          "library": "lucide",
-                          "fill": "$field/placeholder"
+                          "variables": {"fills/0/color": "field/placeholder"},
+                          "children": [
+                            {
+                              "name": "path",
+                              "type": "VECTOR",
+                              "x": 1,
+                              "y": 1.5,
+                              "width": 10,
+                              "height": 9,
+                              "strokes": [{"type": "SOLID", "color": "#7B7584"}],
+                              "strokeWeight": 1
+                            }
+                          ]
                         },
                         {
-                          "type": "text",
-                          "id": "F6wtm",
+                          "id": "1:3393",
                           "name": "Coverage Text 2",
-                          "fill": "$muted",
-                          "content": "Quick actions",
-                          "fontFamily": "Geist",
-                          "fontSize": 12,
-                          "fontWeight": "normal"
+                          "type": "TEXT",
+                          "x": 19,
+                          "y": 0,
+                          "width": 75,
+                          "height": 16,
+                          "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                          "text": "Quick actions",
+                          "font": ["Geist", 400, 12],
+                          "variables": {"fills/0/color": "muted"}
                         }
                       ]
                     }
                   ]
                 },
                 {
-                  "type": "frame",
-                  "id": "w6F4Uj",
+                  "id": "1:3394",
                   "name": "Edit Page Card",
-                  "width": "fill_container",
-                  "fill": "$background/background",
-                  "cornerRadius": "$radius/3xl",
-                  "stroke": "$border/border",
-                  "strokeWidth": 1,
-                  "strokeAlignment": "inner",
-                  "layout": "vertical",
-                  "gap": 6,
-                  "padding": 14,
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 249,
+                  "width": 250,
+                  "height": 104,
+                  "fills": [{"type": "SOLID", "color": "#121114"}],
+                  "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+                  "strokeWeight": 1,
+                  "cornerRadius": 24,
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "gap": 6,
+                    "padding": [14, 14, 14, 14],
+                    "primary": "MIN",
+                    "counter": "MIN",
+                    "sizing": ["HUG", "FIXED"]
+                  },
+                  "layoutAlignSelf": "STRETCH",
+                  "variables": {
+                    "cornerRadius": "radius/3xl",
+                    "fills/0/color": "background/background",
+                    "strokes/0/color": "border/border"
+                  },
                   "children": [
                     {
-                      "type": "text",
-                      "id": "x7PGKd",
+                      "id": "1:3395",
                       "name": "Edit Page Title",
-                      "fill": "$foreground/foreground",
-                      "content": "Improve this page",
-                      "fontFamily": "JetBrains Mono",
-                      "fontSize": 12,
-                      "fontWeight": "600"
+                      "type": "TEXT",
+                      "x": 14,
+                      "y": 14,
+                      "width": 123,
+                      "height": 16,
+                      "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                      "text": "Improve this page",
+                      "font": ["JetBrains Mono", 600, 12],
+                      "variables": {"fills/0/color": "foreground/foreground"}
                     },
                     {
-                      "type": "text",
-                      "id": "Wg5y7",
+                      "id": "1:3396",
                       "name": "Edit Page Body",
-                      "fill": "$muted",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "Found a gap? Open a docs issue or suggest an edit on GitHub.",
-                      "lineHeight": 1.4,
-                      "fontFamily": "Geist",
-                      "fontSize": 11.5,
-                      "fontWeight": "normal"
+                      "type": "TEXT",
+                      "x": 14,
+                      "y": 36,
+                      "width": 222,
+                      "height": 32,
+                      "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                      "layoutAlignSelf": "STRETCH",
+                      "text": "Found a gap? Open a docs issue or suggest an edit on GitHub.",
+                      "font": ["Geist", 400, 11.5],
+                      "lineHeight": {"value": 139.9999976158142, "unit": "PERCENT"},
+                      "variables": {"fills/0/color": "muted"}
                     },
                     {
-                      "type": "frame",
-                      "id": "gD1qG",
+                      "id": "1:3397",
                       "name": "Edit Page Link",
-                      "gap": 6,
-                      "alignItems": "center",
+                      "type": "FRAME",
+                      "x": 14,
+                      "y": 74,
+                      "width": 95,
+                      "height": 16,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 6,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["HUG", "HUG"]
+                      },
                       "children": [
                         {
-                          "type": "text",
-                          "id": "knlxb",
+                          "id": "1:3398",
                           "name": "Edit Page Link Text",
-                          "fill": "$accent/soft-foreground",
-                          "content": "Edit this page",
-                          "fontFamily": "Geist",
-                          "fontSize": 12,
-                          "fontWeight": "500"
+                          "type": "TEXT",
+                          "x": 0,
+                          "y": 0,
+                          "width": 77,
+                          "height": 16,
+                          "fills": [{"type": "SOLID", "color": "#FF8AC4"}],
+                          "text": "Edit this page",
+                          "font": ["Geist", 500, 12],
+                          "variables": {"fills/0/color": "accent/soft-foreground"}
                         },
                         {
-                          "type": "icon",
-                          "id": "duWGi",
+                          "id": "1:3399",
                           "name": "Edit Page Link Icon",
+                          "type": "FRAME",
+                          "x": 83,
+                          "y": 2,
                           "width": 12,
                           "height": 12,
-                          "icon": "external-link",
-                          "library": "lucide",
-                          "fill": "$accent/accent"
+                          "variables": {"fills/0/color": "accent/accent"},
+                          "children": [
+                            {
+                              "name": "path",
+                              "type": "VECTOR",
+                              "x": 1.5,
+                              "y": 1.5,
+                              "width": 9,
+                              "height": 9,
+                              "strokes": [{"type": "SOLID", "color": "#FF4FA3"}],
+                              "strokeWeight": 1
+                            }
+                          ]
                         }
                       ]
                     }

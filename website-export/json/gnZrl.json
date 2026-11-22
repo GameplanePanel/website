@@ -1,250 +1,376 @@
 {
-  "type": "frame",
-  "id": "gnZrl",
+  "file": "gnZrl",
+  "id": "1:123",
+  "name": "Footer",
+  "type": "COMPONENT",
   "x": 0,
   "y": -1852,
-  "name": "Footer",
-  "reusable": true,
   "width": 1440,
-  "fill": "$background/background",
-  "stroke": "$border/border",
-  "strokeWidth": {
-    "top": 1
+  "height": 284,
+  "fills": [{"type": "SOLID", "color": "#FFFFFF"}],
+  "strokes": [{"type": "SOLID", "color": "#EFC3D6"}],
+  "strokeWeight": 1,
+  "layout": {
+    "mode": "VERTICAL",
+    "gap": 32,
+    "padding": [48, 80, 32, 80],
+    "primary": "MIN",
+    "counter": "MIN",
+    "sizing": ["HUG", "FIXED"]
   },
-  "strokeAlignment": "inner",
-  "strokeLinejoin": "round",
-  "layout": "vertical",
-  "gap": 32,
-  "padding": [
-    48,
-    80,
-    32,
-    80
-  ],
+  "variables": {"fills/0/color": "background/background", "strokes/0/color": "border/border"},
   "children": [
     {
-      "type": "frame",
-      "id": "O1vTM",
+      "id": "1:125",
       "name": "footerRow1",
-      "width": "fill_container",
-      "justifyContent": "space_between",
+      "type": "FRAME",
+      "x": 80,
+      "y": 48,
+      "width": 1280,
+      "height": 123,
+      "layout": {
+        "mode": "HORIZONTAL",
+        "gap": 0,
+        "padding": [0, 0, 0, 0],
+        "primary": "SPACE_BETWEEN",
+        "counter": "MIN",
+        "sizing": ["FIXED", "HUG"]
+      },
+      "layoutAlignSelf": "STRETCH",
       "children": [
         {
-          "type": "frame",
-          "id": "cAvoy",
+          "id": "1:126",
           "name": "footerLeft",
+          "type": "FRAME",
+          "x": 0,
+          "y": 0,
           "width": 320,
-          "layout": "vertical",
-          "gap": 8,
+          "height": 85,
+          "layout": {
+            "mode": "VERTICAL",
+            "gap": 8,
+            "padding": [0, 0, 0, 0],
+            "primary": "MIN",
+            "counter": "MIN",
+            "sizing": ["HUG", "FIXED"]
+          },
           "children": [
             {
-              "type": "frame",
-              "id": "I94iVd",
+              "id": "1:127",
               "name": "logoRow",
-              "gap": 8,
-              "alignItems": "center",
+              "type": "FRAME",
+              "x": 0,
+              "y": 0,
+              "width": 108,
+              "height": 24,
+              "layout": {
+                "mode": "HORIZONTAL",
+                "gap": 8,
+                "padding": [0, 0, 0, 0],
+                "primary": "MIN",
+                "counter": "CENTER",
+                "sizing": ["HUG", "HUG"]
+              },
               "children": [
                 {
-                  "type": "frame",
-                  "id": "cAoEy",
+                  "id": "1:128",
                   "name": "logoMark",
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 0,
                   "width": 24,
                   "height": 24,
-                  "fill": {
-                    "type": "image",
-                    "enabled": true,
-                    "url": "design-assets/gameplane-icon.png",
-                    "mode": "cover"
+                  "cornerRadius": 6,
+                  "layout": {
+                    "mode": "HORIZONTAL",
+                    "gap": 0,
+                    "padding": [0, 0, 0, 0],
+                    "primary": "CENTER",
+                    "counter": "CENTER",
+                    "sizing": ["FIXED", "FIXED"]
                   },
-                  "cornerRadius": "$radius/md",
-                  "justifyContent": "center",
-                  "alignItems": "center"
+                  "variables": {"cornerRadius": "radius/md"}
                 },
                 {
-                  "type": "text",
-                  "id": "raqNn",
+                  "id": "1:129",
                   "name": "wordmark",
-                  "fill": "$foreground/foreground",
-                  "content": "gameplane",
-                  "fontFamily": "$typography/font-mono",
-                  "fontSize": 14,
-                  "fontWeight": "600"
+                  "type": "TEXT",
+                  "x": 32,
+                  "y": 3,
+                  "width": 76,
+                  "height": 18,
+                  "fills": [{"type": "SOLID", "color": "#2A0F1E"}],
+                  "text": "gameplane",
+                  "font": ["JetBrains Mono", 600, 14],
+                  "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
                 }
               ]
             },
             {
-              "type": "text",
-              "id": "BQphR",
+              "id": "1:130",
               "name": "tagline",
-              "fill": "$muted",
-              "content": "Kubernetes-native game server control plane.",
-              "fontFamily": "$typography/font-sans",
-              "fontSize": 13,
-              "fontWeight": "normal"
+              "type": "TEXT",
+              "x": 0,
+              "y": 32,
+              "width": 270,
+              "height": 17,
+              "fills": [{"type": "SOLID", "color": "#6E5262"}],
+              "text": "Kubernetes-native game server control plane.",
+              "font": ["Geist", 400, 13],
+              "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
             },
             {
-              "id": "F4Y0Y0",
-              "type": "ref",
-              "ref": "X4Xyl",
+              "id": "1:124",
               "name": "licenseBadge",
-              "descendants": {
-                "W2qoN": {
-                  "content": "AGPL-3.0-or-later"
-                }
-              }
+              "type": "INSTANCE",
+              "x": 0,
+              "y": 57,
+              "width": 165,
+              "height": 28,
+              "component": "Badge/Outline",
+              "componentId": "1:3",
+              "fills": [{"type": "SOLID", "color": "#FFFFFF"}],
+              "cornerRadius": 16,
+              "layout": {
+                "mode": "HORIZONTAL",
+                "gap": 8,
+                "padding": [6, 14, 6, 14],
+                "primary": "MIN",
+                "counter": "CENTER",
+                "sizing": ["HUG", "HUG"]
+              },
+              "variables": {"cornerRadius": "radius/2xl", "fills/0/color": "accent/soft"},
+              "texts": ["AGPL-3.0-or-later"]
             }
           ]
         },
         {
-          "type": "frame",
-          "id": "uV6Om",
+          "id": "1:131",
           "name": "linkGroups",
-          "gap": 64,
+          "type": "FRAME",
+          "x": 891,
+          "y": 0,
+          "width": 389,
+          "height": 123,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "gap": 64,
+            "padding": [0, 0, 0, 0],
+            "primary": "MIN",
+            "counter": "MIN",
+            "sizing": ["HUG", "HUG"]
+          },
           "children": [
             {
-              "type": "frame",
-              "id": "qjf3G",
+              "id": "1:132",
               "name": "Product",
-              "layout": "vertical",
-              "gap": 10,
+              "type": "FRAME",
+              "x": 0,
+              "y": 0,
+              "width": 62,
+              "height": 123,
+              "layout": {
+                "mode": "VERTICAL",
+                "gap": 10,
+                "padding": [0, 0, 0, 0],
+                "primary": "MIN",
+                "counter": "MIN",
+                "sizing": ["HUG", "HUG"]
+              },
               "children": [
                 {
-                  "type": "text",
-                  "id": "Ody6T",
+                  "id": "1:133",
                   "name": "PRODUCT",
-                  "fill": "$foreground/foreground",
-                  "content": "PRODUCT",
-                  "fontFamily": "$typography/font-mono",
-                  "fontSize": 11,
-                  "fontWeight": "600"
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 0,
+                  "width": 47,
+                  "height": 15,
+                  "fills": [{"type": "SOLID", "color": "#2A0F1E"}],
+                  "text": "PRODUCT",
+                  "font": ["JetBrains Mono", 600, 11],
+                  "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
                 },
                 {
-                  "type": "text",
-                  "id": "Z4CYoj",
+                  "id": "1:134",
                   "name": "Features",
-                  "fill": "$muted",
-                  "content": "Features",
-                  "fontFamily": "$typography/font-sans",
-                  "fontSize": 13,
-                  "fontWeight": "normal"
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 25,
+                  "width": 52,
+                  "height": 17,
+                  "fills": [{"type": "SOLID", "color": "#6E5262"}],
+                  "text": "Features",
+                  "font": ["Geist", 400, 13],
+                  "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
                 },
                 {
-                  "type": "text",
-                  "id": "euXgF",
+                  "id": "1:135",
                   "name": "Games",
-                  "fill": "$muted",
-                  "content": "Games",
-                  "fontFamily": "$typography/font-sans",
-                  "fontSize": 13,
-                  "fontWeight": "normal"
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 52,
+                  "width": 42,
+                  "height": 17,
+                  "fills": [{"type": "SOLID", "color": "#6E5262"}],
+                  "text": "Games",
+                  "font": ["Geist", 400, 13],
+                  "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
                 },
                 {
-                  "type": "text",
-                  "id": "jvnsf",
+                  "id": "1:136",
                   "name": "Showcase",
-                  "fill": "$muted",
-                  "content": "Showcase",
-                  "fontFamily": "$typography/font-sans",
-                  "fontSize": 13,
-                  "fontWeight": "normal"
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 79,
+                  "width": 62,
+                  "height": 17,
+                  "fills": [{"type": "SOLID", "color": "#6E5262"}],
+                  "text": "Showcase",
+                  "font": ["Geist", 400, 13],
+                  "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
                 },
                 {
-                  "type": "text",
-                  "id": "Movd3",
+                  "id": "1:137",
                   "name": "Compare",
-                  "fill": "$muted",
-                  "content": "Compare",
-                  "fontFamily": "$typography/font-sans",
-                  "fontSize": 13,
-                  "fontWeight": "normal"
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 106,
+                  "width": 55,
+                  "height": 17,
+                  "fills": [{"type": "SOLID", "color": "#6E5262"}],
+                  "text": "Compare",
+                  "font": ["Geist", 400, 13],
+                  "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
                 }
               ]
             },
             {
-              "type": "frame",
-              "id": "Rbc4G",
+              "id": "1:138",
               "name": "Resources",
-              "layout": "vertical",
-              "gap": 10,
+              "type": "FRAME",
+              "x": 126,
+              "y": 0,
+              "width": 91,
+              "height": 123,
+              "layout": {
+                "mode": "VERTICAL",
+                "gap": 10,
+                "padding": [0, 0, 0, 0],
+                "primary": "MIN",
+                "counter": "MIN",
+                "sizing": ["HUG", "HUG"]
+              },
               "children": [
                 {
-                  "type": "text",
-                  "id": "vRYk0",
+                  "id": "1:139",
                   "name": "RESOURCES",
-                  "fill": "$foreground/foreground",
-                  "content": "RESOURCES",
-                  "fontFamily": "$typography/font-mono",
-                  "fontSize": 11,
-                  "fontWeight": "600"
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 0,
+                  "width": 60,
+                  "height": 15,
+                  "fills": [{"type": "SOLID", "color": "#2A0F1E"}],
+                  "text": "RESOURCES",
+                  "font": ["JetBrains Mono", 600, 11],
+                  "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
                 },
                 {
-                  "type": "text",
-                  "id": "y1pYYm",
+                  "id": "1:140",
                   "name": "Documentation",
-                  "fill": "$muted",
-                  "content": "Documentation",
-                  "fontFamily": "$typography/font-sans",
-                  "fontSize": 13,
-                  "fontWeight": "normal"
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 25,
+                  "width": 91,
+                  "height": 17,
+                  "fills": [{"type": "SOLID", "color": "#6E5262"}],
+                  "text": "Documentation",
+                  "font": ["Geist", 400, 13],
+                  "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
                 },
                 {
-                  "type": "text",
-                  "id": "XCpIx",
+                  "id": "1:141",
                   "name": "Changelog",
-                  "fill": "$muted",
-                  "content": "Changelog",
-                  "fontFamily": "$typography/font-sans",
-                  "fontSize": 13,
-                  "fontWeight": "normal"
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 52,
+                  "width": 65,
+                  "height": 17,
+                  "fills": [{"type": "SOLID", "color": "#6E5262"}],
+                  "text": "Changelog",
+                  "font": ["Geist", 400, 13],
+                  "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
                 },
                 {
-                  "type": "text",
-                  "id": "A07NYu",
+                  "id": "1:142",
                   "name": "Telemetry",
-                  "fill": "$muted",
-                  "content": "Telemetry",
-                  "fontFamily": "$typography/font-sans",
-                  "fontSize": 13,
-                  "fontWeight": "normal"
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 79,
+                  "width": 59,
+                  "height": 17,
+                  "fills": [{"type": "SOLID", "color": "#6E5262"}],
+                  "text": "Telemetry",
+                  "font": ["Geist", 400, 13],
+                  "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
                 },
                 {
-                  "type": "text",
-                  "id": "XUlGh",
+                  "id": "1:143",
                   "name": "GitHub",
-                  "fill": "$muted",
-                  "content": "GitHub",
-                  "fontFamily": "$typography/font-sans",
-                  "fontSize": 13,
-                  "fontWeight": "normal"
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 106,
+                  "width": 41,
+                  "height": 17,
+                  "fills": [{"type": "SOLID", "color": "#6E5262"}],
+                  "text": "GitHub",
+                  "font": ["Geist", 400, 13],
+                  "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
                 }
               ]
             },
             {
-              "type": "frame",
-              "id": "A9HNp",
+              "id": "1:144",
               "name": "License",
-              "layout": "vertical",
-              "gap": 10,
+              "type": "FRAME",
+              "x": 281,
+              "y": 0,
+              "width": 108,
+              "height": 42,
+              "layout": {
+                "mode": "VERTICAL",
+                "gap": 10,
+                "padding": [0, 0, 0, 0],
+                "primary": "MIN",
+                "counter": "MIN",
+                "sizing": ["HUG", "HUG"]
+              },
               "children": [
                 {
-                  "type": "text",
-                  "id": "ZCTZu",
+                  "id": "1:145",
                   "name": "LICENSE",
-                  "fill": "$foreground/foreground",
-                  "content": "LICENSE",
-                  "fontFamily": "$typography/font-mono",
-                  "fontSize": 11,
-                  "fontWeight": "600"
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 0,
+                  "width": 47,
+                  "height": 15,
+                  "fills": [{"type": "SOLID", "color": "#2A0F1E"}],
+                  "text": "LICENSE",
+                  "font": ["JetBrains Mono", 600, 11],
+                  "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
                 },
                 {
-                  "type": "text",
-                  "id": "LHIjE",
+                  "id": "1:146",
                   "name": "licenseValue",
-                  "fill": "$muted",
-                  "content": "AGPL-3.0-or-later",
-                  "fontFamily": "$typography/font-sans",
-                  "fontSize": 13,
-                  "fontWeight": "normal"
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 25,
+                  "width": 108,
+                  "height": 17,
+                  "fills": [{"type": "SOLID", "color": "#6E5262"}],
+                  "text": "AGPL-3.0-or-later",
+                  "font": ["Geist", 400, 13],
+                  "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
                 }
               ]
             }
@@ -253,39 +379,60 @@
       ]
     },
     {
-      "type": "rectangle",
-      "id": "SGzB2",
+      "id": "1:147",
       "name": "divider",
-      "fill": "$border/border",
-      "width": "fill_container",
-      "height": 1
+      "type": "RECTANGLE",
+      "x": 80,
+      "y": 203,
+      "width": 1280,
+      "height": 1,
+      "fills": [{"type": "SOLID", "color": "#EFC3D6"}],
+      "layoutAlignSelf": "STRETCH",
+      "variables": {"fills/0/color": "border/border"}
     },
     {
-      "type": "frame",
-      "id": "VkNrq",
+      "id": "1:148",
       "name": "footerRow2",
-      "width": "fill_container",
-      "justifyContent": "space_between",
+      "type": "FRAME",
+      "x": 80,
+      "y": 236,
+      "width": 1280,
+      "height": 16,
+      "layout": {
+        "mode": "HORIZONTAL",
+        "gap": 0,
+        "padding": [0, 0, 0, 0],
+        "primary": "SPACE_BETWEEN",
+        "counter": "MIN",
+        "sizing": ["FIXED", "HUG"]
+      },
+      "layoutAlignSelf": "STRETCH",
       "children": [
         {
-          "type": "text",
-          "id": "Dp1jw",
+          "id": "1:149",
           "name": "copyright",
-          "fill": "$muted",
-          "content": "© 2026 Gameplane contributors.",
-          "fontFamily": "$typography/font-sans",
-          "fontSize": 12,
-          "fontWeight": "normal"
+          "type": "TEXT",
+          "x": 0,
+          "y": 0,
+          "width": 181,
+          "height": 16,
+          "fills": [{"type": "SOLID", "color": "#6E5262"}],
+          "text": "© 2026 Gameplane contributors.",
+          "font": ["Geist", 400, 12],
+          "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
         },
         {
-          "type": "text",
-          "id": "ZqbcN",
+          "id": "1:150",
           "name": "versionLine",
-          "fill": "$muted",
-          "content": "v0.4.0 · AGPL-3.0-or-later · Built on Kubernetes",
-          "fontFamily": "$typography/font-sans",
-          "fontSize": 12,
-          "fontWeight": "normal"
+          "type": "TEXT",
+          "x": 1022,
+          "y": 0,
+          "width": 258,
+          "height": 16,
+          "fills": [{"type": "SOLID", "color": "#6E5262"}],
+          "text": "v0.4.0 · AGPL-3.0-or-later · Built on Kubernetes",
+          "font": ["Geist", 400, 12],
+          "variables": {"fontFamily": "typography/font-sans", "fills/0/color": "muted"}
         }
       ]
     }

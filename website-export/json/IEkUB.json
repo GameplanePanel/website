@@ -1,963 +1,1440 @@
 {
-  "type": "frame",
-  "id": "IEkUB",
+  "file": "IEkUB",
+  "id": "1:7528",
+  "name": "Screen/Docs — CRD Catalog",
+  "type": "FRAME",
   "x": 0,
   "y": 97460,
-  "name": "Screen/Docs — CRD Catalog",
-  "theme": {
-    "semantic": "dark"
-  },
-  "clip": true,
   "width": 1440,
   "height": 900,
-  "fill": "$background/background",
+  "fills": [{"type": "SOLID", "color": "#121114"}],
+  "layout": {
+    "mode": "HORIZONTAL",
+    "gap": 0,
+    "padding": [0, 0, 0, 0],
+    "primary": "MIN",
+    "counter": "MIN",
+    "sizing": ["FIXED", "FIXED"]
+  },
+  "clips": true,
+  "variables": {"fills/0/color": "background/background"},
   "children": [
     {
-      "id": "VzGO7",
-      "type": "ref",
-      "ref": "K2Rt4H",
-      "height": "fill_container",
+      "id": "1:7529",
       "name": "DocsSidebar/Full",
-      "width": 280
+      "type": "INSTANCE",
+      "x": 0,
+      "y": 0,
+      "width": 280,
+      "height": 900,
+      "component": "Docs/Expanded Sidebar",
+      "componentId": "1:151",
+      "fills": [{"type": "SOLID", "color": "#17151A"}],
+      "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+      "strokeWeight": 1,
+      "layout": {
+        "mode": "VERTICAL",
+        "gap": 0,
+        "padding": [0, 0, 0, 0],
+        "primary": "MIN",
+        "counter": "MIN",
+        "sizing": ["FIXED", "FIXED"]
+      },
+      "layoutAlignSelf": "STRETCH",
+      "variables": {"fills/0/color": "surface/secondary", "strokes/0/color": "border/border"},
+      "texts": [
+        "gameplane",
+        "Back to site",
+        "START HERE",
+        "Overview",
+        "Getting Started",
+        "CORE CONCEPTS",
+        "Architecture",
+        "Security",
+        "OPERATE",
+        "Servers & Config",
+        "Console & Logs",
+        "Files & Backups",
+        "Network & Automation",
+        "PLATFORM",
+        "Cluster & Storage",
+        "Users & Access",
+        "Audit & Observability",
+        "DEVELOP",
+        "Modules & Sources",
+        "API & Reference",
+        "Local Development",
+        "Component Guides",
+        "Testing & Release",
+        "REFERENCE",
+        "Upgrades",
+        "Troubleshooting",
+        "FAQ",
+        "Releases & Roadmap",
+        "Community"
+      ]
     },
     {
-      "type": "frame",
-      "id": "g7ZSKl",
+      "id": "1:7530",
       "name": "Reference Main",
-      "width": "fill_container",
-      "height": "fill_container",
-      "fill": "$background/background",
-      "layout": "vertical",
+      "type": "FRAME",
+      "x": 280,
+      "y": 0,
+      "width": 1160,
+      "height": 900,
+      "fills": [{"type": "SOLID", "color": "#121114"}],
+      "layout": {
+        "mode": "VERTICAL",
+        "gap": 0,
+        "padding": [0, 0, 0, 0],
+        "primary": "MIN",
+        "counter": "MIN",
+        "sizing": ["FIXED", "FIXED"]
+      },
+      "layoutGrow": 1,
+      "layoutAlignSelf": "STRETCH",
+      "variables": {"fills/0/color": "background/background"},
       "children": [
         {
-          "id": "NAG20",
-          "type": "ref",
-          "ref": "egO9x",
+          "id": "1:7531",
           "name": "Reference Top Bar",
-          "width": "fill_container",
-          "descendants": {
-            "q9WGq": {
-              "content": "Reference"
-            },
-            "Dsb2K": {
-              "content": "CRD Catalog"
-            }
-          }
+          "type": "INSTANCE",
+          "x": 0,
+          "y": 0,
+          "width": 1160,
+          "height": 64,
+          "component": "Reference Top Bar",
+          "componentId": "1:2979",
+          "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+          "strokeWeight": 1,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "gap": 0,
+            "padding": [0, 32, 0, 32],
+            "primary": "SPACE_BETWEEN",
+            "counter": "CENTER",
+            "sizing": ["FIXED", "FIXED"]
+          },
+          "layoutAlignSelf": "STRETCH",
+          "variables": {"strokes/0/color": "border/border"},
+          "texts": ["Docs", "/", "Reference", "/", "CRD Catalog"]
         },
         {
-          "type": "frame",
-          "id": "GrLze",
+          "id": "1:7532",
           "name": "Reference Body",
-          "clip": true,
-          "width": "fill_container",
-          "height": "fill_container",
-          "layout": "vertical",
-          "gap": 14,
-          "padding": 32,
+          "type": "FRAME",
+          "x": 0,
+          "y": 64,
+          "width": 1160,
+          "height": 836,
+          "layout": {
+            "mode": "VERTICAL",
+            "gap": 14,
+            "padding": [32, 32, 32, 32],
+            "primary": "MIN",
+            "counter": "MIN",
+            "sizing": ["FIXED", "FIXED"]
+          },
+          "layoutGrow": 1,
+          "layoutAlignSelf": "STRETCH",
+          "clips": true,
           "children": [
             {
-              "type": "frame",
-              "id": "yiGSD",
+              "id": "1:7533",
               "name": "Reference Intro",
-              "width": "fill_container",
-              "justifyContent": "space_between",
-              "alignItems": "end",
+              "type": "FRAME",
+              "x": 32,
+              "y": 32,
+              "width": 1096,
+              "height": 101,
+              "layout": {
+                "mode": "HORIZONTAL",
+                "gap": 0,
+                "padding": [0, 0, 0, 0],
+                "primary": "SPACE_BETWEEN",
+                "counter": "MAX",
+                "sizing": ["FIXED", "HUG"]
+              },
+              "layoutAlignSelf": "STRETCH",
               "children": [
                 {
-                  "type": "frame",
-                  "id": "g5NO6",
+                  "id": "1:7534",
                   "name": "Reference Intro Text",
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 0,
                   "width": 700,
-                  "layout": "vertical",
-                  "gap": 7,
+                  "height": 101,
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "gap": 7,
+                    "padding": [0, 0, 0, 0],
+                    "primary": "MIN",
+                    "counter": "MIN",
+                    "sizing": ["HUG", "FIXED"]
+                  },
                   "children": [
                     {
-                      "type": "text",
-                      "id": "Sypc4",
+                      "id": "1:7535",
                       "name": "Reference Eyebrow",
-                      "fill": "$accent/accent",
-                      "content": "REFERENCE",
-                      "fontFamily": "JetBrains Mono",
-                      "fontSize": 11,
-                      "fontWeight": "600",
-                      "letterSpacing": 0.8
+                      "type": "TEXT",
+                      "x": 0,
+                      "y": 0,
+                      "width": 66,
+                      "height": 15,
+                      "fills": [{"type": "SOLID", "color": "#FF4FA3"}],
+                      "text": "REFERENCE",
+                      "font": ["JetBrains Mono", 600, 11],
+                      "variables": {"fills/0/color": "accent/accent"}
                     },
                     {
-                      "type": "text",
-                      "id": "X5qIBE",
+                      "id": "1:7536",
                       "name": "Reference Title",
-                      "fill": "$foreground/foreground",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "CRD schema catalog",
-                      "lineHeight": 1.1,
-                      "fontFamily": "JetBrains Mono",
-                      "fontSize": 29,
-                      "fontWeight": "700"
+                      "type": "TEXT",
+                      "x": 0,
+                      "y": 22,
+                      "width": 700,
+                      "height": 32,
+                      "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                      "layoutAlignSelf": "STRETCH",
+                      "text": "CRD schema catalog",
+                      "font": ["JetBrains Mono", 700, 29],
+                      "lineHeight": {"value": 110.00000238418579, "unit": "PERCENT"},
+                      "variables": {"fills/0/color": "foreground/foreground"}
                     },
                     {
-                      "type": "text",
-                      "id": "TNh51",
+                      "id": "1:7537",
                       "name": "Reference Lead",
-                      "fill": "$muted",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "Understand every gameplane.local/v1alpha1 resource, its scope, desired spec, observed status, and controller owner.",
-                      "lineHeight": 1.4,
-                      "fontFamily": "Geist",
-                      "fontSize": 14,
-                      "fontWeight": "normal"
+                      "type": "TEXT",
+                      "x": 0,
+                      "y": 61,
+                      "width": 700,
+                      "height": 40,
+                      "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                      "layoutAlignSelf": "STRETCH",
+                      "text": "Understand every gameplane.local/v1alpha1 resource, its scope, desired spec, observed status, and controller owner.",
+                      "font": ["Geist", 400, 14],
+                      "lineHeight": {"value": 139.9999976158142, "unit": "PERCENT"},
+                      "variables": {"fills/0/color": "muted"}
                     }
                   ]
                 },
                 {
-                  "type": "frame",
-                  "id": "lVKOA",
+                  "id": "1:7538",
                   "name": "Reference Filter",
+                  "type": "FRAME",
+                  "x": 776,
+                  "y": 63,
                   "width": 320,
                   "height": 38,
-                  "fill": "$surface/surface",
-                  "cornerRadius": "$radius/xl",
-                  "stroke": "$border/border",
-                  "strokeWidth": 1,
-                  "strokeAlignment": "inner",
-                  "gap": 8,
-                  "padding": [
-                    0,
-                    11
-                  ],
-                  "alignItems": "center",
+                  "fills": [{"type": "SOLID", "color": "#1C1A20"}],
+                  "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+                  "strokeWeight": 1,
+                  "cornerRadius": 12,
+                  "layout": {
+                    "mode": "HORIZONTAL",
+                    "gap": 8,
+                    "padding": [0, 11, 0, 11],
+                    "primary": "MIN",
+                    "counter": "CENTER",
+                    "sizing": ["FIXED", "FIXED"]
+                  },
+                  "variables": {
+                    "cornerRadius": "radius/xl",
+                    "fills/0/color": "surface/surface",
+                    "strokes/0/color": "border/border"
+                  },
                   "children": [
                     {
-                      "type": "icon",
-                      "id": "e0cFu",
+                      "id": "1:7539",
                       "name": "Reference Filter Icon",
+                      "type": "FRAME",
+                      "x": 11,
+                      "y": 12,
                       "width": 14,
                       "height": 14,
-                      "icon": "search",
-                      "library": "lucide",
-                      "fill": "$field/placeholder"
+                      "variables": {"fills/0/color": "field/placeholder"},
+                      "children": [
+                        {
+                          "name": "path",
+                          "type": "VECTOR",
+                          "x": 9.72,
+                          "y": 9.72,
+                          "width": 2.53,
+                          "height": 2.53,
+                          "strokes": [{"type": "SOLID", "color": "#7B7584"}],
+                          "strokeWeight": 1.17
+                        },
+                        {
+                          "name": "path",
+                          "type": "VECTOR",
+                          "x": 1.75,
+                          "y": 1.75,
+                          "width": 9.33,
+                          "height": 9.33,
+                          "strokes": [{"type": "SOLID", "color": "#7B7584"}],
+                          "strokeWeight": 1.17
+                        }
+                      ]
                     },
                     {
-                      "type": "text",
-                      "id": "c6ajI",
+                      "id": "1:7540",
                       "name": "Reference Filter Placeholder",
-                      "fill": "$field/placeholder",
-                      "content": "Filter CRDs…",
-                      "fontFamily": "Geist",
-                      "fontSize": 12,
-                      "fontWeight": "normal"
+                      "type": "TEXT",
+                      "x": 33,
+                      "y": 11,
+                      "width": 70,
+                      "height": 16,
+                      "fills": [{"type": "SOLID", "color": "#7B7584"}],
+                      "text": "Filter CRDs…",
+                      "font": ["Geist", 400, 12],
+                      "variables": {"fills/0/color": "field/placeholder"}
                     }
                   ]
                 }
               ]
             },
             {
-              "type": "frame",
-              "id": "CcLq4",
+              "id": "1:7541",
               "name": "Reference Tabs",
-              "width": "fill_container",
-              "gap": 8,
-              "alignItems": "center",
+              "type": "FRAME",
+              "x": 32,
+              "y": 147,
+              "width": 1096,
+              "height": 32,
+              "layout": {
+                "mode": "HORIZONTAL",
+                "gap": 8,
+                "padding": [0, 0, 0, 0],
+                "primary": "MIN",
+                "counter": "CENTER",
+                "sizing": ["FIXED", "HUG"]
+              },
+              "layoutAlignSelf": "STRETCH",
               "children": [
                 {
-                  "id": "gXta9",
-                  "type": "ref",
-                  "ref": "BW9MK",
+                  "id": "1:7542",
                   "name": "Tab/Active",
-                  "descendants": {
-                    "jlJXf": {
-                      "content": "Catalog"
-                    }
-                  }
+                  "type": "INSTANCE",
+                  "x": 0,
+                  "y": 0,
+                  "width": 83,
+                  "height": 32,
+                  "component": "Tab/Active",
+                  "componentId": "1:3002",
+                  "fills": [{"type": "SOLID", "color": "#46464C"}],
+                  "effects": [{"type": "DROP_SHADOW", "radius": 3, "visible": true}],
+                  "cornerRadius": 24,
+                  "layout": {
+                    "mode": "HORIZONTAL",
+                    "gap": 0,
+                    "padding": [0, 16, 0, 16],
+                    "primary": "CENTER",
+                    "counter": "CENTER",
+                    "sizing": ["HUG", "FIXED"]
+                  },
+                  "variables": {"cornerRadius": "radius/3xl", "fills/0/color": "segment"},
+                  "texts": ["Catalog"]
                 },
                 {
-                  "id": "eDQiQ",
-                  "type": "ref",
-                  "ref": "c3yE3",
+                  "id": "1:7543",
                   "name": "Tab/Inactive",
-                  "descendants": {
-                    "Aw1YL": {
-                      "content": "Scope"
-                    }
-                  }
+                  "type": "INSTANCE",
+                  "x": 91,
+                  "y": 0,
+                  "width": 74,
+                  "height": 32,
+                  "component": "Tab/Inactive",
+                  "componentId": "1:3005",
+                  "cornerRadius": 24,
+                  "layout": {
+                    "mode": "HORIZONTAL",
+                    "gap": 0,
+                    "padding": [0, 16, 0, 16],
+                    "primary": "CENTER",
+                    "counter": "CENTER",
+                    "sizing": ["HUG", "FIXED"]
+                  },
+                  "variables": {"cornerRadius": "radius/3xl"},
+                  "texts": ["Scope"]
                 },
                 {
-                  "id": "Sk1ht",
-                  "type": "ref",
-                  "ref": "c3yE3",
+                  "id": "1:7544",
                   "name": "Tab/Inactive",
-                  "descendants": {
-                    "Aw1YL": {
-                      "content": "Spec & status"
-                    }
-                  }
+                  "type": "INSTANCE",
+                  "x": 173,
+                  "y": 0,
+                  "width": 123,
+                  "height": 32,
+                  "component": "Tab/Inactive",
+                  "componentId": "1:3005",
+                  "cornerRadius": 24,
+                  "layout": {
+                    "mode": "HORIZONTAL",
+                    "gap": 0,
+                    "padding": [0, 16, 0, 16],
+                    "primary": "CENTER",
+                    "counter": "CENTER",
+                    "sizing": ["HUG", "FIXED"]
+                  },
+                  "variables": {"cornerRadius": "radius/3xl"},
+                  "texts": ["Spec & status"]
                 },
                 {
-                  "id": "v0iPn",
-                  "type": "ref",
-                  "ref": "c3yE3",
+                  "id": "1:7545",
                   "name": "Tab/Inactive",
-                  "descendants": {
-                    "Aw1YL": {
-                      "content": "Generation"
-                    }
-                  }
+                  "type": "INSTANCE",
+                  "x": 304,
+                  "y": 0,
+                  "width": 104,
+                  "height": 32,
+                  "component": "Tab/Inactive",
+                  "componentId": "1:3005",
+                  "cornerRadius": 24,
+                  "layout": {
+                    "mode": "HORIZONTAL",
+                    "gap": 0,
+                    "padding": [0, 16, 0, 16],
+                    "primary": "CENTER",
+                    "counter": "CENTER",
+                    "sizing": ["HUG", "FIXED"]
+                  },
+                  "variables": {"cornerRadius": "radius/3xl"},
+                  "texts": ["Generation"]
                 },
                 {
-                  "id": "eOjRW",
-                  "type": "ref",
-                  "ref": "c3yE3",
+                  "id": "1:7546",
                   "name": "Tab/Inactive",
-                  "descendants": {
-                    "Aw1YL": {
-                      "content": "Lifecycle"
-                    }
-                  }
+                  "type": "INSTANCE",
+                  "x": 416,
+                  "y": 0,
+                  "width": 91,
+                  "height": 32,
+                  "component": "Tab/Inactive",
+                  "componentId": "1:3005",
+                  "cornerRadius": 24,
+                  "layout": {
+                    "mode": "HORIZONTAL",
+                    "gap": 0,
+                    "padding": [0, 16, 0, 16],
+                    "primary": "CENTER",
+                    "counter": "CENTER",
+                    "sizing": ["HUG", "FIXED"]
+                  },
+                  "variables": {"cornerRadius": "radius/3xl"},
+                  "texts": ["Lifecycle"]
                 }
               ]
             },
             {
-              "type": "frame",
-              "id": "G8DZOP",
+              "id": "1:7547",
               "name": "Reference Block 1",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 7,
+              "type": "FRAME",
+              "x": 32,
+              "y": 193,
+              "width": 1096,
+              "height": 247,
+              "layout": {
+                "mode": "VERTICAL",
+                "gap": 7,
+                "padding": [0, 0, 0, 0],
+                "primary": "MIN",
+                "counter": "MIN",
+                "sizing": ["HUG", "FIXED"]
+              },
+              "layoutAlignSelf": "STRETCH",
               "children": [
                 {
-                  "type": "text",
-                  "id": "JRUhP",
+                  "id": "1:7548",
                   "name": "Reference Block Title 1",
-                  "fill": "$foreground/foreground",
-                  "content": "Workload and recovery resources",
-                  "fontFamily": "JetBrains Mono",
-                  "fontSize": 14,
-                  "fontWeight": "600"
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 0,
+                  "width": 261,
+                  "height": 18,
+                  "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                  "text": "Workload and recovery resources",
+                  "font": ["JetBrains Mono", 600, 14],
+                  "variables": {"fills/0/color": "foreground/foreground"}
                 },
                 {
-                  "type": "frame",
-                  "id": "WFJGQ",
+                  "id": "1:7549",
                   "name": "Reference Table 1",
-                  "clip": true,
-                  "width": "fill_container",
-                  "cornerRadius": "$radius/2xl",
-                  "stroke": "$border/border",
-                  "strokeWidth": 1,
-                  "strokeAlignment": "inner",
-                  "layout": "vertical",
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 25,
+                  "width": 1096,
+                  "height": 222,
+                  "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+                  "strokeWeight": 1,
+                  "cornerRadius": 16,
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "gap": 0,
+                    "padding": [0, 0, 0, 0],
+                    "primary": "MIN",
+                    "counter": "MIN",
+                    "sizing": ["HUG", "FIXED"]
+                  },
+                  "layoutAlignSelf": "STRETCH",
+                  "clips": true,
+                  "variables": {"cornerRadius": "radius/2xl", "strokes/0/color": "border/border"},
                   "children": [
                     {
-                      "type": "frame",
-                      "id": "zqFjM",
+                      "id": "1:7550",
                       "name": "Reference Table Header 1",
-                      "width": "fill_container",
+                      "type": "FRAME",
+                      "x": 0,
+                      "y": 0,
+                      "width": 1096,
                       "height": 32,
-                      "fill": "$surface/surface",
-                      "alignItems": "center",
+                      "fills": [{"type": "SOLID", "color": "#1C1A20"}],
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 0,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["FIXED", "FIXED"]
+                      },
+                      "layoutAlignSelf": "STRETCH",
+                      "variables": {"fills/0/color": "surface/surface"},
                       "children": [
                         {
-                          "type": "frame",
-                          "id": "pVf7x",
+                          "id": "1:7551",
                           "name": "Header 1 Cell 0",
+                          "type": "FRAME",
+                          "x": 0,
+                          "y": 0,
                           "width": 270,
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "height": 32,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "cxnHh",
+                              "id": "1:7552",
                               "name": "Header 1 Text 0",
-                              "fill": "$field/placeholder",
-                              "content": "KIND",
-                              "fontFamily": "JetBrains Mono",
-                              "fontSize": 9,
-                              "fontWeight": "600",
-                              "letterSpacing": 0.5
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 10,
+                              "width": 24,
+                              "height": 12,
+                              "fills": [{"type": "SOLID", "color": "#7B7584"}],
+                              "text": "KIND",
+                              "font": ["JetBrains Mono", 600, 9],
+                              "variables": {"fills/0/color": "field/placeholder"}
                             }
                           ]
                         },
                         {
-                          "type": "frame",
-                          "id": "c3J4Po",
+                          "id": "1:7553",
                           "name": "Header 1 Cell 1",
+                          "type": "FRAME",
+                          "x": 270,
+                          "y": 0,
                           "width": 130,
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "height": 32,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "heuzV",
+                              "id": "1:7554",
                               "name": "Header 1 Text 1",
-                              "fill": "$field/placeholder",
-                              "content": "SCOPE",
-                              "fontFamily": "JetBrains Mono",
-                              "fontSize": 9,
-                              "fontWeight": "600",
-                              "letterSpacing": 0.5
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 10,
+                              "width": 30,
+                              "height": 12,
+                              "fills": [{"type": "SOLID", "color": "#7B7584"}],
+                              "text": "SCOPE",
+                              "font": ["JetBrains Mono", 600, 9],
+                              "variables": {"fills/0/color": "field/placeholder"}
                             }
                           ]
                         },
                         {
-                          "type": "frame",
-                          "id": "BPkTc",
+                          "id": "1:7555",
                           "name": "Header 1 Cell 2",
+                          "type": "FRAME",
+                          "x": 400,
+                          "y": 0,
                           "width": 150,
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "height": 32,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "jNQj8",
+                              "id": "1:7556",
                               "name": "Header 1 Text 2",
-                              "fill": "$field/placeholder",
-                              "content": "SHORT NAME",
-                              "fontFamily": "JetBrains Mono",
-                              "fontSize": 9,
-                              "fontWeight": "600",
-                              "letterSpacing": 0.5
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 10,
+                              "width": 59,
+                              "height": 12,
+                              "fills": [{"type": "SOLID", "color": "#7B7584"}],
+                              "text": "SHORT NAME",
+                              "font": ["JetBrains Mono", 600, 9],
+                              "variables": {"fills/0/color": "field/placeholder"}
                             }
                           ]
                         },
                         {
-                          "type": "frame",
-                          "id": "wKINn",
+                          "id": "1:7557",
                           "name": "Header 1 Cell 3",
-                          "width": "fill_container",
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "type": "FRAME",
+                          "x": 550,
+                          "y": 0,
+                          "width": 546,
+                          "height": 32,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutGrow": 1,
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "K0cfV",
+                              "id": "1:7558",
                               "name": "Header 1 Text 3",
-                              "fill": "$field/placeholder",
-                              "content": "PURPOSE",
-                              "fontFamily": "JetBrains Mono",
-                              "fontSize": 9,
-                              "fontWeight": "600",
-                              "letterSpacing": 0.5
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 10,
+                              "width": 41,
+                              "height": 12,
+                              "fills": [{"type": "SOLID", "color": "#7B7584"}],
+                              "text": "PURPOSE",
+                              "font": ["JetBrains Mono", 600, 9],
+                              "variables": {"fills/0/color": "field/placeholder"}
                             }
                           ]
                         }
                       ]
                     },
                     {
-                      "type": "frame",
-                      "id": "bjoNR",
+                      "id": "1:7559",
                       "name": "Reference 1 Row 0",
-                      "width": "fill_container",
+                      "type": "FRAME",
+                      "x": 0,
+                      "y": 32,
+                      "width": 1096,
                       "height": 38,
-                      "fill": "$background/background",
-                      "stroke": "$separator/separator",
-                      "strokeWidth": {
-                        "top": 1
+                      "fills": [{"type": "SOLID", "color": "#121114"}],
+                      "strokes": [{"type": "SOLID", "color": "#232227"}],
+                      "strokeWeight": 1,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 0,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["FIXED", "FIXED"]
                       },
-                      "strokeAlignment": "inner",
-                      "strokeLinejoin": "round",
-                      "alignItems": "center",
+                      "layoutAlignSelf": "STRETCH",
+                      "variables": {"fills/0/color": "background/background", "strokes/0/color": "separator/separator"},
                       "children": [
                         {
-                          "type": "frame",
-                          "id": "rTpax",
+                          "id": "1:7560",
                           "name": "Reference 1 Row 0 Cell 0",
+                          "type": "FRAME",
+                          "x": 0,
+                          "y": 0,
                           "width": 270,
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "height": 38,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "t1YbLw",
+                              "id": "1:7561",
                               "name": "Reference 1 Row 0 Text 0",
-                              "fill": "$accent/soft-foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "GameServer",
-                              "fontFamily": "JetBrains Mono",
-                              "fontSize": 10.5,
-                              "fontWeight": "500"
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 12,
+                              "width": 250,
+                              "height": 14,
+                              "fills": [{"type": "SOLID", "color": "#FF8AC4"}],
+                              "layoutGrow": 1,
+                              "text": "GameServer",
+                              "font": ["JetBrains Mono", 500, 10.5],
+                              "variables": {"fills/0/color": "accent/soft-foreground"}
                             }
                           ]
                         },
                         {
-                          "type": "frame",
-                          "id": "lVm8L",
+                          "id": "1:7562",
                           "name": "Reference 1 Row 0 Cell 1",
+                          "type": "FRAME",
+                          "x": 270,
+                          "y": 0,
                           "width": 130,
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "height": 38,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "A2nzA6",
+                              "id": "1:7563",
                               "name": "Reference 1 Row 0 Text 1",
-                              "fill": "$default/foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Namespaced",
-                              "fontFamily": "JetBrains Mono",
-                              "fontSize": 10.5,
-                              "fontWeight": "normal"
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 12,
+                              "width": 110,
+                              "height": 14,
+                              "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                              "layoutGrow": 1,
+                              "text": "Namespaced",
+                              "font": ["JetBrains Mono", 400, 10.5],
+                              "variables": {"fills/0/color": "default/foreground"}
                             }
                           ]
                         },
                         {
-                          "type": "frame",
-                          "id": "wuHV5",
+                          "id": "1:7564",
                           "name": "Reference 1 Row 0 Cell 2",
+                          "type": "FRAME",
+                          "x": 400,
+                          "y": 0,
                           "width": 150,
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "height": 38,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "dypQB",
+                              "id": "1:7565",
                               "name": "Reference 1 Row 0 Text 2",
-                              "fill": "$default/foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "gs",
-                              "fontFamily": "JetBrains Mono",
-                              "fontSize": 10.5,
-                              "fontWeight": "normal"
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 12,
+                              "width": 130,
+                              "height": 14,
+                              "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                              "layoutGrow": 1,
+                              "text": "gs",
+                              "font": ["JetBrains Mono", 400, 10.5],
+                              "variables": {"fills/0/color": "default/foreground"}
                             }
                           ]
                         },
                         {
-                          "type": "frame",
-                          "id": "Mebc6",
+                          "id": "1:7566",
                           "name": "Reference 1 Row 0 Cell 3",
-                          "width": "fill_container",
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "type": "FRAME",
+                          "x": 550,
+                          "y": 0,
+                          "width": 546,
+                          "height": 38,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutGrow": 1,
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "ZKkbO",
+                              "id": "1:7567",
                               "name": "Reference 1 Row 0 Text 3",
-                              "fill": "$muted",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Desired game workload and live status.",
-                              "fontFamily": "Geist",
-                              "fontSize": 11,
-                              "fontWeight": "normal"
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 12,
+                              "width": 526,
+                              "height": 14,
+                              "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                              "layoutGrow": 1,
+                              "text": "Desired game workload and live status.",
+                              "font": ["Geist", 400, 11],
+                              "variables": {"fills/0/color": "muted"}
                             }
                           ]
                         }
                       ]
                     },
                     {
-                      "type": "frame",
-                      "id": "yH22K",
+                      "id": "1:7568",
                       "name": "Reference 1 Row 1",
-                      "width": "fill_container",
+                      "type": "FRAME",
+                      "x": 0,
+                      "y": 70,
+                      "width": 1096,
                       "height": 38,
-                      "fill": "$surface/secondary",
-                      "stroke": "$separator/separator",
-                      "strokeWidth": {
-                        "top": 1
+                      "fills": [{"type": "SOLID", "color": "#17151A"}],
+                      "strokes": [{"type": "SOLID", "color": "#232227"}],
+                      "strokeWeight": 1,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 0,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["FIXED", "FIXED"]
                       },
-                      "strokeAlignment": "inner",
-                      "strokeLinejoin": "round",
-                      "alignItems": "center",
+                      "layoutAlignSelf": "STRETCH",
+                      "variables": {"fills/0/color": "surface/secondary", "strokes/0/color": "separator/separator"},
                       "children": [
                         {
-                          "type": "frame",
-                          "id": "y5kE9",
+                          "id": "1:7569",
                           "name": "Reference 1 Row 1 Cell 0",
+                          "type": "FRAME",
+                          "x": 0,
+                          "y": 0,
                           "width": 270,
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "height": 38,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "F2Nuf",
+                              "id": "1:7570",
                               "name": "Reference 1 Row 1 Text 0",
-                              "fill": "$accent/soft-foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "GameTemplate",
-                              "fontFamily": "JetBrains Mono",
-                              "fontSize": 10.5,
-                              "fontWeight": "500"
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 12,
+                              "width": 250,
+                              "height": 14,
+                              "fills": [{"type": "SOLID", "color": "#FF8AC4"}],
+                              "layoutGrow": 1,
+                              "text": "GameTemplate",
+                              "font": ["JetBrains Mono", 500, 10.5],
+                              "variables": {"fills/0/color": "accent/soft-foreground"}
                             }
                           ]
                         },
                         {
-                          "type": "frame",
-                          "id": "VBHGP",
+                          "id": "1:7571",
                           "name": "Reference 1 Row 1 Cell 1",
+                          "type": "FRAME",
+                          "x": 270,
+                          "y": 0,
                           "width": 130,
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "height": 38,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "q22Cmw",
+                              "id": "1:7572",
                               "name": "Reference 1 Row 1 Text 1",
-                              "fill": "$default/foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Cluster",
-                              "fontFamily": "JetBrains Mono",
-                              "fontSize": 10.5,
-                              "fontWeight": "normal"
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 12,
+                              "width": 110,
+                              "height": 14,
+                              "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                              "layoutGrow": 1,
+                              "text": "Cluster",
+                              "font": ["JetBrains Mono", 400, 10.5],
+                              "variables": {"fills/0/color": "default/foreground"}
                             }
                           ]
                         },
                         {
-                          "type": "frame",
-                          "id": "L9HIdb",
+                          "id": "1:7573",
                           "name": "Reference 1 Row 1 Cell 2",
+                          "type": "FRAME",
+                          "x": 400,
+                          "y": 0,
                           "width": 150,
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "height": 38,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "wZVls",
+                              "id": "1:7574",
                               "name": "Reference 1 Row 1 Text 2",
-                              "fill": "$default/foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "gt",
-                              "fontFamily": "JetBrains Mono",
-                              "fontSize": 10.5,
-                              "fontWeight": "normal"
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 12,
+                              "width": 130,
+                              "height": 14,
+                              "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                              "layoutGrow": 1,
+                              "text": "gt",
+                              "font": ["JetBrains Mono", 400, 10.5],
+                              "variables": {"fills/0/color": "default/foreground"}
                             }
                           ]
                         },
                         {
-                          "type": "frame",
-                          "id": "IRT3y",
+                          "id": "1:7575",
                           "name": "Reference 1 Row 1 Cell 3",
-                          "width": "fill_container",
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "type": "FRAME",
+                          "x": 550,
+                          "y": 0,
+                          "width": 546,
+                          "height": 38,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutGrow": 1,
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "bmIHF",
+                              "id": "1:7576",
                               "name": "Reference 1 Row 1 Text 3",
-                              "fill": "$muted",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Reusable game/runtime blueprint from a module.",
-                              "fontFamily": "Geist",
-                              "fontSize": 11,
-                              "fontWeight": "normal"
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 12,
+                              "width": 526,
+                              "height": 14,
+                              "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                              "layoutGrow": 1,
+                              "text": "Reusable game/runtime blueprint from a module.",
+                              "font": ["Geist", 400, 11],
+                              "variables": {"fills/0/color": "muted"}
                             }
                           ]
                         }
                       ]
                     },
                     {
-                      "type": "frame",
-                      "id": "u4CnhS",
+                      "id": "1:7577",
                       "name": "Reference 1 Row 2",
-                      "width": "fill_container",
+                      "type": "FRAME",
+                      "x": 0,
+                      "y": 108,
+                      "width": 1096,
                       "height": 38,
-                      "fill": "$background/background",
-                      "stroke": "$separator/separator",
-                      "strokeWidth": {
-                        "top": 1
+                      "fills": [{"type": "SOLID", "color": "#121114"}],
+                      "strokes": [{"type": "SOLID", "color": "#232227"}],
+                      "strokeWeight": 1,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 0,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["FIXED", "FIXED"]
                       },
-                      "strokeAlignment": "inner",
-                      "strokeLinejoin": "round",
-                      "alignItems": "center",
+                      "layoutAlignSelf": "STRETCH",
+                      "variables": {"fills/0/color": "background/background", "strokes/0/color": "separator/separator"},
                       "children": [
                         {
-                          "type": "frame",
-                          "id": "BhxFC",
+                          "id": "1:7578",
                           "name": "Reference 1 Row 2 Cell 0",
+                          "type": "FRAME",
+                          "x": 0,
+                          "y": 0,
                           "width": 270,
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "height": 38,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "D7LpJv",
+                              "id": "1:7579",
                               "name": "Reference 1 Row 2 Text 0",
-                              "fill": "$accent/soft-foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Backup",
-                              "fontFamily": "JetBrains Mono",
-                              "fontSize": 10.5,
-                              "fontWeight": "500"
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 12,
+                              "width": 250,
+                              "height": 14,
+                              "fills": [{"type": "SOLID", "color": "#FF8AC4"}],
+                              "layoutGrow": 1,
+                              "text": "Backup",
+                              "font": ["JetBrains Mono", 500, 10.5],
+                              "variables": {"fills/0/color": "accent/soft-foreground"}
                             }
                           ]
                         },
                         {
-                          "type": "frame",
-                          "id": "h14HdB",
+                          "id": "1:7580",
                           "name": "Reference 1 Row 2 Cell 1",
+                          "type": "FRAME",
+                          "x": 270,
+                          "y": 0,
                           "width": 130,
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "height": 38,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "BHA4m",
+                              "id": "1:7581",
                               "name": "Reference 1 Row 2 Text 1",
-                              "fill": "$default/foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Namespaced",
-                              "fontFamily": "JetBrains Mono",
-                              "fontSize": 10.5,
-                              "fontWeight": "normal"
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 12,
+                              "width": 110,
+                              "height": 14,
+                              "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                              "layoutGrow": 1,
+                              "text": "Namespaced",
+                              "font": ["JetBrains Mono", 400, 10.5],
+                              "variables": {"fills/0/color": "default/foreground"}
                             }
                           ]
                         },
                         {
-                          "type": "frame",
-                          "id": "Akn85",
+                          "id": "1:7582",
                           "name": "Reference 1 Row 2 Cell 2",
+                          "type": "FRAME",
+                          "x": 400,
+                          "y": 0,
                           "width": 150,
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "height": 38,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "L6k2u4",
+                              "id": "1:7583",
                               "name": "Reference 1 Row 2 Text 2",
-                              "fill": "$default/foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "bkp",
-                              "fontFamily": "JetBrains Mono",
-                              "fontSize": 10.5,
-                              "fontWeight": "normal"
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 12,
+                              "width": 130,
+                              "height": 14,
+                              "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                              "layoutGrow": 1,
+                              "text": "bkp",
+                              "font": ["JetBrains Mono", 400, 10.5],
+                              "variables": {"fills/0/color": "default/foreground"}
                             }
                           ]
                         },
                         {
-                          "type": "frame",
-                          "id": "EeGQ1",
+                          "id": "1:7584",
                           "name": "Reference 1 Row 2 Cell 3",
-                          "width": "fill_container",
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "type": "FRAME",
+                          "x": 550,
+                          "y": 0,
+                          "width": 546,
+                          "height": 38,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutGrow": 1,
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "XKc8g",
+                              "id": "1:7585",
                               "name": "Reference 1 Row 2 Text 3",
-                              "fill": "$muted",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "One-shot snapshot of server data.",
-                              "fontFamily": "Geist",
-                              "fontSize": 11,
-                              "fontWeight": "normal"
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 12,
+                              "width": 526,
+                              "height": 14,
+                              "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                              "layoutGrow": 1,
+                              "text": "One-shot snapshot of server data.",
+                              "font": ["Geist", 400, 11],
+                              "variables": {"fills/0/color": "muted"}
                             }
                           ]
                         }
                       ]
                     },
                     {
-                      "type": "frame",
-                      "id": "ESunO",
+                      "id": "1:7586",
                       "name": "Reference 1 Row 3",
-                      "width": "fill_container",
+                      "type": "FRAME",
+                      "x": 0,
+                      "y": 146,
+                      "width": 1096,
                       "height": 38,
-                      "fill": "$surface/secondary",
-                      "stroke": "$separator/separator",
-                      "strokeWidth": {
-                        "top": 1
+                      "fills": [{"type": "SOLID", "color": "#17151A"}],
+                      "strokes": [{"type": "SOLID", "color": "#232227"}],
+                      "strokeWeight": 1,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 0,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["FIXED", "FIXED"]
                       },
-                      "strokeAlignment": "inner",
-                      "strokeLinejoin": "round",
-                      "alignItems": "center",
+                      "layoutAlignSelf": "STRETCH",
+                      "variables": {"fills/0/color": "surface/secondary", "strokes/0/color": "separator/separator"},
                       "children": [
                         {
-                          "type": "frame",
-                          "id": "oIzNb",
+                          "id": "1:7587",
                           "name": "Reference 1 Row 3 Cell 0",
+                          "type": "FRAME",
+                          "x": 0,
+                          "y": 0,
                           "width": 270,
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "height": 38,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "c0psXx",
+                              "id": "1:7588",
                               "name": "Reference 1 Row 3 Text 0",
-                              "fill": "$accent/soft-foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "BackupSchedule",
-                              "fontFamily": "JetBrains Mono",
-                              "fontSize": 10.5,
-                              "fontWeight": "500"
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 12,
+                              "width": 250,
+                              "height": 14,
+                              "fills": [{"type": "SOLID", "color": "#FF8AC4"}],
+                              "layoutGrow": 1,
+                              "text": "BackupSchedule",
+                              "font": ["JetBrains Mono", 500, 10.5],
+                              "variables": {"fills/0/color": "accent/soft-foreground"}
                             }
                           ]
                         },
                         {
-                          "type": "frame",
-                          "id": "SCbcC",
+                          "id": "1:7589",
                           "name": "Reference 1 Row 3 Cell 1",
+                          "type": "FRAME",
+                          "x": 270,
+                          "y": 0,
                           "width": 130,
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "height": 38,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "f7YAD6",
+                              "id": "1:7590",
                               "name": "Reference 1 Row 3 Text 1",
-                              "fill": "$default/foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Namespaced",
-                              "fontFamily": "JetBrains Mono",
-                              "fontSize": 10.5,
-                              "fontWeight": "normal"
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 12,
+                              "width": 110,
+                              "height": 14,
+                              "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                              "layoutGrow": 1,
+                              "text": "Namespaced",
+                              "font": ["JetBrains Mono", 400, 10.5],
+                              "variables": {"fills/0/color": "default/foreground"}
                             }
                           ]
                         },
                         {
-                          "type": "frame",
-                          "id": "b4LfxR",
+                          "id": "1:7591",
                           "name": "Reference 1 Row 3 Cell 2",
+                          "type": "FRAME",
+                          "x": 400,
+                          "y": 0,
                           "width": 150,
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "height": 38,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "NSvoD",
+                              "id": "1:7592",
                               "name": "Reference 1 Row 3 Text 2",
-                              "fill": "$default/foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "bkps",
-                              "fontFamily": "JetBrains Mono",
-                              "fontSize": 10.5,
-                              "fontWeight": "normal"
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 12,
+                              "width": 130,
+                              "height": 14,
+                              "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                              "layoutGrow": 1,
+                              "text": "bkps",
+                              "font": ["JetBrains Mono", 400, 10.5],
+                              "variables": {"fills/0/color": "default/foreground"}
                             }
                           ]
                         },
                         {
-                          "type": "frame",
-                          "id": "RFUo5",
+                          "id": "1:7593",
                           "name": "Reference 1 Row 3 Cell 3",
-                          "width": "fill_container",
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "type": "FRAME",
+                          "x": 550,
+                          "y": 0,
+                          "width": 546,
+                          "height": 38,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutGrow": 1,
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "akIaE",
+                              "id": "1:7594",
                               "name": "Reference 1 Row 3 Text 3",
-                              "fill": "$muted",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Cron policy, destination, and retention.",
-                              "fontFamily": "Geist",
-                              "fontSize": 11,
-                              "fontWeight": "normal"
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 12,
+                              "width": 526,
+                              "height": 14,
+                              "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                              "layoutGrow": 1,
+                              "text": "Cron policy, destination, and retention.",
+                              "font": ["Geist", 400, 11],
+                              "variables": {"fills/0/color": "muted"}
                             }
                           ]
                         }
                       ]
                     },
                     {
-                      "type": "frame",
-                      "id": "J4pkIA",
+                      "id": "1:7595",
                       "name": "Reference 1 Row 4 NetworkCapture",
-                      "width": "fill_container",
+                      "type": "FRAME",
+                      "x": 0,
+                      "y": 184,
+                      "width": 1096,
                       "height": 38,
-                      "fill": "$background/background",
-                      "stroke": "$separator/separator",
-                      "strokeWidth": {
-                        "top": 1
+                      "fills": [{"type": "SOLID", "color": "#121114"}],
+                      "strokes": [{"type": "SOLID", "color": "#232227"}],
+                      "strokeWeight": 1,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 0,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["FIXED", "FIXED"]
                       },
-                      "strokeAlignment": "inner",
-                      "strokeLinejoin": "round",
-                      "alignItems": "center",
+                      "layoutAlignSelf": "STRETCH",
+                      "variables": {"fills/0/color": "background/background", "strokes/0/color": "separator/separator"},
                       "children": [
                         {
-                          "type": "frame",
-                          "id": "bG5mL",
+                          "id": "1:7596",
                           "name": "Reference 1 Row 4 Cell 0",
+                          "type": "FRAME",
+                          "x": 0,
+                          "y": 0,
                           "width": 270,
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "height": 38,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "RF0am",
+                              "id": "1:7597",
                               "name": "Reference 1 Row 4 Text 0",
-                              "fill": "$accent/soft-foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "NetworkCapture",
-                              "fontFamily": "JetBrains Mono",
-                              "fontSize": 10.5,
-                              "fontWeight": "500"
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 12,
+                              "width": 250,
+                              "height": 14,
+                              "fills": [{"type": "SOLID", "color": "#FF8AC4"}],
+                              "layoutGrow": 1,
+                              "text": "NetworkCapture",
+                              "font": ["JetBrains Mono", 500, 10.5],
+                              "variables": {"fills/0/color": "accent/soft-foreground"}
                             }
                           ]
                         },
                         {
-                          "type": "frame",
-                          "id": "YoNvz",
+                          "id": "1:7598",
                           "name": "Reference 1 Row 4 Cell 1",
+                          "type": "FRAME",
+                          "x": 270,
+                          "y": 0,
                           "width": 130,
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "height": 38,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "zbCJv",
+                              "id": "1:7599",
                               "name": "Reference 1 Row 4 Text 1",
-                              "fill": "$default/foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Namespaced",
-                              "fontFamily": "JetBrains Mono",
-                              "fontSize": 10.5,
-                              "fontWeight": "normal"
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 12,
+                              "width": 110,
+                              "height": 14,
+                              "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                              "layoutGrow": 1,
+                              "text": "Namespaced",
+                              "font": ["JetBrains Mono", 400, 10.5],
+                              "variables": {"fills/0/color": "default/foreground"}
                             }
                           ]
                         },
                         {
-                          "type": "frame",
-                          "id": "X94Vm",
+                          "id": "1:7600",
                           "name": "Reference 1 Row 4 Cell 2",
+                          "type": "FRAME",
+                          "x": 400,
+                          "y": 0,
                           "width": 150,
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "height": 38,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "ahBE9",
+                              "id": "1:7601",
                               "name": "Reference 1 Row 4 Text 2",
-                              "fill": "$default/foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "cap",
-                              "fontFamily": "JetBrains Mono",
-                              "fontSize": 10.5,
-                              "fontWeight": "normal"
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 12,
+                              "width": 130,
+                              "height": 14,
+                              "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                              "layoutGrow": 1,
+                              "text": "cap",
+                              "font": ["JetBrains Mono", 400, 10.5],
+                              "variables": {"fills/0/color": "default/foreground"}
                             }
                           ]
                         },
                         {
-                          "type": "frame",
-                          "id": "xn2Xt",
+                          "id": "1:7602",
                           "name": "Reference 1 Row 4 Cell 3",
-                          "width": "fill_container",
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "type": "FRAME",
+                          "x": 550,
+                          "y": 0,
+                          "width": 546,
+                          "height": 38,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutGrow": 1,
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "O5CZ1f",
+                              "id": "1:7603",
                               "name": "Reference 1 Row 4 Text 3",
-                              "fill": "$muted",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Packet-capture record for a server (v0.3.0).",
-                              "fontFamily": "Geist",
-                              "fontSize": 11,
-                              "fontWeight": "normal"
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 12,
+                              "width": 526,
+                              "height": 14,
+                              "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                              "layoutGrow": 1,
+                              "text": "Packet-capture record for a server (v0.3.0).",
+                              "font": ["Geist", 400, 11],
+                              "variables": {"fills/0/color": "muted"}
                             }
                           ]
                         }
@@ -968,625 +1445,853 @@
               ]
             },
             {
-              "type": "frame",
-              "id": "jOjx6",
+              "id": "1:7604",
               "name": "Reference Block 2",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 7,
+              "type": "FRAME",
+              "x": 32,
+              "y": 454,
+              "width": 1096,
+              "height": 209,
+              "layout": {
+                "mode": "VERTICAL",
+                "gap": 7,
+                "padding": [0, 0, 0, 0],
+                "primary": "MIN",
+                "counter": "MIN",
+                "sizing": ["HUG", "FIXED"]
+              },
+              "layoutAlignSelf": "STRETCH",
               "children": [
                 {
-                  "type": "text",
-                  "id": "bhB0S",
+                  "id": "1:7605",
                   "name": "Reference Block Title 2",
-                  "fill": "$foreground/foreground",
-                  "content": "Platform resources",
-                  "fontFamily": "JetBrains Mono",
-                  "fontSize": 14,
-                  "fontWeight": "600"
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 0,
+                  "width": 152,
+                  "height": 18,
+                  "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                  "text": "Platform resources",
+                  "font": ["JetBrains Mono", 600, 14],
+                  "variables": {"fills/0/color": "foreground/foreground"}
                 },
                 {
-                  "type": "frame",
-                  "id": "M1tj7b",
+                  "id": "1:7606",
                   "name": "Reference Table 2",
-                  "clip": true,
-                  "width": "fill_container",
-                  "cornerRadius": "$radius/2xl",
-                  "stroke": "$border/border",
-                  "strokeWidth": 1,
-                  "strokeAlignment": "inner",
-                  "layout": "vertical",
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 25,
+                  "width": 1096,
+                  "height": 184,
+                  "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+                  "strokeWeight": 1,
+                  "cornerRadius": 16,
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "gap": 0,
+                    "padding": [0, 0, 0, 0],
+                    "primary": "MIN",
+                    "counter": "MIN",
+                    "sizing": ["HUG", "FIXED"]
+                  },
+                  "layoutAlignSelf": "STRETCH",
+                  "clips": true,
+                  "variables": {"cornerRadius": "radius/2xl", "strokes/0/color": "border/border"},
                   "children": [
                     {
-                      "type": "frame",
-                      "id": "KjUPd",
+                      "id": "1:7607",
                       "name": "Reference Table Header 2",
-                      "width": "fill_container",
+                      "type": "FRAME",
+                      "x": 0,
+                      "y": 0,
+                      "width": 1096,
                       "height": 32,
-                      "fill": "$surface/surface",
-                      "alignItems": "center",
+                      "fills": [{"type": "SOLID", "color": "#1C1A20"}],
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 0,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["FIXED", "FIXED"]
+                      },
+                      "layoutAlignSelf": "STRETCH",
+                      "variables": {"fills/0/color": "surface/surface"},
                       "children": [
                         {
-                          "type": "frame",
-                          "id": "I5XdE0",
+                          "id": "1:7608",
                           "name": "Header 2 Cell 0",
+                          "type": "FRAME",
+                          "x": 0,
+                          "y": 0,
                           "width": 270,
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "height": 32,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "lVLnU",
+                              "id": "1:7609",
                               "name": "Header 2 Text 0",
-                              "fill": "$field/placeholder",
-                              "content": "KIND",
-                              "fontFamily": "JetBrains Mono",
-                              "fontSize": 9,
-                              "fontWeight": "600",
-                              "letterSpacing": 0.5
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 10,
+                              "width": 24,
+                              "height": 12,
+                              "fills": [{"type": "SOLID", "color": "#7B7584"}],
+                              "text": "KIND",
+                              "font": ["JetBrains Mono", 600, 9],
+                              "variables": {"fills/0/color": "field/placeholder"}
                             }
                           ]
                         },
                         {
-                          "type": "frame",
-                          "id": "GlGSq",
+                          "id": "1:7610",
                           "name": "Header 2 Cell 1",
+                          "type": "FRAME",
+                          "x": 270,
+                          "y": 0,
                           "width": 130,
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "height": 32,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "VSbZc",
+                              "id": "1:7611",
                               "name": "Header 2 Text 1",
-                              "fill": "$field/placeholder",
-                              "content": "SCOPE",
-                              "fontFamily": "JetBrains Mono",
-                              "fontSize": 9,
-                              "fontWeight": "600",
-                              "letterSpacing": 0.5
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 10,
+                              "width": 30,
+                              "height": 12,
+                              "fills": [{"type": "SOLID", "color": "#7B7584"}],
+                              "text": "SCOPE",
+                              "font": ["JetBrains Mono", 600, 9],
+                              "variables": {"fills/0/color": "field/placeholder"}
                             }
                           ]
                         },
                         {
-                          "type": "frame",
-                          "id": "LqfBV",
+                          "id": "1:7612",
                           "name": "Header 2 Cell 2",
+                          "type": "FRAME",
+                          "x": 400,
+                          "y": 0,
                           "width": 150,
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "height": 32,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "z8PGo",
+                              "id": "1:7613",
                               "name": "Header 2 Text 2",
-                              "fill": "$field/placeholder",
-                              "content": "SHORT NAME",
-                              "fontFamily": "JetBrains Mono",
-                              "fontSize": 9,
-                              "fontWeight": "600",
-                              "letterSpacing": 0.5
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 10,
+                              "width": 59,
+                              "height": 12,
+                              "fills": [{"type": "SOLID", "color": "#7B7584"}],
+                              "text": "SHORT NAME",
+                              "font": ["JetBrains Mono", 600, 9],
+                              "variables": {"fills/0/color": "field/placeholder"}
                             }
                           ]
                         },
                         {
-                          "type": "frame",
-                          "id": "UwN7G",
+                          "id": "1:7614",
                           "name": "Header 2 Cell 3",
-                          "width": "fill_container",
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "type": "FRAME",
+                          "x": 550,
+                          "y": 0,
+                          "width": 546,
+                          "height": 32,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutGrow": 1,
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "y5IHVL",
+                              "id": "1:7615",
                               "name": "Header 2 Text 3",
-                              "fill": "$field/placeholder",
-                              "content": "PURPOSE",
-                              "fontFamily": "JetBrains Mono",
-                              "fontSize": 9,
-                              "fontWeight": "600",
-                              "letterSpacing": 0.5
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 10,
+                              "width": 41,
+                              "height": 12,
+                              "fills": [{"type": "SOLID", "color": "#7B7584"}],
+                              "text": "PURPOSE",
+                              "font": ["JetBrains Mono", 600, 9],
+                              "variables": {"fills/0/color": "field/placeholder"}
                             }
                           ]
                         }
                       ]
                     },
                     {
-                      "type": "frame",
-                      "id": "sFVfG",
+                      "id": "1:7616",
                       "name": "Reference 2 Row 0",
-                      "width": "fill_container",
+                      "type": "FRAME",
+                      "x": 0,
+                      "y": 32,
+                      "width": 1096,
                       "height": 38,
-                      "fill": "$background/background",
-                      "stroke": "$separator/separator",
-                      "strokeWidth": {
-                        "top": 1
+                      "fills": [{"type": "SOLID", "color": "#121114"}],
+                      "strokes": [{"type": "SOLID", "color": "#232227"}],
+                      "strokeWeight": 1,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 0,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["FIXED", "FIXED"]
                       },
-                      "strokeAlignment": "inner",
-                      "strokeLinejoin": "round",
-                      "alignItems": "center",
+                      "layoutAlignSelf": "STRETCH",
+                      "variables": {"fills/0/color": "background/background", "strokes/0/color": "separator/separator"},
                       "children": [
                         {
-                          "type": "frame",
-                          "id": "O1TT6B",
+                          "id": "1:7617",
                           "name": "Reference 2 Row 0 Cell 0",
+                          "type": "FRAME",
+                          "x": 0,
+                          "y": 0,
                           "width": 270,
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "height": 38,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "LRQ4R",
+                              "id": "1:7618",
                               "name": "Reference 2 Row 0 Text 0",
-                              "fill": "$accent/soft-foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Restore",
-                              "fontFamily": "JetBrains Mono",
-                              "fontSize": 10.5,
-                              "fontWeight": "500"
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 12,
+                              "width": 250,
+                              "height": 14,
+                              "fills": [{"type": "SOLID", "color": "#FF8AC4"}],
+                              "layoutGrow": 1,
+                              "text": "Restore",
+                              "font": ["JetBrains Mono", 500, 10.5],
+                              "variables": {"fills/0/color": "accent/soft-foreground"}
                             }
                           ]
                         },
                         {
-                          "type": "frame",
-                          "id": "aE5dx",
+                          "id": "1:7619",
                           "name": "Reference 2 Row 0 Cell 1",
+                          "type": "FRAME",
+                          "x": 270,
+                          "y": 0,
                           "width": 130,
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "height": 38,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "FKcfb",
+                              "id": "1:7620",
                               "name": "Reference 2 Row 0 Text 1",
-                              "fill": "$default/foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Namespaced",
-                              "fontFamily": "JetBrains Mono",
-                              "fontSize": 10.5,
-                              "fontWeight": "normal"
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 12,
+                              "width": 110,
+                              "height": 14,
+                              "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                              "layoutGrow": 1,
+                              "text": "Namespaced",
+                              "font": ["JetBrains Mono", 400, 10.5],
+                              "variables": {"fills/0/color": "default/foreground"}
                             }
                           ]
                         },
                         {
-                          "type": "frame",
-                          "id": "BFgjg",
+                          "id": "1:7621",
                           "name": "Reference 2 Row 0 Cell 2",
+                          "type": "FRAME",
+                          "x": 400,
+                          "y": 0,
                           "width": 150,
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "height": 38,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "hq2on",
+                              "id": "1:7622",
                               "name": "Reference 2 Row 0 Text 2",
-                              "fill": "$default/foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "rst",
-                              "fontFamily": "JetBrains Mono",
-                              "fontSize": 10.5,
-                              "fontWeight": "normal"
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 12,
+                              "width": 130,
+                              "height": 14,
+                              "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                              "layoutGrow": 1,
+                              "text": "rst",
+                              "font": ["JetBrains Mono", 400, 10.5],
+                              "variables": {"fills/0/color": "default/foreground"}
                             }
                           ]
                         },
                         {
-                          "type": "frame",
-                          "id": "SIVkB",
+                          "id": "1:7623",
                           "name": "Reference 2 Row 0 Cell 3",
-                          "width": "fill_container",
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "type": "FRAME",
+                          "x": 550,
+                          "y": 0,
+                          "width": 546,
+                          "height": 38,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutGrow": 1,
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "J7E8e8",
+                              "id": "1:7624",
                               "name": "Reference 2 Row 0 Text 3",
-                              "fill": "$muted",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "One-shot restore into new or existing server.",
-                              "fontFamily": "Geist",
-                              "fontSize": 11,
-                              "fontWeight": "normal"
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 12,
+                              "width": 526,
+                              "height": 14,
+                              "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                              "layoutGrow": 1,
+                              "text": "One-shot restore into new or existing server.",
+                              "font": ["Geist", 400, 11],
+                              "variables": {"fills/0/color": "muted"}
                             }
                           ]
                         }
                       ]
                     },
                     {
-                      "type": "frame",
-                      "id": "s8ZTu",
+                      "id": "1:7625",
                       "name": "Reference 2 Row 1",
-                      "width": "fill_container",
+                      "type": "FRAME",
+                      "x": 0,
+                      "y": 70,
+                      "width": 1096,
                       "height": 38,
-                      "fill": "$surface/secondary",
-                      "stroke": "$separator/separator",
-                      "strokeWidth": {
-                        "top": 1
+                      "fills": [{"type": "SOLID", "color": "#17151A"}],
+                      "strokes": [{"type": "SOLID", "color": "#232227"}],
+                      "strokeWeight": 1,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 0,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["FIXED", "FIXED"]
                       },
-                      "strokeAlignment": "inner",
-                      "strokeLinejoin": "round",
-                      "alignItems": "center",
+                      "layoutAlignSelf": "STRETCH",
+                      "variables": {"fills/0/color": "surface/secondary", "strokes/0/color": "separator/separator"},
                       "children": [
                         {
-                          "type": "frame",
-                          "id": "U2qaI7",
+                          "id": "1:7626",
                           "name": "Reference 2 Row 1 Cell 0",
+                          "type": "FRAME",
+                          "x": 0,
+                          "y": 0,
                           "width": 270,
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "height": 38,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "linof",
+                              "id": "1:7627",
                               "name": "Reference 2 Row 1 Text 0",
-                              "fill": "$accent/soft-foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Module",
-                              "fontFamily": "JetBrains Mono",
-                              "fontSize": 10.5,
-                              "fontWeight": "500"
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 12,
+                              "width": 250,
+                              "height": 14,
+                              "fills": [{"type": "SOLID", "color": "#FF8AC4"}],
+                              "layoutGrow": 1,
+                              "text": "Module",
+                              "font": ["JetBrains Mono", 500, 10.5],
+                              "variables": {"fills/0/color": "accent/soft-foreground"}
                             }
                           ]
                         },
                         {
-                          "type": "frame",
-                          "id": "PIpaz",
+                          "id": "1:7628",
                           "name": "Reference 2 Row 1 Cell 1",
+                          "type": "FRAME",
+                          "x": 270,
+                          "y": 0,
                           "width": 130,
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "height": 38,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "GESo3",
+                              "id": "1:7629",
                               "name": "Reference 2 Row 1 Text 1",
-                              "fill": "$default/foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Cluster",
-                              "fontFamily": "JetBrains Mono",
-                              "fontSize": 10.5,
-                              "fontWeight": "normal"
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 12,
+                              "width": 110,
+                              "height": 14,
+                              "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                              "layoutGrow": 1,
+                              "text": "Cluster",
+                              "font": ["JetBrains Mono", 400, 10.5],
+                              "variables": {"fills/0/color": "default/foreground"}
                             }
                           ]
                         },
                         {
-                          "type": "frame",
-                          "id": "EPgYA",
+                          "id": "1:7630",
                           "name": "Reference 2 Row 1 Cell 2",
+                          "type": "FRAME",
+                          "x": 400,
+                          "y": 0,
                           "width": 150,
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "height": 38,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "l0p0Q",
+                              "id": "1:7631",
                               "name": "Reference 2 Row 1 Text 2",
-                              "fill": "$default/foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "mod",
-                              "fontFamily": "JetBrains Mono",
-                              "fontSize": 10.5,
-                              "fontWeight": "normal"
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 12,
+                              "width": 130,
+                              "height": 14,
+                              "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                              "layoutGrow": 1,
+                              "text": "mod",
+                              "font": ["JetBrains Mono", 400, 10.5],
+                              "variables": {"fills/0/color": "default/foreground"}
                             }
                           ]
                         },
                         {
-                          "type": "frame",
-                          "id": "jxoeD",
+                          "id": "1:7632",
                           "name": "Reference 2 Row 1 Cell 3",
-                          "width": "fill_container",
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "type": "FRAME",
+                          "x": 550,
+                          "y": 0,
+                          "width": 546,
+                          "height": 38,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutGrow": 1,
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "Sk8nR",
+                              "id": "1:7633",
                               "name": "Reference 2 Row 1 Text 3",
-                              "fill": "$muted",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Installed immutable module bundle and template owner.",
-                              "fontFamily": "Geist",
-                              "fontSize": 11,
-                              "fontWeight": "normal"
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 12,
+                              "width": 526,
+                              "height": 14,
+                              "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                              "layoutGrow": 1,
+                              "text": "Installed immutable module bundle and template owner.",
+                              "font": ["Geist", 400, 11],
+                              "variables": {"fills/0/color": "muted"}
                             }
                           ]
                         }
                       ]
                     },
                     {
-                      "type": "frame",
-                      "id": "V0lMy",
+                      "id": "1:7634",
                       "name": "Reference 2 Row 2",
-                      "width": "fill_container",
+                      "type": "FRAME",
+                      "x": 0,
+                      "y": 108,
+                      "width": 1096,
                       "height": 38,
-                      "fill": "$background/background",
-                      "stroke": "$separator/separator",
-                      "strokeWidth": {
-                        "top": 1
+                      "fills": [{"type": "SOLID", "color": "#121114"}],
+                      "strokes": [{"type": "SOLID", "color": "#232227"}],
+                      "strokeWeight": 1,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 0,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["FIXED", "FIXED"]
                       },
-                      "strokeAlignment": "inner",
-                      "strokeLinejoin": "round",
-                      "alignItems": "center",
+                      "layoutAlignSelf": "STRETCH",
+                      "variables": {"fills/0/color": "background/background", "strokes/0/color": "separator/separator"},
                       "children": [
                         {
-                          "type": "frame",
-                          "id": "RbhyM",
+                          "id": "1:7635",
                           "name": "Reference 2 Row 2 Cell 0",
+                          "type": "FRAME",
+                          "x": 0,
+                          "y": 0,
                           "width": 270,
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "height": 38,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "UCAJy",
+                              "id": "1:7636",
                               "name": "Reference 2 Row 2 Text 0",
-                              "fill": "$accent/soft-foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "ModuleSource",
-                              "fontFamily": "JetBrains Mono",
-                              "fontSize": 10.5,
-                              "fontWeight": "500"
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 12,
+                              "width": 250,
+                              "height": 14,
+                              "fills": [{"type": "SOLID", "color": "#FF8AC4"}],
+                              "layoutGrow": 1,
+                              "text": "ModuleSource",
+                              "font": ["JetBrains Mono", 500, 10.5],
+                              "variables": {"fills/0/color": "accent/soft-foreground"}
                             }
                           ]
                         },
                         {
-                          "type": "frame",
-                          "id": "dRtpZ",
+                          "id": "1:7637",
                           "name": "Reference 2 Row 2 Cell 1",
+                          "type": "FRAME",
+                          "x": 270,
+                          "y": 0,
                           "width": 130,
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "height": 38,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "X1ckR",
+                              "id": "1:7638",
                               "name": "Reference 2 Row 2 Text 1",
-                              "fill": "$default/foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Cluster",
-                              "fontFamily": "JetBrains Mono",
-                              "fontSize": 10.5,
-                              "fontWeight": "normal"
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 12,
+                              "width": 110,
+                              "height": 14,
+                              "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                              "layoutGrow": 1,
+                              "text": "Cluster",
+                              "font": ["JetBrains Mono", 400, 10.5],
+                              "variables": {"fills/0/color": "default/foreground"}
                             }
                           ]
                         },
                         {
-                          "type": "frame",
-                          "id": "lsiKs",
+                          "id": "1:7639",
                           "name": "Reference 2 Row 2 Cell 2",
+                          "type": "FRAME",
+                          "x": 400,
+                          "y": 0,
                           "width": 150,
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "height": 38,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "WTZGW",
+                              "id": "1:7640",
                               "name": "Reference 2 Row 2 Text 2",
-                              "fill": "$default/foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "msrc",
-                              "fontFamily": "JetBrains Mono",
-                              "fontSize": 10.5,
-                              "fontWeight": "normal"
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 12,
+                              "width": 130,
+                              "height": 14,
+                              "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                              "layoutGrow": 1,
+                              "text": "msrc",
+                              "font": ["JetBrains Mono", 400, 10.5],
+                              "variables": {"fills/0/color": "default/foreground"}
                             }
                           ]
                         },
                         {
-                          "type": "frame",
-                          "id": "rMKxf",
+                          "id": "1:7641",
                           "name": "Reference 2 Row 2 Cell 3",
-                          "width": "fill_container",
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "type": "FRAME",
+                          "x": 550,
+                          "y": 0,
+                          "width": 546,
+                          "height": 38,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutGrow": 1,
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "rl2En",
+                              "id": "1:7642",
                               "name": "Reference 2 Row 2 Text 3",
-                              "fill": "$muted",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Registry, Git, HTTP, local, or upload source.",
-                              "fontFamily": "Geist",
-                              "fontSize": 11,
-                              "fontWeight": "normal"
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 12,
+                              "width": 526,
+                              "height": 14,
+                              "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                              "layoutGrow": 1,
+                              "text": "Registry, Git, HTTP, local, or upload source.",
+                              "font": ["Geist", 400, 11],
+                              "variables": {"fills/0/color": "muted"}
                             }
                           ]
                         }
                       ]
                     },
                     {
-                      "type": "frame",
-                      "id": "rQjm7",
+                      "id": "1:7643",
                       "name": "Reference 2 Row 3",
-                      "width": "fill_container",
+                      "type": "FRAME",
+                      "x": 0,
+                      "y": 146,
+                      "width": 1096,
                       "height": 38,
-                      "fill": "$surface/secondary",
-                      "stroke": "$separator/separator",
-                      "strokeWidth": {
-                        "top": 1
+                      "fills": [{"type": "SOLID", "color": "#17151A"}],
+                      "strokes": [{"type": "SOLID", "color": "#232227"}],
+                      "strokeWeight": 1,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 0,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["FIXED", "FIXED"]
                       },
-                      "strokeAlignment": "inner",
-                      "strokeLinejoin": "round",
-                      "alignItems": "center",
+                      "layoutAlignSelf": "STRETCH",
+                      "variables": {"fills/0/color": "surface/secondary", "strokes/0/color": "separator/separator"},
                       "children": [
                         {
-                          "type": "frame",
-                          "id": "FxkT4",
+                          "id": "1:7644",
                           "name": "Reference 2 Row 3 Cell 0",
+                          "type": "FRAME",
+                          "x": 0,
+                          "y": 0,
                           "width": 270,
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "height": 38,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "kxl8t",
+                              "id": "1:7645",
                               "name": "Reference 2 Row 3 Text 0",
-                              "fill": "$accent/soft-foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Cluster",
-                              "fontFamily": "JetBrains Mono",
-                              "fontSize": 10.5,
-                              "fontWeight": "500"
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 12,
+                              "width": 250,
+                              "height": 14,
+                              "fills": [{"type": "SOLID", "color": "#FF8AC4"}],
+                              "layoutGrow": 1,
+                              "text": "Cluster",
+                              "font": ["JetBrains Mono", 500, 10.5],
+                              "variables": {"fills/0/color": "accent/soft-foreground"}
                             }
                           ]
                         },
                         {
-                          "type": "frame",
-                          "id": "bNX0R",
+                          "id": "1:7646",
                           "name": "Reference 2 Row 3 Cell 1",
+                          "type": "FRAME",
+                          "x": 270,
+                          "y": 0,
                           "width": 130,
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "height": 38,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "u86iR",
+                              "id": "1:7647",
                               "name": "Reference 2 Row 3 Text 1",
-                              "fill": "$default/foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Cluster",
-                              "fontFamily": "JetBrains Mono",
-                              "fontSize": 10.5,
-                              "fontWeight": "normal"
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 12,
+                              "width": 110,
+                              "height": 14,
+                              "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                              "layoutGrow": 1,
+                              "text": "Cluster",
+                              "font": ["JetBrains Mono", 400, 10.5],
+                              "variables": {"fills/0/color": "default/foreground"}
                             }
                           ]
                         },
                         {
-                          "type": "frame",
-                          "id": "c1PRX",
+                          "id": "1:7648",
                           "name": "Reference 2 Row 3 Cell 2",
+                          "type": "FRAME",
+                          "x": 400,
+                          "y": 0,
                           "width": 150,
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "height": 38,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "gW3ST",
+                              "id": "1:7649",
                               "name": "Reference 2 Row 3 Text 2",
-                              "fill": "$default/foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "gpc",
-                              "fontFamily": "JetBrains Mono",
-                              "fontSize": 10.5,
-                              "fontWeight": "normal"
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 12,
+                              "width": 130,
+                              "height": 14,
+                              "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                              "layoutGrow": 1,
+                              "text": "gpc",
+                              "font": ["JetBrains Mono", 400, 10.5],
+                              "variables": {"fills/0/color": "default/foreground"}
                             }
                           ]
                         },
                         {
-                          "type": "frame",
-                          "id": "qSpVv",
+                          "id": "1:7650",
                           "name": "Reference 2 Row 3 Cell 3",
-                          "width": "fill_container",
-                          "height": "fill_container",
-                          "padding": [
-                            0,
-                            10
-                          ],
-                          "alignItems": "center",
+                          "type": "FRAME",
+                          "x": 550,
+                          "y": 0,
+                          "width": 546,
+                          "height": 38,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 0,
+                            "padding": [0, 10, 0, 10],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "FIXED"]
+                          },
+                          "layoutGrow": 1,
+                          "layoutAlignSelf": "STRETCH",
                           "children": [
                             {
-                              "type": "text",
-                              "id": "h5aBX",
+                              "id": "1:7651",
                               "name": "Reference 2 Row 3 Text 3",
-                              "fill": "$muted",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Registered target-cluster identity and health.",
-                              "fontFamily": "Geist",
-                              "fontSize": 11,
-                              "fontWeight": "normal"
+                              "type": "TEXT",
+                              "x": 10,
+                              "y": 12,
+                              "width": 526,
+                              "height": 14,
+                              "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                              "layoutGrow": 1,
+                              "text": "Registered target-cluster identity and health.",
+                              "font": ["Geist", 400, 11],
+                              "variables": {"fills/0/color": "muted"}
                             }
                           ]
                         }
@@ -1597,43 +2302,73 @@
               ]
             },
             {
-              "type": "frame",
-              "id": "vCTGS",
+              "id": "1:7652",
               "name": "Reference Note",
-              "width": "fill_container",
-              "fill": "#FF4FA30F",
-              "cornerRadius": "$radius/xl",
-              "stroke": "#FF4FA34D",
-              "strokeWidth": 1,
-              "strokeAlignment": "inner",
-              "gap": 9,
-              "padding": [
-                10,
-                12
-              ],
-              "alignItems": "center",
+              "type": "FRAME",
+              "x": 32,
+              "y": 677,
+              "width": 1096,
+              "height": 36,
+              "fills": [{"type": "SOLID", "color": "#FF4FA30F", "opacity": 0.06}],
+              "strokes": [{"type": "SOLID", "color": "#FF4FA34D", "opacity": 0.3}],
+              "strokeWeight": 1,
+              "cornerRadius": 12,
+              "layout": {
+                "mode": "HORIZONTAL",
+                "gap": 9,
+                "padding": [10, 12, 10, 12],
+                "primary": "MIN",
+                "counter": "CENTER",
+                "sizing": ["FIXED", "HUG"]
+              },
+              "layoutAlignSelf": "STRETCH",
+              "variables": {"cornerRadius": "radius/xl"},
               "children": [
                 {
-                  "type": "icon",
-                  "id": "h8cg0c",
+                  "id": "1:7653",
                   "name": "Reference Note Icon",
+                  "type": "FRAME",
+                  "x": 12,
+                  "y": 10.5,
                   "width": 15,
                   "height": 15,
-                  "icon": "info",
-                  "library": "lucide",
-                  "fill": "$accent/accent"
+                  "variables": {"fills/0/color": "accent/accent"},
+                  "children": [
+                    {
+                      "name": "path",
+                      "type": "VECTOR",
+                      "x": 1.25,
+                      "y": 1.25,
+                      "width": 12.5,
+                      "height": 12.5,
+                      "strokes": [{"type": "SOLID", "color": "#FF4FA3"}],
+                      "strokeWeight": 1.25
+                    },
+                    {
+                      "name": "path",
+                      "type": "VECTOR",
+                      "x": 7.5,
+                      "y": 5,
+                      "width": 0.01,
+                      "height": 5,
+                      "strokes": [{"type": "SOLID", "color": "#FF4FA3"}],
+                      "strokeWeight": 1.25
+                    }
+                  ]
                 },
                 {
-                  "type": "text",
-                  "id": "S2VvLa",
+                  "id": "1:7654",
                   "name": "Reference Note Text",
-                  "fill": "$default/foreground",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "Clients write spec and metadata; controllers own phase, conditions, observed fields, timestamps, digests, and results.",
-                  "fontFamily": "Geist",
-                  "fontSize": 12.5,
-                  "fontWeight": "normal"
+                  "type": "TEXT",
+                  "x": 36,
+                  "y": 10,
+                  "width": 1048,
+                  "height": 16,
+                  "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                  "layoutGrow": 1,
+                  "text": "Clients write spec and metadata; controllers own phase, conditions, observed fields, timestamps, digests, and results.",
+                  "font": ["Geist", 400, 12.5],
+                  "variables": {"fills/0/color": "default/foreground"}
                 }
               ]
             }

@@ -70,7 +70,7 @@ Monaco ships inside the dashboard image instead of loading from a CDN, and the d
 
 ## Develop and verify
 
-Use strict build, lint, Vitest/MSW, and the appropriate Playwright mode; UI changes cite Pencil node IDs.
+Use strict build, lint, Vitest/MSW, and the appropriate Playwright mode; UI changes cite `design.fig` screen IDs.
 
 <DocsQuickReference
   label="WEB CHECK"
@@ -110,10 +110,10 @@ See [Languages & Translations](../languages/) and the [translating guide on GitH
 
 ### Design and PRs
 
-UI changes must be designed first in `design.pen` (Pencil MCP, never edit directly) before writing React code. When submitting a PR with visual changes:
+UI changes must be designed first in `design.fig` (OpenPencil or Figma, never edit the file directly) before writing React code. When submitting a PR with visual changes:
 
 - Export the touched design nodes to `design-export/json/<id>.json` and `design-export/screenshots/<id>.png` (automated during design export).
-- Cite the Pencil node ID in your PR description (e.g., "Implements design node `ZwM1N` (Web Dashboard Development…)").
+- Cite the `design.fig` screen ID in your PR description (e.g., "Implements design node `ZwM1N` (Web Dashboard Development…)").
 - Reference the screenshot in the PR for visual comparison.
 
 This ensures the design source remains canonical and reviewers can compare intent to implementation without re-opening the design tool.

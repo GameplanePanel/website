@@ -1,171 +1,262 @@
 {
-  "type": "frame",
-  "id": "Qczsa",
+  "file": "Qczsa",
+  "id": "1:8",
+  "name": "Nav",
+  "type": "COMPONENT",
   "x": 0,
   "y": -1432,
-  "name": "Nav",
-  "reusable": true,
   "width": 1440,
   "height": 72,
-  "fill": "$background/background",
-  "stroke": "$border/border",
-  "strokeWidth": {
-    "bottom": 1
+  "fills": [{"type": "SOLID", "color": "#FFFFFF"}],
+  "strokes": [{"type": "SOLID", "color": "#EFC3D6"}],
+  "strokeWeight": 1,
+  "layout": {
+    "mode": "HORIZONTAL",
+    "gap": 0,
+    "padding": [0, 32, 0, 32],
+    "primary": "SPACE_BETWEEN",
+    "counter": "CENTER",
+    "sizing": ["FIXED", "FIXED"]
   },
-  "strokeAlignment": "inner",
-  "strokeLinejoin": "round",
-  "padding": [
-    0,
-    32
-  ],
-  "justifyContent": "space_between",
-  "alignItems": "center",
+  "variables": {"fills/0/color": "background/background", "strokes/0/color": "border/border"},
   "children": [
     {
-      "type": "frame",
-      "id": "iacvn",
+      "id": "1:13",
       "name": "navLeft",
-      "gap": 12,
-      "alignItems": "center",
+      "type": "FRAME",
+      "x": 32,
+      "y": 22,
+      "width": 236,
+      "height": 28,
+      "layout": {
+        "mode": "HORIZONTAL",
+        "gap": 12,
+        "padding": [0, 0, 0, 0],
+        "primary": "MIN",
+        "counter": "CENTER",
+        "sizing": ["HUG", "HUG"]
+      },
       "children": [
         {
-          "type": "frame",
-          "id": "F1PntV",
+          "id": "1:14",
           "name": "logoMark",
+          "type": "FRAME",
+          "x": 0,
+          "y": 0,
           "width": 28,
           "height": 28,
-          "fill": {
-            "type": "image",
-            "enabled": true,
-            "url": "design-assets/gameplane-icon.png",
-            "mode": "cover"
+          "cornerRadius": 6,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "gap": 0,
+            "padding": [0, 0, 0, 0],
+            "primary": "CENTER",
+            "counter": "CENTER",
+            "sizing": ["FIXED", "FIXED"]
           },
-          "cornerRadius": "$radius/md",
-          "justifyContent": "center",
-          "alignItems": "center"
+          "variables": {"cornerRadius": "radius/md"}
         },
         {
-          "type": "text",
-          "id": "A7xCZ",
+          "id": "1:15",
           "name": "wordmark",
-          "fill": "$foreground/foreground",
-          "content": "gameplane",
-          "fontFamily": "$typography/font-mono",
-          "fontSize": 18,
-          "fontWeight": "600"
+          "type": "TEXT",
+          "x": 40,
+          "y": 2,
+          "width": 98,
+          "height": 24,
+          "fills": [{"type": "SOLID", "color": "#2A0F1E"}],
+          "text": "gameplane",
+          "font": ["JetBrains Mono", 600, 18],
+          "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "foreground/foreground"}
         },
         {
-          "id": "Y4gJBd",
-          "type": "ref",
-          "ref": "X4Xyl",
+          "id": "1:9",
           "name": "betaBadge",
-          "descendants": {
-            "W2qoN": {
-              "content": "Pre-v1"
-            }
-          }
+          "type": "INSTANCE",
+          "x": 150,
+          "y": 0,
+          "width": 86,
+          "height": 28,
+          "component": "Badge/Outline",
+          "componentId": "1:3",
+          "fills": [{"type": "SOLID", "color": "#FFFFFF"}],
+          "cornerRadius": 16,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "gap": 8,
+            "padding": [6, 14, 6, 14],
+            "primary": "MIN",
+            "counter": "CENTER",
+            "sizing": ["HUG", "HUG"]
+          },
+          "variables": {"cornerRadius": "radius/2xl", "fills/0/color": "accent/soft"},
+          "texts": ["Pre-v1"]
         }
       ]
     },
     {
-      "type": "frame",
-      "id": "boCTz",
+      "id": "1:16",
       "name": "navCenter",
-      "gap": 24,
-      "alignItems": "center",
+      "type": "FRAME",
+      "x": 595.5,
+      "y": 27,
+      "width": 367,
+      "height": 18,
+      "layout": {
+        "mode": "HORIZONTAL",
+        "gap": 24,
+        "padding": [0, 0, 0, 0],
+        "primary": "MIN",
+        "counter": "CENTER",
+        "sizing": ["HUG", "HUG"]
+      },
       "children": [
         {
-          "type": "text",
-          "id": "M82O57",
+          "id": "1:17",
           "name": "Features",
-          "fill": "$muted",
-          "content": "Features",
-          "fontFamily": "$typography/font-mono",
-          "fontSize": 14,
-          "fontWeight": "500"
+          "type": "TEXT",
+          "x": 0,
+          "y": 0,
+          "width": 68,
+          "height": 18,
+          "fills": [{"type": "SOLID", "color": "#6E5262"}],
+          "text": "Features",
+          "font": ["JetBrains Mono", 500, 14],
+          "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "muted"}
         },
         {
-          "type": "text",
-          "id": "PHeIf",
+          "id": "1:18",
           "name": "Games",
-          "fill": "$muted",
-          "content": "Games",
-          "fontFamily": "$typography/font-mono",
-          "fontSize": 14,
-          "fontWeight": "500"
+          "type": "TEXT",
+          "x": 92,
+          "y": 0,
+          "width": 42,
+          "height": 18,
+          "fills": [{"type": "SOLID", "color": "#6E5262"}],
+          "text": "Games",
+          "font": ["JetBrains Mono", 500, 14],
+          "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "muted"}
         },
         {
-          "type": "text",
-          "id": "z4Rhu",
+          "id": "1:19",
           "name": "Compare",
-          "fill": "$muted",
-          "content": "Compare",
-          "fontFamily": "$typography/font-mono",
-          "fontSize": 14,
-          "fontWeight": "500"
+          "type": "TEXT",
+          "x": 158,
+          "y": 0,
+          "width": 59,
+          "height": 18,
+          "fills": [{"type": "SOLID", "color": "#6E5262"}],
+          "text": "Compare",
+          "font": ["JetBrains Mono", 500, 14],
+          "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "muted"}
         },
         {
-          "type": "text",
-          "id": "Mf13I",
+          "id": "1:20",
           "name": "Showcase",
-          "fill": "$muted",
-          "content": "Showcase",
-          "fontFamily": "$typography/font-mono",
-          "fontSize": 14,
-          "fontWeight": "500"
+          "type": "TEXT",
+          "x": 241,
+          "y": 0,
+          "width": 68,
+          "height": 18,
+          "fills": [{"type": "SOLID", "color": "#6E5262"}],
+          "text": "Showcase",
+          "font": ["JetBrains Mono", 500, 14],
+          "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "muted"}
         },
         {
-          "type": "text",
-          "id": "mkfFO",
+          "id": "1:21",
           "name": "Docs",
-          "fill": "$muted",
-          "content": "Docs",
-          "fontFamily": "$typography/font-mono",
-          "fontSize": 14,
-          "fontWeight": "500"
+          "type": "TEXT",
+          "x": 333,
+          "y": 0,
+          "width": 34,
+          "height": 18,
+          "fills": [{"type": "SOLID", "color": "#6E5262"}],
+          "text": "Docs",
+          "font": ["JetBrains Mono", 500, 14],
+          "variables": {"fontFamily": "typography/font-mono", "fills/0/color": "muted"}
         }
       ]
     },
     {
-      "type": "frame",
-      "id": "sXDou",
+      "id": "1:22",
       "name": "navRight",
-      "gap": 12,
-      "alignItems": "center",
+      "type": "FRAME",
+      "x": 1290,
+      "y": 16,
+      "width": 118,
+      "height": 40,
+      "layout": {
+        "mode": "HORIZONTAL",
+        "gap": 12,
+        "padding": [0, 0, 0, 0],
+        "primary": "MIN",
+        "counter": "CENTER",
+        "sizing": ["HUG", "HUG"]
+      },
       "children": [
         {
-          "id": "XqCoF",
-          "type": "ref",
-          "ref": "x8L7t",
+          "id": "1:23",
           "name": "githubBtn",
-          "descendants": {
-            "L2GjX": {
-              "type": "icon",
-              "id": "A4STc",
+          "type": "FRAME",
+          "x": 0,
+          "y": 0,
+          "width": 40,
+          "height": 40,
+          "strokes": [{"type": "SOLID", "color": "#DEDEE0"}],
+          "strokeWeight": 1,
+          "cornerRadius": 24,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "gap": 0,
+            "padding": [0, 0, 0, 0],
+            "primary": "CENTER",
+            "counter": "CENTER",
+            "sizing": ["FIXED", "FIXED"]
+          },
+          "variables": {"cornerRadius": "radius/3xl", "strokes/0/color": "border"},
+          "children": [
+            {
+              "id": "1:10",
+              "name": "icon",
+              "type": "INSTANCE",
+              "x": 10,
+              "y": 10,
               "width": 20,
               "height": 20,
-              "icon": "github",
-              "library": "lucide",
-              "fill": "$foreground/foreground"
+              "component": "lucide/github/20x20",
+              "variables": {"fills/0/color": "foreground/foreground"}
             }
-          }
+          ]
         },
         {
-          "id": "MEIq1",
-          "type": "ref",
-          "ref": "K0umgv",
+          "id": "1:11",
           "name": "demoBtn",
-          "fill": "$default/default",
-          "descendants": {
-            "B8F3q": {
-              "enabled": false
-            },
-            "noFxJ": {
-              "content": "Demo",
-              "fill": "$default/foreground",
-              "fontFamily": "$typography/font-mono"
-            }
-          }
+          "type": "INSTANCE",
+          "x": 52,
+          "y": 2,
+          "width": 66,
+          "height": 36,
+          "component": "Button/Secondary/MD",
+          "componentId": "1:8583",
+          "fills": [{"type": "SOLID", "color": "#F6DCE7"}],
+          "cornerRadius": 24,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "gap": 8,
+            "padding": [8, 16, 8, 16],
+            "primary": "CENTER",
+            "counter": "CENTER",
+            "sizing": ["HUG", "FIXED"]
+          },
+          "variables": {
+            "itemSpacing": "spacing/2",
+            "cornerRadius": "radius/3xl",
+            "paddingRight": "spacing/4",
+            "paddingLeft": "spacing/4",
+            "fills/0/color": "default/default"
+          },
+          "texts": ["Demo"]
         }
       ]
     }

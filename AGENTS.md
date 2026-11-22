@@ -4,7 +4,7 @@ Public marketing + docs site for Gameplane; the `website/` submodule of `Gamepla
 
 ## House rules
 
-- **Design-first:** visual source of truth is `website.pen` in this repo (Pencil MCP only — never read/edit the file directly). Update the design first; export touched nodes to `website-export/json/<id>.json` + `website-export/screenshots/<id>.png` in the same commit. Palette follows the main app's HeroUI theme (`web/src/styles/globals.css` in the main repo).
+- **Design-first:** visual source of truth is `website.fig` in this repo, edited only through OpenPencil (desktop app, `openpencil-mcp`, or `openpencil eval -w` from a [ValgulNecron/open-pencil](https://github.com/ValgulNecron/open-pencil) `master` checkout) or Figma; never read or edit the file directly. Update the design first, then regenerate `website-export/` (one `.fig`, JSON and 2x PNG per screen, plus `screens.json` and `parts.json`) with the main repo's `hack/design/fig-export.ts` (`bun fig-export.ts <website>/website.fig <website>/website-export`) in the same commit. Palette follows the main app's HeroUI theme (`web/src/styles/globals.css` in the main repo).
 - **CI verifies:** locally only `npm run build` / `npm run check`; never run lint/tests locally. Fix what CI flags; no suppressions or loosened rules.
 - **Git:** signed commits (`git commit -s`), conventional prefixes, one logical unit each; one branch per unit of work, PR to `main`, delete branch after merge. Then bump the submodule pointer in the main repo (`git add website`).
 - **TypeScript:** strict; `no-explicit-any` and `no-floating-promises` are errors.

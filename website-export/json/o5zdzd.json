@@ -1,933 +1,1584 @@
 {
-  "type": "frame",
-  "id": "o5zdzd",
+  "file": "o5zdzd",
+  "id": "1:6220",
+  "name": "Screen/Docs — Agent & Game Protocols",
+  "type": "FRAME",
   "x": 0,
   "y": 83640,
-  "name": "Screen/Docs — Agent & Game Protocols",
-  "theme": {
-    "semantic": "dark"
-  },
-  "clip": true,
   "width": 1440,
   "height": 900,
-  "fill": "$background/background",
+  "fills": [{"type": "SOLID", "color": "#121114"}],
+  "layout": {
+    "mode": "HORIZONTAL",
+    "gap": 0,
+    "padding": [0, 0, 0, 0],
+    "primary": "MIN",
+    "counter": "MIN",
+    "sizing": ["FIXED", "FIXED"]
+  },
+  "clips": true,
+  "variables": {"fills/0/color": "background/background"},
   "children": [
     {
-      "id": "hsdtW",
-      "type": "ref",
-      "ref": "K2Rt4H",
-      "height": "fill_container",
+      "id": "1:6221",
       "name": "DocsSidebar/Expanded",
-      "width": 280
+      "type": "INSTANCE",
+      "x": 0,
+      "y": 0,
+      "width": 280,
+      "height": 900,
+      "component": "Docs/Expanded Sidebar",
+      "componentId": "1:151",
+      "fills": [{"type": "SOLID", "color": "#17151A"}],
+      "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+      "strokeWeight": 1,
+      "layout": {
+        "mode": "VERTICAL",
+        "gap": 0,
+        "padding": [0, 0, 0, 0],
+        "primary": "MIN",
+        "counter": "MIN",
+        "sizing": ["FIXED", "FIXED"]
+      },
+      "layoutAlignSelf": "STRETCH",
+      "variables": {"fills/0/color": "surface/secondary", "strokes/0/color": "border/border"},
+      "texts": [
+        "gameplane",
+        "Back to site",
+        "START HERE",
+        "Overview",
+        "Getting Started",
+        "CORE CONCEPTS",
+        "Architecture",
+        "Security",
+        "OPERATE",
+        "Servers & Config",
+        "Console & Logs",
+        "Files & Backups",
+        "Network & Automation",
+        "PLATFORM",
+        "Cluster & Storage",
+        "Users & Access",
+        "Audit & Observability",
+        "DEVELOP",
+        "Modules & Sources",
+        "API & Reference",
+        "Local Development",
+        "Component Guides",
+        "Testing & Release",
+        "REFERENCE",
+        "Upgrades",
+        "Troubleshooting",
+        "FAQ",
+        "Releases & Roadmap",
+        "Community"
+      ]
     },
     {
-      "type": "frame",
-      "id": "A2Ljhu",
+      "id": "1:6222",
       "name": "Docs Main",
-      "width": "fill_container",
-      "height": "fill_container",
-      "fill": "$background/background",
-      "layout": "vertical",
+      "type": "FRAME",
+      "x": 280,
+      "y": 0,
+      "width": 1160,
+      "height": 900,
+      "fills": [{"type": "SOLID", "color": "#121114"}],
+      "layout": {
+        "mode": "VERTICAL",
+        "gap": 0,
+        "padding": [0, 0, 0, 0],
+        "primary": "MIN",
+        "counter": "MIN",
+        "sizing": ["FIXED", "FIXED"]
+      },
+      "layoutGrow": 1,
+      "layoutAlignSelf": "STRETCH",
+      "variables": {"fills/0/color": "background/background"},
       "children": [
         {
-          "id": "C0Nznx",
-          "type": "ref",
-          "ref": "SOdlr",
+          "id": "1:6223",
           "name": "Docs Top Bar",
-          "width": "fill_container",
-          "descendants": {
-            "NImey": {
-              "content": "Develop"
-            },
-            "ikbi6": {
-              "content": "Agent & Protocols"
-            }
-          }
+          "type": "INSTANCE",
+          "x": 0,
+          "y": 0,
+          "width": 1160,
+          "height": 64,
+          "component": "Docs Top Bar",
+          "componentId": "1:239",
+          "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+          "strokeWeight": 1,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "gap": 0,
+            "padding": [0, 32, 0, 32],
+            "primary": "SPACE_BETWEEN",
+            "counter": "CENTER",
+            "sizing": ["FIXED", "FIXED"]
+          },
+          "layoutAlignSelf": "STRETCH",
+          "variables": {"strokes/0/color": "border/border"},
+          "texts": ["Docs", "/", "Develop", "/", "Agent & Protocols"]
         },
         {
-          "type": "frame",
-          "id": "BVOPq",
+          "id": "1:6224",
           "name": "Docs Article Body",
-          "clip": true,
-          "width": "fill_container",
-          "height": "fill_container",
-          "gap": 32,
-          "padding": 32,
+          "type": "FRAME",
+          "x": 0,
+          "y": 64,
+          "width": 1160,
+          "height": 836,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "gap": 32,
+            "padding": [32, 32, 32, 32],
+            "primary": "MIN",
+            "counter": "MIN",
+            "sizing": ["FIXED", "FIXED"]
+          },
+          "layoutGrow": 1,
+          "layoutAlignSelf": "STRETCH",
+          "clips": true,
           "children": [
             {
-              "type": "frame",
-              "id": "q7kNbR",
+              "id": "1:6225",
               "name": "Docs Article",
+              "type": "FRAME",
+              "x": 32,
+              "y": 32,
               "width": 780,
-              "layout": "vertical",
-              "gap": 14,
+              "height": 712,
+              "layout": {
+                "mode": "VERTICAL",
+                "gap": 14,
+                "padding": [0, 0, 0, 0],
+                "primary": "MIN",
+                "counter": "MIN",
+                "sizing": ["HUG", "FIXED"]
+              },
               "children": [
                 {
-                  "type": "text",
-                  "id": "u3hsI4",
+                  "id": "1:6226",
                   "name": "Article Eyebrow",
-                  "fill": "$accent/accent",
-                  "content": "DEVELOP",
-                  "fontFamily": "JetBrains Mono",
-                  "fontSize": 11,
-                  "fontWeight": "600",
-                  "letterSpacing": 0.8
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 0,
+                  "width": 51,
+                  "height": 15,
+                  "fills": [{"type": "SOLID", "color": "#FF4FA3"}],
+                  "text": "DEVELOP",
+                  "font": ["JetBrains Mono", 600, 11],
+                  "variables": {"fills/0/color": "accent/accent"}
                 },
                 {
-                  "type": "text",
-                  "id": "P9ZN0",
+                  "id": "1:6227",
                   "name": "Article Title",
-                  "fill": "$foreground/foreground",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "Agent and game protocols",
-                  "lineHeight": 1.1,
-                  "fontFamily": "JetBrains Mono",
-                  "fontSize": 30,
-                  "fontWeight": "700"
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 29,
+                  "width": 780,
+                  "height": 33,
+                  "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                  "layoutAlignSelf": "STRETCH",
+                  "text": "Agent and game protocols",
+                  "font": ["JetBrains Mono", 700, 30],
+                  "lineHeight": {"value": 110.00000238418579, "unit": "PERCENT"},
+                  "variables": {"fills/0/color": "foreground/foreground"}
                 },
                 {
-                  "type": "text",
-                  "id": "m4WJdY",
+                  "id": "1:6228",
                   "name": "Article Lead",
-                  "fill": "$muted",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "Extend the per-game sidecar while keeping its authenticated contract, filesystem boundary, and capabilities explicit.",
-                  "lineHeight": 1.45,
-                  "fontFamily": "Geist",
-                  "fontSize": 15,
-                  "fontWeight": "normal"
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 76,
+                  "width": 780,
+                  "height": 44,
+                  "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                  "layoutAlignSelf": "STRETCH",
+                  "text": "Extend the per-game sidecar while keeping its authenticated contract, filesystem boundary, and capabilities explicit.",
+                  "font": ["Geist", 400, 15],
+                  "lineHeight": {"value": 145.00000476837158, "unit": "PERCENT"},
+                  "variables": {"fills/0/color": "muted"}
                 },
                 {
-                  "type": "frame",
-                  "id": "CYRR9",
+                  "id": "1:6229",
                   "name": "Article Metadata",
-                  "gap": 8,
-                  "alignItems": "center",
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 134,
+                  "width": 202,
+                  "height": 17,
+                  "layout": {
+                    "mode": "HORIZONTAL",
+                    "gap": 8,
+                    "padding": [0, 0, 0, 0],
+                    "primary": "MIN",
+                    "counter": "CENTER",
+                    "sizing": ["HUG", "HUG"]
+                  },
                   "children": [
                     {
-                      "id": "d4voT",
-                      "type": "ref",
-                      "ref": "NZPtq",
+                      "id": "1:6230",
                       "name": "Meta Chip 0",
-                      "descendants": {
-                        "NLG8t": {
-                          "content": "DEVELOPER GUIDE"
-                        }
-                      }
+                      "type": "INSTANCE",
+                      "x": 0,
+                      "y": 0,
+                      "width": 110,
+                      "height": 17,
+                      "component": "Chip/Soft/Accent/SM",
+                      "componentId": "1:1583",
+                      "fills": [{"type": "SOLID", "color": "#331525"}],
+                      "cornerRadius": 16,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 2,
+                        "padding": [2, 4, 2, 4],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["HUG", "HUG"]
+                      },
+                      "variables": {"cornerRadius": "radius/2xl", "fills/0/color": "accent/soft"},
+                      "texts": ["DEVELOPER GUIDE"]
                     },
                     {
-                      "id": "C1gEVb",
-                      "type": "ref",
-                      "ref": "EbSsA",
+                      "id": "1:6231",
                       "name": "Meta Chip 1",
-                      "descendants": {
-                        "yb6zz": {
-                          "content": "v0.4"
-                        }
-                      }
+                      "type": "INSTANCE",
+                      "x": 118,
+                      "y": 0,
+                      "width": 32,
+                      "height": 17,
+                      "component": "Chip/Soft/Default/SM",
+                      "componentId": "1:1586",
+                      "fills": [{"type": "SOLID", "color": "#232128"}],
+                      "cornerRadius": 16,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 2,
+                        "padding": [2, 4, 2, 4],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["HUG", "HUG"]
+                      },
+                      "variables": {"cornerRadius": "radius/2xl", "fills/0/color": "default/default"},
+                      "texts": ["v0.4"]
                     },
                     {
-                      "id": "pzLFe",
-                      "type": "ref",
-                      "ref": "EbSsA",
+                      "id": "1:6232",
                       "name": "Meta Chip 2",
-                      "descendants": {
-                        "yb6zz": {
-                          "content": "18 MIN"
-                        }
-                      }
+                      "type": "INSTANCE",
+                      "x": 158,
+                      "y": 0,
+                      "width": 44,
+                      "height": 17,
+                      "component": "Chip/Soft/Default/SM",
+                      "componentId": "1:1586",
+                      "fills": [{"type": "SOLID", "color": "#232128"}],
+                      "cornerRadius": 16,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 2,
+                        "padding": [2, 4, 2, 4],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["HUG", "HUG"]
+                      },
+                      "variables": {"cornerRadius": "radius/2xl", "fills/0/color": "default/default"},
+                      "texts": ["18 MIN"]
                     }
                   ]
                 },
                 {
-                  "type": "frame",
-                  "id": "v1HIIm",
+                  "id": "1:6233",
                   "name": "Article Callout",
-                  "width": "fill_container",
-                  "fill": "$accent/soft",
-                  "cornerRadius": "$radius/xl",
-                  "stroke": "$border/border",
-                  "strokeWidth": 1,
-                  "strokeAlignment": "inner",
-                  "gap": 10,
-                  "padding": [
-                    10,
-                    12
-                  ],
-                  "alignItems": "center",
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 165,
+                  "width": 780,
+                  "height": 36,
+                  "fills": [{"type": "SOLID", "color": "#331525"}],
+                  "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+                  "strokeWeight": 1,
+                  "cornerRadius": 12,
+                  "layout": {
+                    "mode": "HORIZONTAL",
+                    "gap": 10,
+                    "padding": [10, 12, 10, 12],
+                    "primary": "MIN",
+                    "counter": "CENTER",
+                    "sizing": ["FIXED", "HUG"]
+                  },
+                  "layoutAlignSelf": "STRETCH",
+                  "variables": {"cornerRadius": "radius/xl", "fills/0/color": "accent/soft", "strokes/0/color": "border/border"},
                   "children": [
                     {
-                      "type": "icon",
-                      "id": "gxZbT",
+                      "id": "1:6234",
                       "name": "Article Callout Icon",
+                      "type": "FRAME",
+                      "x": 12,
+                      "y": 10,
                       "width": 16,
                       "height": 16,
-                      "icon": "gamepad-2",
-                      "library": "lucide",
-                      "fill": "$accent/soft-foreground"
+                      "variables": {"fills/0/color": "accent/soft-foreground"},
+                      "children": [
+                        {
+                          "name": "path",
+                          "type": "VECTOR",
+                          "x": 1.33,
+                          "y": 3.33,
+                          "width": 13.33,
+                          "height": 9.33,
+                          "strokes": [{"type": "SOLID", "color": "#FF8AC4"}],
+                          "strokeWeight": 1.33
+                        }
+                      ]
                     },
                     {
-                      "type": "text",
-                      "id": "T59Ajj",
+                      "id": "1:6235",
                       "name": "Article Callout Text",
-                      "fill": "$accent/soft-foreground",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "Unsupported capabilities must disappear or degrade safely—not emit a request that cannot succeed.",
-                      "fontFamily": "Geist",
-                      "fontSize": 12.5,
-                      "fontWeight": "normal"
+                      "type": "TEXT",
+                      "x": 38,
+                      "y": 10,
+                      "width": 730,
+                      "height": 16,
+                      "fills": [{"type": "SOLID", "color": "#FF8AC4"}],
+                      "layoutGrow": 1,
+                      "text": "Unsupported capabilities must disappear or degrade safely—not emit a request that cannot succeed.",
+                      "font": ["Geist", 400, 12.5],
+                      "variables": {"fills/0/color": "accent/soft-foreground"}
                     }
                   ]
                 },
                 {
-                  "type": "frame",
-                  "id": "GICiO",
+                  "id": "1:6236",
                   "name": "Guide Section 1",
-                  "width": "fill_container",
-                  "layout": "vertical",
-                  "gap": 6,
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "x39Toe",
-                      "name": "Section Title 1",
-                      "fill": "$foreground/foreground",
-                      "content": "Agent surface",
-                      "fontFamily": "JetBrains Mono",
-                      "fontSize": 17,
-                      "fontWeight": "600"
-                    },
-                    {
-                      "type": "text",
-                      "id": "J24fD",
-                      "name": "Section Body 1",
-                      "fill": "$muted",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "The sidecar serves authenticated operational endpoints with health and metrics as narrow unauthenticated exceptions.",
-                      "lineHeight": 1.45,
-                      "fontFamily": "Geist",
-                      "fontSize": 13,
-                      "fontWeight": "normal"
-                    },
-                    {
-                      "type": "frame",
-                      "id": "Z6kaZ",
-                      "name": "Section List 1",
-                      "width": "fill_container",
-                      "fill": "$surface/surface",
-                      "cornerRadius": "$radius/2xl",
-                      "stroke": "$border/border",
-                      "strokeWidth": 1,
-                      "strokeAlignment": "inner",
-                      "layout": "vertical",
-                      "gap": 5,
-                      "padding": [
-                        8,
-                        10
-                      ],
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "uh3Cl",
-                          "name": "Section 1 Item 0",
-                          "width": "fill_container",
-                          "gap": 8,
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "icon",
-                              "id": "pGJsu",
-                              "name": "Section 1 Item Icon 0",
-                              "width": 13,
-                              "height": 13,
-                              "icon": "check",
-                              "library": "lucide",
-                              "fill": "$accent/accent"
-                            },
-                            {
-                              "type": "text",
-                              "id": "W6IpAx",
-                              "name": "Section 1 Item Text 0",
-                              "fill": "$default/foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Surface includes files, logs, console, players, mods, status, actions, hooks.",
-                              "fontFamily": "Geist",
-                              "fontSize": 12.5,
-                              "fontWeight": "normal"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "frame",
-                          "id": "xVs5b",
-                          "name": "Section 1 Item 1",
-                          "width": "fill_container",
-                          "gap": 8,
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "icon",
-                              "id": "eckrn",
-                              "name": "Section 1 Item Icon 1",
-                              "width": 13,
-                              "height": 13,
-                              "icon": "check",
-                              "library": "lucide",
-                              "fill": "$accent/accent"
-                            },
-                            {
-                              "type": "text",
-                              "id": "EmNkJ",
-                              "name": "Section 1 Item Text 1",
-                              "fill": "$default/foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Production uses operator-managed mTLS; bearer is compatibility-only.",
-                              "fontFamily": "Geist",
-                              "fontSize": 12.5,
-                              "fontWeight": "normal"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "frame",
-                          "id": "oOuLg",
-                          "name": "Section 1 Item 2",
-                          "width": "fill_container",
-                          "gap": 8,
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "icon",
-                              "id": "I7Mnn8",
-                              "name": "Section 1 Item Icon 2",
-                              "width": 13,
-                              "height": 13,
-                              "icon": "check",
-                              "library": "lucide",
-                              "fill": "$accent/accent"
-                            },
-                            {
-                              "type": "text",
-                              "id": "PE1gp",
-                              "name": "Section 1 Item Text 2",
-                              "fill": "$default/foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "File operations are rooted at /data, bounded, and traversal-safe.",
-                              "fontFamily": "Geist",
-                              "fontSize": 12.5,
-                              "fontWeight": "normal"
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "JQ5LZ",
-                  "name": "Guide Section 2",
-                  "width": "fill_container",
-                  "layout": "vertical",
-                  "gap": 6,
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "Gw1qy",
-                      "name": "Section Title 2",
-                      "fill": "$foreground/foreground",
-                      "content": "Game protocols",
-                      "fontFamily": "JetBrains Mono",
-                      "fontSize": 17,
-                      "fontWeight": "600"
-                    },
-                    {
-                      "type": "text",
-                      "id": "BGIGS",
-                      "name": "Section Body 2",
-                      "fill": "$muted",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "Adapters normalize RCON, PTY, log files, moderation, status, and graceful stop across games.",
-                      "lineHeight": 1.45,
-                      "fontFamily": "Geist",
-                      "fontSize": 13,
-                      "fontWeight": "normal"
-                    },
-                    {
-                      "type": "frame",
-                      "id": "HwYlW",
-                      "name": "Section List 2",
-                      "width": "fill_container",
-                      "fill": "$surface/surface",
-                      "cornerRadius": "$radius/2xl",
-                      "stroke": "$border/border",
-                      "strokeWidth": 1,
-                      "strokeAlignment": "inner",
-                      "layout": "vertical",
-                      "gap": 5,
-                      "padding": [
-                        8,
-                        10
-                      ],
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "XbyXB",
-                          "name": "Section 2 Item 0",
-                          "width": "fill_container",
-                          "gap": 8,
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "icon",
-                              "id": "OIzLl",
-                              "name": "Section 2 Item Icon 0",
-                              "width": 13,
-                              "height": 13,
-                              "icon": "check",
-                              "library": "lucide",
-                              "fill": "$accent/accent"
-                            },
-                            {
-                              "type": "text",
-                              "id": "C4Ca8",
-                              "name": "Section 2 Item Text 0",
-                              "fill": "$default/foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Separate authoritative game logs from container stdout.",
-                              "fontFamily": "Geist",
-                              "fontSize": 12.5,
-                              "fontWeight": "normal"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "frame",
-                          "id": "FXYch",
-                          "name": "Section 2 Item 1",
-                          "width": "fill_container",
-                          "gap": 8,
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "icon",
-                              "id": "NcDFr",
-                              "name": "Section 2 Item Icon 1",
-                              "width": 13,
-                              "height": 13,
-                              "icon": "check",
-                              "library": "lucide",
-                              "fill": "$accent/accent"
-                            },
-                            {
-                              "type": "text",
-                              "id": "W4gSpJ",
-                              "name": "Section 2 Item Text 1",
-                              "fill": "$default/foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Model console mode and credentials without hard-coding secrets; a console with no password sets spec.rcon.authentication: false (v0.4.0).",
-                              "fontFamily": "Geist",
-                              "fontSize": 12.5,
-                              "fontWeight": "normal"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "frame",
-                          "id": "Tlwlg",
-                          "name": "Section 2 Item 2",
-                          "width": "fill_container",
-                          "gap": 8,
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "icon",
-                              "id": "y3pzZ",
-                              "name": "Section 2 Item Icon 2",
-                              "width": 13,
-                              "height": 13,
-                              "icon": "check",
-                              "library": "lucide",
-                              "fill": "$accent/accent"
-                            },
-                            {
-                              "type": "text",
-                              "id": "UF40z",
-                              "name": "Section 2 Item Text 2",
-                              "fill": "$default/foreground",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Capability gates hide unsupported status, players, actions, and mods.",
-                              "fontFamily": "Geist",
-                              "fontSize": 12.5,
-                              "fontWeight": "normal"
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "yRXOs",
-                  "name": "Guide Section 3",
-                  "width": "fill_container",
-                  "layout": "vertical",
-                  "gap": 6,
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "Yla3Z",
-                      "name": "Section Title 3",
-                      "fill": "$foreground/foreground",
-                      "content": "Extend safely",
-                      "fontFamily": "JetBrains Mono",
-                      "fontSize": 17,
-                      "fontWeight": "600"
-                    },
-                    {
-                      "type": "text",
-                      "id": "C7fYgE",
-                      "name": "Section Body 3",
-                      "fill": "$muted",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "Update OpenAPI, handlers, API proxy, safety libraries, and protocol tests as one wire-contract change.",
-                      "lineHeight": 1.45,
-                      "fontFamily": "Geist",
-                      "fontSize": 13,
-                      "fontWeight": "normal"
-                    },
-                    {
-                      "type": "frame",
-                      "id": "gTA3X",
-                      "name": "Quick Reference",
-                      "width": "fill_container",
-                      "fill": "$surface/tertiary",
-                      "cornerRadius": "$radius/xl",
-                      "stroke": "$border/border",
-                      "strokeWidth": 1,
-                      "strokeAlignment": "inner",
-                      "layout": "vertical",
-                      "gap": 3,
-                      "padding": 12,
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "DE3rJ",
-                          "name": "Quick Reference Label",
-                          "fill": "$accent/accent",
-                          "content": "AGENT CONTRACT",
-                          "fontFamily": "JetBrains Mono",
-                          "fontSize": 9,
-                          "fontWeight": "600",
-                          "letterSpacing": 0.6
-                        },
-                        {
-                          "type": "text",
-                          "id": "qJ1K3",
-                          "name": "Quick Reference Line 1",
-                          "fill": "$foreground/foreground",
-                          "content": "01  cd agent && go test ./...",
-                          "fontFamily": "JetBrains Mono",
-                          "fontSize": 11.5,
-                          "fontWeight": "normal"
-                        },
-                        {
-                          "type": "text",
-                          "id": "o0tGNh",
-                          "name": "Quick Reference Line 2",
-                          "fill": "$foreground/foreground",
-                          "content": "02  agent/openapi.yaml   # contract source",
-                          "fontFamily": "JetBrains Mono",
-                          "fontSize": 11.5,
-                          "fontWeight": "normal"
-                        },
-                        {
-                          "type": "text",
-                          "id": "GZfiN",
-                          "name": "Quick Reference Line 3",
-                          "fill": "$foreground/foreground",
-                          "content": "03  GET /healthz · GET /metrics · WSS /console",
-                          "fontFamily": "JetBrains Mono",
-                          "fontSize": 11.5,
-                          "fontWeight": "normal"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "y6bI0",
-                  "name": "Article Next Link",
-                  "width": "fill_container",
-                  "stroke": "$border/border",
-                  "strokeWidth": {
-                    "top": 1
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 215,
+                  "width": 780,
+                  "height": 127,
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "gap": 6,
+                    "padding": [0, 0, 0, 0],
+                    "primary": "MIN",
+                    "counter": "MIN",
+                    "sizing": ["HUG", "FIXED"]
                   },
-                  "strokeAlignment": "inner",
-                  "strokeLinejoin": "round",
-                  "padding": [
-                    10,
-                    0,
-                    0,
-                    0
-                  ],
-                  "justifyContent": "space_between",
-                  "alignItems": "center",
+                  "layoutAlignSelf": "STRETCH",
                   "children": [
                     {
-                      "type": "frame",
-                      "id": "Ndtap",
-                      "name": "Next Link Text",
-                      "layout": "vertical",
-                      "gap": 2,
+                      "id": "1:6237",
+                      "name": "Section Title 1",
+                      "type": "TEXT",
+                      "x": 0,
+                      "y": 0,
+                      "width": 133,
+                      "height": 22,
+                      "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                      "text": "Agent surface",
+                      "font": ["JetBrains Mono", 600, 17],
+                      "variables": {"fills/0/color": "foreground/foreground"}
+                    },
+                    {
+                      "id": "1:6238",
+                      "name": "Section Body 1",
+                      "type": "TEXT",
+                      "x": 0,
+                      "y": 28,
+                      "width": 780,
+                      "height": 19,
+                      "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                      "layoutAlignSelf": "STRETCH",
+                      "text": "The sidecar serves authenticated operational endpoints with health and metrics as narrow unauthenticated exceptions.",
+                      "font": ["Geist", 400, 13],
+                      "lineHeight": {"value": 145.00000476837158, "unit": "PERCENT"},
+                      "variables": {"fills/0/color": "muted"}
+                    },
+                    {
+                      "id": "1:6239",
+                      "name": "Section List 1",
+                      "type": "FRAME",
+                      "x": 0,
+                      "y": 53,
+                      "width": 780,
+                      "height": 74,
+                      "fills": [{"type": "SOLID", "color": "#1C1A20"}],
+                      "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+                      "strokeWeight": 1,
+                      "cornerRadius": 16,
+                      "layout": {
+                        "mode": "VERTICAL",
+                        "gap": 5,
+                        "padding": [8, 10, 8, 10],
+                        "primary": "MIN",
+                        "counter": "MIN",
+                        "sizing": ["HUG", "FIXED"]
+                      },
+                      "layoutAlignSelf": "STRETCH",
+                      "variables": {
+                        "cornerRadius": "radius/2xl",
+                        "fills/0/color": "surface/surface",
+                        "strokes/0/color": "border/border"
+                      },
                       "children": [
                         {
-                          "type": "text",
-                          "id": "XeEEF",
-                          "name": "Next Link Eyebrow",
-                          "fill": "$field/placeholder",
-                          "content": "NEXT GUIDE",
-                          "fontFamily": "Geist",
-                          "fontSize": 10,
-                          "fontWeight": "normal"
+                          "id": "1:6240",
+                          "name": "Section 1 Item 0",
+                          "type": "FRAME",
+                          "x": 10,
+                          "y": 8,
+                          "width": 760,
+                          "height": 16,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 8,
+                            "padding": [0, 0, 0, 0],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "HUG"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
+                          "children": [
+                            {
+                              "id": "1:6241",
+                              "name": "Section 1 Item Icon 0",
+                              "type": "FRAME",
+                              "x": 0,
+                              "y": 1.5,
+                              "width": 13,
+                              "height": 13,
+                              "variables": {"fills/0/color": "accent/accent"},
+                              "children": [
+                                {
+                                  "name": "path",
+                                  "type": "VECTOR",
+                                  "x": 2.17,
+                                  "y": 3.25,
+                                  "width": 8.67,
+                                  "height": 5.96,
+                                  "strokes": [{"type": "SOLID", "color": "#FF4FA3"}],
+                                  "strokeWeight": 1.08
+                                }
+                              ]
+                            },
+                            {
+                              "id": "1:6242",
+                              "name": "Section 1 Item Text 0",
+                              "type": "TEXT",
+                              "x": 21,
+                              "y": 0,
+                              "width": 739,
+                              "height": 16,
+                              "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                              "layoutGrow": 1,
+                              "text": "Surface includes files, logs, console, players, mods, status, actions, hooks.",
+                              "font": ["Geist", 400, 12.5],
+                              "variables": {"fills/0/color": "default/foreground"}
+                            }
+                          ]
                         },
                         {
-                          "type": "text",
-                          "id": "xaLIi",
+                          "id": "1:6243",
+                          "name": "Section 1 Item 1",
+                          "type": "FRAME",
+                          "x": 10,
+                          "y": 29,
+                          "width": 760,
+                          "height": 16,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 8,
+                            "padding": [0, 0, 0, 0],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "HUG"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
+                          "children": [
+                            {
+                              "id": "1:6244",
+                              "name": "Section 1 Item Icon 1",
+                              "type": "FRAME",
+                              "x": 0,
+                              "y": 1.5,
+                              "width": 13,
+                              "height": 13,
+                              "variables": {"fills/0/color": "accent/accent"},
+                              "children": [
+                                {
+                                  "name": "path",
+                                  "type": "VECTOR",
+                                  "x": 2.17,
+                                  "y": 3.25,
+                                  "width": 8.67,
+                                  "height": 5.96,
+                                  "strokes": [{"type": "SOLID", "color": "#FF4FA3"}],
+                                  "strokeWeight": 1.08
+                                }
+                              ]
+                            },
+                            {
+                              "id": "1:6245",
+                              "name": "Section 1 Item Text 1",
+                              "type": "TEXT",
+                              "x": 21,
+                              "y": 0,
+                              "width": 739,
+                              "height": 16,
+                              "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                              "layoutGrow": 1,
+                              "text": "Production uses operator-managed mTLS; bearer is compatibility-only.",
+                              "font": ["Geist", 400, 12.5],
+                              "variables": {"fills/0/color": "default/foreground"}
+                            }
+                          ]
+                        },
+                        {
+                          "id": "1:6246",
+                          "name": "Section 1 Item 2",
+                          "type": "FRAME",
+                          "x": 10,
+                          "y": 50,
+                          "width": 760,
+                          "height": 16,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 8,
+                            "padding": [0, 0, 0, 0],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "HUG"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
+                          "children": [
+                            {
+                              "id": "1:6247",
+                              "name": "Section 1 Item Icon 2",
+                              "type": "FRAME",
+                              "x": 0,
+                              "y": 1.5,
+                              "width": 13,
+                              "height": 13,
+                              "variables": {"fills/0/color": "accent/accent"},
+                              "children": [
+                                {
+                                  "name": "path",
+                                  "type": "VECTOR",
+                                  "x": 2.17,
+                                  "y": 3.25,
+                                  "width": 8.67,
+                                  "height": 5.96,
+                                  "strokes": [{"type": "SOLID", "color": "#FF4FA3"}],
+                                  "strokeWeight": 1.08
+                                }
+                              ]
+                            },
+                            {
+                              "id": "1:6248",
+                              "name": "Section 1 Item Text 2",
+                              "type": "TEXT",
+                              "x": 21,
+                              "y": 0,
+                              "width": 739,
+                              "height": 16,
+                              "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                              "layoutGrow": 1,
+                              "text": "File operations are rooted at /data, bounded, and traversal-safe.",
+                              "font": ["Geist", 400, 12.5],
+                              "variables": {"fills/0/color": "default/foreground"}
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "1:6249",
+                  "name": "Guide Section 2",
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 356,
+                  "width": 780,
+                  "height": 143,
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "gap": 6,
+                    "padding": [0, 0, 0, 0],
+                    "primary": "MIN",
+                    "counter": "MIN",
+                    "sizing": ["HUG", "FIXED"]
+                  },
+                  "layoutAlignSelf": "STRETCH",
+                  "children": [
+                    {
+                      "id": "1:6250",
+                      "name": "Section Title 2",
+                      "type": "TEXT",
+                      "x": 0,
+                      "y": 0,
+                      "width": 143,
+                      "height": 22,
+                      "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                      "text": "Game protocols",
+                      "font": ["JetBrains Mono", 600, 17],
+                      "variables": {"fills/0/color": "foreground/foreground"}
+                    },
+                    {
+                      "id": "1:6251",
+                      "name": "Section Body 2",
+                      "type": "TEXT",
+                      "x": 0,
+                      "y": 28,
+                      "width": 780,
+                      "height": 19,
+                      "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                      "layoutAlignSelf": "STRETCH",
+                      "text": "Adapters normalize RCON, PTY, log files, moderation, status, and graceful stop across games.",
+                      "font": ["Geist", 400, 13],
+                      "lineHeight": {"value": 145.00000476837158, "unit": "PERCENT"},
+                      "variables": {"fills/0/color": "muted"}
+                    },
+                    {
+                      "id": "1:6252",
+                      "name": "Section List 2",
+                      "type": "FRAME",
+                      "x": 0,
+                      "y": 53,
+                      "width": 780,
+                      "height": 90,
+                      "fills": [{"type": "SOLID", "color": "#1C1A20"}],
+                      "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+                      "strokeWeight": 1,
+                      "cornerRadius": 16,
+                      "layout": {
+                        "mode": "VERTICAL",
+                        "gap": 5,
+                        "padding": [8, 10, 8, 10],
+                        "primary": "MIN",
+                        "counter": "MIN",
+                        "sizing": ["HUG", "FIXED"]
+                      },
+                      "layoutAlignSelf": "STRETCH",
+                      "variables": {
+                        "cornerRadius": "radius/2xl",
+                        "fills/0/color": "surface/surface",
+                        "strokes/0/color": "border/border"
+                      },
+                      "children": [
+                        {
+                          "id": "1:6253",
+                          "name": "Section 2 Item 0",
+                          "type": "FRAME",
+                          "x": 10,
+                          "y": 8,
+                          "width": 760,
+                          "height": 16,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 8,
+                            "padding": [0, 0, 0, 0],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "HUG"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
+                          "children": [
+                            {
+                              "id": "1:6254",
+                              "name": "Section 2 Item Icon 0",
+                              "type": "FRAME",
+                              "x": 0,
+                              "y": 1.5,
+                              "width": 13,
+                              "height": 13,
+                              "variables": {"fills/0/color": "accent/accent"},
+                              "children": [
+                                {
+                                  "name": "path",
+                                  "type": "VECTOR",
+                                  "x": 2.17,
+                                  "y": 3.25,
+                                  "width": 8.67,
+                                  "height": 5.96,
+                                  "strokes": [{"type": "SOLID", "color": "#FF4FA3"}],
+                                  "strokeWeight": 1.08
+                                }
+                              ]
+                            },
+                            {
+                              "id": "1:6255",
+                              "name": "Section 2 Item Text 0",
+                              "type": "TEXT",
+                              "x": 21,
+                              "y": 0,
+                              "width": 739,
+                              "height": 16,
+                              "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                              "layoutGrow": 1,
+                              "text": "Separate authoritative game logs from container stdout.",
+                              "font": ["Geist", 400, 12.5],
+                              "variables": {"fills/0/color": "default/foreground"}
+                            }
+                          ]
+                        },
+                        {
+                          "id": "1:6256",
+                          "name": "Section 2 Item 1",
+                          "type": "FRAME",
+                          "x": 10,
+                          "y": 29,
+                          "width": 760,
+                          "height": 32,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 8,
+                            "padding": [0, 0, 0, 0],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "HUG"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
+                          "children": [
+                            {
+                              "id": "1:6257",
+                              "name": "Section 2 Item Icon 1",
+                              "type": "FRAME",
+                              "x": 0,
+                              "y": 9.5,
+                              "width": 13,
+                              "height": 13,
+                              "variables": {"fills/0/color": "accent/accent"},
+                              "children": [
+                                {
+                                  "name": "path",
+                                  "type": "VECTOR",
+                                  "x": 2.17,
+                                  "y": 3.25,
+                                  "width": 8.67,
+                                  "height": 5.96,
+                                  "strokes": [{"type": "SOLID", "color": "#FF4FA3"}],
+                                  "strokeWeight": 1.08
+                                }
+                              ]
+                            },
+                            {
+                              "id": "1:6258",
+                              "name": "Section 2 Item Text 1",
+                              "type": "TEXT",
+                              "x": 21,
+                              "y": 0,
+                              "width": 739,
+                              "height": 32,
+                              "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                              "layoutGrow": 1,
+                              "text": "Model console mode and credentials without hard-coding secrets; a console with no password sets spec.rcon.authentication: false (v0.4.0).",
+                              "font": ["Geist", 400, 12.5],
+                              "variables": {"fills/0/color": "default/foreground"}
+                            }
+                          ]
+                        },
+                        {
+                          "id": "1:6259",
+                          "name": "Section 2 Item 2",
+                          "type": "FRAME",
+                          "x": 10,
+                          "y": 66,
+                          "width": 760,
+                          "height": 16,
+                          "layout": {
+                            "mode": "HORIZONTAL",
+                            "gap": 8,
+                            "padding": [0, 0, 0, 0],
+                            "primary": "MIN",
+                            "counter": "CENTER",
+                            "sizing": ["FIXED", "HUG"]
+                          },
+                          "layoutAlignSelf": "STRETCH",
+                          "children": [
+                            {
+                              "id": "1:6260",
+                              "name": "Section 2 Item Icon 2",
+                              "type": "FRAME",
+                              "x": 0,
+                              "y": 1.5,
+                              "width": 13,
+                              "height": 13,
+                              "variables": {"fills/0/color": "accent/accent"},
+                              "children": [
+                                {
+                                  "name": "path",
+                                  "type": "VECTOR",
+                                  "x": 2.17,
+                                  "y": 3.25,
+                                  "width": 8.67,
+                                  "height": 5.96,
+                                  "strokes": [{"type": "SOLID", "color": "#FF4FA3"}],
+                                  "strokeWeight": 1.08
+                                }
+                              ]
+                            },
+                            {
+                              "id": "1:6261",
+                              "name": "Section 2 Item Text 2",
+                              "type": "TEXT",
+                              "x": 21,
+                              "y": 0,
+                              "width": 739,
+                              "height": 16,
+                              "fills": [{"type": "SOLID", "color": "#EDE9F0"}],
+                              "layoutGrow": 1,
+                              "text": "Capability gates hide unsupported status, players, actions, and mods.",
+                              "font": ["Geist", 400, 12.5],
+                              "variables": {"fills/0/color": "default/foreground"}
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "1:6262",
+                  "name": "Guide Section 3",
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 513,
+                  "width": 780,
+                  "height": 143,
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "gap": 6,
+                    "padding": [0, 0, 0, 0],
+                    "primary": "MIN",
+                    "counter": "MIN",
+                    "sizing": ["HUG", "FIXED"]
+                  },
+                  "layoutAlignSelf": "STRETCH",
+                  "children": [
+                    {
+                      "id": "1:6263",
+                      "name": "Section Title 3",
+                      "type": "TEXT",
+                      "x": 0,
+                      "y": 0,
+                      "width": 133,
+                      "height": 22,
+                      "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                      "text": "Extend safely",
+                      "font": ["JetBrains Mono", 600, 17],
+                      "variables": {"fills/0/color": "foreground/foreground"}
+                    },
+                    {
+                      "id": "1:6264",
+                      "name": "Section Body 3",
+                      "type": "TEXT",
+                      "x": 0,
+                      "y": 28,
+                      "width": 780,
+                      "height": 19,
+                      "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                      "layoutAlignSelf": "STRETCH",
+                      "text": "Update OpenAPI, handlers, API proxy, safety libraries, and protocol tests as one wire-contract change.",
+                      "font": ["Geist", 400, 13],
+                      "lineHeight": {"value": 145.00000476837158, "unit": "PERCENT"},
+                      "variables": {"fills/0/color": "muted"}
+                    },
+                    {
+                      "id": "1:6265",
+                      "name": "Quick Reference",
+                      "type": "FRAME",
+                      "x": 0,
+                      "y": 53,
+                      "width": 780,
+                      "height": 90,
+                      "fills": [{"type": "SOLID", "color": "#141317"}],
+                      "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+                      "strokeWeight": 1,
+                      "cornerRadius": 12,
+                      "layout": {
+                        "mode": "VERTICAL",
+                        "gap": 3,
+                        "padding": [12, 12, 12, 12],
+                        "primary": "MIN",
+                        "counter": "MIN",
+                        "sizing": ["HUG", "FIXED"]
+                      },
+                      "layoutAlignSelf": "STRETCH",
+                      "variables": {
+                        "cornerRadius": "radius/xl",
+                        "fills/0/color": "surface/tertiary",
+                        "strokes/0/color": "border/border"
+                      },
+                      "children": [
+                        {
+                          "id": "1:6266",
+                          "name": "Quick Reference Label",
+                          "type": "TEXT",
+                          "x": 12,
+                          "y": 12,
+                          "width": 84,
+                          "height": 12,
+                          "fills": [{"type": "SOLID", "color": "#FF4FA3"}],
+                          "text": "AGENT CONTRACT",
+                          "font": ["JetBrains Mono", 600, 9],
+                          "variables": {"fills/0/color": "accent/accent"}
+                        },
+                        {
+                          "id": "1:6267",
+                          "name": "Quick Reference Line 1",
+                          "type": "TEXT",
+                          "x": 12,
+                          "y": 27,
+                          "width": 201,
+                          "height": 15,
+                          "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                          "text": "01  cd agent && go test ./...",
+                          "font": ["JetBrains Mono", 400, 11.5],
+                          "variables": {"fills/0/color": "foreground/foreground"}
+                        },
+                        {
+                          "id": "1:6268",
+                          "name": "Quick Reference Line 2",
+                          "type": "TEXT",
+                          "x": 12,
+                          "y": 45,
+                          "width": 290,
+                          "height": 15,
+                          "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                          "text": "02  agent/openapi.yaml   # contract source",
+                          "font": ["JetBrains Mono", 400, 11.5],
+                          "variables": {"fills/0/color": "foreground/foreground"}
+                        },
+                        {
+                          "id": "1:6269",
+                          "name": "Quick Reference Line 3",
+                          "type": "TEXT",
+                          "x": 12,
+                          "y": 63,
+                          "width": 318,
+                          "height": 15,
+                          "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                          "text": "03  GET /healthz · GET /metrics · WSS /console",
+                          "font": ["JetBrains Mono", 400, 11.5],
+                          "variables": {"fills/0/color": "foreground/foreground"}
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "1:6270",
+                  "name": "Article Next Link",
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 670,
+                  "width": 780,
+                  "height": 42,
+                  "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+                  "strokeWeight": 1,
+                  "layout": {
+                    "mode": "HORIZONTAL",
+                    "gap": 0,
+                    "padding": [10, 0, 0, 0],
+                    "primary": "SPACE_BETWEEN",
+                    "counter": "CENTER",
+                    "sizing": ["FIXED", "HUG"]
+                  },
+                  "layoutAlignSelf": "STRETCH",
+                  "variables": {"strokes/0/color": "border/border"},
+                  "children": [
+                    {
+                      "id": "1:6271",
+                      "name": "Next Link Text",
+                      "type": "FRAME",
+                      "x": 0,
+                      "y": 10,
+                      "width": 180,
+                      "height": 32,
+                      "layout": {
+                        "mode": "VERTICAL",
+                        "gap": 2,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "MIN",
+                        "sizing": ["HUG", "HUG"]
+                      },
+                      "children": [
+                        {
+                          "id": "1:6272",
+                          "name": "Next Link Eyebrow",
+                          "type": "TEXT",
+                          "x": 0,
+                          "y": 0,
+                          "width": 57,
+                          "height": 13,
+                          "fills": [{"type": "SOLID", "color": "#7B7584"}],
+                          "text": "NEXT GUIDE",
+                          "font": ["Geist", 400, 10],
+                          "variables": {"fills/0/color": "field/placeholder"}
+                        },
+                        {
+                          "id": "1:6273",
                           "name": "Next Link Title",
-                          "fill": "$foreground/foreground",
-                          "content": "Database and migrations",
-                          "fontFamily": "JetBrains Mono",
-                          "fontSize": 13,
-                          "fontWeight": "500"
+                          "type": "TEXT",
+                          "x": 0,
+                          "y": 15,
+                          "width": 180,
+                          "height": 17,
+                          "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                          "text": "Database and migrations",
+                          "font": ["JetBrains Mono", 500, 13],
+                          "variables": {"fills/0/color": "foreground/foreground"}
                         }
                       ]
                     },
                     {
-                      "type": "icon",
-                      "id": "kN8Nv",
+                      "id": "1:6274",
                       "name": "Next Link Icon",
+                      "type": "FRAME",
+                      "x": 765,
+                      "y": 18.5,
                       "width": 15,
                       "height": 15,
-                      "icon": "arrow-right",
-                      "library": "lucide",
-                      "fill": "$muted"
+                      "variables": {"fills/0/color": "muted"},
+                      "children": [
+                        {
+                          "name": "path",
+                          "type": "VECTOR",
+                          "x": 3.13,
+                          "y": 3.13,
+                          "width": 8.75,
+                          "height": 8.75,
+                          "strokes": [{"type": "SOLID", "color": "#9E98A6"}],
+                          "strokeWeight": 1.25
+                        }
+                      ]
                     }
                   ]
                 }
               ]
             },
             {
-              "type": "frame",
-              "id": "Rx5ww",
+              "id": "1:6275",
               "name": "Docs Page Aside",
+              "type": "FRAME",
+              "x": 844,
+              "y": 32,
               "width": 250,
-              "layout": "vertical",
-              "gap": 16,
+              "height": 353,
+              "layout": {
+                "mode": "VERTICAL",
+                "gap": 16,
+                "padding": [0, 0, 0, 0],
+                "primary": "MIN",
+                "counter": "MIN",
+                "sizing": ["HUG", "FIXED"]
+              },
               "children": [
                 {
-                  "type": "frame",
-                  "id": "Xkcan",
+                  "id": "1:6276",
                   "name": "Docs Table of Contents",
-                  "width": "fill_container",
-                  "fill": "$surface/secondary",
-                  "cornerRadius": "$radius/2xl",
-                  "stroke": "$border/border",
-                  "strokeWidth": 1,
-                  "strokeAlignment": "inner",
-                  "layout": "vertical",
-                  "gap": 10,
-                  "padding": 16,
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 0,
+                  "width": 250,
+                  "height": 233,
+                  "fills": [{"type": "SOLID", "color": "#17151A"}],
+                  "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+                  "strokeWeight": 1,
+                  "cornerRadius": 16,
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "gap": 10,
+                    "padding": [16, 16, 16, 16],
+                    "primary": "MIN",
+                    "counter": "MIN",
+                    "sizing": ["HUG", "FIXED"]
+                  },
+                  "layoutAlignSelf": "STRETCH",
+                  "variables": {
+                    "cornerRadius": "radius/2xl",
+                    "fills/0/color": "surface/secondary",
+                    "strokes/0/color": "border/border"
+                  },
                   "children": [
                     {
-                      "type": "text",
-                      "id": "yeO1q",
+                      "id": "1:6277",
                       "name": "TOC Label",
-                      "fill": "$field/placeholder",
-                      "content": "ON THIS PAGE",
-                      "fontFamily": "JetBrains Mono",
-                      "fontSize": 9,
-                      "fontWeight": "600",
-                      "letterSpacing": 0.7
+                      "type": "TEXT",
+                      "x": 16,
+                      "y": 16,
+                      "width": 73,
+                      "height": 12,
+                      "fills": [{"type": "SOLID", "color": "#7B7584"}],
+                      "text": "ON THIS PAGE",
+                      "font": ["JetBrains Mono", 600, 9],
+                      "variables": {"fills/0/color": "field/placeholder"}
                     },
                     {
-                      "type": "frame",
-                      "id": "h3D3CS",
+                      "id": "1:6278",
                       "name": "TOC Row 0",
-                      "width": "fill_container",
-                      "gap": 8,
-                      "alignItems": "center",
+                      "type": "FRAME",
+                      "x": 16,
+                      "y": 38,
+                      "width": 218,
+                      "height": 16,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 8,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["FIXED", "HUG"]
+                      },
+                      "layoutAlignSelf": "STRETCH",
                       "children": [
                         {
-                          "type": "icon",
-                          "id": "pTJt8",
+                          "id": "1:6279",
                           "name": "TOC Icon 0",
+                          "type": "FRAME",
+                          "x": 0,
+                          "y": 2,
                           "width": 12,
                           "height": 12,
-                          "icon": "hash",
-                          "library": "lucide",
-                          "fill": "$accent/accent"
+                          "variables": {"fills/0/color": "accent/accent"},
+                          "children": [
+                            {
+                              "name": "path",
+                              "type": "VECTOR",
+                              "x": 2,
+                              "y": 1.5,
+                              "width": 8,
+                              "height": 9,
+                              "strokes": [{"type": "SOLID", "color": "#FF4FA3"}],
+                              "strokeWeight": 1
+                            }
+                          ]
                         },
                         {
-                          "type": "text",
-                          "id": "JlN0s",
+                          "id": "1:6280",
                           "name": "TOC Text 0",
-                          "fill": "$foreground/foreground",
-                          "content": "Surface",
-                          "fontFamily": "Geist",
-                          "fontSize": 12.5,
-                          "fontWeight": "500"
+                          "type": "TEXT",
+                          "x": 20,
+                          "y": 0,
+                          "width": 46,
+                          "height": 16,
+                          "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                          "text": "Surface",
+                          "font": ["Geist", 500, 12.5],
+                          "variables": {"fills/0/color": "foreground/foreground"}
                         }
                       ]
                     },
                     {
-                      "type": "frame",
-                      "id": "K0xpq",
+                      "id": "1:6281",
                       "name": "TOC Row 1",
-                      "width": "fill_container",
-                      "gap": 8,
-                      "alignItems": "center",
+                      "type": "FRAME",
+                      "x": 16,
+                      "y": 64,
+                      "width": 218,
+                      "height": 16,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 8,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["FIXED", "HUG"]
+                      },
+                      "layoutAlignSelf": "STRETCH",
                       "children": [
                         {
-                          "type": "icon",
-                          "id": "sdxxb",
+                          "id": "1:6282",
                           "name": "TOC Icon 1",
+                          "type": "FRAME",
+                          "x": 0,
+                          "y": 2,
                           "width": 12,
                           "height": 12,
-                          "icon": "hash",
-                          "library": "lucide",
-                          "fill": "$field/placeholder"
+                          "variables": {"fills/0/color": "field/placeholder"},
+                          "children": [
+                            {
+                              "name": "path",
+                              "type": "VECTOR",
+                              "x": 2,
+                              "y": 1.5,
+                              "width": 8,
+                              "height": 9,
+                              "strokes": [{"type": "SOLID", "color": "#7B7584"}],
+                              "strokeWeight": 1
+                            }
+                          ]
                         },
                         {
-                          "type": "text",
-                          "id": "dePXz",
+                          "id": "1:6283",
                           "name": "TOC Text 1",
-                          "fill": "$muted",
-                          "content": "Protocols",
-                          "fontFamily": "Geist",
-                          "fontSize": 12.5,
-                          "fontWeight": "normal"
+                          "type": "TEXT",
+                          "x": 20,
+                          "y": 0,
+                          "width": 55,
+                          "height": 16,
+                          "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                          "text": "Protocols",
+                          "font": ["Geist", 400, 12.5],
+                          "variables": {"fills/0/color": "muted"}
                         }
                       ]
                     },
                     {
-                      "type": "frame",
-                      "id": "BEoO6",
+                      "id": "1:6284",
                       "name": "TOC Row 2",
-                      "width": "fill_container",
-                      "gap": 8,
-                      "alignItems": "center",
+                      "type": "FRAME",
+                      "x": 16,
+                      "y": 90,
+                      "width": 218,
+                      "height": 16,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 8,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["FIXED", "HUG"]
+                      },
+                      "layoutAlignSelf": "STRETCH",
                       "children": [
                         {
-                          "type": "icon",
-                          "id": "zTqsG",
+                          "id": "1:6285",
                           "name": "TOC Icon 2",
+                          "type": "FRAME",
+                          "x": 0,
+                          "y": 2,
                           "width": 12,
                           "height": 12,
-                          "icon": "hash",
-                          "library": "lucide",
-                          "fill": "$field/placeholder"
+                          "variables": {"fills/0/color": "field/placeholder"},
+                          "children": [
+                            {
+                              "name": "path",
+                              "type": "VECTOR",
+                              "x": 2,
+                              "y": 1.5,
+                              "width": 8,
+                              "height": 9,
+                              "strokes": [{"type": "SOLID", "color": "#7B7584"}],
+                              "strokeWeight": 1
+                            }
+                          ]
                         },
                         {
-                          "type": "text",
-                          "id": "tCM6W",
+                          "id": "1:6286",
                           "name": "TOC Text 2",
-                          "fill": "$muted",
-                          "content": "Wire changes",
-                          "fontFamily": "Geist",
-                          "fontSize": 12.5,
-                          "fontWeight": "normal"
+                          "type": "TEXT",
+                          "x": 20,
+                          "y": 0,
+                          "width": 78,
+                          "height": 16,
+                          "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                          "text": "Wire changes",
+                          "font": ["Geist", 400, 12.5],
+                          "variables": {"fills/0/color": "muted"}
                         }
                       ]
                     },
                     {
-                      "type": "rectangle",
-                      "id": "YiCWq",
+                      "id": "1:6287",
                       "name": "TOC Divider",
-                      "fill": "$border/border",
-                      "width": "fill_container",
-                      "height": 1
+                      "type": "RECTANGLE",
+                      "x": 16,
+                      "y": 116,
+                      "width": 218,
+                      "height": 1,
+                      "fills": [{"type": "SOLID", "color": "#2C2932"}],
+                      "layoutAlignSelf": "STRETCH",
+                      "variables": {"fills/0/color": "border/border"}
                     },
                     {
-                      "type": "text",
-                      "id": "n1iiHn",
+                      "id": "1:6288",
                       "name": "Coverage Label",
-                      "fill": "$field/placeholder",
-                      "content": "COVERS",
-                      "fontFamily": "JetBrains Mono",
-                      "fontSize": 9,
-                      "fontWeight": "600",
-                      "letterSpacing": 0.7
+                      "type": "TEXT",
+                      "x": 16,
+                      "y": 127,
+                      "width": 36,
+                      "height": 12,
+                      "fills": [{"type": "SOLID", "color": "#7B7584"}],
+                      "text": "COVERS",
+                      "font": ["JetBrains Mono", 600, 9],
+                      "variables": {"fills/0/color": "field/placeholder"}
                     },
                     {
-                      "type": "frame",
-                      "id": "EvboC",
+                      "id": "1:6289",
                       "name": "Coverage Row 0",
-                      "width": "fill_container",
-                      "gap": 7,
-                      "alignItems": "center",
+                      "type": "FRAME",
+                      "x": 16,
+                      "y": 149,
+                      "width": 218,
+                      "height": 16,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 7,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["FIXED", "HUG"]
+                      },
+                      "layoutAlignSelf": "STRETCH",
                       "children": [
                         {
-                          "type": "icon",
-                          "id": "jYdM0",
+                          "id": "1:6290",
                           "name": "Coverage Icon 0",
+                          "type": "FRAME",
+                          "x": 0,
+                          "y": 2,
                           "width": 12,
                           "height": 12,
-                          "icon": "book-open",
-                          "library": "lucide",
-                          "fill": "$field/placeholder"
+                          "variables": {"fills/0/color": "field/placeholder"},
+                          "children": [
+                            {
+                              "name": "path",
+                              "type": "VECTOR",
+                              "x": 1,
+                              "y": 1.5,
+                              "width": 10,
+                              "height": 9,
+                              "strokes": [{"type": "SOLID", "color": "#7B7584"}],
+                              "strokeWeight": 1
+                            }
+                          ]
                         },
                         {
-                          "type": "text",
-                          "id": "YOmpD",
+                          "id": "1:6291",
                           "name": "Coverage Text 0",
-                          "fill": "$muted",
-                          "content": "Agent",
-                          "fontFamily": "Geist",
-                          "fontSize": 12,
-                          "fontWeight": "normal"
+                          "type": "TEXT",
+                          "x": 19,
+                          "y": 0,
+                          "width": 33,
+                          "height": 16,
+                          "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                          "text": "Agent",
+                          "font": ["Geist", 400, 12],
+                          "variables": {"fills/0/color": "muted"}
                         }
                       ]
                     },
                     {
-                      "type": "frame",
-                      "id": "tTuhJ",
+                      "id": "1:6292",
                       "name": "Coverage Row 1",
-                      "width": "fill_container",
-                      "gap": 7,
-                      "alignItems": "center",
+                      "type": "FRAME",
+                      "x": 16,
+                      "y": 175,
+                      "width": 218,
+                      "height": 16,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 7,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["FIXED", "HUG"]
+                      },
+                      "layoutAlignSelf": "STRETCH",
                       "children": [
                         {
-                          "type": "icon",
-                          "id": "RQ3xI",
+                          "id": "1:6293",
                           "name": "Coverage Icon 1",
+                          "type": "FRAME",
+                          "x": 0,
+                          "y": 2,
                           "width": 12,
                           "height": 12,
-                          "icon": "book-open",
-                          "library": "lucide",
-                          "fill": "$field/placeholder"
+                          "variables": {"fills/0/color": "field/placeholder"},
+                          "children": [
+                            {
+                              "name": "path",
+                              "type": "VECTOR",
+                              "x": 1,
+                              "y": 1.5,
+                              "width": 10,
+                              "height": 9,
+                              "strokes": [{"type": "SOLID", "color": "#7B7584"}],
+                              "strokeWeight": 1
+                            }
+                          ]
                         },
                         {
-                          "type": "text",
-                          "id": "lp6f3",
+                          "id": "1:6294",
                           "name": "Coverage Text 1",
-                          "fill": "$muted",
-                          "content": "RCON",
-                          "fontFamily": "Geist",
-                          "fontSize": 12,
-                          "fontWeight": "normal"
+                          "type": "TEXT",
+                          "x": 19,
+                          "y": 0,
+                          "width": 35,
+                          "height": 16,
+                          "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                          "text": "RCON",
+                          "font": ["Geist", 400, 12],
+                          "variables": {"fills/0/color": "muted"}
                         }
                       ]
                     },
                     {
-                      "type": "frame",
-                      "id": "S9fM2O",
+                      "id": "1:6295",
                       "name": "Coverage Row 2",
-                      "width": "fill_container",
-                      "gap": 7,
-                      "alignItems": "center",
+                      "type": "FRAME",
+                      "x": 16,
+                      "y": 201,
+                      "width": 218,
+                      "height": 16,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 7,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["FIXED", "HUG"]
+                      },
+                      "layoutAlignSelf": "STRETCH",
                       "children": [
                         {
-                          "type": "icon",
-                          "id": "JG87D",
+                          "id": "1:6296",
                           "name": "Coverage Icon 2",
+                          "type": "FRAME",
+                          "x": 0,
+                          "y": 2,
                           "width": 12,
                           "height": 12,
-                          "icon": "book-open",
-                          "library": "lucide",
-                          "fill": "$field/placeholder"
+                          "variables": {"fills/0/color": "field/placeholder"},
+                          "children": [
+                            {
+                              "name": "path",
+                              "type": "VECTOR",
+                              "x": 1,
+                              "y": 1.5,
+                              "width": 10,
+                              "height": 9,
+                              "strokes": [{"type": "SOLID", "color": "#7B7584"}],
+                              "strokeWeight": 1
+                            }
+                          ]
                         },
                         {
-                          "type": "text",
-                          "id": "WZUAh",
+                          "id": "1:6297",
                           "name": "Coverage Text 2",
-                          "fill": "$muted",
-                          "content": "mTLS",
-                          "fontFamily": "Geist",
-                          "fontSize": 12,
-                          "fontWeight": "normal"
+                          "type": "TEXT",
+                          "x": 19,
+                          "y": 0,
+                          "width": 31,
+                          "height": 16,
+                          "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                          "text": "mTLS",
+                          "font": ["Geist", 400, 12],
+                          "variables": {"fills/0/color": "muted"}
                         }
                       ]
                     }
                   ]
                 },
                 {
-                  "type": "frame",
-                  "id": "JnlZd",
+                  "id": "1:6298",
                   "name": "Edit Page Card",
-                  "width": "fill_container",
-                  "fill": "$background/background",
-                  "cornerRadius": "$radius/3xl",
-                  "stroke": "$border/border",
-                  "strokeWidth": 1,
-                  "strokeAlignment": "inner",
-                  "layout": "vertical",
-                  "gap": 6,
-                  "padding": 14,
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 249,
+                  "width": 250,
+                  "height": 104,
+                  "fills": [{"type": "SOLID", "color": "#121114"}],
+                  "strokes": [{"type": "SOLID", "color": "#2C2932"}],
+                  "strokeWeight": 1,
+                  "cornerRadius": 24,
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "gap": 6,
+                    "padding": [14, 14, 14, 14],
+                    "primary": "MIN",
+                    "counter": "MIN",
+                    "sizing": ["HUG", "FIXED"]
+                  },
+                  "layoutAlignSelf": "STRETCH",
+                  "variables": {
+                    "cornerRadius": "radius/3xl",
+                    "fills/0/color": "background/background",
+                    "strokes/0/color": "border/border"
+                  },
                   "children": [
                     {
-                      "type": "text",
-                      "id": "vRHfU",
+                      "id": "1:6299",
                       "name": "Edit Page Title",
-                      "fill": "$foreground/foreground",
-                      "content": "Improve this page",
-                      "fontFamily": "JetBrains Mono",
-                      "fontSize": 12,
-                      "fontWeight": "600"
+                      "type": "TEXT",
+                      "x": 14,
+                      "y": 14,
+                      "width": 123,
+                      "height": 16,
+                      "fills": [{"type": "SOLID", "color": "#F5F3F7"}],
+                      "text": "Improve this page",
+                      "font": ["JetBrains Mono", 600, 12],
+                      "variables": {"fills/0/color": "foreground/foreground"}
                     },
                     {
-                      "type": "text",
-                      "id": "v3IOT",
+                      "id": "1:6300",
                       "name": "Edit Page Body",
-                      "fill": "$muted",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "Found a gap? Open a docs issue or suggest an edit on GitHub.",
-                      "lineHeight": 1.4,
-                      "fontFamily": "Geist",
-                      "fontSize": 11.5,
-                      "fontWeight": "normal"
+                      "type": "TEXT",
+                      "x": 14,
+                      "y": 36,
+                      "width": 222,
+                      "height": 32,
+                      "fills": [{"type": "SOLID", "color": "#9E98A6"}],
+                      "layoutAlignSelf": "STRETCH",
+                      "text": "Found a gap? Open a docs issue or suggest an edit on GitHub.",
+                      "font": ["Geist", 400, 11.5],
+                      "lineHeight": {"value": 139.9999976158142, "unit": "PERCENT"},
+                      "variables": {"fills/0/color": "muted"}
                     },
                     {
-                      "type": "frame",
-                      "id": "E9zNmu",
+                      "id": "1:6301",
                       "name": "Edit Page Link",
-                      "gap": 6,
-                      "alignItems": "center",
+                      "type": "FRAME",
+                      "x": 14,
+                      "y": 74,
+                      "width": 95,
+                      "height": 16,
+                      "layout": {
+                        "mode": "HORIZONTAL",
+                        "gap": 6,
+                        "padding": [0, 0, 0, 0],
+                        "primary": "MIN",
+                        "counter": "CENTER",
+                        "sizing": ["HUG", "HUG"]
+                      },
                       "children": [
                         {
-                          "type": "text",
-                          "id": "bM9x4",
+                          "id": "1:6302",
                           "name": "Edit Page Link Text",
-                          "fill": "$accent/soft-foreground",
-                          "content": "Edit this page",
-                          "fontFamily": "Geist",
-                          "fontSize": 12,
-                          "fontWeight": "500"
+                          "type": "TEXT",
+                          "x": 0,
+                          "y": 0,
+                          "width": 77,
+                          "height": 16,
+                          "fills": [{"type": "SOLID", "color": "#FF8AC4"}],
+                          "text": "Edit this page",
+                          "font": ["Geist", 500, 12],
+                          "variables": {"fills/0/color": "accent/soft-foreground"}
                         },
                         {
-                          "type": "icon",
-                          "id": "eFu8g",
+                          "id": "1:6303",
                           "name": "Edit Page Link Icon",
+                          "type": "FRAME",
+                          "x": 83,
+                          "y": 2,
                           "width": 12,
                           "height": 12,
-                          "icon": "external-link",
-                          "library": "lucide",
-                          "fill": "$accent/accent"
+                          "variables": {"fills/0/color": "accent/accent"},
+                          "children": [
+                            {
+                              "name": "path",
+                              "type": "VECTOR",
+                              "x": 1.5,
+                              "y": 1.5,
+                              "width": 9,
+                              "height": 9,
+                              "strokes": [{"type": "SOLID", "color": "#FF4FA3"}],
+                              "strokeWeight": 1
+                            }
+                          ]
                         }
                       ]
                     }
