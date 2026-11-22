@@ -112,7 +112,7 @@ Add OIDC providers under **Admin Settings → Authentication → Add provider**.
 
 Supported providers include Keycloak, Authentik, Google, GitHub, and any RFC-7519 compliant OpenID Connect provider. Detailed setup guides for Keycloak, Authentik, Google, and GitHub follow the same issuer/client ID/secret pattern.
 
-When a user logs in via OIDC for the first time, Gameplane creates a user row. Without role mappings the role is `viewer` and admins must promote new OIDC users manually via the dashboard or custom role bindings; with role mappings the role comes from the user's IdP groups (see Install-time role mappings below).
+When a user logs in via OIDC for the first time, Gameplane creates a user row. Without role rules the role is `viewer` and admins must promote new OIDC users manually via the dashboard or custom role bindings; with role rules the role comes from the user's IdP groups (see SSO group role rules below).
 
 The sequence below shows the OIDC sign-in round trip between the browser, the API, and the identity provider.
 
@@ -136,6 +136,51 @@ sequenceDiagram
   A-->>B: Set session and CSRF cookies, 302 to /
 ```
 
+### SSO group role rules
+
+<DocsCallout icon="milestone" title="New after v0.4.3">
+  Role rules and role source ship in the first release after v0.4.3. Earlier releases use the per-role mappings described in Install-time role mappings below.
+</DocsCallout>
+
+Each SSO provider maps IdP groups to roles with an **ordered list of rules**. A rule says "members of group X get role Y".
+
+- **Any role.** A rule can name a built-in role (`admin`, `operator`, `viewer`) or a custom role such as `login-only`.
+- **First match wins.** Rules are checked from the top, and the first rule whose group the user is in decides the role. Order decides, not privilege: a `viewer` rule above an `admin` rule gives viewer to members of both groups.
+- **Exact match.** Group names are matched exactly and case-sensitively against the groups claim. Spaces and punctuation are allowed.
+- **Fallback.** If no rule matches, the fallback role applies: viewer, `deny` (refuse the sign-in), or any role that exists.
+- **Missing roles.** The dashboard refuses to save a rule or fallback that names a role that does not exist, and refuses to delete a role that a rule or fallback uses.
+- **Mapping off.** A provider with no rules keeps roles as they are: new users get viewer and sign-in never changes a role.
+
+Edit the rules under **Admin Settings → Authentication**, in the provider form or, for the Helm-configured provider, in the role rule override card. The editor adds, removes and reorders rules, warns when a group already appears in an earlier rule, and asks for confirmation before a save gives a group the admin role. For the Helm provider, the dashboard override replaces the whole Helm rule list and fallback; **Reset to Helm default** removes it.
+
+The flowchart below shows how the API picks a role from the user's groups.
+
+```mermaid
+flowchart TD
+  A["Groups from groupsClaim"] --> B{"Any role rules?"}
+  B -- no --> V["viewer, role never changed at sign-in"]
+  B -- yes --> C{"Next rule: is the user in its group?"}
+  C -- yes --> R["That rule's role"]
+  C -- "no, more rules" --> C
+  C -- "no rule left" --> F{"Fallback"}
+  F -- "deny" --> X["Sign-in refused"]
+  F -- "role" --> G["Fallback role"]
+```
+
+#### Role source
+
+Gameplane records who set each SSO user's current role, and the Users page shows it as a badge:
+
+| Badge | Meaning |
+|---|---|
+| From SSO | The rules set the role. Each sign-in applies the rule result, including demotion when the user leaves a group. |
+| From SSO (applies at next sign-in) | An admin returned the user to SSO control. The role stays the same until the next sign-in. |
+| Set by hand | An admin set the role on the Users page. Sign-in never changes it, and the user is let in even when no rule matches and the fallback is `deny`. |
+
+Changing an SSO user's role on the Users page marks it **Set by hand**. To hand the role back to the rules, choose **Return to SSO control** on the user. On upgrade, users linked to an SSO account start as From SSO and all other users as Set by hand; no role changes.
+
+Every SSO sign-in that changes, keeps or refuses a role writes an audit event of the form `oidc role decision: provider=… rule=… group=… role=… source=… result=…`, so you can see which rule matched and whether it was applied. A demotion that would remove the last user who can manage users is skipped and recorded, as before.
+
 ### Install-time role mappings
 
 <DocsCallout icon="milestone" title="Available since v0.3.0">
@@ -144,9 +189,26 @@ sequenceDiagram
 
 Helm role mappings eliminate the need for a `bootstrap-admin` account in OIDC-only deployments. Operators configure group mappings at install time, and the first user to log in receives the correct role immediately based on their IdP group membership.
 
-When deploying with Helm, set `api.oidc.enabled=true`, `api.oidc.groupsClaim` to the name of your IdP's groups claim (e.g., `"groups"`), and configure `api.oidc.roleMappings.{admin,operator,viewer}` with a list of group names for each role. On first login, Gameplane matches the user's group membership against the mappings and assigns the highest-privilege matching role.
+When deploying with Helm, set `api.oidc.enabled=true`, `api.oidc.groupsClaim` to the name of your IdP's groups claim (e.g., `"groups"`), and list the rules in `api.oidc.roleRules`. On first login, Gameplane matches the user's groups against the rules and assigns the first matching rule's role.
 
-The flowchart below shows how the API picks a role from the user's groups, including the case where no mapping matches.
+```yaml
+api:
+  oidc:
+    enabled: true
+    groupsClaim: "groups"
+    defaultRole: "deny"
+    roleRules:
+      - group: "sys-admin"
+        role: "admin"
+      - group: "gameplane login only"
+        role: "login-only"
+```
+
+Create custom roles such as `login-only` before users sign in; a rule naming a role that does not exist refuses the sign-in.
+
+**Old per-role keys.** `api.oidc.roleMappings.{admin,operator,viewer}` keeps working and is read as rules in the order admin, then operator, then viewer, which gives the same role as before (the highest-privilege matching role). Set either `roleRules` or `roleMappings`, not both: the chart fails to render when both are set.
+
+With the old per-role keys, the role is picked as in the flowchart below.
 
 ```mermaid
 flowchart TD
@@ -164,7 +226,7 @@ flowchart TD
   F -- "admin or operator" --> G["defaultRole value"]
 ```
 
-After deployment, admins can override role mappings through the dashboard without restarting the API. Helm upgrades preserve dashboard customizations — they do not overwrite group mappings that have already been edited in the UI. For detailed Helm value examples and troubleshooting, see the [OIDC provider setup documentation](https://github.com/GameplanePanel/Gameplane/blob/master/docs/oidc.md#role-mapping-at-install-time-no-bootstrap-admin-required) on GitHub.
+After deployment, admins can override the Helm rules through the dashboard without restarting the API. Helm upgrades preserve dashboard customizations — they do not overwrite rules that have already been edited in the UI. For detailed Helm value examples and troubleshooting, see the [OIDC provider setup documentation](https://github.com/GameplanePanel/Gameplane/blob/master/docs/oidc.md#role-mapping-at-install-time-no-bootstrap-admin-required) on GitHub.
 
 <DocsQuickReference
   label="LOCKOUT PREVENTION"
