@@ -190,7 +190,7 @@ Install a tagged release straight from the GitHub Container Registry (GHCR). Rep
 
 ```bash
 helm upgrade --install gameplane oci://ghcr.io/gameplanepanel/charts/gameplane \
-  --version 0.4.0 \
+  --version 0.4.3 \
   --namespace gameplane-system --create-namespace \
   --values values.override.yaml
 ```
@@ -284,7 +284,7 @@ Create a simple test GameServer to verify the operator is reconciling correctly:
 <DocsQuickReference
   label="INSTALL CHECK"
   items={[
-    "helm upgrade --install gameplane oci://ghcr.io/gameplanepanel/charts/gameplane --version 0.4.0 --namespace gameplane-system --create-namespace --values values.override.yaml",
+    "helm upgrade --install gameplane oci://ghcr.io/gameplanepanel/charts/gameplane --version 0.4.3 --namespace gameplane-system --create-namespace --values values.override.yaml",
     "kubectl -n gameplane-system get pods && kubectl get crds | grep gameplane",
     "Log in, select the cluster, and create a test server to verify the operator reconciles",
   ]}
@@ -296,7 +296,7 @@ Every published image (tagged releases and `:edge`), the Helm chart, and officia
 
 ```bash
 cosign verify --key signing/cosign.pub \
-  ghcr.io/gameplanepanel/gameplane/operator:0.4.0
+  ghcr.io/gameplanepanel/gameplane/operator:0.4.3
 ```
 
 Pre-rotation releases (v0.2.0-beta.7 and earlier) used the retired Ed25519 key and lack transparency log entries — verify those with `signing/2026-07-24-cosign-legacy.pub` and `--insecure-ignore-tlog=true`.
@@ -309,7 +309,7 @@ The Helm chart defaults to pulling images from GitHub Container Registry (`ghcr.
 
 ```bash
 helm upgrade --install gameplane oci://ghcr.io/gameplanepanel/charts/gameplane \
-  --version 0.4.0 \
+  --version 0.4.3 \
   --set image.registry=your-private-registry.com
 ```
 
