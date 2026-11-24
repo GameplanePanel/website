@@ -46,6 +46,8 @@ Control operator behavior, logging, high availability, and module storage.
 | `operator.backupResources` | object | `null` | Complete ResourceRequirements for backup, restore and forget/prune workers. Default requests are 100m CPU and 128Mi memory; forget/prune keeps 50m and 128Mi with a 512Mi memory limit. |
 | `operator.nodeSelector`, `operator.tolerations`, `operator.affinity`, `operator.topologySpreadConstraints`, `operator.priorityClassName` | mixed | `{}`, `[]`, `{}`, `[]`, `""` | Placement for the operator Deployment. The same keys exist for `api`, `web`, `gateway`, `mcpServer`, `api.telemetry.receiver` and `crds.autoApply`. Unsatisfied hard selectors, taints or topology constraints leave pods Pending. |
 | `operator.pdb.enabled` | boolean | `false` | Creates a PodDisruptionBudget for the operator. With `pdb.minAvailable` or `pdb.maxUnavailable` unset, the budget defaults to `maxUnavailable: 1`. The same `pdb` block exists on `api`, `web`, `gateway` and `mcpServer`. |
+| `operator.filesIdleTimeout` | duration | `10m` | *(next release)* How long a stopped server's file-only pod stays up after its last file operation before the operator removes it. Must be a positive duration. |
+| `operator.templateHostnames` | object | `{}` | *(next release)* Default player-facing DNS names by GameTemplate name for NodePort and LoadBalancer servers, for example `minecraft-java: mc.example.net`. A server's `networking.hostname` overrides its default. |
 
 ## Networking and ingress
 
@@ -165,6 +167,17 @@ Configure persistent volumes and local module sources.
 |---|---|---|---|
 | `operator.localModules.existingClaim` | string | *(empty)* | PersistentVolumeClaim for local module bundles (homebrew/homelab pattern: drop module directories on disk and they appear in the catalog). Provide exactly one of `existingClaim` or `hostPath`. |
 | `operator.localModules.hostPath` | string | *(empty)* | Host path for local module bundles (node-local storage). Use only on single-node clusters; requires `nodeSelector` to pin the operator to that node. |
+
+## File transfer and SFTP (next release)
+
+Configure the upload limit for the Files tab and the optional SFTP endpoint. This section ships in the release after v0.4.3.
+
+| Key | Type | Default | Description |
+|---|---|---|---|
+| `files.maxUploadSize` | quantity | `20Gi` | *(next release)* Largest single file one upload can send, through SFTP and the dashboard. Accepts Kubernetes quantities (`Ki`, `Mi`, `Gi`, `Ti`, `K`, `M`, `G`, `T`) or a plain byte count. |
+| `sftp.enabled` | boolean | `false` | *(next release)* Run the SFTP endpoint for game server files. Off by default. Every login and file operation is authorised by the API as the signed-in user. |
+| `sftp.serviceType` | enum | `ClusterIP` | *(next release)* Service type for the SFTP endpoint: `ClusterIP`, `NodePort` or `LoadBalancer`. Use `LoadBalancer` or `NodePort` to accept SFTP from outside the cluster. |
+| `sftp.publicAddress` | string | `""` | *(next release)* Address shown to users in the SFTP profile, as a host or `host:port`. Empty means unknown. |
 
 ## Cluster operations
 

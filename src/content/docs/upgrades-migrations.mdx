@@ -219,6 +219,14 @@ helm install gameplane charts/gameplane -n gameplane-system --create-namespace -
 The Helm 4 field-manager behavior and the hook-on-reinstall behavior above are part of v0.3.0.
 </DocsCallout>
 
+## Upgrading to the next release
+
+The notes below ship in the release after v0.4.3. Read them before you upgrade from v0.4.3.
+
+- **Breaking: the chart installs its CRDs and ModuleSources from hooks.** The packaged chart no longer bundles the `gameplane-crds` subchart. The `crds.autoApply` hook installs the CRDs on every install and every upgrade, so air-gapped clusters must mirror `crds.autoApply.image`. The default and upload ModuleSources are kept across the upgrade and are no longer removed by `helm uninstall`. Turning `defaultModuleSource.enabled` off no longer deletes the existing one. If you set `crds.autoApply.enabled=false`, install the CRDs first from the `gameplane-crds` chart. See [Helm CRD caveat](https://github.com/GameplanePanel/Gameplane/blob/master/docs/install.md#helm-crd-caveat).
+- **Breaking: the MCP server no longer reads every namespace.** The break-glass MCP server (`mcpServer.enabled`) no longer has a cluster-wide ClusterRole for Pods, Events and pod logs. The upgrade removes the old `<release>-mcp-server-read` ClusterRole and ClusterRoleBinding. Break-glass reads now cover only the release namespace and the managed game namespaces, through namespaced Roles. A ClusterRole remains for GameTemplate, Module and ModuleSource only. After upgrading, use a personal MCP token (`/users/me/mcp-tokens`) for per-user reads across clusters. See [MCP server (optional)](https://github.com/GameplanePanel/Gameplane/blob/master/docs/security.md#mcp-server-optional).
+- **Run `helm upgrade` so each cluster gets its security settings.** Modules can now set the run-as user, run-as group, filesystem group and volume ownership check for their game. Server owners with the `servers:security` permission can override each one, and overrides apply on the next restart. Root overrides are off by default and are allowed per cluster under Clusters, cluster, Configuration, Security. The volume ownership check now defaults to "only when wrong". See [PR #977](https://github.com/GameplanePanel/Gameplane/pull/977).
+
 ## Upgrading to v0.4.1 and later
 
 Read the notes for every release between your current version and your target. The full lists are in the [CHANGELOG](../changelog/).

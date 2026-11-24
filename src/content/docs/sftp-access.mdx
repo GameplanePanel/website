@@ -1,0 +1,153 @@
+---
+title: "SFTP access"
+description: "Upload worlds and mods to, and download backups from, game server files with FileZilla, WinSCP or the sftp command."
+section: "operate"
+group: "files-backups"
+order: 8
+icon: "folder"
+eyebrow: "OPERATE"
+readTime: "8 MIN"
+covers: ["Enable", "Credentials", "Connect", "Remote clusters"]
+---
+
+SFTP access ships in the release after v0.4.3.
+
+Gameplane can serve your game servers' files over SFTP, so you can upload worlds and mods and download backups with FileZilla, WinSCP or the `sftp` command. SFTP is optional and off by default. Every login and file operation goes through the Gameplane API as the signed-in user, and the SFTP pod keeps no game data. Permissions, ownership and the audit log match the Files tab.
+
+## Turn it on (next release)
+
+Enable SFTP with Helm values:
+
+```sh
+helm upgrade gameplane charts/gameplane --reuse-values \
+  --set sftp.enabled=true
+```
+
+By default the endpoint is a `ClusterIP` Service on port `2222`, which only reaches the cluster from inside. To accept connections from your network, choose one exposure:
+
+| Value | Use it when |
+| --- | --- |
+| `sftp.serviceType: LoadBalancer` | Your cloud or load balancer gives the Service an address. Set `sftp.loadBalancerIP` to request one. |
+| `sftp.serviceType: NodePort` | Clients can reach a node address. Set `sftp.nodePort` (30000-32767) to fix the port. |
+| `sftp.publicAddress` | The address users should type, for example `files.example.com:2222`. The profile page shows it. |
+
+Other values:
+
+- `sftp.port` (default `2222`): the port the SFTP server listens on.
+- `sftp.idleTimeout` (default `15m`): an idle SFTP session closes after this.
+- `sftp.maxSessionsPerUser` (default `4`) and `sftp.maxTransfersPerUser` (default `8`).
+- `files.maxUploadSize` (default `20Gi`): the largest single file one upload can send, through SFTP and the dashboard. It takes Kubernetes quantities (`Ki`, `Mi`, `Gi`, `Ti`, `K`, `M`, `G`, `T`) or a plain byte count. The agent refuses a file that would not fit in the free space.
+
+The chart creates a Secret named `gameplane-sftp-host-key` with the SSH host key. It is kept on uninstall, so clients do not see a changed key after an upgrade. To bring your own key, set `sftp.hostKeySecret` to a Secret with a `host_key` entry in PEM format. For GitOps or offline renders (`helm template`, Argo CD), set `sftp.hostKeySecret` and the service token secret explicitly, because the chart cannot look up existing Secrets there.
+
+Check that the pod is running:
+
+```sh
+kubectl -n gameplane get deploy gameplane-sftp
+```
+
+With `sftp.enabled` false, the chart creates no SFTP objects and the profile page has no SFTP section. All values are listed in the [Helm values reference](../helm-values-reference/).
+
+## Set up your credentials (next release)
+
+Each user manages their own SFTP access under **Settings, SFTP**. SSO users do too; there is no separate SFTP account. The page shows the address and port, the username forms, the host key fingerprint, your SSH public keys, and whether you have a generated password.
+
+**SSH keys.** Click **Add key** and paste one public key on one line, starting with `ssh-ed25519`, `ecdsa-sha2-` or `ssh-rsa`. Keys must be ed25519, ECDSA (nistp256, nistp384 or nistp521) or RSA with at least 3072 bits. You can keep up to 20 keys. A key cannot be added to two accounts. Removing a key closes any session that used it.
+
+**Generated password.** Click **Generate password**, choose a length from 20 to 40, and copy it. The password is shown once, because Gameplane stores only a hash. It does not expire.
+
+You have one password at a time. **Regenerate** replaces it, and the old one stops working at the next login. **Revoke** removes it and closes the sessions that used it.
+
+The dashboard login password is never accepted by SFTP.
+
+## Connect (next release)
+
+Use the address and port from the profile page, one of your usernames (see below), and either your key or your generated password.
+
+```sh
+sftp -P 2222 alice@files.example.com
+sftp -P 2222 -i ~/.ssh/id_ed25519 alice@files.example.com
+```
+
+**FileZilla:** protocol **SFTP - SSH File Transfer Protocol**, then host, port, username, and either the password or a key file (Edit, Settings, SFTP, Add key file).
+
+**WinSCP:** file protocol **SFTP**, then host, port and username. Enter the password, or choose a private key under **Advanced, Authentication**.
+
+The first time you connect, compare the host key fingerprint with the one on your profile page. It is in the `SHA256:` form and must match exactly. If it differs, do not log in: someone else may be answering on that address, or the endpoint was rebuilt with a new key.
+
+## Usernames and what you see (next release)
+
+The username chooses where the session starts.
+
+- `alice` opens the root of the cluster endpoint. Servers in the default games namespace appear as folders at the top, and servers in other namespaces appear under `_namespaces/<namespace>/`, for example `_namespaces/events/lobby`.
+- `alice+survival` opens straight in the files of the server `survival` in the default games namespace.
+- `alice+events/lobby` opens straight in the files of `lobby` in the namespace `events`.
+
+Both forms use the same password or key and the same permission checks. You only see the servers you can read.
+
+`alice` is your panel username, shown on the profile page. An SSO account is usually named by its email address, for example `alice@example.com`. OpenSSH splits the host at the last `@`, so `sftp -P 2222 alice@example.com+survival@sftp.example.com` works as written. A username that contains `+` cannot be used over SFTP, because `+` starts the server part.
+
+Permissions:
+
+- Reading needs `servers:read` on the server, or ownership or collaborator access.
+- Writing, renaming and deleting need `servers:write`, or ownership or collaborator access, the same as in the Files tab.
+- The root and the server folders are read-only. You create, rename and delete files inside a server, not the server folder itself.
+- Dotfiles are never listed or created over SFTP.
+- An SFTP session has no shell, no commands and no port forwarding. It only moves files.
+
+Any refused login (wrong password, revoked key, no access to the server in the username, or a disabled account) gets the same generic refusal, so a refusal does not reveal which servers exist.
+
+## Remote clusters (next release)
+
+Each cluster has its own SFTP endpoint, with its own address and host key. The same credentials work on each endpoint if the user can read the servers there.
+
+An admin sets up a remote endpoint under **Clusters**, in the cluster's SFTP drawer:
+
+1. Click **Create service token**. The token is shown once. Gameplane keeps at most two active tokens per cluster, so revoke an old one before making a third.
+2. Install the chart on the remote cluster with SFTP on and the central panel as its API:
+
+   ```sh
+   helm upgrade gameplane charts/gameplane --reuse-values \
+     --set sftp.enabled=true \
+     --set sftp.apiURL=https://panel.example.com \
+     --set sftp.serviceTokenSecret=gameplane-sftp-remote-token
+   ```
+
+   The Secret `gameplane-sftp-remote-token` must hold the token in its `token` key. Add `sftp.apiCASecret` if the panel uses a private CA.
+3. Set the endpoint address and host key fingerprint in the drawer, so users of that cluster see the right address.
+
+The remote endpoint sends each login and file operation to the central API, which reaches the files through the remote gateway. The remote cluster must reach the central API over HTTPS. If it cannot, logins fail and the SFTP pod logs a message about the API.
+
+## Stopped and sleeping servers (next release)
+
+You can edit the files of a stopped server over SFTP, and the Files tab shows them too. Gameplane starts a small file-only pod that mounts the server's storage. The game does not start, and no player port opens. Browsing files does not wake a sleeping server.
+
+- The first `ls` may take up to a minute while the pod starts. If it does not come up in time, the request fails and you can retry.
+- If you start the server while files are open, the SFTP session reports that the server is starting. The game starts after the file-only pod is removed.
+- The file-only pod is removed after `operator.filesIdleTimeout` (default `10m`) without file access.
+
+## Revoking access (next release)
+
+Revoking a key, revoking or regenerating the password, disabling a user, or deleting a user closes their open SFTP sessions within about 60 seconds. New logins with the revoked credential fail straight away.
+
+Admins do this from the user's row in **Users**, with `users:manage`.
+
+## Troubleshooting (next release)
+
+**The connection is refused or times out.** Check that the Service has an address (`kubectl -n gameplane get svc gameplane-sftp`), that the port is open on your firewall or load balancer, and that `sftp.enabled` is true.
+
+**Login fails with the right password.** A regenerated password replaces the old one, so use the newest copy. Check that you can read the server in the username. For `alice+events/lobby`, the namespace must be spelled right. Check that the key is still on your profile.
+
+**Too many attempts.** The API limits logins per user and per source address. Wait a minute and try again.
+
+**The host key changed warning.** Compare the fingerprint with your profile page. If it differs, the endpoint's key changed, for example after the `gameplane-sftp-host-key` Secret was deleted. Do not accept the new key until an admin confirms it.
+
+**"Permission denied" on upload or rename.** You can read the server but lack `servers:write` on it, or the path is a server folder itself.
+
+**An upload stops with "file too large".** The file is bigger than `files.maxUploadSize`. Raise the value with `helm upgrade --reuse-values`.
+
+**Files of a stopped server do not appear.** Wait a minute and retry. If it keeps failing, check that the `gameplane-files` pod in the games namespace is running.
+
+**The session closes on its own.** It was idle longer than `sftp.idleTimeout`, the key or password was revoked, or the server pod could not be reached. The SFTP pod's logs show which.
+
+Logs: `kubectl -n gameplane logs deploy/gameplane-sftp`. Audit entries for SFTP file changes show `source: sftp` in the audit log. For the threat model of optional components, see [Security](../security/).

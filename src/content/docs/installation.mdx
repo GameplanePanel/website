@@ -197,7 +197,7 @@ helm upgrade --install gameplane oci://ghcr.io/gameplanepanel/charts/gameplane \
 
 The chart is OCI-packaged — no `helm repo add` is needed. The `appVersion` field pins matching component images, so no image overrides are required for a released version.
 
-Each release also publishes the CRDs alone as the OCI chart `oci://ghcr.io/gameplanepanel/charts/gameplane-crds`, at the same version. Argo CD installs can point their CRD Application at this chart; see [One owner for each resource](https://github.com/GameplanePanel/Gameplane/blob/master/docs/argocd.md#one-owner-for-each-resource). Existing installs need no change.
+Each release also publishes the CRDs alone as the OCI chart `oci://ghcr.io/gameplanepanel/charts/gameplane-crds`, at the same version. Argo CD installs can point their CRD Application at this chart; see [One owner for each resource](https://github.com/GameplanePanel/Gameplane/blob/master/docs/argocd.md#one-owner-for-each-resource). Existing installs need no change. From the next release (after v0.4.3), the `gameplane` chart no longer bundles the CRD subchart: the `crds.autoApply` hook installs the CRDs on every install and upgrade, and with `crds.autoApply.enabled=false` you install the CRDs first from the `gameplane-crds` chart ([Helm CRD caveat](https://github.com/GameplanePanel/Gameplane/blob/master/docs/install.md#helm-crd-caveat)).
 
 The flowchart below shows which resources a default chart install renders, and which ones are opt-in.
 
