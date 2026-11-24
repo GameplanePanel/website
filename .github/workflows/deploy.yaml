@@ -8,7 +8,6 @@ on:
 permissions:
   contents: read
   pages: write
-  id-token: write
 
 concurrency:
   group: pages
@@ -25,9 +24,14 @@ jobs:
           enablement: true
       - uses: withastro/action@v6
 
+  # The build job runs third-party npm code, so only this deploy job is granted
+  # the OIDC token (id-token: write) needed by actions/deploy-pages.
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
