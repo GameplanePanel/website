@@ -13,7 +13,27 @@ import DocsCallout from "../../components/docs/DocsCallout.astro";
 import ChangeEntry from "../../components/docs/ChangeEntry.astro";
 
 <div class="flex flex-col">
-  <ChangeEntry version="v0.4.3" date="2026-11-21" highlight>
+  <ChangeEntry version="Unreleased" date="next release" highlight>
+    These changes ship in the release after v0.4.3.
+    **SSO group role rules:** an SSO provider maps IdP groups to any role, including custom roles, with an ordered rule list where the first match wins. Roles set by hand on the Users page are kept at sign-in.
+    **Personal MCP tokens:** users create read-only MCP tokens in the API, valid for 7, 30, 90 or 365 days and revocable at any time. The API adds read routes for pods, Kubernetes events and pod logs.
+    **MCP tokens page:** Settings → MCP tokens creates, copies and revokes personal MCP tokens, shown once with a ready-to-paste client configuration.
+    **MCP events warning:** when `list_events` returns more than 100 events across clusters, the unavailable-cluster warning still appears after the truncation notice.
+    **Upgrade: MCP server namespace scope:** the break-glass MCP server no longer reads every namespace. It reads only the release and managed game namespaces, so use personal MCP tokens for per-user reads across clusters after upgrading.
+    **CurseForge and FTB modpacks:** the Modpacks tab installs, pins and removes Modrinth, CurseForge and FTB modpacks at a chosen version, so a restart never upgrades a pack by surprise.
+    **Share link wake access:** owners can turn wake access on or off for an existing share link in Settings → Share links, and the change applies to everyone with the URL.
+    **Backup schedules from a server:** the Backups tab edits or deletes a schedule, and **Managed by server settings** opens the settings that control the automatic schedule.
+    **Template hostnames:** `operator.templateHostnames` sets a default hostname for NodePort and LoadBalancer servers using a template. A hostname set on a server takes precedence.
+    **Backup destinations from settings:** destination managers open the selected server's cluster and namespace from Settings → Scheduled backups, and Back up now links there when the server has no destinations.
+    **Module updates:** minecraft-java 2.13.0 adds CurseForge and FTB modpack installs (needs Gameplane 0.5.0), a new Minecraft Proxy module is added, and Valheim shows a player count read from the Steam query. Installed modules keep their version until you upgrade them.
+    **SFTP access:** set `sftp.enabled=true` to browse, upload and download server files with FileZilla, WinSCP or `sftp`, under the Files tab permissions and audit log. Uploads are capped by `files.maxUploadSize` (default `20Gi`).
+    **SFTP with SSO accounts:** SSO accounts, named by their email address, can log in with their panel username. An unregistered SSH key falls back to the password prompt.
+    **Server name rule:** a server name that starts with a digit or is longer than 57 characters is refused at create or clone time with a clear message. An existing server with such a name shows Failed with the reason.
+    **Upgrade: chart CRD hooks:** the chart no longer bundles the `gameplane-crds` subchart, and hooks install the CRDs and ModuleSources instead. Air-gapped clusters must mirror `crds.autoApply.image`, and `helm uninstall` no longer removes the default and upload ModuleSources.
+    **Per-server security overrides:** modules set the run-as user and group, filesystem group and volume ownership check, and owners with `servers:security` can override them. Overrides apply on the next restart, and root overrides are off by default.
+  </ChangeEntry>
+
+  <ChangeEntry version="v0.4.3" date="2026-11-21">
     **Publishes 0.4.2:** the 0.4.2 release stopped at a HIGH image scan finding, so 0.4.3 ships every 0.4.2 change plus a libxml2 update in the dashboard image (CVE-2026-86144).
   </ChangeEntry>
 

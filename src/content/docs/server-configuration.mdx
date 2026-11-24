@@ -159,6 +159,20 @@ spec:
 
 Tune `initialDelaySeconds` and `periodSeconds` to match your game's boot time and responsiveness. Too aggressive, and the game restarts constantly; too lenient, and hung servers appear online to players.
 
+## Security overrides (next release)
+
+This section ships in the release after v0.4.3.
+
+A module sets default security settings for its game in the `security` block of the GameTemplate: the run-as user and group, the filesystem group, and the volume ownership check. A server owner with the `servers:security` permission can override these for one server, in the Advanced section of the create-server wizard and in the server's Settings. The permission is part of the admin role by default. See the [Permission Catalog](../permission-catalog/).
+
+- **Restarts:** Overrides apply on the next restart. Saving an override does not restart the server.
+- **Root values:** A root value is a user or group of 0, or the image's default user. Root values are off by default. An administrator allows them per cluster under Clusters, then the cluster, then Configuration, then Security.
+- **Ownership check:** The volume ownership check defaults to "only when wrong". This starts servers with large volumes faster, but files deeper in the volume keep their current owner. The other setting, `EveryStart`, re-applies the group to every file on each start. It is always correct but slower on large volumes.
+
+<DocsCallout icon="layers" title="Run helm upgrade first.">
+Run `helm upgrade` so that each cluster gets its security settings.
+</DocsCallout>
+
 ## Placement and safety
 
 Use Kubernetes scheduling rules and per-server RBAC to control server placement, and establish safety boundaries before enabling transfer, wipe, or deletion.

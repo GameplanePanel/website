@@ -33,6 +33,8 @@ Installed modules define supported games, versions, loaders, ports, and optional
   ]}
 />
 
+Server names must start with a letter and be at most 57 characters (next release). Gameplane refuses a name that starts with a digit or is longer than 57 characters, so the server is not created. A server that already has such a name shows Failed with the reason; delete it and create it again with a valid name.
+
 ## Configure compute and storage
 
 Size the pod and persistent volume for the workload, then add environment, secrets, and placement rules.

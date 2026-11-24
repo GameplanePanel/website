@@ -81,3 +81,17 @@ Back up first, confirm the manifest, allow the required restart, and validate ev
     "Backup → save manifest → restart → validate logs and joins",
   ]}
 />
+
+## CurseForge and FTB modpacks (next release)
+
+This section ships in the release after v0.4.3.
+
+The Modpacks tab installs, pins and removes modpacks from Modrinth, CurseForge and Feed The Beast (FTB). Each pack is pinned to the version you choose, so a restart never upgrades it by surprise. The active pack is stored in `GameServer.spec.modpack`, and the operator applies it. You can take a backup first. Removing a pack empties the mods folder and keeps the world.
+
+Some CurseForge files are blocked from automatic download. The Modpacks tab lists them with links. Download each file, then upload it to the `downloads/` path on the server.
+
+Servers that already run an unpinned Modrinth pack are pinned to their installed version at the next quiet moment, when no players are online. This takes one restart.
+
+An admin can turn on **Share the CurseForge key with game servers** under Settings → Mod registries. This lets servers on images without a built-in key (the `java8` tags, Minecraft 1.16.5 and older) use CurseForge packs. Read the [residual risk](../security/) before turning it on. A change to this setting reaches a running server when it has no players online, or when the server is stopped or asleep, because the change restarts its pod. Module authors can find the new template fields and the `ftb` provider in [Modpacks](../module-authoring/).
+
+API change: `POST /servers/{name}/modpack` now returns `202 Accepted` with the modpack view (phase `Pending`) instead of `200 {"ok":true}`. It returns `409` while an earlier change is still in progress.

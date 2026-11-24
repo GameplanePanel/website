@@ -101,6 +101,10 @@ The operator does not create the DNS record. With external-dns watching Services
 
 This applies to every LoadBalancer server with a hostname, including servers created before the upgrade that introduced it. Before upgrading, check that each such hostname resolves to its server, or clear it where it is not the name players use.
 
+#### Default hostname per template (next release)
+
+Set `operator.templateHostnames` in the Helm values to give every NodePort and LoadBalancer server on a game template a default player hostname. A hostname set on a server takes precedence, and clearing that field restores the template default.
+
 ### Choosing a load-balancer implementation (v0.4.2)
 
 A cluster can run more than one load-balancer implementation, each handling Services of its own class. Set `spec.networking.loadBalancerClass` on a LoadBalancer server to pick one; it becomes the Service's `spec.loadBalancerClass`. When the field is unset, the operator does not manage the class. A new Service has none, so the cluster's default implementation handles it, and an existing Service keeps any class something else gave it.
