@@ -110,10 +110,10 @@ Upgrade a non-production or canary environment first. Watch the rollout, check m
 Once you have verified your values and backups, apply the upgrade to your cluster:
 
 ```bash
-# Upgrade to a specific version (e.g., 0.4.3)
+# Upgrade to a specific version (e.g., 0.5.0)
 helm upgrade gameplane oci://ghcr.io/gameplanepanel/charts/gameplane \
   --namespace gameplane-system \
-  --version 0.4.3 \
+  --version 0.5.0 \
   --values gameplane-values-backup.yaml \
   --wait
 
@@ -219,9 +219,9 @@ helm install gameplane charts/gameplane -n gameplane-system --create-namespace -
 The Helm 4 field-manager behavior and the hook-on-reinstall behavior above are part of v0.3.0.
 </DocsCallout>
 
-## Upgrading to the next release
+## Upgrading to 0.5.0
 
-The notes below ship in the release after v0.4.3. Read them before you upgrade from v0.4.3.
+These notes apply to v0.5.0. Read them before you upgrade from v0.4.3, and see the [full 0.5.0 changelog](https://github.com/GameplanePanel/Gameplane/blob/v0.5.0/CHANGELOG.md#050--2026-11-25).
 
 - **Breaking: the chart installs its CRDs and ModuleSources from hooks.** The packaged chart no longer bundles the `gameplane-crds` subchart. The `crds.autoApply` hook installs the CRDs on every install and every upgrade, so air-gapped clusters must mirror `crds.autoApply.image`. The default and upload ModuleSources are kept across the upgrade and are no longer removed by `helm uninstall`. Turning `defaultModuleSource.enabled` off no longer deletes the existing one. If you set `crds.autoApply.enabled=false`, install the CRDs first from the `gameplane-crds` chart. See [Helm CRD caveat](https://github.com/GameplanePanel/Gameplane/blob/master/docs/install.md#helm-crd-caveat).
 - **Breaking: the MCP server no longer reads every namespace.** The break-glass MCP server (`mcpServer.enabled`) no longer has a cluster-wide ClusterRole for Pods, Events and pod logs. The upgrade removes the old `<release>-mcp-server-read` ClusterRole and ClusterRoleBinding. Break-glass reads now cover only the release namespace and the managed game namespaces, through namespaced Roles. A ClusterRole remains for GameTemplate, Module and ModuleSource only. After upgrading, use a personal MCP token (`/users/me/mcp-tokens`) for per-user reads across clusters. See [MCP server (optional)](https://github.com/GameplanePanel/Gameplane/blob/master/docs/security.md#mcp-server-optional).

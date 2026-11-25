@@ -101,7 +101,7 @@ The operator does not create the DNS record. With external-dns watching Services
 
 This applies to every LoadBalancer server with a hostname, including servers created before the upgrade that introduced it. Before upgrading, check that each such hostname resolves to its server, or clear it where it is not the name players use.
 
-#### Default hostname per template (next release)
+#### Default hostname per template
 
 Set `operator.templateHostnames` in the Helm values to give every NodePort and LoadBalancer server on a game template a default player hostname. A hostname set on a server takes precedence, and clearing that field restores the template default.
 

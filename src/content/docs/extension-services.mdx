@@ -89,11 +89,11 @@ A strictly **read-only** [Model Context Protocol](https://modelcontextprotocol.i
 - Access via `kubectl exec -i deploy/gameplane-mcp-server -n gameplane-system -- /mcp-server serve` — each exec spawns an independent, isolated MCP session.
 - Works against local kubeconfig: `KUBECONFIG=~/.kube/config /mcp-server serve`.
 
-**RBAC blast radius (v0.4.3 and earlier; the next release narrows it, see below):** The ClusterRole is cluster-wide (not namespaced), so it can read Pods, Events, and logs in *every* namespace, including `kube-system` and other workloads. Pod logs can surface application secrets. This is an accepted tradeoff (opt-in, write-free), but install it with that in mind.
+**RBAC blast radius (v0.4.3 and earlier; v0.5.0 narrows it, see below):** The ClusterRole is cluster-wide (not namespaced), so it can read Pods, Events, and logs in *every* namespace, including `kube-system` and other workloads. Pod logs can surface application secrets. This is an accepted tradeoff (opt-in, write-free), but install it with that in mind.
 
-**Personal MCP tokens (next release).** Each signed-in user can create a personal MCP token under **Settings → MCP tokens** (also in the user menu). A token lasts 7, 30, 90 or 365 days, can be revoked at any time, and never grants more than its owner's permissions. Admins with `users:read` can see a user's tokens in Users & RBAC, and those with `users:manage` can revoke them.
+**Personal MCP tokens (v0.5.0 and later).** Each signed-in user can create a personal MCP token under **Settings → MCP tokens** (also in the user menu). A token lasts 7, 30, 90 or 365 days, can be revoked at any time, and never grants more than its owner's permissions. Admins with `users:read` can see a user's tokens in Users & RBAC, and those with `users:manage` can revoke them.
 
-**Breaking (next release): the break-glass server no longer reads every namespace.** The chart removes the old cluster-wide read ClusterRole on upgrade. Pods, Events and pod logs are then readable only in the release namespace and the managed game namespaces, through namespaced Roles. A ClusterRole remains only for GameTemplate, Module and ModuleSource. After upgrading, use a personal MCP token for per-user reads across clusters. See [security](https://github.com/GameplanePanel/Gameplane/blob/master/docs/security.md#mcp-server-optional) for the threat model.
+**Breaking (v0.5.0 and later): the break-glass server no longer reads every namespace.** The chart removes the old cluster-wide read ClusterRole on upgrade. Pods, Events and pod logs are then readable only in the release namespace and the managed game namespaces, through namespaced Roles. A ClusterRole remains only for GameTemplate, Module and ModuleSource. After upgrading, use a personal MCP token for per-user reads across clusters. See [security](https://github.com/GameplanePanel/Gameplane/blob/master/docs/security.md#mcp-server-optional) for the threat model.
 
 ## Libraries
 

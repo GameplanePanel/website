@@ -10,11 +10,11 @@ readTime: "8 MIN"
 covers: ["Enable", "Credentials", "Connect", "Remote clusters"]
 ---
 
-SFTP access ships in the release after v0.4.3.
+SFTP access ships in v0.5.0.
 
 Gameplane can serve your game servers' files over SFTP, so you can upload worlds and mods and download backups with FileZilla, WinSCP or the `sftp` command. SFTP is optional and off by default. Every login and file operation goes through the Gameplane API as the signed-in user, and the SFTP pod keeps no game data. Permissions, ownership and the audit log match the Files tab.
 
-## Turn it on (next release)
+## Turn it on
 
 Enable SFTP with Helm values:
 
@@ -48,7 +48,7 @@ kubectl -n gameplane get deploy gameplane-sftp
 
 With `sftp.enabled` false, the chart creates no SFTP objects and the profile page has no SFTP section. All values are listed in the [Helm values reference](../helm-values-reference/).
 
-## Set up your credentials (next release)
+## Set up your credentials
 
 Each user manages their own SFTP access under **Settings, SFTP**. SSO users do too; there is no separate SFTP account. The page shows the address and port, the username forms, the host key fingerprint, your SSH public keys, and whether you have a generated password.
 
@@ -60,7 +60,7 @@ You have one password at a time. **Regenerate** replaces it, and the old one sto
 
 The dashboard login password is never accepted by SFTP.
 
-## Connect (next release)
+## Connect
 
 Use the address and port from the profile page, one of your usernames (see below), and either your key or your generated password.
 
@@ -75,7 +75,7 @@ sftp -P 2222 -i ~/.ssh/id_ed25519 alice@files.example.com
 
 The first time you connect, compare the host key fingerprint with the one on your profile page. It is in the `SHA256:` form and must match exactly. If it differs, do not log in: someone else may be answering on that address, or the endpoint was rebuilt with a new key.
 
-## Usernames and what you see (next release)
+## Usernames and what you see
 
 The username chooses where the session starts.
 
@@ -97,7 +97,7 @@ Permissions:
 
 Any refused login (wrong password, revoked key, no access to the server in the username, or a disabled account) gets the same generic refusal, so a refusal does not reveal which servers exist.
 
-## Remote clusters (next release)
+## Remote clusters
 
 Each cluster has its own SFTP endpoint, with its own address and host key. The same credentials work on each endpoint if the user can read the servers there.
 
@@ -118,7 +118,7 @@ An admin sets up a remote endpoint under **Clusters**, in the cluster's SFTP dra
 
 The remote endpoint sends each login and file operation to the central API, which reaches the files through the remote gateway. The remote cluster must reach the central API over HTTPS. If it cannot, logins fail and the SFTP pod logs a message about the API.
 
-## Stopped and sleeping servers (next release)
+## Stopped and sleeping servers
 
 You can edit the files of a stopped server over SFTP, and the Files tab shows them too. Gameplane starts a small file-only pod that mounts the server's storage. The game does not start, and no player port opens. Browsing files does not wake a sleeping server.
 
@@ -126,13 +126,13 @@ You can edit the files of a stopped server over SFTP, and the Files tab shows th
 - If you start the server while files are open, the SFTP session reports that the server is starting. The game starts after the file-only pod is removed.
 - The file-only pod is removed after `operator.filesIdleTimeout` (default `10m`) without file access.
 
-## Revoking access (next release)
+## Revoking access
 
 Revoking a key, revoking or regenerating the password, disabling a user, or deleting a user closes their open SFTP sessions within about 60 seconds. New logins with the revoked credential fail straight away.
 
 Admins do this from the user's row in **Users**, with `users:manage`.
 
-## Troubleshooting (next release)
+## Troubleshooting
 
 **The connection is refused or times out.** Check that the Service has an address (`kubectl -n gameplane get svc gameplane-sftp`), that the port is open on your firewall or load balancer, and that `sftp.enabled` is true.
 
