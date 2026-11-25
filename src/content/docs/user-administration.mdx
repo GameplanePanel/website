@@ -68,7 +68,7 @@ Users who log in via OIDC have their role determined by:
 - **Helm-seeded rules** (`api.oidc.groupsClaim`, `api.oidc.roleRules`, or the older `api.oidc.roleMappings`) for the Helm-configured provider; an admin can override them in the dashboard
 - **Manual assignment** when no rule is configured: new OIDC users get the default role (`viewer`) and an admin promotes them
 
-**Roles set by hand stay (after v0.4.3).** Each SSO user's card shows where their role comes from: **From SSO**, **From SSO (applies at next sign-in)** or **Set by hand**. Changing an SSO user's role on the Users page marks it **Set by hand**, and sign-in no longer changes it. To let the rules manage the role again, choose **Return to SSO control** on the user and confirm: the user keeps their role until their next sign-in, when the rule result applies. Local (password) users have no role source. See [Users, Auth & RBAC](../users-auth-rbac/) for how rules are matched.
+**Roles set by hand stay (v0.5.0 and later).** Each SSO user's card shows where their role comes from: **From SSO**, **From SSO (applies at next sign-in)** or **Set by hand**. Changing an SSO user's role on the Users page marks it **Set by hand**, and sign-in no longer changes it. To let the rules manage the role again, choose **Return to SSO control** on the user and confirm: the user keeps their role until their next sign-in, when the rule result applies. Local (password) users have no role source. See [Users, Auth & RBAC](../users-auth-rbac/) for how rules are matched.
 
 ## Review lifecycle and availability
 

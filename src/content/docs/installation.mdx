@@ -190,14 +190,14 @@ Install a tagged release straight from the GitHub Container Registry (GHCR). Rep
 
 ```bash
 helm upgrade --install gameplane oci://ghcr.io/gameplanepanel/charts/gameplane \
-  --version 0.4.3 \
+  --version 0.5.0 \
   --namespace gameplane-system --create-namespace \
   --values values.override.yaml
 ```
 
 The chart is OCI-packaged — no `helm repo add` is needed. The `appVersion` field pins matching component images, so no image overrides are required for a released version.
 
-Each release also publishes the CRDs alone as the OCI chart `oci://ghcr.io/gameplanepanel/charts/gameplane-crds`, at the same version. Argo CD installs can point their CRD Application at this chart; see [One owner for each resource](https://github.com/GameplanePanel/Gameplane/blob/master/docs/argocd.md#one-owner-for-each-resource). Existing installs need no change. From the next release (after v0.4.3), the `gameplane` chart no longer bundles the CRD subchart: the `crds.autoApply` hook installs the CRDs on every install and upgrade, and with `crds.autoApply.enabled=false` you install the CRDs first from the `gameplane-crds` chart ([Helm CRD caveat](https://github.com/GameplanePanel/Gameplane/blob/master/docs/install.md#helm-crd-caveat)).
+Each release also publishes the CRDs alone as the OCI chart `oci://ghcr.io/gameplanepanel/charts/gameplane-crds`, at the same version. Argo CD installs can point their CRD Application at this chart; see [One owner for each resource](https://github.com/GameplanePanel/Gameplane/blob/master/docs/argocd.md#one-owner-for-each-resource). Existing installs need no change. From the next release (after v0.5.0), the `gameplane` chart no longer bundles the CRD subchart: the `crds.autoApply` hook installs the CRDs on every install and upgrade, and with `crds.autoApply.enabled=false` you install the CRDs first from the `gameplane-crds` chart ([Helm CRD caveat](https://github.com/GameplanePanel/Gameplane/blob/master/docs/install.md#helm-crd-caveat)).
 
 The flowchart below shows which resources a default chart install renders, and which ones are opt-in.
 
@@ -286,7 +286,7 @@ Create a simple test GameServer to verify the operator is reconciling correctly:
 <DocsQuickReference
   label="INSTALL CHECK"
   items={[
-    "helm upgrade --install gameplane oci://ghcr.io/gameplanepanel/charts/gameplane --version 0.4.3 --namespace gameplane-system --create-namespace --values values.override.yaml",
+    "helm upgrade --install gameplane oci://ghcr.io/gameplanepanel/charts/gameplane --version 0.5.0 --namespace gameplane-system --create-namespace --values values.override.yaml",
     "kubectl -n gameplane-system get pods && kubectl get crds | grep gameplane",
     "Log in, select the cluster, and create a test server to verify the operator reconciles",
   ]}
@@ -298,7 +298,7 @@ Every published image (tagged releases and `:edge`), the Helm chart, and officia
 
 ```bash
 cosign verify --key signing/cosign.pub \
-  ghcr.io/gameplanepanel/gameplane/operator:0.4.3
+  ghcr.io/gameplanepanel/gameplane/operator:0.5.0
 ```
 
 Pre-rotation releases (v0.2.0-beta.7 and earlier) used the retired Ed25519 key and lack transparency log entries — verify those with `signing/2026-07-24-cosign-legacy.pub` and `--insecure-ignore-tlog=true`.
@@ -311,7 +311,7 @@ The Helm chart defaults to pulling images from GitHub Container Registry (`ghcr.
 
 ```bash
 helm upgrade --install gameplane oci://ghcr.io/gameplanepanel/charts/gameplane \
-  --version 0.4.3 \
+  --version 0.5.0 \
   --set image.registry=your-private-registry.com
 ```
 

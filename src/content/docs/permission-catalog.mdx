@@ -21,7 +21,7 @@ These permissions govern individual game servers and their backups. They are nam
 | `servers:read` | server / cluster | View state | Ownership-filtered |
 | `servers:write` | server / cluster | Mutate config | Excludes console |
 | `servers:console` | server | Interactive I/O | Audited session |
-| `servers:security` | server / cluster | Set or change a server's security overrides (run-as user and group, filesystem group, volume ownership check) (next release) | Admin role by default; root values need the cluster's root-override setting |
+| `servers:security` | server / cluster | Set or change a server's security overrides (run-as user and group, filesystem group, volume ownership check) (v0.5.0 and later) | Admin role by default; root values need the cluster's root-override setting |
 | `backups:restore` | server | Execute restore | High-impact action |
 
 **servers:read** — View server state, logs, active player lists, and files. Ownership-filtered means the caller sees only servers they own or collaborate on, or all servers if they have a cluster-wide `servers:read` permission binding.
@@ -30,7 +30,7 @@ These permissions govern individual game servers and their backups. They are nam
 
 **servers:console** — Access the live console (RCON or PTY, depending on the game). All console sessions are audited and recorded with actor, timestamp, and transcript.
 
-**servers:security** — Set or change a server's security overrides: the run-as user and group, the filesystem group, and the volume ownership check (next release). Overrides apply on the next restart. Root values also need the cluster's root-override setting turned on.
+**servers:security** — Set or change a server's security overrides: the run-as user and group, the filesystem group, and the volume ownership check (v0.5.0 and later). Overrides apply on the next restart. Root values also need the cluster's root-override setting turned on.
 
 **backups:restore** — Execute a restore operation from an existing backup. This is marked a high-impact action because a restore overwrites game data.
 
