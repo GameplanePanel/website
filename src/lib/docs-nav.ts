@@ -48,8 +48,6 @@ export const GROUPS: {
   { id: "community", label: "Community", icon: "heart-handshake", section: "reference" },
 ];
 
-const groupIndex = new Map(GROUPS.map((group) => [group.id, group]));
-
 export async function getOrderedDocs(): Promise<DocEntry[]> {
   const docs = await getCollection("docs");
   const groupOrder = new Map(GROUPS.map((group, index) => [group.id, index]));
@@ -76,12 +74,4 @@ export function docHref(doc: DocEntry): string {
 
 export function sidebarLabel(doc: DocEntry): string {
   return doc.data.sidebarLabel ?? doc.data.title;
-}
-
-export function getGroupById(id: string) {
-  return groupIndex.get(id);
-}
-
-export function getGroupsInSection(section: DocEntry["data"]["section"]) {
-  return GROUPS.filter((g) => g.section === section);
 }
