@@ -44,7 +44,7 @@ ModuleSource indexes a module catalog (OCI registry, git repo, HTTP archive, or 
 | `spec.oci.insecure` | bool | no | Allow plain HTTP (no TLS) — for local kind/k3d registries only; never use on production |
 | `spec.git` | object | conditional | Git repository config (required if `type=git`) |
 | `spec.git.url` | string | yes | Clone URL (https or ssh) |
-| `spec.git.ref` | string | no | Branch or tag to index; defaults to `main` |
+| `spec.git.ref` | string | no | Branch or tag to index; defaults to `master` |
 | `spec.git.subPath` | string | no | Subdirectory relative to repository root (must not start with `/` or contain `..`) |
 | `spec.git.secretRef` | LocalObjectReference | no | Secret in operator namespace: https requires `token` or `username`+`password`; ssh requires `ssh-privatekey` + optional `known_hosts` |
 | `spec.http` | object | conditional | HTTP archive config (required if `type=http`) |
