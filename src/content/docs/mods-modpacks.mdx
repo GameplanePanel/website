@@ -95,3 +95,7 @@ Servers that already run an unpinned Modrinth pack are pinned to their installed
 An admin can turn on **Share the CurseForge key with game servers** under Settings → Mod registries. This lets servers on images without a built-in key (the `java8` tags, Minecraft 1.16.5 and older) use CurseForge packs. Read the [residual risk](../security/) before turning it on. A change to this setting reaches a running server when it has no players online, or when the server is stopped or asleep, because the change restarts its pod. Module authors can find the new template fields and the `ftb` provider in [Modpacks](../module-authoring/).
 
 API change: `POST /servers/{name}/modpack` now returns `202 Accepted` with the modpack view (phase `Pending`) instead of `200 {"ok":true}`. It returns `409` while an earlier change is still in progress.
+
+### Browse packs for every loader (next release)
+
+This ships in the release after v0.5.0. The Modpacks tab has an "All loaders" switch. Turned on, it lists packs for every loader and Minecraft version, not only the ones that match the server's current version, so a Fabric server can find NeoForge packs. The version picker shows which server version each pack version runs on. Installing a version for another loader or Minecraft version also switches the server to that version, and the confirmation says so.

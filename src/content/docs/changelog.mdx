@@ -13,7 +13,14 @@ import DocsCallout from "../../components/docs/DocsCallout.astro";
 import ChangeEntry from "../../components/docs/ChangeEntry.astro";
 
 <div class="flex flex-col">
-  <ChangeEntry version="v0.5.0" date="2026-11-25" highlight>
+  <ChangeEntry version="Unreleased" date="next release" highlight>
+    These changes ship in the release after v0.5.0.
+    **Modpacks for every loader:** the Modpacks tab has an "All loaders" switch that lists packs for every loader and Minecraft version. Installing a version for another loader or Minecraft version also switches the server to it, and the confirmation says so.
+    **Upgrade: repositories use master:** the GameplanePanel module, website and component repositories renamed their default branch from `main` to `master`. Change a git `ModuleSource` that tracks the module repository with `ref: main` to `ref: master` or a release tag.
+    **Upgrade: git module sources default to master:** a git `ModuleSource` with no `spec.git.ref`, or an empty one, now indexes `master`. Set `ref: main` on a source whose repository still uses `main`. Sources that already store `ref: main` are unaffected.
+  </ChangeEntry>
+
+  <ChangeEntry version="v0.5.0" date="2026-11-25">
     **SSO group role rules:** an SSO provider maps IdP groups to any role, including custom roles, with an ordered rule list where the first match wins. Roles set by hand on the Users page are kept at sign-in.
     **Personal MCP tokens:** users create read-only MCP tokens in the API, valid for 7, 30, 90 or 365 days and revocable at any time. The API adds read routes for pods, Kubernetes events and pod logs.
     **MCP tokens page:** Settings → MCP tokens creates, copies and revokes personal MCP tokens, shown once with a ready-to-paste client configuration.
