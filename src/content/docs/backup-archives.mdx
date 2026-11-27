@@ -1,0 +1,74 @@
+---
+title: Download and upload backups
+description: Download a finished backup as one .tar.gz or .zip file, and restore a server from an archive file you upload.
+section: operate
+group: files-backups
+order: 6
+icon: download
+sidebarLabel: Download and upload
+eyebrow: RECOVERY
+readTime: 6 MIN
+covers: ["Download", "Upload and restore", "Limits"]
+---
+
+import DocsCallout from "../../components/docs/DocsCallout.astro";
+import DocsQuickReference from "../../components/docs/DocsQuickReference.astro";
+
+This page describes a feature that ships in the release after v0.5.0.
+
+You can take a finished backup out of Gameplane as a single file, and restore a server from a file. Restic stays the only place backups are stored: no archive is kept in the cluster, and an upload is written straight into the server rather than saved as a new backup.
+
+<DocsCallout icon="shield-alert" title="An archive holds every server file.">
+  Archives are plain, unencrypted files. They include configs that may contain passwords, so keep downloaded archives private.
+</DocsCallout>
+
+## Download a backup
+
+On a server's **Backups** tab or on the **Backups** page, choose **Download** on a finished backup. Then pick the format:
+
+- **.tar.gz** (the default) keeps file permissions.
+- **.zip** opens everywhere, but file permissions are reset to the server's defaults when you restore it.
+
+The archive holds every volume the backup captured, each in its own folder, plus a `gameplane-backup.json` manifest. The manifest records the server, namespace, template and revision, game version, capture time, restic snapshot ID and Gameplane version.
+
+- Anyone who can view backups can download them (`backups:read`).
+- Volume snapshot (CSI) backups cannot be downloaded, because they stay inside the storage system. They show "—" instead of a **Download** button.
+- The download streams from a short-lived worker Pod, so the panel never holds the archive in memory. If the backup is deleted or pruned during the download, or the worker fails, your browser reports a broken transfer instead of saving a file that looks complete.
+
+## Upload and restore
+
+On a server's **Backups** tab, choose **Upload backup** and pick a `.tar.gz` or `.zip` file. This needs the `backups:restore` permission.
+
+1. **Pick the file.** It is uploaded to a temporary staging volume and unpacked there. Nothing on the server changes yet.
+2. **Checks run.** A Gameplane archive is checked against the server: the game and template must match, and every volume the server uses must be in the archive. A plain archive, such as a world copied from another host, asks you to confirm the game. Gameplane can then only run the safety checks on its contents.
+3. **Review.** Warnings appear here before you confirm, for example an older game version, or zip file permissions that will be reset.
+4. **Confirm the restore** within 30 minutes of the upload, or the restore fails. Gameplane then stops the server, replaces its data from the staging volume and starts it again. The staging volume is deleted when the restore ends, on success or failure.
+
+<DocsQuickReference
+  label="BEFORE YOU CONFIRM"
+  items={[
+    "The restore replaces all data on the server",
+    "The server stops while the data is copied",
+    "If the copy fails partway, data may be partly replaced and the server stays stopped",
+  ]}
+/>
+
+Unsafe archives are refused with a plain reason, and nothing is written to the server. The checks refuse absolute paths, `..` names, links that point outside the data folder, device files, truncated or oversized content, and archives made by a newer Gameplane.
+
+## Limits and settings for operators
+
+| Helm value | Default | What it does |
+| --- | --- | --- |
+| `backups.maxUploadSize` | `20Gi` | Largest upload. Bigger files are refused as soon as the upload starts, and nothing is stored. |
+| `backups.uploadStagingStorageClass` | empty | StorageClass for the staging volume. Empty uses the cluster's default StorageClass. With neither, uploads are refused before the server stops, and the message names this value. |
+| `backups.maxConcurrentExports` | `3` | Downloads that can run at once in one namespace. |
+| `backups.exportTTL` | `1h` | Longest time one download can run. |
+
+Each download is a `BackupExport` resource (`backupexports.gameplane.local`, short name `bkx`) that the operator turns into a worker Pod.
+
+If a restore fails during the final copy, it ends **Failed**, the server stays stopped, and the message says the data may be partly replaced. Check the data before you start the server again.
+
+## Next steps
+
+- [Backups and recovery](../backups-recovery/): create, schedule and restore backups inside the cluster
+- [Backup Destinations](../backup-destinations/): configure the restic repositories backups are stored in
