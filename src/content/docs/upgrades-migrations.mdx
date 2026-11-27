@@ -219,6 +219,13 @@ helm install gameplane charts/gameplane -n gameplane-system --create-namespace -
 The Helm 4 field-manager behavior and the hook-on-reinstall behavior above are part of v0.3.0.
 </DocsCallout>
 
+## Upgrading to the next release
+
+These notes ship in the release after v0.5.0. Read them before you upgrade from v0.5.0.
+
+- **Breaking: module and component repositories now use `master`.** The GameplanePanel module, website and component repositories renamed their default branch from `main` to `master`. If a git `ModuleSource` tracks `https://github.com/GameplanePanel/module.git` with `ref: main`, change it to `ref: master` or, better, a release tag such as `v0.5.0`. The default chart values already pin a tag and need no change.
+- **Breaking: git module sources default to `master`.** A git `ModuleSource` with no `spec.git.ref`, or an empty one, now indexes `master` instead of `main`. Sources created with the old CRD default keep `ref: main` stored and are unaffected. A source stored with `ref: ""` now resolves to `master`, so set `ref: main` on it if its repository still uses `main`. If you cleared `defaultModuleSource.git.ref`, the chart now renders `master`; set `defaultModuleSource.git.ref: main` in your Helm values if you need the old branch.
+
 ## Upgrading to 0.5.0
 
 These notes apply to v0.5.0. Read them before you upgrade from v0.4.3, and see the [full 0.5.0 changelog](https://github.com/GameplanePanel/Gameplane/blob/v0.5.0/CHANGELOG.md#050--2026-11-25).
